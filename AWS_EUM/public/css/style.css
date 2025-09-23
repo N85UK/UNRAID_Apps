@@ -1,0 +1,194 @@
+/* AWS End User Messaging - Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #232f3e;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #232f3e;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ff9900;
+    padding-bottom: 10px;
+}
+
+.sms-form, .message-history {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #232f3e;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #ff9900;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+#charCount {
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+button {
+    background-color: #ff9900;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #e88f00;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.history-item {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fafafa;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.timestamp {
+    font-weight: 600;
+}
+
+.originator {
+    background-color: #ff9900;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.phone-number {
+    font-weight: 600;
+    color: #232f3e;
+    margin-bottom: 8px;
+}
+
+.message-body {
+    background-color: white;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #ff9900;
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+}
+
+.message-id {
+    font-size: 12px;
+    color: #666;
+    font-family: monospace;
+}
+
+.no-history {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .history-header {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
