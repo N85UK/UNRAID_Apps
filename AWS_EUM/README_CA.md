@@ -1,24 +1,83 @@
-AWS End User Messaging - Community Applications submission
+# AWS End User Messaging - Community Applications
 
 This package bundles the AWS SMS App as a Community Applications (CA) template for UnRaid.
 
-What this package contains
-- Docker image and docker-compose configuration for the app
-- `.env.example` (no secrets) — end users must copy to `.env` and provide their own AWS credentials
-- README and submission notes for UnRaid CA
+## ✅ Status: Ready for CA Submission
 
-Privacy & Secrets
-- This submission intentionally does not include any AWS keys or secrets.
-- All credentials must be set by the end-user via the UnRaid CA template environment variables or by copying `.env.example` to the appdata directory and editing.
+The Docker image has been built and published to GitHub Container Registry:
+- **Image**: `ghcr.io/n85uk/aws-eum:latest`
+- **Build Status**: ✅ Successful
+- **CA Template**: ✅ Configured
 
-Resources
-- UnRaid CA policies: https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/
-- Community Applications docs: https://docs.unraid.net/unraid-os/using-unraid-to/run-docker-containers/community-applications/
+## 📦 Package Contents
 
-How to configure
-1. Install via CA (once published)
-2. In the template, set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` and `AWS_REGION`
-3. Optionally set `ORIGINATORS` to override default originators
+- **Docker Image**: Pre-built and published to GHCR
+- **CA Template**: `template.cfg` with proper configuration
+- **Documentation**: `doc.md` with CA metadata headers
+- **Environment Example**: `.env.example` (no secrets included)
+- **Docker Compose**: For manual testing and deployment
 
-Support
-- This template is provided as-is. End users are responsible for AWS account configuration and billing.
+## 🔒 Privacy & Security
+
+- ✅ **No AWS credentials** included in repository or image
+- ✅ **Environment variables** properly exposed for user configuration
+- ✅ **Follows CA policies** for secret management
+- ✅ **User provides own AWS credentials** via template
+
+## 🚀 Installation (After CA Approval)
+
+1. In UNraid web UI, go to **Apps** tab
+2. Search for **"AWS End User Messaging"**
+3. Click **Install**
+4. Configure your AWS credentials:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_REGION` (default: eu-west-2)
+   - `ORIGINATORS` (optional)
+
+## 🧪 Manual Testing
+
+Before CA submission or for development:
+
+```bash
+# Using Docker Compose
+docker-compose up -d
+
+# Or direct Docker
+docker run -d \
+  --name aws-eum \
+  -p 80:80 \
+  -e AWS_ACCESS_KEY_ID=your_key \
+  -e AWS_SECRET_ACCESS_KEY=your_secret \
+  -e AWS_REGION=eu-west-2 \
+  -v ./data:/app/data \
+  ghcr.io/n85uk/aws-eum:latest
+```
+
+## 📋 CA Submission Checklist
+
+- ✅ **Template Format**: Follows CA standards
+- ✅ **Documentation**: Complete with metadata headers
+- ✅ **Docker Image**: Publicly available on GHCR
+- ✅ **Security**: No secrets, proper environment variable exposure
+- ✅ **Testing**: Image builds and runs successfully
+- ✅ **Category**: Utilities (appropriate classification)
+
+## 📖 Resources
+
+- **UNraid CA Policies**: https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/
+- **Community Applications**: https://docs.unraid.net/unraid-os/using-unraid-to/run-docker-containers/community-applications/
+- **AWS Pinpoint SMS**: https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html
+
+## 🆘 Support
+
+- **Issues**: Create issues in the main repository
+- **AWS Setup**: Refer to AWS documentation for Pinpoint configuration
+- **UNraid**: Check UNraid forums for CA-specific questions
+
+## ⚠️ Important Notes
+
+- **AWS Costs**: SMS sending incurs AWS charges - monitor your usage
+- **Phone Numbers**: Must be verified/registered with AWS Pinpoint
+- **Regions**: Ensure AWS Pinpoint is available in your region
+- **Credentials**: Never share AWS keys - users provide their own

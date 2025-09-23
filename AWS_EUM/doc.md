@@ -4,7 +4,6 @@
 %author: Paul McCann
 %category: Utilities
 %description: Simple web UI for sending SMS using AWS Pinpoint SMS (originators provided by user). No keys are included; end users must set their own credentials.
-%icon: https://raw.githubusercontent.com/N85UK/UnRiaid_Apps/main/AWS_EUM/icon.png
 
 # AWS End User Messaging (EUM)
 
