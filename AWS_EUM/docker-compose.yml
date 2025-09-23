@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  aws-eum:
+    image: ghcr.io/N85UK/aws-eum:latest
+    container_name: aws-eum
+    restart: unless-stopped
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - PORT=${PORT}
+      - ORIGINATORS=${ORIGINATORS}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - br0.100
+
+networks:
+  br0.100:
+    external: true
