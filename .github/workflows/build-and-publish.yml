@@ -1,0 +1,48 @@
+name: Build and publish
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          registry-url: 'https://ghcr.io'
+
+      - name: Install dependencies
+        run: |
+          cd AWS_EUM
+          npm ci
+
+      - name: Build image
+        run: |
+          cd AWS_EUM
+          IMAGE=ghcr.io/${{ github.repository_owner }}/aws-eum:latest
+          docker build -t $IMAGE .
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        run: |
+          IMAGE=ghcr.io/${{ github.repository_owner }}/aws-eum:latest
+          docker push $IMAGE
