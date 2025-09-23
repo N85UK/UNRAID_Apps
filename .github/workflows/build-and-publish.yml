@@ -30,7 +30,7 @@ jobs:
       - name: Build image
         run: |
           cd AWS_EUM
-          IMAGE=ghcr.io/${{ github.repository_owner }}/aws-eum:latest
+          IMAGE=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/aws-eum:latest
           docker build -t $IMAGE .
 
       - name: Log in to GitHub Container Registry
@@ -42,5 +42,5 @@ jobs:
 
       - name: Push image
         run: |
-          IMAGE=ghcr.io/${{ github.repository_owner }}/aws-eum:latest
+          IMAGE=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/aws-eum:latest
           docker push $IMAGE

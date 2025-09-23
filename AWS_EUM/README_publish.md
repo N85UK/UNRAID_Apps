@@ -3,7 +3,7 @@ Publishing to GitHub Container Registry (GHCR)
 1. Push this project to `https://github.com/N85UK/UnRiaid_Apps` in a subfolder `AWS_EUM`.
 2. Ensure the repository has GitHub Actions enabled.
 3. The workflow `build-and-publish.yml` will run on push to `main` and on release.
-4. After the workflow completes, your image will be available at `ghcr.io/N85UK/aws-eum:latest`.
+4. After the workflow completes, your image will be available at `ghcr.io/n85uk/aws-eum:latest`.
 
 Make the package public (optional):
 - Go to https://github.com/orgs/N85UK/packages/container/package/aws-eum
