@@ -30,6 +30,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 All notable changes to this project will be documented in this file.
 
+## [2025.10.03.3] - 2025-10-03 (v1.2 - Cross-Server Compatibility)
+
+### Fixed
+- Fixed hardcoded URLs and ports for universal server compatibility
+- Dynamic hostname/IP detection works on any UNRAID server
+- Improved HTTPS/HTTP protocol detection
+- Port configuration now consistent across all components
+- Better fallback handling for different network configurations
+- Works with custom ports, domain names, and IP addresses
+
 ## [2025.10.03.2] - 2025-10-03 (v1.1 - Admin Setup)
 
 ### Added

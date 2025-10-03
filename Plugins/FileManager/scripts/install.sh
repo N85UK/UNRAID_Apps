@@ -149,15 +149,23 @@ if [ -f /usr/local/bin/filebrowser ]; then
     
     # Create FileBrowser config if it doesn't exist
     FB_CONFIG="$CONFIG_DIR/config/filebrowser.json"
+    SETTINGS_FILE="$CONFIG_DIR/config/settings.ini"
+    
+    # Get port from settings.ini if it exists
+    PORT=8080
+    if [ -f "$SETTINGS_FILE" ]; then
+        PORT=$(grep "^port=" "$SETTINGS_FILE" 2>/dev/null | cut -d'=' -f2 | tr -d ' ' || echo "8080")
+    fi
+    
     if [ ! -f "$FB_CONFIG" ]; then
         echo "Creating FileBrowser configuration..."
-        cat > "$FB_CONFIG" << 'EOL'
+        cat > "$FB_CONFIG" << EOL
 {
-  "port": 8080,
+  "port": ${PORT},
   "baseURL": "",
   "address": "0.0.0.0",
   "log": "stdout",
-  "database": "/boot/config/plugins/file-manager/config/filebrowser.db",
+  "database": "$CONFIG_DIR/config/filebrowser.db",
   "root": "/mnt"
 }
 EOL

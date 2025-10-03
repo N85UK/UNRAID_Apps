@@ -59,7 +59,13 @@ function plugin($attribute, $plugin_file) {
 $plugin_cfg = parse_plugin_cfg('file-manager');
 $filemanager_enabled = $plugin_cfg['enabled'] ?? 'yes';
 $filemanager_port = $plugin_cfg['port'] ?? '8080';
-$filemanager_url = "http://{$_SERVER['HTTP_HOST']}:$filemanager_port";
+
+// Build URL with better server detection
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+// Remove any existing port from HOST header to avoid conflicts
+$host = preg_replace('/:[0-9]+$/', '', $host);
+$filemanager_url = "{$protocol}://{$host}:{$filemanager_port}";
 
 function check_filemanager_status() {
   global $filemanager_port;

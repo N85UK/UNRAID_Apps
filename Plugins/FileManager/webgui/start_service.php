@@ -27,11 +27,19 @@ if (!is_dir($config_dir)) {
     mkdir($config_dir, 0755, true);
 }
 
+// Get port from settings.ini
+$settings_file = $config_dir . '/settings.ini';
+$port = 8080; // default
+if (file_exists($settings_file)) {
+    $settings = parse_ini_file($settings_file, true);
+    $port = $settings['filemanager']['port'] ?? 8080;
+}
+
 // Create filebrowser config
 $config_file = $config_dir . '/filebrowser.json';
 if (!file_exists($config_file)) {
     $config = array(
-        'port' => 8080,
+        'port' => (int)$port,
         'baseURL' => '',
         'address' => '0.0.0.0',
         'log' => 'stdout',

@@ -50,9 +50,18 @@ if (file_exists($db_file)) {
     unlink($db_file);
 }
 
+// Get the configured port from settings
+$config_dir = '/boot/config/plugins/file-manager/config';
+$settings_file = $config_dir . '/settings.ini';
+$port = 8080; // default
+if (file_exists($settings_file)) {
+    $settings = parse_ini_file($settings_file, true);
+    $port = $settings['filemanager']['port'] ?? 8080;
+}
+
 // Create filebrowser config
 $config = [
-    'port' => 8080,
+    'port' => (int)$port,
     'baseURL' => '',
     'address' => '0.0.0.0',
     'log' => 'stdout',
@@ -130,12 +139,26 @@ sleep(3);
 $check_cmd = "pgrep -f filebrowser";
 exec($check_cmd, $check_output, $check_return);
 
+// Get the configured port from settings
+$config_dir = '/boot/config/plugins/file-manager/config';
+$settings_file = $config_dir . '/settings.ini';
+$port = 8080; // default
+if (file_exists($settings_file)) {
+    $settings = parse_ini_file($settings_file, true);
+    $port = $settings['filemanager']['port'] ?? 8080;
+}
+
+// Build the URL dynamically
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+$filemanager_url = "{$protocol}://{$host}:{$port}";
+
 if ($check_return === 0 && !empty($check_output)) {
     echo json_encode([
         'status' => 'success',
         'message' => 'FileBrowser configured and started successfully',
         'username' => $username,
-        'url' => "http://{$_SERVER['HTTP_HOST']}:8080",
+        'url' => $filemanager_url,
         'pid' => $check_output[0]
     ]);
 } else {
