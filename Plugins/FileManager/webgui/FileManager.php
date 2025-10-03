@@ -94,6 +94,47 @@ $filemanager_running = check_filemanager_status();
 
 </div>
 
+<!-- Admin Setup Modal -->
+<div id="admin-setup-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>_(Setup File Manager Admin)_</h3>
+      <button onclick="closeModal('admin-setup-modal')" class="close-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="setup-section">
+        <p>_(Create an admin user for the File Manager. This will allow you to login and manage files.)_</p>
+        
+        <div class="form-group">
+          <label for="admin-username">_(Username)_:</label>
+          <input type="text" id="admin-username" value="admin" placeholder="_(Enter username)_">
+        </div>
+        
+        <div class="form-group">
+          <label for="admin-password">_(Password)_:</label>
+          <input type="password" id="admin-password" value="admin" placeholder="_(Enter password)_">
+        </div>
+        
+        <div class="setup-actions">
+          <button onclick="setupAdmin()" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i>
+            _(Create Admin User)_
+          </button>
+          <button onclick="closeModal('admin-setup-modal')" class="btn btn-secondary">
+            _(Cancel)_
+          </button>
+        </div>
+        
+        <div class="setup-info">
+          <p><strong>_(Note)_:</strong> _(Default credentials are admin/admin. Please change them for security.)_</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Quick Help Modal -->
 <div id="help-modal" class="modal" style="display: none;">
   <div class="modal-content">
@@ -478,4 +519,70 @@ window.addEventListener('beforeunload', function() {
   if (statusCheckInterval) clearInterval(statusCheckInterval);
   if (performanceCheckInterval) clearInterval(performanceCheckInterval);
 });
+
+// Admin Setup Functions
+function showAdminSetup() {
+  document.getElementById('admin-setup-modal').style.display = 'flex';
+}
+
+function setupAdmin() {
+  const username = document.getElementById('admin-username').value || 'admin';
+  const password = document.getElementById('admin-password').value || 'admin';
+  
+  if (!username || !password) {
+    showNotification('_(Please enter both username and password)_', 'error');
+    return;
+  }
+  
+  showLoading('_(Setting up admin user)_...');
+  
+  fetch('/plugins/file-manager/setup_admin.php', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ username: username, password: password })
+  })
+  .then(response => response.json())
+  .then(data => {
+    hideLoading();
+    if (data.status === 'success') {
+      closeModal('admin-setup-modal');
+      showNotification('_(Admin user created successfully! You can now login with your credentials.)_', 'success');
+      // Show login details
+      showLoginInfo(data.username, data.url);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    } else {
+      showNotification('_(Failed to setup admin: )_' + (data.message || '_(Unknown error)_'), 'error');
+    }
+  })
+  .catch(error => {
+    hideLoading();
+    console.error('Error setting up admin:', error);
+    showNotification('_(Failed to setup admin user)_', 'error');
+  });
+}
+
+function showLoginInfo(username, url) {
+  const notification = document.createElement('div');
+  notification.className = 'notification success login-info';
+  notification.innerHTML = `
+    <div>
+      <h4>_(Login Information)_</h4>
+      <p><strong>_(URL)_:</strong> <a href="${url}" target="_blank">${url}</a></p>
+      <p><strong>_(Username)_:</strong> ${username}</p>
+      <p><strong>_(Password)_:</strong> _(As entered above)_</p>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  setTimeout(() => notification.classList.add('show'), 100);
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => document.body.removeChild(notification), 300);
+  }, 8000);
+}
 </script>

@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.1">
-<!ENTITY md5       "385919d37aec1d28f00416a1fde97265">
+<!ENTITY version   "2025.10.03.2">
+<!ENTITY md5       "614f4e6336730531f6b8b82deff59179">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
@@ -14,6 +14,14 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.2 (v1.1 - Admin Setup)
+- Added admin user setup interface for easy FileBrowser configuration
+- Integrated admin creation wizard in UNRAID webGUI
+- Added setup_admin.php script for automated user management
+- Enhanced UI with admin setup modal and improved notifications
+- Fixed authentication issues - no more login confusion
+- Default credentials: admin/admin (easily changeable)
+
 ###2025.10.03.1 (v1 Release)
 - First stable production release of File Manager for UNRAID
 - Full UNRAID 7.2+ native API integration (compatible with 7.2.0-rc.1+)

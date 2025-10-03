@@ -30,6 +30,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 All notable changes to this project will be documented in this file.
 
+## [2025.10.03.2] - 2025-10-03 (v1.1 - Admin Setup)
+
+### Added
+- Admin user setup interface for easy FileBrowser configuration
+- Integrated admin creation wizard in UNRAID webGUI
+- Added setup_admin.php script for automated user management
+- Enhanced UI with admin setup modal and improved notifications
+- Fixed authentication issues - no more login confusion
+- Default credentials: admin/admin (easily changeable)
+
 ## [2025.10.03.1] - 2025-10-03 (v1 Release)
 
 ### Added

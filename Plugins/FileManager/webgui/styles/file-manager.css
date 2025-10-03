@@ -637,8 +637,8 @@
 /* Notifications */
 .notification {
   position: fixed;
-  top: 2rem;
-  right: 2rem;
+  top: 1rem;
+  right: 1rem;
   background: var(--fm-bg-primary);
   border: 1px solid var(--fm-border);
   border-radius: var(--fm-radius);
@@ -647,10 +647,10 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  z-index: 10001;
+  max-width: 400px;
+  z-index: 10002;
   transform: translateX(100%);
   transition: var(--fm-transition);
-  max-width: 400px;
 }
 
 .notification.show {
@@ -658,31 +658,96 @@
 }
 
 .notification.success {
-  border-left: 4px solid var(--fm-success);
-}
-
-.notification.error {
-  border-left: 4px solid var(--fm-error);
-}
-
-.notification.info {
-  border-left: 4px solid var(--fm-primary);
-}
-
-.notification i {
-  font-size: 1.25rem;
-}
-
-.notification.success i {
+  border-color: var(--fm-success);
   color: var(--fm-success);
 }
 
-.notification.error i {
+.notification.error {
+  border-color: var(--fm-error);
   color: var(--fm-error);
 }
 
-.notification.info i {
+.notification.info {
+  border-color: var(--fm-primary);
   color: var(--fm-primary);
+}
+
+.notification.login-info {
+  max-width: 500px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.notification.login-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--fm-text-primary);
+}
+
+.notification.login-info p {
+  margin: 0.25rem 0;
+  color: var(--fm-text-secondary);
+}
+
+.notification.login-info a {
+  color: var(--fm-primary);
+  text-decoration: none;
+}
+
+.notification.login-info a:hover {
+  text-decoration: underline;
+}
+
+/* Admin Setup Modal */
+.setup-section {
+  padding: 0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--fm-text-primary);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--fm-border);
+  border-radius: var(--fm-radius);
+  background: var(--fm-bg-primary);
+  color: var(--fm-text-primary);
+  font-size: 0.875rem;
+  transition: var(--fm-transition);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--fm-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.setup-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.setup-info {
+  padding: 1rem;
+  background: var(--fm-bg-secondary);
+  border-radius: var(--fm-radius);
+  border-left: 4px solid var(--fm-warning);
+}
+
+.setup-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--fm-text-secondary);
 }
 
 /* Responsive Design */
