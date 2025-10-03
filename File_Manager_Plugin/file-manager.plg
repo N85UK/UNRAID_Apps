@@ -15,7 +15,7 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
-###2025.10.03.21 (Robust JSON Handling & Frontend Improvements)
+###2025.10.03.21 (Robust JSON Handling &amp; Frontend Improvements)
 - Added safe JSON fetch wrapper with raw response fallback
 - Improved error diagnostics for installation, setup, start/stop actions
 - Frontend buttons now re-enable reliably after failures
