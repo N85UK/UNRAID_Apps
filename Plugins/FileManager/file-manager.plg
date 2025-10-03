@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.4">
+<!ENTITY version   "2025.10.03.5">
 <!ENTITY md5       "2c02ce98a0333abd9cbcf894a1914882">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
@@ -14,6 +14,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.5 (v1.4 - Security Documentation Update)
+- Removed placeholder email addresses from security documentation
+- Updated security reporting to use GitHub Security Advisories
+- Corrected GitHub URLs to point to proper repository
+- Enhanced security documentation with proper contact methods
+- All security issues should now be reported via GitHub Issues or Security Advisories
+
 ###2025.10.03.4 (v1.3 - Updated Icon)
 - Updated plugin icon to use file-explorer.png (better visual design)
 - Replaced placeholder icon with proper file explorer graphic

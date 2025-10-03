@@ -30,6 +30,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 All notable changes to this project will be documented in this file.
 
+## [2025.10.03.5] - 2025-10-03 (v1.4 - Security Documentation Update)
+
+### Fixed
+- Removed placeholder email addresses from security documentation
+- Updated security reporting to use GitHub Security Advisories
+- Corrected GitHub URLs to point to proper repository (N85UK/UnRiaid_Apps)
+- Enhanced security documentation with proper contact methods
+- All security issues should now be reported via GitHub Issues or Security Advisories
+
 ## [2025.10.03.4] - 2025-10-03 (v1.3 - Updated Icon)
 
 ### Changed

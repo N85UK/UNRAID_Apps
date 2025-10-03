@@ -17,8 +17,8 @@ We take security seriously. If you discover a security vulnerability, please fol
 
 For sensitive security issues, please **DO NOT** create a public GitHub issue. Instead:
 
-1. **Email**: Send details to `security@yourproject.com` (replace with actual email)
-2. **Subject**: Use "SECURITY: UNRAID File Manager - [Brief Description]"
+1. **GitHub Security Advisory**: Use GitHub's private vulnerability reporting feature
+2. **Contact**: Create a private security advisory at [GitHub Security](https://github.com/N85UK/UnRiaid_Apps/security/advisories)
 3. **Include**:
    - Description of the vulnerability
    - Steps to reproduce
@@ -29,7 +29,7 @@ For sensitive security issues, please **DO NOT** create a public GitHub issue. I
 
 For less sensitive issues that don't pose immediate risk:
 
-1. Create a [GitHub Issue](https://github.com/YOUR_USERNAME/unraid-file-manager/issues)
+1. Create a [GitHub Issue](https://github.com/N85UK/UnRiaid_Apps/issues)
 2. Use the label `security`
 3. Provide detailed information
 
