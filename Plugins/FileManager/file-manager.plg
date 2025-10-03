@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.8">
-<!ENTITY md5       "65d55fc8f33e33e32c135b70bc50cd9c">
+<!ENTITY version   "2025.10.03.9">
+<!ENTITY md5       "bf627fd17b9c91f0e435e994579795c9">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
@@ -14,6 +14,16 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.9 (v1.8 - Installation &amp; Service Management Fix)
+- Fixed plugin installation issues requiring Force Install
+- Enhanced FileBrowser binary installation with better error handling
+- Improved button functionality with loading indicators and detailed feedback
+- Fixed URL construction for better cross-server compatibility
+- Added comprehensive error reporting with troubleshooting information
+- Resolved service startup and management reliability issues
+- Installation script now continues even if FileBrowser download fails initially
+- Web interface buttons now provide clear success/error feedback
+
 ###2025.10.03.8 (v1.7 - Comprehensive Validation &amp; Cleanup)
 - Complete documentation overhaul and accuracy improvements
 - Updated README to reflect actual current plugin capabilities
