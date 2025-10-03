@@ -176,7 +176,6 @@ function safeFetchJson(url, options) {
             throw new Error('Invalid JSON response (HTTP ' + resp.status + '). Raw (first 400 chars): ' + raw.substring(0,400));
         }
     }).catch(err => {
-        // Augment error with timing & fetch options for easier debugging
         console.error('safeFetchJson error for', url, err);
         throw err;
     });
