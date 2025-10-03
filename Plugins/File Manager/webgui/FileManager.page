@@ -1,0 +1,251 @@
+Title="File Manager"
+Icon="file-manager.png"
+---
+<?PHP
+/* Copyright 2024, Paul McCann
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ */
+
+$docroot ??= ($_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp');
+require_once "$docroot/webGui/include/Helpers.php";
+
+// add translations
+$_SERVER['REQUEST_URI'] = 'filemanager';
+require_once "$docroot/webGui/include/Translations.php";
+
+$plugin_cfg = parse_plugin_cfg('file-manager');
+$filemanager_enabled = $plugin_cfg['enabled'] ?? 'yes';
+$filemanager_port = $plugin_cfg['port'] ?? '8080';
+$filemanager_url = "http://{$_SERVER['HTTP_HOST']}:$filemanager_port";
+
+function check_filemanager_status() {
+  global $filemanager_port;
+  $url = "http://127.0.0.1:$filemanager_port/api/ping";
+  $context = stream_context_create([
+    'http' => [
+      'timeout' => 3,
+      'method' => 'GET'
+    ]
+  ]);
+  
+  $result = @file_get_contents($url, false, $context);
+  return $result !== false;
+}
+
+$filemanager_running = check_filemanager_status();
+?>
+
+<link type="text/css" rel="stylesheet" href="<?autov('/webGui/styles/jquery.ui.css')?>">
+<link type="text/css" rel="stylesheet" href="<?autov('/plugins/file-manager/styles/file-manager.css')?>">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<div id="title">
+  <span class="left">File Manager
+    <?if ($filemanager_running):?>
+      <span class="status running"><i class="fa fa-play green-text"></i></span>
+    <?else:?>
+      <span class="status stopped"><i class="fa fa-stop red-text"></i></span>
+    <?endif;?>
+  </span>
+</div>
+
+<div class="filemanager-container">
+  <?if ($filemanager_enabled === 'yes'):?>
+    <?if ($filemanager_running):?>
+      <div class="action-bar">
+        <button type="button" onclick="refreshFileManager()" class="btn btn-primary">
+          <i class="fa fa-refresh"></i> Refresh
+        </button>
+        <button type="button" onclick="openFileManagerNewTab()" class="btn btn-secondary">
+          <i class="fa fa-external-link"></i> Open in New Tab
+        </button>
+        <button type="button" onclick="toggleFullscreen()" class="btn btn-outline">
+          <i class="fa fa-expand" id="fullscreen-icon"></i> <span id="fullscreen-text">Fullscreen</span>
+        </button>
+      </div>
+
+      <div class="filemanager-frame-container">
+        <div class="frame-loading" id="frame-loading" style="display: none;">
+          <i class="fa fa-spinner fa-spin"></i>
+          <span>Loading File Manager...</span>
+        </div>
+        <iframe 
+          id="filemanager-frame"
+          src="<?=$filemanager_url?>"
+          width="100%" 
+          height="800px"
+          frameborder="0"
+          onload="hideFrameLoading()">
+        </iframe>
+      </div>
+    <?else:?>
+      <div class="notice">
+        <i class="fa fa-exclamation-triangle red-text"></i>
+        <b>Service Not Running</b><br>
+        The File Manager service is currently stopped. Start the service to access file management features.
+        <br><br>
+        <button type="button" onclick="startFileManager()" class="btn btn-primary">
+          <i class="fa fa-play"></i> Start Service
+        </button>
+        <button type="button" onclick="window.location.reload()" class="btn btn-secondary">
+          <i class="fa fa-refresh"></i> Refresh Page
+        </button>
+      </div>
+    <?endif;?>
+  <?else:?>
+    <div class="notice">
+      <i class="fa fa-info-circle"></i>
+      <b>Service Disabled</b><br>
+      File Manager is currently disabled. Enable it in the plugin configuration to access file management features.
+      <br><br>
+      <button type="button" onclick="window.location.href='/Settings/PluginManager'" class="btn btn-primary">
+        <i class="fa fa-cog"></i> Plugin Settings
+      </button>
+    </div>
+  <?endif;?>
+
+  <div class="info-section" style="margin-top: 20px;">
+    <h3>Service Information</h3>
+    <table class="tablesorter">
+      <tr>
+        <td>Status:</td>
+        <td>
+          <?if ($filemanager_running):?>
+            <span class="green-text"><i class="fa fa-check"></i> Running</span>
+          <?else:?>
+            <span class="red-text"><i class="fa fa-times"></i> Stopped</span>
+          <?endif;?>
+        </td>
+      </tr>
+      <tr>
+        <td>Port:</td>
+        <td><?=$filemanager_port?></td>
+      </tr>
+      <tr>
+        <td>URL:</td>
+        <td><a href="<?=$filemanager_url?>" target="_blank"><?=$filemanager_url?></a></td>
+      </tr>
+      <tr>
+        <td>Plugin Version:</td>
+        <td><?=plugin('version', '/boot/config/plugins/file-manager.plg')?></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<script>
+function refreshFileManager() {
+  document.getElementById('frame-loading').style.display = 'block';
+  var frame = document.getElementById('filemanager-frame');
+  frame.src = frame.src;
+}
+
+function openFileManagerNewTab() {
+  window.open('<?=$filemanager_url?>', '_blank');
+}
+
+function hideFrameLoading() {
+  document.getElementById('frame-loading').style.display = 'none';
+}
+
+function toggleFullscreen() {
+  var container = document.querySelector('.filemanager-frame-container');
+  var frame = document.getElementById('filemanager-frame');
+  var icon = document.getElementById('fullscreen-icon');
+  var text = document.getElementById('fullscreen-text');
+  
+  if (container.classList.contains('fullscreen')) {
+    container.classList.remove('fullscreen');
+    frame.style.height = '800px';
+    icon.className = 'fa fa-expand';
+    text.textContent = 'Fullscreen';
+  } else {
+    container.classList.add('fullscreen');
+    frame.style.height = 'calc(100vh - 100px)';
+    icon.className = 'fa fa-compress';
+    text.textContent = 'Exit Fullscreen';
+  }
+}
+
+function startFileManager() {
+  // This would need to call an admin endpoint to start the service
+  alert('Service management functionality would be implemented here');
+}
+</script>
+
+<style>
+.filemanager-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.action-bar {
+  margin: 20px 0;
+  text-align: left;
+}
+
+.action-bar .btn {
+  margin-right: 10px;
+}
+
+.filemanager-frame-container {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.filemanager-frame-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  border: none;
+  border-radius: 0;
+}
+
+.frame-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.status.running .fa {
+  color: #5cb85c;
+}
+
+.status.stopped .fa {
+  color: #d9534f;
+}
+
+.info-section {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.info-section h3 {
+  margin-top: 0;
+}
+
+.notice {
+  background: #fcf8e3;
+  border: 1px solid #faebcc;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.notice i {
+  margin-right: 8px;
+}
+</style>

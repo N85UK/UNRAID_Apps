@@ -11,21 +11,33 @@ A modern, feature-rich file management plugin for UNRAID systems with an intuiti
 - **Mobile Responsive**: Works seamlessly on desktop, tablet, and mobile devices
 - **Integration Ready**: Built on NestJS with comprehensive API endpoints
 
-## 📦 Installation
+## 📦 Installation Options
 
-### Method 1: Direct URL Installation (Recommended)
-1. Open your UNRAID WebGUI
-2. Navigate to **Plugins** → **Install Plugin**
-3. Enter the plugin URL:
-   ```
-   https://github.com/YOUR_USERNAME/unraid-file-manager/releases/latest/download/file-manager.plg
-   ```
-4. Click **Install**
+### Option A: Advanced Plugin (Full Featured)
+**Install URL:** 
+```
+https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/File%20Manager/file-manager.plg
+```
 
-### Method 2: Manual Installation
-1. Download the latest `file-manager.plg` from [Releases](https://github.com/YOUR_USERNAME/unraid-file-manager/releases)
-2. Upload to your UNRAID server
-3. Install via the Plugin Manager
+**Features:**
+- ✅ Complete NestJS backend with FileBrowser integration
+- ✅ Advanced file operations and management
+- ✅ User authentication and permissions
+- ✅ Real-time status monitoring
+- ✅ Professional web interface
+- ✅ Mobile responsive design
+
+### Option B: Simple Plugin (Basic)
+**Install URL:** 
+```
+https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/File%20Manager/file-manager-simple.plg
+```
+
+**Features:**
+- ✅ Basic UNRAID integration
+- ✅ Links to existing file browsers
+- ✅ Lightweight implementation
+- ✅ Quick setup
 
 ## 🛠️ Configuration
 
@@ -33,11 +45,18 @@ After installation, access the plugin via:
 - **Main Interface**: `Settings` → `File Manager`
 - **Advanced Settings**: `Settings` → `File Manager Settings`
 
-### Initial Setup
+### Initial Setup (Advanced Plugin)
 1. Configure file browser settings
 2. Set user permissions
 3. Customize interface preferences
 4. Test file operations
+
+### Service Configuration
+The advanced plugin runs a FileBrowser service on port 8080 (configurable):
+- **Default Port**: 8080
+- **Service**: Automatically started with UNRAID
+- **Authentication**: Integrated with UNRAID users
+- **Virtual Roots**: Pre-configured for common UNRAID paths
 
 ## 📱 Usage
 
@@ -63,17 +82,17 @@ The plugin provides REST API endpoints for programmatic access:
 ### Build from Source
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/unraid-file-manager.git
-cd unraid-file-manager
+git clone https://github.com/N85UK/UnRiaid_Apps.git
+cd "UnRiaid_Apps/Plugins/File Manager"
 
 # Install dependencies
 npm install
 
 # Build the plugin
-npm run build:plg
+./dev/build-plg.sh --vendor
 
-# Build with vendor dependencies (for distribution)
-npm run build:plg -- --vendor
+# Or use the setup script
+./setup-advanced.sh
 ```
 
 ### Development Mode
@@ -88,14 +107,26 @@ npm test
 npm run type-check
 ```
 
+### Plugin Structure
+```
+Plugins/File Manager/
+├── src/                    # TypeScript source code
+├── webgui/                 # UNRAID web interface files
+├── scripts/                # Installation/removal scripts
+├── dev/                    # Build tools and scripts
+├── dist/                   # Compiled JavaScript
+├── file-manager.plg        # Plugin manifest
+└── file-manager-*.tar.xz   # Plugin archive
+```
+
 ## 📸 Screenshots
 
 | Feature | Preview |
 |---------|---------|
-| Main Interface | ![Main Interface](screenshots/main-interface.png) |
-| File Browser | ![File Browser](screenshots/file-browser.png) |
-| Settings Panel | ![Settings](screenshots/settings.png) |
-| Mobile View | ![Mobile](screenshots/mobile-view.png) |
+| Main Interface | Modern file manager with responsive design |
+| File Browser | Advanced file operations and navigation |
+| Settings Panel | Configuration options and preferences |
+| Mobile View | Optimized mobile interface |
 
 ## 🆘 Support
 
@@ -105,7 +136,7 @@ npm run type-check
 - **UI not loading**: Clear browser cache and check network connectivity
 
 ### Getting Help
-1. Check the [Issues](https://github.com/YOUR_USERNAME/unraid-file-manager/issues) page
+1. Check the [Issues](https://github.com/N85UK/UnRiaid_Apps/issues) page
 2. Search existing discussions
 3. Create a new issue with:
    - UNRAID version
@@ -141,10 +172,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 Stats
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/YOUR_USERNAME/unraid-file-manager)
-![GitHub downloads](https://img.shields.io/github/downloads/YOUR_USERNAME/unraid-file-manager/total)
-![GitHub issues](https://img.shields.io/github/issues/YOUR_USERNAME/unraid-file-manager)
-![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/unraid-file-manager)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/N85UK/UnRiaid_Apps)
+![GitHub downloads](https://img.shields.io/github/downloads/N85UK/UnRiaid_Apps/total)
+![GitHub issues](https://img.shields.io/github/issues/N85UK/UnRiaid_Apps)
+![GitHub stars](https://img.shields.io/github/stars/N85UK/UnRiaid_Apps)
 
 ---
 

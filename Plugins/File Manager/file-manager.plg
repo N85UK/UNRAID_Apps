@@ -3,7 +3,7 @@
 <!ENTITY name      "file-manager">
 <!ENTITY author    "Paul McCann">
 <!ENTITY version   "2025.10.03">
-<!ENTITY md5       "26a0a4a554d5e7813ea7506e7c14c39a">
+<!ENTITY md5       "b4787bb59469d1831e41cd295d0dfc8f">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/File%20Manager/file-manager.plg">
@@ -38,7 +38,7 @@ fi
 </FILE>
 
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.tar.xz" Run="upgradepkg --install-new">
-<URL>&gitURL;/releases/download/v&version;/&name;-&version;.tar.xz</URL>
+<URL>&gitURL;/raw/main/Plugins/File%20Manager/&name;-&version;.tar.xz</URL>
 <MD5>&md5;</MD5>
 </FILE>
 

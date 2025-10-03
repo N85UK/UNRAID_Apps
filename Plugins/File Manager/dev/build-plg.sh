@@ -37,12 +37,15 @@ mkdir -p "$PLUGIN_DIR/config"
 
 # Copy core module files
 echo "Copying module files..."
-rsync -a --delete "$BASE_DIR/src/unraid-api/modules/filemanager/" "$PLUGIN_DIR/modules/filemanager/"
+if [ -d "$BASE_DIR/src/unraid-api/modules/filemanager" ]; then
+  mkdir -p "$PLUGIN_DIR/modules"
+  rsync -a "$BASE_DIR/src/unraid-api/modules/filemanager/" "$PLUGIN_DIR/modules/filemanager/"
+fi
 
 # Copy webGUI files
 echo "Copying webGUI files..."
 if [ -d "$BASE_DIR/webgui" ]; then
-  rsync -a "$BASE_DIR/webgui/" "$PLUGIN_DIR/webgui/"
+  rsync -a "$BASE_DIR/webgui/" "$PLUGIN_DIR/"
 fi
 
 # Copy scripts
@@ -196,8 +199,8 @@ cat > "$TMP_DIR/file-manager.plg" << 'EOF'
 <!ENTITY version   "VERSION_PLACEHOLDER">
 <!ENTITY md5       "MD5_PLACEHOLDER">
 <!ENTITY launch    "Settings/FileManager">
-<!ENTITY gitURL    "https://github.com/yourusername/unraid-file-manager">
-<!ENTITY pluginURL "&gitURL;/raw/main/file-manager.plg">
+<!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
+<!ENTITY pluginURL "&gitURL;/raw/main/Plugins/File%20Manager/file-manager.plg">
 <!ENTITY support   "&gitURL;/issues">
 ]>
 
@@ -229,7 +232,7 @@ fi
 </FILE>
 
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.tar.xz" Run="upgradepkg --install-new">
-<URL>&gitURL;/releases/download/&version;/&name;-&version;.tar.xz</URL>
+<URL>&gitURL;/raw/main/Plugins/File%20Manager/&name;-&version;.tar.xz</URL>
 <MD5>&md5;</MD5>
 </FILE>
 
