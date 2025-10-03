@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.24">
-<!ENTITY md5       "7cf47e5e4f9eb6b17bdcb15880222f41">
+<!ENTITY version   "2025.10.04.01">
+<!ENTITY md5       "83e43aa82241ef460bb4b9e12eff0b0e">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -11,10 +11,16 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- XML syntax validated - 2025.10.03.24 -->
+<!-- XML syntax validated - 2025.10.04.01 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.04.01 (Correct Archive Root &amp; Fallback Rename)
+- Repackaged archive with proper `file-manager/` top-level directory instead of `build/`
+- Added install fallback to rename `build` to `file-manager` if an older archive layout is encountered
+- Ensures extraction populates /usr/local/emhttp/plugins/file-manager and GUI updates version
+- No code changes to runtime scripts; distribution structure fix only
+
 ###2025.10.03.24 (Absolute Paths &amp; Installer Fail-safe Distribution)
 - Updated all frontend fetch calls to absolute `/plugins/file-manager/*.php` paths to avoid resolution under `/Settings/` causing empty/HTML responses
 - Synchronized distributed `install_binary.php` with shutdown fail-safe (always-JSON) and enhanced diagnostics
@@ -123,6 +129,11 @@ echo "Cleaned old installation"
 # Extract and install plugin
 cd /usr/local/emhttp/plugins
 tar -xf /boot/config/plugins/&name;/&name;-&version;.txz
+
+# If archive root was 'build', rename to expected plugin directory name
+if [ -d build ] && [ ! -d &name; ]; then
+  mv build &name;
+fi
 
 # Set proper permissions
 chmod -R 755 /usr/local/emhttp/plugins/&name;
