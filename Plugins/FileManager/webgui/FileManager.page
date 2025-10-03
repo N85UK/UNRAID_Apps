@@ -90,6 +90,9 @@ $filemanager_running = check_filemanager_status();
         <button type="button" onclick="startFileManager()" class="btn btn-primary">
           <i class="fa fa-play"></i> Start Service
         </button>
+        <button type="button" onclick="showAdminSetup()" class="btn btn-warning">
+          <i class="fa fa-user-cog"></i> Setup Admin
+        </button>
         <button type="button" onclick="installFileBrowser()" class="btn btn-warning">
           <i class="fa fa-download"></i> Install FileBrowser Binary
         </button>
@@ -197,31 +200,7 @@ function startFileManager() {
   xhr.send();
 }
 
-function installFileBrowser() {
-  if (confirm('This will download and install the FileBrowser binary. Continue?')) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/plugins/file-manager/install_binary.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        try {
-          var response = JSON.parse(xhr.responseText);
-          if (xhr.status === 200) {
-            alert('Success: ' + response.message);
-            setTimeout(function() {
-              window.location.reload();
-            }, 3000);
-          } else {
-            alert('Error: ' + response.message);
-          }
-        } catch(e) {
-          alert('Installation error. Check logs for details.');
-        }
-      }
-    };
-    xhr.send();
-  }
-}
+function installFileBrowser() {\n  if (confirm('This will download and install the FileBrowser binary. Continue?')) {\n    var xhr = new XMLHttpRequest();\n    xhr.open('POST', '/plugins/file-manager/install_binary.php', true);\n    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');\n    xhr.onreadystatechange = function() {\n      if (xhr.readyState === 4) {\n        try {\n          var response = JSON.parse(xhr.responseText);\n          if (xhr.status === 200) {\n            alert('Success: ' + response.message);\n            setTimeout(function() {\n              window.location.reload();\n            }, 3000);\n          } else {\n            alert('Error: ' + response.message + (response.details ? '\\n\\nDetails: ' + response.details : ''));\n          }\n        } catch(e) {\n          alert('Installation error. Response: ' + xhr.responseText);\n        }\n      }\n    };\n    xhr.send();\n  }\n}\n\nfunction showAdminSetup() {\n  var username = prompt('Enter admin username:', 'admin');\n  if (username === null) return;\n  \n  var password = prompt('Enter admin password:', 'admin');\n  if (password === null) return;\n  \n  if (!username || !password) {\n    alert('Both username and password are required');\n    return;\n  }\n  \n  var xhr = new XMLHttpRequest();\n  xhr.open('POST', '/plugins/file-manager/setup_admin.php', true);\n  xhr.setRequestHeader('Content-Type', 'application/json');\n  xhr.onreadystatechange = function() {\n    if (xhr.readyState === 4) {\n      try {\n        var response = JSON.parse(xhr.responseText);\n        if (xhr.status === 200) {\n          alert('Success: ' + response.message + '\\n\\nUsername: ' + response.username + '\\nURL: ' + response.url);\n          setTimeout(function() {\n            window.location.reload();\n          }, 3000);\n        } else {\n          alert('Error: ' + response.message);\n        }\n      } catch(e) {\n        alert('Setup error. Response: ' + xhr.responseText);\n      }\n    }\n  };\n  xhr.send(JSON.stringify({username: username, password: password}));\n}
 </script>
 
 <style>

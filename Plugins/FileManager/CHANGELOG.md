@@ -30,6 +30,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 All notable changes to this project will be documented in this file.
 
+## [2025.10.03.6] - 2025-10-03 (v1.5 - Enhanced Error Handling & Debugging)
+
+### Enhanced
+- Completely rewritten install_binary.php with comprehensive error handling
+- Added detailed debug logging to /tmp/filebrowser_install.log
+- Improved download reliability using curl instead of wget
+- Enhanced error messages with specific failure details
+- Added file size validation to detect download issues
+- Added Setup Admin button to main interface for easier access
+- Better installation verification and cleanup
+- Improved user feedback with detailed error information
+
 ## [2025.10.03.5] - 2025-10-03 (v1.4 - Security Documentation Update)
 
 ### Fixed

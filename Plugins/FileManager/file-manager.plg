@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.5">
-<!ENTITY md5       "2c02ce98a0333abd9cbcf894a1914882">
+<!ENTITY version   "2025.10.03.6">
+<!ENTITY md5       "c675c848ef43bb045bc3ed0970ca3f19">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
@@ -14,6 +14,16 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.6 (v1.5 - Enhanced Error Handling & Debugging)
+- Completely rewritten install_binary.php with comprehensive error handling
+- Added detailed debug logging to /tmp/filebrowser_install.log
+- Improved download reliability using curl instead of wget
+- Enhanced error messages with specific failure details
+- Added file size validation to detect download issues
+- Added Setup Admin button to main interface for easier access
+- Better installation verification and cleanup
+- Improved user feedback with detailed error information
+
 ###2025.10.03.5 (v1.4 - Security Documentation Update)
 - Removed placeholder email addresses from security documentation
 - Updated security reporting to use GitHub Security Advisories
