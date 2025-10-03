@@ -26,17 +26,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added rate limiting for API endpoints
 - Enhanced input validation and sanitization
 
-## [2025.10.03] - 2025-10-03
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [2025.10.03.1] - 2025-10-03 (v1 Release)
 
 ### Added
-- Initial release of UNRAID File Manager Plugin
-- Complete NestJS backend with TypeScript
-- Modern PHP web interface with CSS Grid layout
-- Comprehensive file management features
-- User role-based access control
-- Real-time status monitoring
-- Mobile-responsive design
-- Professional UI with modern design principles
+- First stable production release
+- UNRAID 7.2+ native API integration
+- Enhanced compatibility with UNRAID Connect
+- GraphQL API support for modern UNRAID systems
+- Professional documentation and support
+- No longer in beta - production ready
 
 ### Features
 - **File Operations**: Upload, download, move, copy, delete

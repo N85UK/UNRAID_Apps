@@ -1,2 +1,8 @@
 .DS_Store
 /Old Working Files
+
+# Plugin archives (keep latest only)
+Plugins/FileManager/file-manager-2025.10.03.txz
+Plugins/FileManager/file-manager-2025.10.03a.txz
+Plugins/FileManager/file-manager-2025.10.03b.txz
+Plugins/FileManager/file-manager-2025.10.03c.txz

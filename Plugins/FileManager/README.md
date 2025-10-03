@@ -1,8 +1,8 @@
-# UNRAID File Manager Plugin
+# File Manager Plugin for UNRAID v1.0
 
-A modern, feature-rich file management plugin for UNRAID 7.2+ systems with native API integration and an intuitive web interface.
+A powerful, modern file manager plugin for UNRAID servers, providing an intuitive web-based interface for file management operations. **Now in stable v1 release - production ready!**
 
-## 🚀 Features
+## Features
 
 - **UNRAID 7.2+ Native Integration**: Built for UNRAID's native API system
 - **Modern Web Interface**: Clean, responsive FileBrowser-based design with dark/light theme support
