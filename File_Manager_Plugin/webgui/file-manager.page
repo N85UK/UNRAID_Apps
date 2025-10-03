@@ -157,7 +157,7 @@ $service_url = "{$protocol}://{$hostname}:{$service_port}";
             </tr>
             <tr>
                 <th>Plugin Version</th>
-                <td>2025.10.03.17</td>
+                <td>2025.10.03.19</td>
             </tr>
         </table>
     </div>

@@ -168,6 +168,14 @@ To remove the plugin:
 
 ## 📋 Version History
 
+### v2025.10.03.19 (Latest - Enhanced Installation)
+- **Enhanced Binary Installation**: Network checks, multiple download sources, comprehensive error handling
+- **Improved Reliability**: Fallback URLs (GitHub, JSDeliver, Raw GitHub), retry logic, timeout handling
+- **Better Diagnostics**: Detailed logging, binary testing, error messages
+- **Code Cleanup**: Removed unused files, optimized archive
+- **Version Consistency**: Fixed version mismatches across all files
+- **Security**: Enhanced input validation and secure operations
+
 ### v2.0 (2025.10.03.10)
 - Complete rebuild with improved reliability
 - Enhanced user interface and experience

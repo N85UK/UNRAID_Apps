@@ -8,25 +8,34 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 **Modern web-based file management for UNRAID**
 
 - **Location**: [`File_Manager_Plugin/`](File_Manager_Plugin/)
-- **Status**: ✅ **Ready for Production Use**
+- **Status**: ✅ **Ready for Production Use - v2025.10.03.19**
 - **Installation**: `https://github.com/N85UK/UnRiaid_Apps/raw/main/File_Manager_Plugin/file-manager.plg`
 
 **Key Features:**
 - 🌐 Modern responsive web interface
 - 📱 Mobile-friendly design
-- 🔧 Automated setup process (3 simple steps)
+- 🔧 **Enhanced Installation**: Network checks, multiple download sources, comprehensive error handling
 - 🔒 Secure user authentication
 - 📂 Access to all UNRAID shares and drives
 - ⬆️⬇️ Upload/download with drag-and-drop
 - 🗜️ Archive creation and extraction
 - 🔄 Real-time service monitoring
+- 🛠️ **Improved Reliability**: Fallback URLs, retry logic, detailed diagnostics
 
 **Quick Setup:**
 1. Install plugin via URL above
-2. Click "Install FileBrowser Binary"
-3. Click "Setup Admin User"  
+2. Click "Install FileBrowser Binary" (now with enhanced error handling)
+3. Click "Setup Admin User"
 4. Click "Start Service"
 5. Access at `http://your-server:8080`
+
+**Latest Improvements (v2025.10.03.19):**
+- ✅ Network connectivity verification before download
+- ✅ Multiple download sources (GitHub, JSDeliver, Raw GitHub)
+- ✅ Comprehensive error diagnostics and logging
+- ✅ Binary testing before and after installation
+- ✅ Automatic fallback and retry mechanisms
+- ✅ Enhanced security and input validation
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**
@@ -82,17 +91,22 @@ import { FileManagerModule } from './modules/filemanager/filemanager.module';
 ### Repository Structure
 ```
 UnRiaid_Apps/
-├── File_Manager_Plugin/        # Ready-to-install UNRAID plugin
-│   ├── file-manager.plg        # Plugin manifest
-│   ├── webgui/                 # PHP-based interface
-│   ├── scripts/                # Installation scripts
+├── File_Manager_Plugin/        # Ready-to-install UNRAID plugin v2025.10.03.19
+│   ├── file-manager.plg        # Plugin manifest (XML validated)
+│   ├── webgui/                 # PHP-based interface with enhanced error handling
+│   ├── scripts/                # Installation/removal scripts
 │   └── README.md               # Installation guide
-├── Bounty_Submission/          # UNRAID API integration
-│   ├── api/src/.../filemanager/ # NestJS modules
-│   ├── web/pages/              # Vue.js components
+├── Bounty_Submission/          # UNRAID API integration (complete)
+│   ├── api/src/unraid-api/modules/filemanager/  # NestJS module
+│   ├── web/pages/              # Vue.js WebGUI
 │   └── README.md               # Integration guide
 ├── AWS_EUM/                    # Docker application
-└── MIGRATION.md                # Architecture explanation
+└── Documentation/              # Updated project documentation
+    ├── README.md               # This file
+    ├── CHANGELOG.md            # Version history
+    ├── CONTRIBUTING.md         # Development guidelines
+    ├── SECURITY.md             # Security policy
+    └── MIGRATION.md            # Migration guides
 ```
 
 ### Key Differences
@@ -108,11 +122,12 @@ UnRiaid_Apps/
 ## 📋 **System Requirements**
 
 ### For Plugin Version
-- **UNRAID**: 6.8+ (tested through 7.2+)
+- **UNRAID**: 6.8.0+ (tested through 7.2+)
 - **Architecture**: x86_64, ARM64, ARMv7
 - **Memory**: 50MB RAM
 - **Storage**: 25MB disk space
-- **Network**: Port 8080 (configurable)
+- **Network**: **Internet access required** for initial FileBrowser binary download
+- **Connectivity**: HTTPS access to GitHub (with automatic fallbacks)
 
 ### For API Integration
 - **UNRAID API**: Development environment
@@ -135,8 +150,8 @@ UnRiaid_Apps/
 ## 🔄 **Version Status**
 
 ### Current Active Projects
-- ✅ **File Manager Plugin v2.0**: Production ready, actively maintained
-- ✅ **Bounty Submission**: Complete, ready for API integration
+- ✅ **File Manager Plugin v2025.10.03.19**: Production ready with enhanced installation
+- ✅ **Bounty Submission**: Complete, ready for UNRAID API integration
 - ✅ **AWS EUM**: Stable, minimal maintenance
 
 ### Discontinued Projects

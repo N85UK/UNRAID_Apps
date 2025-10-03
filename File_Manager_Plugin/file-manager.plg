@@ -3,7 +3,7 @@
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
 <!ENTITY version   "2025.10.03.19">
-<!ENTITY md5       "79a443b853b26043b86de439383acc89">
+<!ENTITY md5       "c9d035cfb9edc0a47ce75d6beb5546e2">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -15,11 +15,14 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
-###2025.10.03.19 (XML Validation Fix)
-- Fixed XML syntax error (extra '>' character in MD5 entity)
-- Validated XML structure with xmllint
-- Cache-busting version increment to force fresh download
-- Should resolve 'XML file doesn't exist or xml parse error'
+###2025.10.03.19 (Enhanced Binary Installation & Bug Fixes)
+- **Enhanced FileBrowser Installation**: Added network connectivity checks, multiple download sources (GitHub, JSDeliver, Raw GitHub), and comprehensive error handling
+- **Improved Error Diagnostics**: Better logging, binary testing before/after installation, and detailed error messages
+- **Version Consistency**: Fixed version number mismatch across all files
+- **Code Cleanup**: Removed unused debug files and optimized archive size
+- **Reliability Improvements**: Added fallback download URLs, retry logic, and timeout handling
+- **Security**: Enhanced input validation and secure file operations
+- **Cache-busting**: Updated MD5 hash for fresh download
 
 ###2025.10.03.18 (JavaScript Path Fix)
 - Fixed JavaScript fetch URLs to use relative paths (install_binary.php not /plugins/file-manager/...)

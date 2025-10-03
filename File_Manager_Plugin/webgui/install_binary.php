@@ -45,9 +45,26 @@ function logDebug($message) {
 try {
     logDebug('Starting FileBrowser installation');
     
+    // Check network connectivity first
+    logDebug('Checking network connectivity...');
+    $networkTest = shell_exec('curl -s --connect-timeout 5 --max-time 10 https://github.com >/dev/null && echo "OK" || echo "FAIL"');
+    if (trim($networkTest) !== 'OK') {
+        throw new Exception('No internet connectivity detected. Please check network settings.');
+    }
+    logDebug('Network connectivity confirmed');
+    
     // Check if binary already exists
     if (file_exists('/usr/local/bin/filebrowser')) {
-        jsonExit('success', 'FileBrowser binary already installed', ['path' => '/usr/local/bin/filebrowser']);
+        // Verify it's executable and working
+        $testCmd = "/usr/local/bin/filebrowser --version 2>&1";
+        exec($testCmd, $testOutput, $testReturn);
+        if ($testReturn === 0 && !empty($testOutput)) {
+            logDebug('FileBrowser binary already exists and is working');
+            jsonExit('success', 'FileBrowser binary already installed', ['path' => '/usr/local/bin/filebrowser']);
+        } else {
+            logDebug('Existing binary is not working, removing it');
+            unlink('/usr/local/bin/filebrowser');
+        }
     }
     
     // Detect architecture
@@ -69,76 +86,162 @@ try {
     }
     
     $version = 'v2.44.0';
-    $downloadUrl = "https://github.com/filebrowser/filebrowser/releases/download/$version/linux-$fbArch-filebrowser.tar.gz";
-    logDebug("Download URL: $downloadUrl");
+    
+    // Multiple download sources for reliability
+    $downloadSources = [
+        'primary' => "https://github.com/filebrowser/filebrowser/releases/download/$version/linux-$fbArch-filebrowser.tar.gz",
+        'fallback1' => "https://cdn.jsdelivr.net/gh/filebrowser/filebrowser@$version/linux-$fbArch-filebrowser.tar.gz",
+        'fallback2' => "https://raw.githubusercontent.com/filebrowser/filebrowser/$version/linux-$fbArch-filebrowser.tar.gz"
+    ];
+    
+    $downloadUrl = null;
+    $downloadSuccess = false;
+    
+    // Try each download source
+    foreach ($downloadSources as $sourceName => $url) {
+        logDebug("Trying download source: $sourceName - $url");
+        
+        // Test URL accessibility first
+        $testCmd = "curl -I --connect-timeout 10 --max-time 30 '$url' 2>/dev/null | head -n 1 | grep -E 'HTTP/[0-9.]+ (200|302)' >/dev/null && echo 'OK' || echo 'FAIL'";
+        $urlTest = trim(shell_exec($testCmd));
+        
+        if ($urlTest === 'OK') {
+            $downloadUrl = $url;
+            logDebug("Download source $sourceName is accessible");
+            break;
+        } else {
+            logDebug("Download source $sourceName is not accessible");
+        }
+    }
+    
+    if (!$downloadUrl) {
+        throw new Exception('All download sources are inaccessible. Please check internet connectivity and try again later.');
+    }
+    
+    logDebug("Selected download URL: $downloadUrl");
     
     // Create temporary directory
     $tempDir = '/tmp/filebrowser_install_' . uniqid();
     mkdir($tempDir, 0755, true);
     logDebug("Created temp directory: $tempDir");
     
-    // Download with curl
-    $downloadCmd = "curl -L -f -o '$tempDir/filebrowser.tar.gz' '$downloadUrl' 2>&1";
+    // Download with curl (with retries and timeout)
+    $downloadCmd = "curl -L -f --connect-timeout 10 --max-time 300 --retry 3 --retry-delay 5 -o '$tempDir/filebrowser.tar.gz' '$downloadUrl' 2>&1";
     logDebug("Executing: $downloadCmd");
     exec($downloadCmd, $downloadOutput, $downloadReturn);
     
     if ($downloadReturn !== 0) {
-        throw new Exception('Download failed: ' . implode('\n', $downloadOutput));
+        $errorMsg = 'Download failed: ' . implode('\n', $downloadOutput);
+        logDebug($errorMsg);
+        throw new Exception($errorMsg);
     }
     
     // Verify download
     if (!file_exists("$tempDir/filebrowser.tar.gz")) {
-        throw new Exception('Downloaded file not found');
+        throw new Exception('Downloaded file not found after download attempt');
     }
     
     $fileSize = filesize("$tempDir/filebrowser.tar.gz");
     logDebug("Downloaded file size: $fileSize bytes");
     
     if ($fileSize < 1000) {
-        throw new Exception('Downloaded file too small, likely an error');
+        $content = file_get_contents("$tempDir/filebrowser.tar.gz");
+        if (strpos($content, 'Not Found') !== false || strpos($content, '404') !== false) {
+            throw new Exception('Download failed: File not found on server (404 error)');
+        }
+        throw new Exception("Downloaded file too small ($fileSize bytes), likely an error page instead of the binary");
     }
     
-    // Extract
-    $extractCmd = "cd '$tempDir' && tar -xzf filebrowser.tar.gz 2>&1";
+    // Extract with better error handling
+    $extractCmd = "cd '$tempDir' && tar -xzf filebrowser.tar.gz 2>&1 && ls -la filebrowser";
     logDebug("Executing: $extractCmd");
     exec($extractCmd, $extractOutput, $extractReturn);
     
     if ($extractReturn !== 0) {
-        throw new Exception('Extraction failed: ' . implode('\n', $extractOutput));
+        $errorMsg = 'Extraction failed: ' . implode('\n', $extractOutput);
+        logDebug($errorMsg);
+        throw new Exception($errorMsg);
     }
     
     // Verify extraction
     if (!file_exists("$tempDir/filebrowser")) {
-        throw new Exception('Extracted binary not found');
+        $listCmd = "ls -la '$tempDir/' 2>&1";
+        $listOutput = shell_exec($listCmd);
+        logDebug("Directory contents after extraction: $listOutput");
+        throw new Exception('Extracted binary not found. Archive may be corrupted or contain different file structure.');
     }
     
-    // Move to final location
-    $moveCmd = "mv '$tempDir/filebrowser' '/usr/local/bin/filebrowser' 2>&1";
+    // Check if binary is executable
+    if (!is_executable("$tempDir/filebrowser")) {
+        logDebug('Setting executable permissions on extracted binary');
+        chmod("$tempDir/filebrowser", 0755);
+    }
+    
+    // Test the binary before installation
+    $testExtractedCmd = "$tempDir/filebrowser --version 2>&1";
+    exec($testExtractedCmd, $testExtractedOutput, $testExtractedReturn);
+    
+    if ($testExtractedReturn !== 0) {
+        $errorMsg = 'Extracted binary test failed: ' . implode('\n', $testExtractedOutput);
+        logDebug($errorMsg);
+        throw new Exception($errorMsg);
+    }
+    
+    logDebug('Binary extraction and test successful');
+    
+    // Move to final location with backup
+    $finalPath = '/usr/local/bin/filebrowser';
+    if (file_exists($finalPath)) {
+        $backupPath = $finalPath . '.backup.' . time();
+        logDebug("Creating backup of existing binary: $backupPath");
+        rename($finalPath, $backupPath);
+    }
+    
+    $moveCmd = "mv '$tempDir/filebrowser' '$finalPath' 2>&1";
     logDebug("Executing: $moveCmd");
     exec($moveCmd, $moveOutput, $moveReturn);
     
     if ($moveReturn !== 0) {
-        throw new Exception('Move failed: ' . implode('\n', $moveOutput));
+        $errorMsg = 'Move failed: ' . implode('\n', $moveOutput);
+        logDebug($errorMsg);
+        throw new Exception($errorMsg);
     }
     
     // Set permissions
-    chmod('/usr/local/bin/filebrowser', 0755);
+    chmod($finalPath, 0755);
     logDebug('Set binary permissions');
     
     // Cleanup
     exec("rm -rf '$tempDir'");
     logDebug('Cleaned up temporary files');
     
-    // Verify installation
-    if (file_exists('/usr/local/bin/filebrowser') && is_executable('/usr/local/bin/filebrowser')) {
-        logDebug('Installation completed successfully');
-        jsonExit('success', 'FileBrowser binary installed successfully', [
-            'version' => $version,
-            'path' => '/usr/local/bin/filebrowser'
-        ]);
-    } else {
-        throw new Exception('Installation verification failed');
+    // Final verification
+    if (!file_exists($finalPath)) {
+        throw new Exception('Installation verification failed: binary not found at final location');
     }
+    
+    if (!is_executable($finalPath)) {
+        throw new Exception('Installation verification failed: binary is not executable');
+    }
+    
+    // Test final installation
+    $finalTestCmd = "$finalPath --version 2>&1";
+    exec($finalTestCmd, $finalTestOutput, $finalTestReturn);
+    
+    if ($finalTestReturn !== 0) {
+        $errorMsg = 'Final binary test failed: ' . implode('\n', $finalTestOutput);
+        logDebug($errorMsg);
+        throw new Exception($errorMsg);
+    }
+    
+    $versionOutput = trim(implode('\n', $finalTestOutput));
+    logDebug('Installation completed successfully');
+    jsonExit('success', 'FileBrowser binary installed successfully', [
+        'version' => $version,
+        'path' => $finalPath,
+        'binary_version' => $versionOutput,
+        'architecture' => $arch
+    ]);
     
 } catch (Exception $e) {
     logDebug('Exception: ' . $e->getMessage());
