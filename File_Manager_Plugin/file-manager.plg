@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.22">
-<!ENTITY md5       "dd06c1a638578d7f0a26f54a7b7f786d">
+<!ENTITY version   "2025.10.03.23">
+<!ENTITY md5       "c5da477d106366e6b198a3ed78e97653">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -11,13 +11,19 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- XML syntax validated - 2025.10.03.22 -->
+<!-- XML syntax validated - 2025.10.03.23 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.23 (Build Sync &amp; Version Display)
+- Synchronized build/webgui and source/webgui `install_binary.php` (shutdown fail-safe ensured in distributed build)
+- Updated GUI displayed version to 2025.10.03.22+ (previous page still showed .21)
+- Formatting fix for changelog bullet indentation
+- No functional code changes besides distribution sync
+
 ###2025.10.03.22 (Health Endpoint &amp; Diagnostics)
 - Added `health.php` endpoint for quick PHP/JSON verification
- - Enhanced frontend `safeFetchJson` with header logging &amp; health probe fallback
+- Enhanced frontend `safeFetchJson` with header logging &amp; health probe fallback
 - Added shutdown-based always-JSON installer earlier (carried forward)
 - Preparing for persistent empty-response root cause isolation
 
