@@ -5,7 +5,7 @@ This package bundles the AWS SMS App as a Community Applications (CA) template f
 ## ✅ Status: Ready for CA Submission
 
 The Docker image has been built and published to GitHub Container Registry:
-- **Image**: `ghcr.io/paulmccann140689/aws-eum:latest`
+- **Image**: `ghcr.io/n85uk/aws-eum:latest`
 - **Build Status**: ✅ Successful
 - **CA Template**: ✅ Configured
 
@@ -51,7 +51,7 @@ docker run -d \
   -e AWS_SECRET_ACCESS_KEY=your_secret \
   -e AWS_REGION=eu-west-2 \
   -v ./data:/app/data \
-  ghcr.io/paulmccann140689/aws-eum:latest
+  ghcr.io/n85uk/aws-eum:latest
 ```
 
 ## 📋 CA Submission Checklist
