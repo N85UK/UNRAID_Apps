@@ -174,18 +174,23 @@ function toggleFullscreen() {
 }
 
 function startFileManager() {
-  // Call the service management script
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/plugins/file-manager/start_service.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        alert('Service start command sent. Please refresh the page in a few seconds.');
-        setTimeout(function() {
-          window.location.reload();
-        }, 3000);
-      } else {
-        alert('Failed to start service. Check the logs for details.');
+      try {
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) {
+          alert('Success: ' + response.message);
+          setTimeout(function() {
+            window.location.reload();
+          }, 2000);
+        } else {
+          alert('Error: ' + response.message);
+        }
+      } catch(e) {
+        alert('Service management error. Check logs for details.');
       }
     }
   };
@@ -196,15 +201,21 @@ function installFileBrowser() {
   if (confirm('This will download and install the FileBrowser binary. Continue?')) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/plugins/file-manager/install_binary.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          alert('FileBrowser binary installation started. This may take a few minutes.');
-          setTimeout(function() {
-            window.location.reload();
-          }, 5000);
-        } else {
-          alert('Failed to start installation. Check the logs for details.');
+        try {
+          var response = JSON.parse(xhr.responseText);
+          if (xhr.status === 200) {
+            alert('Success: ' + response.message);
+            setTimeout(function() {
+              window.location.reload();
+            }, 3000);
+          } else {
+            alert('Error: ' + response.message);
+          }
+        } catch(e) {
+          alert('Installation error. Check logs for details.');
         }
       }
     };
