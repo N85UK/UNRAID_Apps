@@ -90,6 +90,9 @@ $filemanager_running = check_filemanager_status();
         <button type="button" onclick="startFileManager()" class="btn btn-primary">
           <i class="fa fa-play"></i> Start Service
         </button>
+        <button type="button" onclick="installFileBrowser()" class="btn btn-warning">
+          <i class="fa fa-download"></i> Install FileBrowser Binary
+        </button>
         <button type="button" onclick="window.location.reload()" class="btn btn-secondary">
           <i class="fa fa-refresh"></i> Refresh Page
         </button>
@@ -171,8 +174,42 @@ function toggleFullscreen() {
 }
 
 function startFileManager() {
-  // This would need to call an admin endpoint to start the service
-  alert('Service management functionality would be implemented here');
+  // Call the service management script
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/plugins/file-manager/start_service.php', true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        alert('Service start command sent. Please refresh the page in a few seconds.');
+        setTimeout(function() {
+          window.location.reload();
+        }, 3000);
+      } else {
+        alert('Failed to start service. Check the logs for details.');
+      }
+    }
+  };
+  xhr.send();
+}
+
+function installFileBrowser() {
+  if (confirm('This will download and install the FileBrowser binary. Continue?')) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/plugins/file-manager/install_binary.php', true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          alert('FileBrowser binary installation started. This may take a few minutes.');
+          setTimeout(function() {
+            window.location.reload();
+          }, 5000);
+        } else {
+          alert('Failed to start installation. Check the logs for details.');
+        }
+      }
+    };
+    xhr.send();
+  }
 }
 </script>
 

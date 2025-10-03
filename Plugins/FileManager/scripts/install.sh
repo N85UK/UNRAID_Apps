@@ -42,10 +42,10 @@ if [ ! -f /usr/local/bin/filebrowser ]; then
             ;;
     esac
     
-    FB_VERSION="v2.24.2"
-    FB_URL="https://github.com/filebrowser/filebrowser/releases/download/${FB_VERSION}/filebrowser-${FB_VERSION}-${FB_ARCH}.tar.gz"
+    FB_VERSION="v2.44.0"
+    FB_URL="https://github.com/filebrowser/filebrowser/releases/download/${FB_VERSION}/linux-${FB_ARCH}-filebrowser.tar.gz"
     
-    echo "Downloading FileBrowser ${FB_VERSION} for ${FB_ARCH}..."
+    echo "Downloading FileBrowser ${FB_VERSION} for linux-${FB_ARCH}..."
     if wget -O /tmp/filebrowser.tar.gz "$FB_URL"; then
         tar -xzf /tmp/filebrowser.tar.gz -C /tmp/
         mv /tmp/filebrowser /usr/local/bin/filebrowser
@@ -140,6 +140,35 @@ fi
 chown -R root:root "$PLUGIN_DIR"
 chown -R root:root "$CONFIG_DIR"
 chown -R root:root "$LOG_DIR"
+
+# Start the FileBrowser service if binary is available
+if [ -f /usr/local/bin/filebrowser ]; then
+    echo "Starting FileBrowser service..."
+    # Kill any existing instances
+    pkill -f filebrowser 2>/dev/null || true
+    
+    # Create FileBrowser config if it doesn't exist
+    FB_CONFIG="$CONFIG_DIR/config/filebrowser.json"
+    if [ ! -f "$FB_CONFIG" ]; then
+        echo "Creating FileBrowser configuration..."
+        cat > "$FB_CONFIG" << 'EOL'
+{
+  "port": 8080,
+  "baseURL": "",
+  "address": "0.0.0.0",
+  "log": "stdout",
+  "database": "/boot/config/plugins/file-manager/config/filebrowser.db",
+  "root": "/mnt"
+}
+EOL
+    fi
+    
+    # Start FileBrowser in background
+    nohup /usr/local/bin/filebrowser --config "$FB_CONFIG" > "$LOG_DIR/filebrowser.log" 2>&1 &
+    echo "FileBrowser service started on port 8080"
+else
+    echo "Warning: FileBrowser binary not found, service not started"
+fi
 
 echo "File Manager Plugin installation completed successfully"
 echo "Access the file manager through Settings -> File Manager"
