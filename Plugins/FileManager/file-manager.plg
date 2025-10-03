@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.3">
-<!ENTITY md5       "bdd7fba83cb361cfd9e28ba78022ec8d">
+<!ENTITY version   "2025.10.03.4">
+<!ENTITY md5       "8b058df495a7e9ee4a5b422510545b5c">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
@@ -14,6 +14,12 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.4 (v1.3 - Updated Icon)
+- Updated plugin icon to use file-explorer.png (better visual design)
+- Replaced placeholder icon with proper file explorer graphic
+- Enhanced visual consistency across UNRAID Settings interface
+- Icon now displays correctly in Settings menu and plugin pages
+
 ###2025.10.03.3 (v1.2 - Cross-Server Compatibility)
 - Fixed hardcoded URLs and ports for universal server compatibility
 - Dynamic hostname/IP detection works on any UNRAID server

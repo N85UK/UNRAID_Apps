@@ -30,6 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 All notable changes to this project will be documented in this file.
 
+## [2025.10.03.4] - 2025-10-03 (v1.3 - Updated Icon)
+
+### Changed
+- Updated plugin icon to use file-explorer.png (better visual design)
+- Replaced placeholder icon with proper file explorer graphic
+- Enhanced visual consistency across UNRAID Settings interface
+- Icon now displays correctly in Settings menu and plugin pages
+
 ## [2025.10.03.3] - 2025-10-03 (v1.2 - Cross-Server Compatibility)
 
 ### Fixed
