@@ -3,7 +3,7 @@
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
 <!ENTITY version   "2025.10.03.10">
-<!ENTITY md5       "a7a417a717aba3e7e3707bcb3773b662">
+<!ENTITY md5       "1731c1a6e44ef7884ba22b8f4ed773fc">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -59,12 +59,10 @@ tar -xf /boot/config/plugins/&name;/&name;-&version;.txz
 # Set proper permissions
 chmod -R 755 /usr/local/emhttp/plugins/&name;
 
-# Run installation script
+# Run installation script if it exists
 if [ -f /usr/local/emhttp/plugins/&name;/scripts/install.sh ]; then
   bash /usr/local/emhttp/plugins/&name;/scripts/install.sh
   echo "Installation script completed"
-else
-  echo "Warning: Installation script not found"
 fi
 
 echo "File Manager plugin installed successfully"

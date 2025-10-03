@@ -10,7 +10,12 @@ $docroot = $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 require_once "$docroot/webGui/include/Helpers.php";
 
 // Plugin configuration
-$plugin_cfg = parse_plugin_cfg('file-manager', true);
+$plugin_cfg = [];
+$config_file = '/boot/config/plugins/file-manager/settings.cfg';
+if (file_exists($config_file)) {
+    $plugin_cfg = parse_ini_file($config_file, true);
+}
+
 $service_enabled = $plugin_cfg['service'] ?? 'enabled';
 $service_port = $plugin_cfg['port'] ?? '8080';
 
@@ -41,7 +46,7 @@ function getPluginVersion() {
             return $matches[1];
         }
     }
-    return 'Unknown';
+    return '2025.10.03.10';
 }
 
 $plugin_version = getPluginVersion();
