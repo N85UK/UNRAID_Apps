@@ -16,7 +16,7 @@ require_once "$docroot/webGui/include/Helpers.php";
 $_SERVER['REQUEST_URI'] = 'filemanager';
 require_once "$docroot/webGui/include/Translations.php";
 
-$plugin_cfg = parse_plugin_cfg('file-manager');
+$plugin_cfg = parse_plugin_cfg('file-manager', true);
 $filemanager_enabled = $plugin_cfg['enabled'] ?? 'yes';
 $filemanager_port = $plugin_cfg['port'] ?? '8080';
 $filemanager_url = "http://{$_SERVER['HTTP_HOST']}:$filemanager_port";

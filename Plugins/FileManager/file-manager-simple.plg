@@ -5,7 +5,7 @@
 <!ENTITY version   "2025.10.03">
 <!ENTITY launch    "Tools/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
-<!ENTITY pluginURL "&gitURL;/raw/main/Plugins/File%20Manager/file-manager-simple.plg">
+<!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager-simple.plg">
 <!ENTITY support   "&gitURL;/issues">
 ]>
 

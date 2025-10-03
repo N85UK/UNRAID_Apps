@@ -200,7 +200,7 @@ cat > "$TMP_DIR/file-manager.plg" << 'EOF'
 <!ENTITY md5       "MD5_PLACEHOLDER">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
-<!ENTITY pluginURL "&gitURL;/raw/main/Plugins/File%20Manager/file-manager.plg">
+<!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
 <!ENTITY support   "&gitURL;/issues">
 ]>
 
@@ -232,7 +232,7 @@ fi
 </FILE>
 
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.tar.xz" Run="upgradepkg --install-new">
-<URL>&gitURL;/raw/main/Plugins/File%20Manager/&name;-&version;.tar.xz</URL>
+<URL>&gitURL;/raw/main/Plugins/FileManager/&name;-&version;.tar.xz</URL>
 <MD5>&md5;</MD5>
 </FILE>
 
