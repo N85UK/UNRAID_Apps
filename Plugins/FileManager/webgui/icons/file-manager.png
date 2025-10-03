@@ -1,0 +1,10 @@
+# File Manager Plugin Icon
+# This would typically be a PNG file, but for now creating a placeholder
+
+# To create the actual icon, you would:
+# 1. Create a 64x64 PNG icon with transparent background
+# 2. Use UNRAID's color scheme and design guidelines
+# 3. Save as /usr/local/emhttp/plugins/file-manager/icons/file-manager.png
+
+# For now, copy from a standard file manager icon or create one that matches UNRAID's style
+echo "Icon placeholder - replace with actual 64x64 PNG file"
