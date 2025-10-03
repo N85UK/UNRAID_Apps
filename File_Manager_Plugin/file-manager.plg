@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.13">
-<!ENTITY md5       "d8ccdfddd4ce37f7de707e1a23c4ab63">
+<!ENTITY version   "2025.10.03.14">
+<!ENTITY md5       "4acd159339923840996b69ad83218490">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -14,6 +14,11 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.14 (File Path Fix)
+- Fixed page file naming to match launch path (file-manager.page)
+- This should resolve the blank page issue in Settings -> File Manager
+- Page files now correctly named for UNRAID webGUI system
+
 ###2025.10.03.10 (v2.0 - Complete Rebuild)
 - Complete plugin rebuild with working functionality
 - Fixed installation issues requiring Force Install
