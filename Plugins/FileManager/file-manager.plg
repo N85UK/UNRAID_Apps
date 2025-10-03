@@ -37,8 +37,8 @@ fi
 </INLINE>
 </FILE>
 
-<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tar.xz" Run="upgradepkg --install-new">
-<URL>&gitURL;/raw/main/Plugins/FileManager/&name;-&version;.tar.xz</URL>
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.txz" Run="upgradepkg --install-new">
+<URL>&gitURL;/raw/main/Plugins/FileManager/&name;-&version;.txz</URL>
 <MD5>&md5;</MD5>
 </FILE>
 
@@ -46,7 +46,7 @@ fi
 <INLINE>
 # Extract and install plugin
 cd /usr/local/emhttp/plugins
-tar -xf /boot/config/plugins/&name;/&name;-&version;.tar.xz
+tar -xf /boot/config/plugins/&name;/&name;-&version;.txz
 
 # Run installation script
 if [ -f /usr/local/emhttp/plugins/&name;/scripts/install.sh ]; then
