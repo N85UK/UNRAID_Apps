@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.04.01">
-<!ENTITY md5       "83e43aa82241ef460bb4b9e12eff0b0e">
+<!ENTITY version   "2025.10.04.02">
+<!ENTITY md5       "95fe670e10a5f83e514104a88f632292">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -11,10 +11,16 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- XML syntax validated - 2025.10.04.01 -->
+<!-- XML syntax validated - 2025.10.04.02 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.04.02 (XML Escapes & GUI Version Update)
+- Escaped logical AND (&&) in install inline script to `&amp;&amp;` preventing XML parse errors
+- Quoted plugin directory reference in rename fallback for clarity
+- Updated displayed plugin version in UI to 2025.10.04.02
+- No functional runtime code changes beyond manifest formatting
+
 ###2025.10.04.01 (Correct Archive Root &amp; Fallback Rename)
 - Repackaged archive with proper `file-manager/` top-level directory instead of `build/`
 - Added install fallback to rename `build` to `file-manager` if an older archive layout is encountered
@@ -131,8 +137,8 @@ cd /usr/local/emhttp/plugins
 tar -xf /boot/config/plugins/&name;/&name;-&version;.txz
 
 # If archive root was 'build', rename to expected plugin directory name
-if [ -d build ] && [ ! -d &name; ]; then
-  mv build &name;
+if [ -d build ] &amp;&amp; [ ! -d "&name;" ]; then
+  mv build "&name;"
 fi
 
 # Set proper permissions
