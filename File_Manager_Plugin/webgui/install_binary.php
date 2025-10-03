@@ -82,58 +82,85 @@ try {
             $fbArch = 'armv7';
             break;
         default:
-            throw new Exception("Unsupported architecture: $arch");
+            $supported = ['x86_64 (amd64)', 'aarch64 (arm64)', 'armv7l (armv7)'];
+            throw new Exception("Unsupported architecture: $arch. Supported architectures: " . implode(', ', $supported));
     }
     
     $version = 'v2.44.0';
     
-    // Multiple download sources for reliability
-    $downloadSources = [
-        'primary' => "https://github.com/filebrowser/filebrowser/releases/download/$version/linux-$fbArch-filebrowser.tar.gz",
-        'fallback1' => "https://cdn.jsdelivr.net/gh/filebrowser/filebrowser@$version/linux-$fbArch-filebrowser.tar.gz",
-        'fallback2' => "https://raw.githubusercontent.com/filebrowser/filebrowser/$version/linux-$fbArch-filebrowser.tar.gz"
-    ];
+    // Use primary download source with retry logic
+    $downloadUrl = "https://github.com/filebrowser/filebrowser/releases/download/$version/linux-$fbArch-filebrowser.tar.gz";
+    logDebug("Download URL: $downloadUrl");
     
-    $downloadUrl = null;
-    $downloadSuccess = false;
+    // Test URL accessibility with retries
+    $maxRetries = 3;
+    $urlAccessible = false;
     
-    // Try each download source
-    foreach ($downloadSources as $sourceName => $url) {
-        logDebug("Trying download source: $sourceName - $url");
+    for ($retry = 1; $retry <= $maxRetries; $retry++) {
+        logDebug("Testing URL accessibility (attempt $retry/$maxRetries)");
         
-        // Test URL accessibility first
-        $testCmd = "curl -I --connect-timeout 10 --max-time 30 '$url' 2>/dev/null | head -n 1 | grep -E 'HTTP/[0-9.]+ (200|302)' >/dev/null && echo 'OK' || echo 'FAIL'";
+        $testCmd = "curl -I --connect-timeout 10 --max-time 30 '$downloadUrl' 2>/dev/null | head -n 1 | grep -E 'HTTP/[0-9.]+ (200|302)' >/dev/null && echo 'OK' || echo 'FAIL'";
         $urlTest = trim(shell_exec($testCmd));
         
         if ($urlTest === 'OK') {
-            $downloadUrl = $url;
-            logDebug("Download source $sourceName is accessible");
+            $urlAccessible = true;
+            logDebug("URL is accessible on attempt $retry");
             break;
         } else {
-            logDebug("Download source $sourceName is not accessible");
+            logDebug("URL test failed on attempt $retry");
+            if ($retry < $maxRetries) {
+                $waitTime = $retry * 2; // Exponential backoff: 2s, 4s, 6s
+                logDebug("Waiting {$waitTime}s before retry...");
+                sleep($waitTime);
+            }
         }
     }
     
-    if (!$downloadUrl) {
-        throw new Exception('All download sources are inaccessible. Please check internet connectivity and try again later.');
+    if (!$urlAccessible) {
+        $manualUrl = "https://github.com/filebrowser/filebrowser/releases/download/$version/linux-$fbArch-filebrowser.tar.gz";
+        throw new Exception('Download URL is not accessible after ' . $maxRetries . ' attempts. Please check your internet connection and try again later. If the problem persists, you can manually download from: ' . $manualUrl . ' and place the extracted binary at /usr/local/bin/filebrowser');
     }
     
-    logDebug("Selected download URL: $downloadUrl");
+    // Check available disk space (need at least 50MB)
+    $diskSpaceCmd = "df /tmp | tail -1 | awk '{print $4}'";
+    $availableBlocks = (int)trim(shell_exec($diskSpaceCmd));
+    $availableMB = $availableBlocks * 512 / 1024 / 1024; // Convert to MB
+    
+    logDebug("Available disk space: {$availableMB}MB");
+    
+    if ($availableMB < 50) {
+        throw new Exception("Insufficient disk space: {$availableMB}MB available, need at least 50MB for download and extraction.");
+    }
     
     // Create temporary directory
     $tempDir = '/tmp/filebrowser_install_' . uniqid();
     mkdir($tempDir, 0755, true);
     logDebug("Created temp directory: $tempDir");
     
-    // Download with curl (with retries and timeout)
-    $downloadCmd = "curl -L -f --connect-timeout 10 --max-time 300 --retry 3 --retry-delay 5 -o '$tempDir/filebrowser.tar.gz' '$downloadUrl' 2>&1";
+    // Download with curl (enhanced retry logic)
+    $downloadCmd = "curl -L -f --connect-timeout 10 --max-time 300 --retry 5 --retry-delay 2 --retry-max-time 120 -o '$tempDir/filebrowser.tar.gz' '$downloadUrl' 2>&1";
     logDebug("Executing: $downloadCmd");
     exec($downloadCmd, $downloadOutput, $downloadReturn);
     
     if ($downloadReturn !== 0) {
-        $errorMsg = 'Download failed: ' . implode('\n', $downloadOutput);
+        $errorMsg = 'Download failed after retries: ' . implode('\n', $downloadOutput);
         logDebug($errorMsg);
-        throw new Exception($errorMsg);
+        
+        // Check if it's a common error
+        $errorOutput = strtolower(implode(' ', $downloadOutput));
+        if (strpos($errorOutput, 'could not resolve host') !== false) {
+            throw new Exception('Network error: Could not resolve hostname. Please check your DNS settings.');
+        } elseif (strpos($errorOutput, 'connection timed out') !== false) {
+            throw new Exception('Network error: Connection timed out. Please check your internet connection.');
+        } elseif (strpos($errorOutput, 'ssl') !== false) {
+            throw new Exception('SSL error: There may be an issue with SSL certificates. Try again later.');
+        } elseif (strpos($errorOutput, '403') !== false) {
+            throw new Exception('Access denied (403): The download may be rate-limited. Please wait a few minutes and try again.');
+        } elseif (strpos($errorOutput, '404') !== false) {
+            throw new Exception('File not found (404): The FileBrowser version may not be available for your architecture.');
+        } else {
+            throw new Exception($errorMsg);
+        }
     }
     
     // Verify download
