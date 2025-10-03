@@ -1,0 +1,60 @@
+Title="File Manager Debug"
+Icon="file-manager.png"
+---
+<?PHP
+/* File Manager Plugin Debug Version */
+
+echo "<h1>File Manager Debug Information</h1>";
+echo "<p>PHP Version: " . phpversion() . "</p>";
+echo "<p>Current Time: " . date('Y-m-d H:i:s') . "</p>";
+echo "<p>Plugin Directory: " . __DIR__ . "</p>";
+
+// Check if files exist
+$files_to_check = [
+    '/usr/local/bin/filebrowser',
+    '/boot/config/plugins/file-manager/settings.cfg',
+    __DIR__ . '/file-manager.png',
+    __DIR__ . '/install_binary.php',
+    __DIR__ . '/start_service.php'
+];
+
+echo "<h2>File Check:</h2><ul>";
+foreach ($files_to_check as $file) {
+    $exists = file_exists($file) ? "✅ EXISTS" : "❌ MISSING";
+    echo "<li>$file: $exists</li>";
+}
+echo "</ul>";
+
+// Check service status
+echo "<h2>Service Check:</h2>";
+$connection = @fsockopen('127.0.0.1', 8080, $errno, $errstr, 2);
+if ($connection) {
+    echo "<p>✅ Port 8080 is responding</p>";
+    fclose($connection);
+} else {
+    echo "<p>❌ Port 8080 is not responding (Error: $errno - $errstr)</p>";
+}
+
+// Check PHP functions
+echo "<h2>PHP Functions:</h2><ul>";
+$functions = ['fsockopen', 'file_exists', 'file_get_contents', 'json_encode'];
+foreach ($functions as $func) {
+    $available = function_exists($func) ? "✅ Available" : "❌ Missing";
+    echo "<li>$func: $available</li>";
+}
+echo "</ul>";
+
+// Test simple button
+echo "<h2>Test Button:</h2>";
+echo '<button onclick="alert(\'JavaScript works!\')">Test JavaScript</button>';
+
+// Show server info
+echo "<h2>Server Info:</h2><ul>";
+echo "<li>HTTP_HOST: " . ($_SERVER['HTTP_HOST'] ?? 'NOT SET') . "</li>";
+echo "<li>SERVER_NAME: " . ($_SERVER['SERVER_NAME'] ?? 'NOT SET') . "</li>";
+echo "<li>DOCUMENT_ROOT: " . ($_SERVER['DOCUMENT_ROOT'] ?? 'NOT SET') . "</li>";
+echo "<li>REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'NOT SET') . "</li>";
+echo "</ul>";
+
+echo "<p><a href='/Settings'>← Back to Settings</a></p>";
+?>

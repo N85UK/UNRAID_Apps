@@ -1,8 +1,16 @@
 Title="File Manager"
-Icon="file-manager.png"
 ---
 <?PHP
 /* File Manager Plugin for UNRAID */
+
+// Debug output first
+if (isset($_GET['debug'])) {
+    echo "<h1>Debug Mode</h1>";
+    echo "<p>Plugin loaded successfully!</p>";
+    echo "<p>Time: " . date('Y-m-d H:i:s') . "</p>";
+    echo "<p>PHP works: ✅</p>";
+    exit;
+}
 
 // Simple configuration
 $service_port = '8080';
