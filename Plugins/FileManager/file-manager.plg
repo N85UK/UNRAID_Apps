@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03a">
+<!ENTITY version   "2025.10.03b">
 <!ENTITY md5       "385919d37aec1d28f00416a1fde97265">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
@@ -13,6 +13,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="6.12.0">
 
 <CHANGES>
+###2025.10.03b
+- Fixed service management with improved PHP scripts for direct FileBrowser control
+- Created proper 48x48 PNG icon for Settings menu display
+- Rewrote binary installation with better error handling and user feedback
+- Added JSON responses and detailed success/error messages
+- Simplified service start process bypassing shell script issues
+
 ###2025.10.03a
 - Fixed service management with working FileBrowser binary installation
 - Added proper PNG icon for Settings menu display

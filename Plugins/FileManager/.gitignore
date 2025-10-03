@@ -15,6 +15,7 @@ build/
 !file-manager-2025.10.03.tar.xz
 !file-manager-2025.10.03.txz
 !file-manager-2025.10.03a.txz
+!file-manager-2025.10.03b.txz
 
 # Environment files
 .env
