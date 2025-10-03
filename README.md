@@ -2,33 +2,43 @@
 
 A collection of applications and plugins for UNRAID systems, providing enhanced functionality and user experience.
 
-## 🚀 Available Applications
+## ⚠️ **IMPORTANT UPDATE**
 
-### 📁 File Manager Plugin
-**Professional file management for UNRAID**
+This repository has been restructured to provide the correct implementation for the UNRAID API File Manager bounty. See [`MIGRATION.md`](MIGRATION.md) for details.
+
+## 🚀 Current Projects
+
+### 📁 UNRAID API File Manager Integration (NEW)
+**Correct NestJS implementation for UNRAID API bounty**
+
+- **Location**: [`UNRAID_API_Integration/`](UNRAID_API_Integration/)
+- **Status**: ✅ Ready for UNRAID API Integration
+- **Architecture**: NestJS module + Vue.js WebGUI
+- **Authentication**: UNRAID API proxy headers
+
+**Key Features:**
+- FileBrowser integration as NestJS subprocess
+- Proxy authentication via UNRAID API sessions
+- Vue.js WebGUI following LogViewer pattern
+- Real-time WebSocket updates
+- Virtual root configuration for UNRAID paths
+
+**Implementation Details:**
+- See [`UNRAID_API_Integration/README.md`](UNRAID_API_Integration/README.md)
+- Follows [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599) requirements
+- Ready for bounty submission
+
+### 📁 File Manager Plugin (ARCHIVED)
+**Legacy plugin implementation - no longer maintained**
 
 - **Location**: [`Plugins/FileManager/`](Plugins/FileManager/)
-- **Author**: N85UK
-- **License**: MIT
-- **Status**: ✅ Production Ready
-
-**Features:**
-- Modern web interface with responsive design
-- Secure file operations (upload, download, copy, move, delete)
-- User authentication and role-based permissions
-- Real-time status monitoring
-- Mobile-optimized interface
-- NestJS backend with FileBrowser integration
-
-**Installation:**
-```
-https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/FileManager/file-manager.plg
-```
+- **Status**: ❌ Archived (wrong architecture)
+- **Note**: Does not meet UNRAID API bounty requirements
 
 ### 📧 AWS End User Messaging (EUM)
 **Send SMS messages via AWS Pinpoint**
 
-- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
+- **Location**: [`AWS_EUM/`](AWS_EUM/)
 - **Author**: N85UK
 - **License**: MIT
 - **Status**: ✅ Production Ready
@@ -42,142 +52,101 @@ https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/FileManager/file-manager.
 
 **Installation:**
 ```
-https://github.com/N85UK/UnRiaid_Apps/raw/main/Apps/AWS_EUM/template.cfg
+https://github.com/N85UK/UnRiaid_Apps/raw/main/AWS_EUM/template.cfg
 ```
 
-## 📦 Installation Methods
+## 📋 Requirements
 
-### Option 1: Community Applications (Recommended)
-1. Install Community Applications plugin if not already installed
-2. Go to **Apps** tab in UNRAID
-3. Search for the application name
-4. Click **Install**
+### For UNRAID API Integration
+- UNRAID API development environment
+- Node.js 18+
+- TypeScript support
+- NestJS framework knowledge
 
-### Option 2: Direct URL Installation
-1. Go to **Plugins** → **Install Plugin** (for plugins) or **Docker** → **Add Container** (for apps)
-2. Enter the installation URL from above
-3. Click **Install**
-
-### Option 3: Custom Repository
-1. Go to **Settings** → **Community Applications**
-2. Add custom repository: `https://github.com/N85UK/UnRiaid_Apps`
-3. Refresh and install from **Apps** tab
+### For Docker Applications
+- **UNRAID Version**: 6.8+
+- **Architecture**: x86_64 (Intel/AMD)
+- **Docker**: Community Applications plugin
 
 ## 🛠️ Development
 
 ### Repository Structure
 ```
 UnRiaid_Apps/
-├── Apps/                   # Docker applications
-│   └── AWS_EUM/           # AWS End User Messaging
-├── Plugins/               # UNRAID plugins
-│   └── FileManager/       # File Manager Plugin
-└── README.md              # This file
+├── UNRAID_API_Integration/     # NEW: Correct API implementation
+│   ├── api/src/unraid-api/modules/filemanager/  # NestJS module
+│   ├── web/pages/              # Vue.js WebGUI
+│   └── README.md               # Integration guide
+├── Plugins/FileManager/        # ARCHIVED: Legacy plugin
+├── AWS_EUM/                    # Docker application
+├── MIGRATION.md                # Migration guide
+└── README.md                   # This file
 ```
 
-### Contributing
-We welcome contributions! Please:
+### Contributing to API Integration
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly on UNRAID
-5. Submit a pull request
+For the UNRAID API File Manager:
+
+1. **Study the Requirements**: Read [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
+2. **Review Implementation**: Check [`UNRAID_API_Integration/`](UNRAID_API_Integration/)
+3. **Follow Patterns**: Use NestJS + Vue.js approach
+4. **Test Integration**: Ensure proper UNRAID API compatibility
 
 ### Development Guidelines
-- Follow UNRAID plugin/application standards
-- Include comprehensive documentation
-- Add proper error handling and logging
-- Test on multiple UNRAID versions
-- Update README and changelog
+- Follow UNRAID API patterns and conventions
+- Use TypeScript for type safety
+- Include comprehensive tests
+- Update documentation
+- Ensure security best practices
 
-## 📋 Requirements
+## 📖 Migration Guide
 
-### UNRAID Version Support
-- **Minimum**: UNRAID 6.8+
-- **Recommended**: UNRAID 6.12+
-- **Tested**: UNRAID 6.8 through 6.12
-
-### System Requirements
-- **Architecture**: x86_64 (Intel/AMD)
-- **RAM**: 2GB+ available
-- **Storage**: Varies by application
-- **Network**: Internet access for installation
+If you were using the previous plugin version, please read [`MIGRATION.md`](MIGRATION.md) for:
+- Architecture changes explanation
+- Migration steps
+- Configuration differences
+- API endpoint changes
 
 ## 🆘 Support
 
-### Getting Help
-1. **Check Documentation**: Each app/plugin has detailed docs in its folder
-2. **Search Issues**: Look through [GitHub Issues](https://github.com/N85UK/UnRiaid_Apps/issues)
-3. **UNRAID Forums**: Post in the appropriate plugin/app support thread
-4. **Create Issue**: If you find a bug or need help
+### For UNRAID API Integration
+- **Documentation**: [`UNRAID_API_Integration/README.md`](UNRAID_API_Integration/README.md)
+- **Bounty Reference**: [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
+- **Architecture Questions**: GitHub Issues with "api-integration" label
 
-### Reporting Issues
-When reporting issues, please include:
-- UNRAID version
-- Application/plugin version
-- Error messages/logs
-- Steps to reproduce
-- System information
+### For Other Applications
+- **GitHub Issues**: [Create an Issue](https://github.com/N85UK/UnRiaid_Apps/issues)
+- **Documentation**: Check individual application folders
 
 ## 📄 License
 
 This repository and its applications are licensed under the MIT License unless otherwise specified.
 
-```
-MIT License
-
-Copyright (c) 2025 N85UK
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## � Contact & Support
+## 🤝 Contact & Support
 
 ### 💬 General Questions & Support
 - **Email**: hello@git.n85.uk
 - **GitHub Issues**: [Create an Issue](https://github.com/N85UK/UnRiaid_Apps/issues)
-- **GitHub Discussions**: [Join the Discussion](https://github.com/N85UK/UnRiaid_Apps/discussions)
 
 ### 🔒 Security Issues
 - **Email**: security@git.n85.uk
 - **GitHub Security**: [Report a Vulnerability](https://github.com/N85UK/UnRiaid_Apps/security/advisories)
 
-### 🤝 Contributing
-- **Pull Requests**: [Contributing Guide](CONTRIBUTING.md)
-- **Bug Reports**: Use GitHub Issues with appropriate labels
-- **Feature Requests**: Use GitHub Issues or Discussions
-
-## �🙏 Acknowledgments
-
-- **UNRAID Team**: For creating an excellent platform
-- **Community Applications Team**: For the plugin distribution system
-- **UNRAID Community**: For feedback, testing, and support
-- **Open Source Contributors**: For libraries and tools used
-
-## 📊 Repository Stats
-
-![GitHub stars](https://img.shields.io/github/stars/N85UK/UnRiaid_Apps)
-![GitHub forks](https://img.shields.io/github/forks/N85UK/UnRiaid_Apps)
-![GitHub issues](https://img.shields.io/github/issues/N85UK/UnRiaid_Apps)
-![GitHub license](https://img.shields.io/github/license/N85UK/UnRiaid_Apps)
-
 ---
+
+## ✅ **Ready for UNRAID API Bounty**
+
+The `UNRAID_API_Integration/` implementation provides everything required for the UNRAID API File Manager bounty:
+
+1. ✅ **NestJS Module Integration**
+2. ✅ **FileBrowser Subprocess Management**
+3. ✅ **Proxy Authentication Bridge**
+4. ✅ **Vue.js WebGUI (LogViewer pattern)**
+5. ✅ **HTTP/WebSocket Proxy**
+6. ✅ **Virtual Root Configuration**
+7. ✅ **Service Lifecycle Management**
+8. ✅ **Security & Permission Integration**
+9. ✅ **JSON Configuration**
+10. ✅ **Comprehensive Documentation**
 
 **Made with ❤️ for the UNRAID community**
