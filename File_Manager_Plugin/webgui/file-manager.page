@@ -169,7 +169,7 @@ function installBinary() {
     btn.innerHTML = '⏳ Installing...';
     btn.disabled = true;
     
-    fetch('/plugins/file-manager/install_binary.php', {
+    fetch('install_binary.php', {
         method: 'POST'
     })
     .then(response => response.json())
@@ -200,7 +200,7 @@ function setupAdmin() {
     btn.innerHTML = '⏳ Setting up...';
     btn.disabled = true;
     
-    fetch('/plugins/file-manager/setup_admin.php', {
+    fetch('setup_admin.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({username: username, password: password})
@@ -227,7 +227,7 @@ function startService() {
     btn.innerHTML = '⏳ Starting...';
     btn.disabled = true;
     
-    fetch('/plugins/file-manager/start_service.php', {
+    fetch('start_service.php', {
         method: 'POST'
     })
     .then(response => response.json())
@@ -254,7 +254,7 @@ function stopService() {
     btn.innerHTML = '⏳ Stopping...';
     btn.disabled = true;
     
-    fetch('/plugins/file-manager/stop_service.php', {
+    fetch('stop_service.php', {
         method: 'POST'
     })
     .then(response => response.json())
