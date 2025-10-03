@@ -3,7 +3,7 @@
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
 <!ENTITY version   "2025.10.03.4">
-<!ENTITY md5       "8b058df495a7e9ee4a5b422510545b5c">
+<!ENTITY md5       "2c02ce98a0333abd9cbcf894a1914882">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
