@@ -24,12 +24,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd AWS_EUM
+          cd Apps/AWS_EUM
           npm ci
 
       - name: Build image
         run: |
-          cd AWS_EUM
+          cd Apps/AWS_EUM
           IMAGE=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/aws-eum:latest
           docker build -t $IMAGE .
 
