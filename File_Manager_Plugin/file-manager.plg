@@ -17,7 +17,7 @@
 <CHANGES>
 ###2025.10.03.22 (Health Endpoint &amp; Diagnostics)
 - Added `health.php` endpoint for quick PHP/JSON verification
-- Enhanced frontend `safeFetchJson` with header logging & health probe fallback
+ - Enhanced frontend `safeFetchJson` with header logging &amp; health probe fallback
 - Added shutdown-based always-JSON installer earlier (carried forward)
 - Preparing for persistent empty-response root cause isolation
 
