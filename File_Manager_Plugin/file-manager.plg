@@ -15,7 +15,7 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
-###2025.10.03.19 (Enhanced Binary Installation & Bug Fixes)
+###2025.10.03.19 (Enhanced Binary Installation &amp; Bug Fixes)
 - **Enhanced FileBrowser Installation**: Added network connectivity checks, multiple download sources (GitHub, JSDeliver, Raw GitHub), and comprehensive error handling
 - **Improved Error Diagnostics**: Better logging, binary testing before/after installation, and detailed error messages
 - **Version Consistency**: Fixed version number mismatch across all files
