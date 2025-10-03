@@ -168,7 +168,13 @@ To remove the plugin:
 
 ## 📋 Version History
 
-### v2025.10.03.20 (Latest - FileBrowser Installation Fix)
+### v2025.10.03.21 (Latest - JSON Handling Improvements)
+- **Robust JSON Parsing**: Added safe fetch wrapper to prevent "Unexpected end of JSON input" errors
+- **Improved Error Diagnostics**: Raw server response surfaced when JSON invalid
+- **Frontend Resilience**: Buttons re-enable properly after failures
+- **Refactor Prep**: Groundwork for future environment-specific logging & retries
+
+### v2025.10.03.20 (FileBrowser Installation Fix)
 - **Fixed FileBrowser Binary Installation**: Corrected version command from `--version` to `version` for CLI compatibility
 - **Resolved Installation Failures**: Binary testing now works correctly across all architectures
 - **Enhanced Reliability**: Improved error handling and diagnostic reporting

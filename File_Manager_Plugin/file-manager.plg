@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.20">
+<!ENTITY version   "2025.10.03.21">
 <!ENTITY md5       "9c1d6d94b186f4bf1a214a89c4631169">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
@@ -11,10 +11,16 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- XML syntax validated - 2025.10.03.20 -->
+<!-- XML syntax validated - 2025.10.03.21 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.21 (Robust JSON Handling & Frontend Improvements)
+- Added safe JSON fetch wrapper with raw response fallback
+- Improved error diagnostics for installation, setup, start/stop actions
+- Frontend buttons now re-enable reliably after failures
+- Preparation for environment-specific logging
+
 ###2025.10.03.20 (FileBrowser Binary Installation Fix)
 - Fixed FileBrowser binary testing command from --version to version
 - Resolved installation failures caused by incorrect CLI command usage

@@ -157,36 +157,47 @@ $service_url = "{$protocol}://{$hostname}:{$service_port}";
             </tr>
             <tr>
                 <th>Plugin Version</th>
-                <td>2025.10.03.19</td>
+                <td>2025.10.03.21</td>
             </tr>
         </table>
     </div>
 </div>
 
 <script>
+function safeFetchJson(url, options) {
+    return fetch(url, options).then(async resp => {
+        const text = await resp.text();
+        let data;
+        try {
+            data = text ? JSON.parse(text) : null;
+        } catch (e) {
+            throw new Error('Invalid JSON response. Raw response: ' + text.substring(0,400));
+        }
+        if (!data) throw new Error('Empty response from server');
+        return data;
+    });
+}
+
 function installBinary() {
-    var btn = document.getElementById('installBtn');
+    const btn = document.getElementById('installBtn');
     btn.innerHTML = '⏳ Installing...';
     btn.disabled = true;
-    
-    fetch('install_binary.php', {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.status === 'success' ? '✅ ' + data.message : '❌ ' + data.message);
-        if (data.status === 'success') {
-            setTimeout(() => location.reload(), 2000);
-        } else {
+
+    safeFetchJson('install_binary.php', {method: 'POST'})
+        .then(data => {
+            alert((data.status === 'success' ? '✅ ' : '❌ ') + data.message);
+            if (data.status === 'success') {
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                btn.innerHTML = '📥 Install FileBrowser Binary';
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('❌ Installation failed: ' + err.message);
             btn.innerHTML = '📥 Install FileBrowser Binary';
             btn.disabled = false;
-        }
-    })
-    .catch(error => {
-        alert('❌ Installation failed: ' + error.message);
-        btn.innerHTML = '📥 Install FileBrowser Binary';
-        btn.disabled = false;
-    });
+        });
 }
 
 function setupAdmin() {
@@ -200,26 +211,25 @@ function setupAdmin() {
     btn.innerHTML = '⏳ Setting up...';
     btn.disabled = true;
     
-    fetch('setup_admin.php', {
+    safeFetchJson('setup_admin.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username: username, password: password})
+        body: JSON.stringify({username, password})
     })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.status === 'success' ? '✅ ' + data.message : '❌ ' + data.message);
-        if (data.status === 'success') {
-            setTimeout(() => location.reload(), 2000);
-        } else {
+        .then(data => {
+            alert((data.status === 'success' ? '✅ ' : '❌ ') + data.message);
+            if (data.status === 'success') {
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                btn.innerHTML = '👤 Setup Admin User';
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('❌ Setup failed: ' + err.message);
             btn.innerHTML = '👤 Setup Admin User';
             btn.disabled = false;
-        }
-    })
-    .catch(error => {
-        alert('❌ Setup failed: ' + error.message);
-        btn.innerHTML = '👤 Setup Admin User';
-        btn.disabled = false;
-    });
+        });
 }
 
 function startService() {
@@ -227,24 +237,21 @@ function startService() {
     btn.innerHTML = '⏳ Starting...';
     btn.disabled = true;
     
-    fetch('start_service.php', {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.status === 'success' ? '✅ ' + data.message : '❌ ' + data.message);
-        if (data.status === 'success') {
-            setTimeout(() => location.reload(), 2000);
-        } else {
+    safeFetchJson('start_service.php', {method: 'POST'})
+        .then(data => {
+            alert((data.status === 'success' ? '✅ ' : '❌ ') + data.message);
+            if (data.status === 'success') {
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                btn.innerHTML = '▶️ Start Service';
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('❌ Start failed: ' + err.message);
             btn.innerHTML = '▶️ Start Service';
             btn.disabled = false;
-        }
-    })
-    .catch(error => {
-        alert('❌ Start failed: ' + error.message);
-        btn.innerHTML = '▶️ Start Service';
-        btn.disabled = false;
-    });
+        });
 }
 
 function stopService() {
@@ -254,18 +261,15 @@ function stopService() {
     btn.innerHTML = '⏳ Stopping...';
     btn.disabled = true;
     
-    fetch('stop_service.php', {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.status === 'success' ? '✅ ' + data.message : '❌ ' + data.message);
-        setTimeout(() => location.reload(), 2000);
-    })
-    .catch(error => {
-        alert('❌ Stop failed: ' + error.message);
-        btn.innerHTML = '⏹️ Stop Service';
-        btn.disabled = false;
-    });
+    safeFetchJson('stop_service.php', {method: 'POST'})
+        .then(data => {
+            alert((data.status === 'success' ? '✅ ' : '❌ ') + data.message);
+            setTimeout(() => location.reload(), 1500);
+        })
+        .catch(err => {
+            alert('❌ Stop failed: ' + err.message);
+            btn.innerHTML = '⏹️ Stop Service';
+            btn.disabled = false;
+        });
 }
 </script>

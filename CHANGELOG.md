@@ -32,6 +32,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented secure file access controls
 - Added input validation for all user inputs
 
+## [2025.10.03.21] - 2025-10-03
+
+### Added
+- Robust frontend JSON handling with safeFetchJson utility
+
+### Fixed
+- Unexpected end of JSON input errors caused by empty / partial responses
+- Improved resilience when server returns non-JSON or network interrupts
+
+### Changed
+- Installation, setup, start/stop actions now provide clearer diagnostic errors
+- Version bump for frontend reliability improvements
+
 ## [2025.10.03.20] - 2025-10-03
 
 ### Fixed
@@ -88,7 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release Notes
 
-### File Manager Plugin v2025.10.03.20
+### File Manager Plugin v2025.10.03.21
 This release provides a comprehensive file management solution for UNRAID servers with enhanced installation reliability:
 
 - **Advanced File Operations**: Copy, move, delete, rename, upload, download
