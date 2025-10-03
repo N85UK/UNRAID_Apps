@@ -59,7 +59,7 @@ try {
     // Check if binary already exists
     if (file_exists('/usr/local/bin/filebrowser')) {
         // Verify it's executable and working
-        $testCmd = "/usr/local/bin/filebrowser --version 2>&1";
+        $testCmd = "/usr/local/bin/filebrowser version 2>&1";
         exec($testCmd, $testOutput, $testReturn);
         if ($testReturn === 0 && !empty($testOutput)) {
             logDebug('FileBrowser binary already exists and is working');
@@ -208,7 +208,7 @@ try {
     }
     
     // Test the binary before installation
-    $testExtractedCmd = "$tempDir/filebrowser --version 2>&1";
+    $testExtractedCmd = "$tempDir/filebrowser version 2>&1";
     exec($testExtractedCmd, $testExtractedOutput, $testExtractedReturn);
     
     if ($testExtractedReturn !== 0) {
@@ -255,7 +255,7 @@ try {
     }
     
     // Test final installation
-    $finalTestCmd = "$finalPath --version 2>&1";
+    $finalTestCmd = "$finalPath version 2>&1";
     exec($finalTestCmd, $finalTestOutput, $finalTestReturn);
     
     if ($finalTestReturn !== 0) {
