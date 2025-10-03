@@ -15,7 +15,7 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
-###2025.10.03.24 (Absolute Paths & Installer Fail-safe Distribution)
+###2025.10.03.24 (Absolute Paths &amp; Installer Fail-safe Distribution)
 - Updated all frontend fetch calls to absolute `/plugins/file-manager/*.php` paths to avoid resolution under `/Settings/` causing empty/HTML responses
 - Synchronized distributed `install_binary.php` with shutdown fail-safe (always-JSON) and enhanced diagnostics
 - Preparing for wider testing of binary installation reliability on Unraid hosts
