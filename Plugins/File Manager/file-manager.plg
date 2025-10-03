@@ -5,8 +5,8 @@
 <!ENTITY version   "2025.10.03">
 <!ENTITY md5       "26a0a4a554d5e7813ea7506e7c14c39a">
 <!ENTITY launch    "Settings/FileManager">
-<!ENTITY gitURL    "https://github.com/yourusername/unraid-file-manager">
-<!ENTITY pluginURL "&gitURL;/raw/main/file-manager.plg">
+<!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
+<!ENTITY pluginURL "&gitURL;/raw/main/Plugins/File%20Manager/file-manager.plg">
 <!ENTITY support   "&gitURL;/issues">
 ]>
 
@@ -38,7 +38,7 @@ fi
 </FILE>
 
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.tar.xz" Run="upgradepkg --install-new">
-<URL>&gitURL;/releases/download/&version;/&name;-&version;.tar.xz</URL>
+<URL>&gitURL;/releases/download/v&version;/&name;-&version;.tar.xz</URL>
 <MD5>&md5;</MD5>
 </FILE>
 
