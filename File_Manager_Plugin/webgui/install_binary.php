@@ -37,7 +37,18 @@ if (php_sapi_name() === 'cli') {
 }
 
 function logDebug($message) {
-    $logFile = '/var/log/file-manager/install.log';
+    // Detect if we're on UNRAID or development environment
+    $isUnraid = file_exists('/etc/unraid-version');
+
+    if ($isUnraid) {
+        // UNRAID production paths
+        $logFile = '/var/log/file-manager/install.log';
+    } else {
+        // Development/local testing paths
+        $baseDir = dirname(__DIR__, 2); // Go up to File_Manager_Plugin directory
+        $logFile = $baseDir . '/logs/install.log';
+    }
+
     $logDir = dirname($logFile);
     if (!is_dir($logDir)) {
         mkdir($logDir, 0755, true);
@@ -56,43 +67,66 @@ try {
     }
     logDebug('Network connectivity confirmed');
     
-    // Check if binary already exists
-    if (file_exists('/usr/local/bin/filebrowser')) {
+    // Check if binary already exists (use appropriate path based on environment)
+    $isUnraid = file_exists('/etc/unraid-version');
+    $baseDir = dirname(__DIR__, 2);
+
+    if ($isUnraid) {
+        $binaryPath = '/usr/local/bin/filebrowser';
+    } else {
+        $binaryPath = $baseDir . '/bin/filebrowser';
+    }
+
+    if (file_exists($binaryPath)) {
         // Verify it's executable and working
-        $testCmd = "/usr/local/bin/filebrowser version 2>&1";
+        $testCmd = escapeshellarg($binaryPath) . " version 2>&1";
         exec($testCmd, $testOutput, $testReturn);
         if ($testReturn === 0 && !empty($testOutput)) {
             logDebug('FileBrowser binary already exists and is working');
-            jsonExit('success', 'FileBrowser binary already installed', ['path' => '/usr/local/bin/filebrowser']);
+            jsonExit('success', 'FileBrowser binary already installed', ['path' => $binaryPath]);
         } else {
             logDebug('Existing binary is not working, removing it');
-            unlink('/usr/local/bin/filebrowser');
+            unlink($binaryPath);
         }
     }
     
-    // Detect architecture
+    // Detect architecture and OS
     $arch = trim(shell_exec('uname -m'));
-    logDebug("Detected architecture: $arch");
+    $os = trim(shell_exec('uname -s'));
+    logDebug("Detected OS: $os, Architecture: $arch");
+    
+    // Map OS names
+    switch (strtolower($os)) {
+        case 'linux':
+            $osName = 'linux';
+            break;
+        case 'darwin':
+            $osName = 'darwin';
+            break;
+        default:
+            throw new Exception("Unsupported OS: $os. Supported OS: Linux, macOS (Darwin)");
+    }
     
     switch ($arch) {
         case 'x86_64':
             $fbArch = 'amd64';
             break;
         case 'aarch64':
+        case 'arm64':
             $fbArch = 'arm64';
             break;
         case 'armv7l':
             $fbArch = 'armv7';
             break;
         default:
-            $supported = ['x86_64 (amd64)', 'aarch64 (arm64)', 'armv7l (armv7)'];
+            $supported = ['x86_64 (amd64)', 'aarch64/arm64 (arm64)', 'armv7l (armv7)'];
             throw new Exception("Unsupported architecture: $arch. Supported architectures: " . implode(', ', $supported));
     }
     
     $version = 'v2.44.0';
     
     // Use primary download source with retry logic
-    $downloadUrl = "https://github.com/filebrowser/filebrowser/releases/download/$version/linux-$fbArch-filebrowser.tar.gz";
+    $downloadUrl = "https://github.com/filebrowser/filebrowser/releases/download/$version/$osName-$fbArch-filebrowser.tar.gz";
     logDebug("Download URL: $downloadUrl");
     
     // Test URL accessibility with retries
@@ -220,7 +254,12 @@ try {
     logDebug('Binary extraction and test successful');
     
     // Move to final location with backup
-    $finalPath = '/usr/local/bin/filebrowser';
+    $finalPath = $binaryPath; // Use the path we determined earlier
+    $binDir = dirname($finalPath);
+    if (!is_dir($binDir)) {
+        mkdir($binDir, 0755, true);
+    }
+
     if (file_exists($finalPath)) {
         $backupPath = $finalPath . '.backup.' . time();
         logDebug("Creating backup of existing binary: $backupPath");
@@ -276,6 +315,15 @@ try {
 } catch (Exception $e) {
     logDebug('Exception: ' . $e->getMessage());
     http_response_code(500);
-    jsonExit('error', $e->getMessage(), ['log_file' => '/var/log/file-manager/install.log']);
+    $isUnraid = file_exists('/etc/unraid-version');
+    $baseDir = dirname(__DIR__, 2);
+
+    if ($isUnraid) {
+        $logPath = '/var/log/file-manager/install.log';
+    } else {
+        $logPath = $baseDir . '/logs/install.log';
+    }
+
+    jsonExit('error', $e->getMessage(), ['log_file' => $logPath]);
 }
 ?>
