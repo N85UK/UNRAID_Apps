@@ -1,0 +1,90 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "file-manager">
+<!ENTITY author    "N85UK">
+<!ENTITY version   "2025.10.03.10">
+<!ENTITY md5       "a7a417a717aba3e7e3707bcb3773b662">
+<!ENTITY launch    "Settings/FileManager">
+<!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
+<!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
+<!ENTITY support   "&gitURL;/issues">
+<!ENTITY min       "7.0.0">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
+
+<CHANGES>
+###2025.10.03.10 (v2.0 - Complete Rebuild)
+- Complete plugin rebuild with working functionality
+- Fixed installation issues requiring Force Install
+- Enhanced FileBrowser integration with automatic setup
+- Improved service management and reliability
+- Better error handling and user feedback
+- Modern responsive web interface
+- Automatic FileBrowser binary installation
+- Simplified configuration and setup process
+- Real-time service status monitoring
+- Comprehensive logging and debugging
+
+###Previous Versions
+- See CHANGELOG.md for complete version history
+</CHANGES>
+
+<FILE Run="/bin/bash">
+<INLINE>
+# Remove old plugin files
+rm -rf /usr/local/emhttp/plugins/&name;
+rm -rf /boot/config/plugins/&name;
+
+# Stop any running services
+if pgrep -f "filebrowser" > /dev/null; then
+  pkill -f "filebrowser"
+fi
+
+echo "Cleaned old installation"
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.txz" Run="upgradepkg --install-new">
+<URL>&gitURL;/raw/main/File_Manager_Plugin/&name;-&version;.txz</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+# Extract and install plugin
+cd /usr/local/emhttp/plugins
+tar -xf /boot/config/plugins/&name;/&name;-&version;.txz
+
+# Set proper permissions
+chmod -R 755 /usr/local/emhttp/plugins/&name;
+
+# Run installation script
+if [ -f /usr/local/emhttp/plugins/&name;/scripts/install.sh ]; then
+  bash /usr/local/emhttp/plugins/&name;/scripts/install.sh
+  echo "Installation script completed"
+else
+  echo "Warning: Installation script not found"
+fi
+
+echo "File Manager plugin installed successfully"
+echo "Access via Settings -> File Manager"
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+# Run removal script
+if [ -f /usr/local/emhttp/plugins/&name;/scripts/remove.sh ]; then
+  bash /usr/local/emhttp/plugins/&name;/scripts/remove.sh
+fi
+
+# Remove plugin files
+rm -rf /usr/local/emhttp/plugins/&name;
+rm -rf /boot/config/plugins/&name;
+
+echo "File Manager plugin removed"
+</INLINE>
+</FILE>
+
+</PLUGIN>

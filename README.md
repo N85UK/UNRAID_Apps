@@ -2,58 +2,187 @@
 
 A collection of applications and plugins for UNRAID systems, providing enhanced functionality and user experience.
 
-## ⚠️ **IMPORTANT UPDATE**
+## 🚀 **Available Projects**
 
-This repository has been restructured to provide the correct implementation for the UNRAID API File Manager bounty. See [`MIGRATION.md`](MIGRATION.md) for details.
+### 📁 **File Manager Plugin** (Ready to Install)
+**Modern web-based file management for UNRAID**
 
-## 🚀 Current Projects
-
-### 📁 UNRAID API File Manager Integration (NEW)
-**Correct NestJS implementation for UNRAID API bounty**
-
-- **Location**: [`UNRAID_API_Integration/`](UNRAID_API_Integration/)
-- **Status**: ✅ Ready for UNRAID API Integration
-- **Architecture**: NestJS module + Vue.js WebGUI
-- **Authentication**: UNRAID API proxy headers
+- **Location**: [`File_Manager_Plugin/`](File_Manager_Plugin/)
+- **Status**: ✅ **Ready for Production Use**
+- **Installation**: `https://github.com/N85UK/UnRiaid_Apps/raw/main/File_Manager_Plugin/file-manager.plg`
 
 **Key Features:**
-- FileBrowser integration as NestJS subprocess
-- Proxy authentication via UNRAID API sessions
-- Vue.js WebGUI following LogViewer pattern
-- Real-time WebSocket updates
-- Virtual root configuration for UNRAID paths
+- 🌐 Modern responsive web interface
+- 📱 Mobile-friendly design
+- 🔧 Automated setup process (3 simple steps)
+- 🔒 Secure user authentication
+- 📂 Access to all UNRAID shares and drives
+- ⬆️⬇️ Upload/download with drag-and-drop
+- 🗜️ Archive creation and extraction
+- 🔄 Real-time service monitoring
 
-**Implementation Details:**
-- See [`UNRAID_API_Integration/README.md`](UNRAID_API_Integration/README.md)
-- Follows [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599) requirements
-- Ready for bounty submission
+**Quick Setup:**
+1. Install plugin via URL above
+2. Click "Install FileBrowser Binary"
+3. Click "Setup Admin User"  
+4. Click "Start Service"
+5. Access at `http://your-server:8080`
 
-### 📁 File Manager Plugin (ARCHIVED)
-**Legacy plugin implementation - no longer maintained**
+### 🏆 **UNRAID API Integration** (Bounty Submission)
+**Complete NestJS implementation for UNRAID API bounty**
 
-- **Location**: [`Plugins/FileManager/`](Plugins/FileManager/)
-- **Status**: ❌ Archived (wrong architecture)
-- **Note**: Does not meet UNRAID API bounty requirements
+- **Location**: [`Bounty_Submission/`](Bounty_Submission/)
+- **Status**: ✅ **Ready for UNRAID API Integration**
+- **Reference**: [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
 
-### 📧 AWS End User Messaging (EUM)
-**Send SMS messages via AWS Pinpoint**
+**Implementation Highlights:**
+- 🏗️ NestJS module architecture
+- 🔐 UNRAID session proxy authentication
+- 🖥️ Vue.js WebGUI following LogViewer pattern
+- 🔄 Real-time WebSocket updates
+- 📊 Service lifecycle management
+- 🛡️ Security and permission inheritance
+
+### 📧 **AWS End User Messaging**
+**SMS messaging via AWS Pinpoint**
 
 - **Location**: [`AWS_EUM/`](AWS_EUM/)
-- **Author**: N85UK
-- **License**: MIT
 - **Status**: ✅ Production Ready
+- **Installation**: `https://github.com/N85UK/UnRiaid_Apps/raw/main/AWS_EUM/template.cfg`
 
-**Features:**
-- Send SMS via AWS Pinpoint service
-- Web interface for message composition
-- Docker container deployment
-- Environment-based configuration
-- Rate limiting and security features
+## 📦 **Installation Methods**
 
-**Installation:**
+### For File Manager Plugin
+
+**Option 1: Direct Installation (Recommended)**
 ```
-https://github.com/N85UK/UnRiaid_Apps/raw/main/AWS_EUM/template.cfg
+1. Go to Plugins → Install Plugin
+2. Enter: https://github.com/N85UK/UnRiaid_Apps/raw/main/File_Manager_Plugin/file-manager.plg
+3. Click Install
+4. Follow 3-step setup process
 ```
+
+**Option 2: Community Applications**
+```
+1. Install Community Applications if needed
+2. Search for "File Manager" in Apps tab
+3. Click Install
+```
+
+### For UNRAID API Integration
+
+The bounty submission requires integration by the UNRAID team:
+```typescript
+// Add to UNRAID API codebase
+import { FileManagerModule } from './modules/filemanager/filemanager.module';
+```
+
+## 🛠️ **Development & Architecture**
+
+### Repository Structure
+```
+UnRiaid_Apps/
+├── File_Manager_Plugin/        # Ready-to-install UNRAID plugin
+│   ├── file-manager.plg        # Plugin manifest
+│   ├── webgui/                 # PHP-based interface
+│   ├── scripts/                # Installation scripts
+│   └── README.md               # Installation guide
+├── Bounty_Submission/          # UNRAID API integration
+│   ├── api/src/.../filemanager/ # NestJS modules
+│   ├── web/pages/              # Vue.js components
+│   └── README.md               # Integration guide
+├── AWS_EUM/                    # Docker application
+└── MIGRATION.md                # Architecture explanation
+```
+
+### Key Differences
+
+| Aspect | Plugin Version | API Integration |
+|--------|---------------|-----------------|
+| **Use Case** | Install now on any UNRAID | Future API integration |
+| **Architecture** | Traditional plugin | NestJS module |
+| **Authentication** | FileBrowser built-in | UNRAID API proxy |
+| **Interface** | PHP + iframe | Vue.js component |
+| **Installation** | One-click install | API team integration |
+
+## 📋 **System Requirements**
+
+### For Plugin Version
+- **UNRAID**: 6.8+ (tested through 7.2+)
+- **Architecture**: x86_64, ARM64, ARMv7
+- **Memory**: 50MB RAM
+- **Storage**: 25MB disk space
+- **Network**: Port 8080 (configurable)
+
+### For API Integration
+- **UNRAID API**: Development environment
+- **Node.js**: 18+
+- **TypeScript**: Latest
+- **NestJS**: Framework knowledge
+
+## 🆘 **Support & Documentation**
+
+### Plugin Support
+- **Quick Start**: [File_Manager_Plugin/README.md](File_Manager_Plugin/README.md)
+- **Installation Issues**: [GitHub Issues](https://github.com/N85UK/UnRiaid_Apps/issues)
+- **User Guide**: Built into plugin interface
+
+### API Integration Support  
+- **Bounty Spec**: [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
+- **Implementation**: [Bounty_Submission/README.md](Bounty_Submission/README.md)
+- **Architecture**: [MIGRATION.md](MIGRATION.md)
+
+## 🔄 **Version Status**
+
+### Current Active Projects
+- ✅ **File Manager Plugin v2.0**: Production ready, actively maintained
+- ✅ **Bounty Submission**: Complete, ready for API integration
+- ✅ **AWS EUM**: Stable, minimal maintenance
+
+### Discontinued Projects
+- ❌ **Legacy Plugin**: Archived, replaced by v2.0
+
+## 🤝 **Contributing**
+
+We welcome contributions for both projects:
+
+**For Plugin Development:**
+- PHP and JavaScript knowledge
+- UNRAID plugin architecture understanding
+- FileBrowser integration experience
+
+**For API Integration:**
+- TypeScript and NestJS expertise
+- Vue.js component development
+- UNRAID API architecture knowledge
+
+## 📄 **License**
+
+MIT License - see individual project folders for specific details.
+
+## 🙏 **Acknowledgments**
+
+- **UNRAID Team**: For excellent platform and bounty opportunity
+- **FileBrowser Project**: For outstanding file management software
+- **Community**: For testing, feedback, and support
+
+## 📊 **Quick Stats**
+
+![GitHub stars](https://img.shields.io/github/stars/N85UK/UnRiaid_Apps)
+![GitHub issues](https://img.shields.io/github/issues/N85UK/UnRiaid_Apps)
+![GitHub license](https://img.shields.io/github/license/N85UK/UnRiaid_Apps)
+
+---
+
+## ✨ **Get Started Today**
+
+### Want File Management Now?
+→ Install the **File Manager Plugin**: [Installation Guide](File_Manager_Plugin/README.md)
+
+### Building UNRAID API Features?
+→ Check the **Bounty Submission**: [Integration Guide](Bounty_Submission/README.md)
+
+**Made with ❤️ for the UNRAID community**
 
 ## 📋 Requirements
 
