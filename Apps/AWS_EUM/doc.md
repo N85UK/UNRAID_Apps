@@ -21,4 +21,8 @@ This template deploys the AWS SMS App in a docker container. The app allows user
 - The app stores SMS history in a volume mounted to `/config/data` (UnRaid appdata recommended).
 
 ### Docker image
-- The template references the image `ghcr.io/n85uk/aws-eum:latest`. A GitHub Actions workflow is included to build and publish the image to GHCR on push to `main` or on release.
+- The template references the image `ghcr.io/paulmccann140689/aws-eum:latest`. A GitHub Actions workflow is included to build and publish the image to GHCR on push to `main` or on release.
+
+---
+
+**Copyright (c) 2025 Paul McCann - Licensed under MIT License**

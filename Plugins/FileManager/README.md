@@ -11,13 +11,20 @@ A modern, feature-rich file management plugin for UNRAID systems with an intuiti
 - **Mobile Responsive**: Works seamlessly on desktop, tablet, and mobile devices
 - **Integration Ready**: Built on NestJS with comprehensive API endpoints
 
-## 📦 Installation Options
+## 📦 Installation
 
-### Option A: Advanced Plugin (Full Featured)
+### UNRAID Plugin Installation
 **Install URL:** 
 ```
-https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/File%20Manager/file-manager.plg
+https://github.com/paulmccann140689/UnRiaid_Apps/raw/main/Plugins/FileManager/file-manager.plg
 ```
+
+**Installation Steps:**
+1. Go to UNRAID web interface
+2. Navigate to **Plugins** tab
+3. Click **Install Plugin**
+4. Paste the URL above
+5. Click **Install**
 
 **Features:**
 - ✅ Complete NestJS backend with FileBrowser integration
@@ -26,18 +33,6 @@ https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/File%20Manager/file-manag
 - ✅ Real-time status monitoring
 - ✅ Professional web interface
 - ✅ Mobile responsive design
-
-### Option B: Simple Plugin (Basic)
-**Install URL:** 
-```
-https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/File%20Manager/file-manager-simple.plg
-```
-
-**Features:**
-- ✅ Basic UNRAID integration
-- ✅ Links to existing file browsers
-- ✅ Lightweight implementation
-- ✅ Quick setup
 
 ## 🛠️ Configuration
 
@@ -82,8 +77,8 @@ The plugin provides REST API endpoints for programmatic access:
 ### Build from Source
 ```bash
 # Clone the repository
-git clone https://github.com/N85UK/UnRiaid_Apps.git
-cd "UnRiaid_Apps/Plugins/File Manager"
+git clone https://github.com/paulmccann140689/UnRiaid_Apps.git
+cd "UnRiaid_Apps/Plugins/FileManager"
 
 # Install dependencies
 npm install
@@ -109,7 +104,7 @@ npm run type-check
 
 ### Plugin Structure
 ```
-Plugins/File Manager/
+Plugins/FileManager/
 ├── src/                    # TypeScript source code
 ├── webgui/                 # UNRAID web interface files
 ├── scripts/                # Installation/removal scripts
@@ -136,7 +131,7 @@ Plugins/File Manager/
 - **UI not loading**: Clear browser cache and check network connectivity
 
 ### Getting Help
-1. Check the [Issues](https://github.com/N85UK/UnRiaid_Apps/issues) page
+1. Check the [Issues](https://github.com/paulmccann140689/UnRiaid_Apps/issues) page
 2. Search existing discussions
 3. Create a new issue with:
    - UNRAID version
@@ -172,10 +167,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 Stats
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/N85UK/UnRiaid_Apps)
-![GitHub downloads](https://img.shields.io/github/downloads/N85UK/UnRiaid_Apps/total)
-![GitHub issues](https://img.shields.io/github/issues/N85UK/UnRiaid_Apps)
-![GitHub stars](https://img.shields.io/github/stars/N85UK/UnRiaid_Apps)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/paulmccann140689/UnRiaid_Apps)
+![GitHub downloads](https://img.shields.io/github/downloads/paulmccann140689/UnRiaid_Apps/total)
+![GitHub issues](https://img.shields.io/github/issues/paulmccann140689/UnRiaid_Apps)
+![GitHub stars](https://img.shields.io/github/stars/paulmccann140689/UnRiaid_Apps)
 
 ---
 

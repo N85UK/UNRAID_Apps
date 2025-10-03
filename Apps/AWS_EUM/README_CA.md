@@ -1,11 +1,11 @@
 # AWS End User Messaging - Community Applications
 
-This package bundles the AWS SMS App as a Community Applications (CA) template for UnRaid.
+This package bundles the AWS SMS App as a Community Applications (CA) template for UNRAID.
 
 ## ✅ Status: Ready for CA Submission
 
 The Docker image has been built and published to GitHub Container Registry:
-- **Image**: `ghcr.io/n85uk/aws-eum:latest`
+- **Image**: `ghcr.io/paulmccann140689/aws-eum:latest`
 - **Build Status**: ✅ Successful
 - **CA Template**: ✅ Configured
 
@@ -26,7 +26,7 @@ The Docker image has been built and published to GitHub Container Registry:
 
 ## 🚀 Installation (After CA Approval)
 
-1. In UNraid web UI, go to **Apps** tab
+1. In UNRAID web UI, go to **Apps** tab
 2. Search for **"AWS End User Messaging"**
 3. Click **Install**
 4. Configure your AWS credentials:
@@ -51,7 +51,7 @@ docker run -d \
   -e AWS_SECRET_ACCESS_KEY=your_secret \
   -e AWS_REGION=eu-west-2 \
   -v ./data:/app/data \
-  ghcr.io/n85uk/aws-eum:latest
+  ghcr.io/paulmccann140689/aws-eum:latest
 ```
 
 ## 📋 CA Submission Checklist
@@ -65,7 +65,7 @@ docker run -d \
 
 ## 📖 Resources
 
-- **UNraid CA Policies**: https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/
+- **UNRAID CA Policies**: https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/
 - **Community Applications**: https://docs.unraid.net/unraid-os/using-unraid-to/run-docker-containers/community-applications/
 - **AWS Pinpoint SMS**: https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html
 
@@ -73,7 +73,7 @@ docker run -d \
 
 - **Issues**: Create issues in the main repository
 - **AWS Setup**: Refer to AWS documentation for Pinpoint configuration
-- **UNraid**: Check UNraid forums for CA-specific questions
+- **UNRAID**: Check UNRAID forums for CA-specific questions
 
 ## ⚠️ Important Notes
 
@@ -81,3 +81,7 @@ docker run -d \
 - **Phone Numbers**: Must be verified/registered with AWS Pinpoint
 - **Regions**: Ensure AWS Pinpoint is available in your region
 - **Credentials**: Never share AWS keys - users provide their own
+
+---
+
+**Copyright (c) 2025 Paul McCann**

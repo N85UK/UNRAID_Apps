@@ -1,6 +1,6 @@
 # UnRiaid Apps
 
-A collection of Docker applications packaged for UNraid Community Applications (CA).
+A collection of Docker applications packaged for UNRAID Community Applications (CA).
 
 ## Applications
 
@@ -9,7 +9,7 @@ A collection of Docker applications packaged for UNraid Community Applications (
 A web-based SMS sending application using AWS Pinpoint SMS services.
 
 **Status**: ✅ Ready for CA submission
-**Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
+**Docker Image**: `ghcr.io/paulmccann140689/aws-eum:latest`
 **Category**: Utilities
 
 #### Features
@@ -20,7 +20,7 @@ A web-based SMS sending application using AWS Pinpoint SMS services.
 - Secure credential management (no secrets included)
 
 #### Installation
-1. **Via UNraid Community Applications** (recommended):
+1. **Via UNRAID Community Applications** (recommended):
    - Once approved, search for "AWS End User Messaging" in the Apps tab
    - Configure your AWS credentials in the template
 
@@ -33,7 +33,7 @@ A web-based SMS sending application using AWS Pinpoint SMS services.
      -e AWS_SECRET_ACCESS_KEY=your_secret \
      -e AWS_REGION=eu-west-2 \
      -v /mnt/user/appdata/aws-eum:/app/data \
-     ghcr.io/n85uk/aws-eum:latest
+     ghcr.io/paulmccann140689/aws-eum:latest
    ```
 
 #### Configuration
@@ -51,7 +51,7 @@ A web-based SMS sending application using AWS Pinpoint SMS services.
 
 ### Building
 ```bash
-cd AWS_EUM
+cd Apps/AWS_EUM
 npm install
 npm run build  # if needed
 docker build -t aws-eum .
@@ -62,13 +62,13 @@ The GitHub Actions workflow automatically builds and publishes the Docker image 
 
 ## Community Applications Submission
 
-This repository contains properly formatted templates for UNraid Community Applications submission.
+This repository contains properly formatted templates for UNRAID Community Applications submission.
 
 ### Submission Status
 - **AWS EUM**: Ready for submission to https://github.com/Squidly271/community.applications
 
 ### Files Included
-- `template.cfg` - UNraid CA template configuration
+- `template.cfg` - UNRAID CA template configuration
 - `doc.md` - Application documentation with CA metadata
 - Docker image published to GHCR
 - Security compliance (no secrets included)
@@ -83,8 +83,12 @@ This repository contains properly formatted templates for UNraid Community Appli
 
 ## License
 
-See individual application licenses.
+MIT License - see [LICENSE](../LICENSE) file for details.
 
 ## Support
 
 For issues with specific applications, please check their respective documentation or create an issue in this repository.
+
+---
+
+**Copyright (c) 2025 Paul McCann**
