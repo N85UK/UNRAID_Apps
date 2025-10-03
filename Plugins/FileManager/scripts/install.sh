@@ -28,13 +28,13 @@ if [ ! -f /usr/local/bin/filebrowser ]; then
     ARCH=$(uname -m)
     case $ARCH in
         x86_64)
-            FB_ARCH="linux-amd64"
+            FB_ARCH="amd64"
             ;;
         aarch64)
-            FB_ARCH="linux-arm64"
+            FB_ARCH="arm64"
             ;;
         armv7l)
-            FB_ARCH="linux-armv7"
+            FB_ARCH="armv7"
             ;;
         *)
             echo "Error: Unsupported architecture: $ARCH"
