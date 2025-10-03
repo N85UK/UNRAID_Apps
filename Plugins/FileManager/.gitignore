@@ -14,6 +14,7 @@ build/
 # Exception: Allow the plugin archives
 !file-manager-2025.10.03.tar.xz
 !file-manager-2025.10.03.txz
+!file-manager-2025.10.03a.txz
 
 # Environment files
 .env

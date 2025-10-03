@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03">
-<!ENTITY md5       "9fef96d4b673ec737713ebcc8e812528">
+<!ENTITY version   "2025.10.03a">
+<!ENTITY md5       "4d4dd9b5bc9ef0a467f159522cbce537">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
@@ -13,6 +13,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="6.12.0">
 
 <CHANGES>
+###2025.10.03a
+- Fixed service management with working FileBrowser binary installation
+- Added proper PNG icon for Settings menu display
+- Fixed FileBrowser download URL to v2.44.0
+- Added Start Service and Install Binary buttons in webGUI
+- Auto-start service after successful installation
+
 ###2025.10.03
 - Initial release of UNRAID File Manager plugin
 - NestJS-based file manager with FileBrowser backend
