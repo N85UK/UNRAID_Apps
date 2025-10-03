@@ -30,6 +30,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 All notable changes to this project will be documented in this file.
 
+## [2025.10.03.8] - 2025-10-03 (v1.7 - Comprehensive Validation & Cleanup)
+
+### Improved
+- Complete documentation overhaul and accuracy improvements
+- Updated README to reflect actual current plugin capabilities
+- Standardized configuration file naming (file-manager.cfg → settings.ini)
+- Improved installation script consistency (wget → curl)
+- Updated CONTRIBUTING.md to remove outdated Node.js/TypeScript references
+- Validated and cleaned all plugin components
+- Enhanced troubleshooting documentation with current common issues
+- Removed references to non-existent development dependencies
+
+## [2025.10.03.7] - 2025-10-03 (v1.6 - XML Parse Error Fix)
+
+### Fixed
+- Fixed XML parsing error caused by unescaped ampersand in changelog
+- Properly escaped &amp; character for XML compliance
+- Validated XML syntax with xmllint to ensure no parse errors
+- Plugin should now install without "XML file doesn't exist or xml parse error"
+
 ## [2025.10.03.6] - 2025-10-03 (v1.5 - Enhanced Error Handling & Debugging)
 
 ### Enhanced

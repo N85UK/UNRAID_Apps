@@ -1,6 +1,6 @@
-# File Manager Plugin for UNRAID v1.0
+# File Manager Plugin for UNRAID v1.6
 
-A powerful, modern file manager plugin for UNRAID servers, providing an intuitive web-based interface for file management operations. **Now in stable v1 release - production ready!**
+A powerful, modern file manager plugin for UNRAID servers, providing an intuitive web-based interface for file management operations. **Production ready with FileBrowser integration!**
 
 ## Features
 
@@ -14,10 +14,10 @@ A powerful, modern file manager plugin for UNRAID servers, providing an intuitiv
 
 ## 📋 Requirements
 
-- **UNRAID 7.2 or higher** (Required for native API integration)
-- **64-bit architecture** (x86_64, ARM64 supported)
-- **1GB+ available disk space**
-- **Network access** for initial setup
+- **UNRAID 7.0 or higher** (Optimized for 7.2+ native API features)
+- **64-bit architecture** (x86_64, ARM64, ARMv7 supported)
+- **FileBrowser binary** (automatically installed)
+- **Network access** for initial setup and FileBrowser download
 
 ## 📦 Installation
 
@@ -33,15 +33,14 @@ https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/FileManager/file-manager.
 3. Click **Install Plugin**
 4. Paste the URL above
 5. Click **Install**
+6. Access via **Settings** → **File Manager**
 
-**Modern Features:**
-- ✅ Native UNRAID 7.2+ API integration
-- ✅ GraphQL API compatibility
-- ✅ Advanced file operations with FileBrowser v2.44.0
-- ✅ UNRAID Connect authentication support
-- ✅ Real-time status monitoring via native API
-- ✅ Professional web interface with UNRAID theming
-- ✅ Mobile responsive design optimized for UNRAID 7.2
+### Initial Setup
+After installation:
+1. **Install FileBrowser Binary**: Click "Install FileBrowser Binary" button
+2. **Setup Admin User**: Click "Setup Admin" to create login credentials
+3. **Start Service**: Click "Start Service" to begin file management
+4. **Access Interface**: Use the provided URL (typically http://server:8080)
 
 ## 🛠️ Configuration
 
@@ -76,52 +75,37 @@ The plugin provides REST API endpoints for programmatic access:
 - User management: Authentication and authorization
 - System status: Health checks and diagnostics
 
-## 🔧 Development
+## �️ Plugin Structure
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- UNRAID 6.8+ for testing
+The plugin consists of:
 
-### Build from Source
-```bash
-# Clone the repository
-git clone https://github.com/N85UK/UnRiaid_Apps.git
-cd "UnRiaid_Apps/Plugins/FileManager"
-
-# Install dependencies
-npm install
-
-# Build the plugin
-./dev/build-plg.sh --vendor
-
-# Or use the setup script
-./setup-advanced.sh
-```
-
-### Development Mode
-```bash
-# Start development server
-npm run dev
-
-# Run tests
-npm test
-
-# Type checking
-npm run type-check
-```
-
-### Plugin Structure
 ```
 Plugins/FileManager/
-├── src/                    # TypeScript source code
 ├── webgui/                 # UNRAID web interface files
+│   ├── FileManager.php     # Main interface page  
+│   ├── FileManager.page    # UNRAID page definition
+│   ├── FileManagerSettings.php # Configuration page
+│   ├── setup_admin.php     # Admin user setup
+│   ├── install_binary.php  # FileBrowser installation
+│   ├── start_service.php   # Service management
+│   ├── file-explorer.png   # Plugin icon
+│   └── styles/             # CSS styling
 ├── scripts/                # Installation/removal scripts
-├── dev/                    # Build tools and scripts
-├── dist/                   # Compiled JavaScript
+│   ├── install.sh          # Plugin installation
+│   ├── remove.sh           # Plugin removal
+│   └── file-manager-service.sh # Service management
 ├── file-manager.plg        # Plugin manifest
-└── file-manager-*.tar.xz   # Plugin archive
+└── README.md               # This documentation
 ```
+
+## 🎯 Current Features
+
+- **FileBrowser v2.44.0**: Modern web-based file manager
+- **Easy Setup**: One-click installation and admin setup
+- **Service Management**: Start/stop FileBrowser service from UNRAID
+- **Cross-Server Compatible**: Works on any UNRAID server (IP/hostname agnostic)
+- **Error Handling**: Comprehensive error reporting and debugging
+- **Mobile Responsive**: Works on desktop, tablet, and mobile devices
 
 ## 📸 Screenshots
 
@@ -132,20 +116,37 @@ Plugins/FileManager/
 | Settings Panel | Configuration options and preferences |
 | Mobile View | Optimized mobile interface |
 
-## 🆘 Support
+## 🆘 Troubleshooting
 
 ### Common Issues
-- **Plugin won't start**: Check UNRAID logs and ensure all dependencies are installed
-- **Permission errors**: Verify user permissions and file system access
-- **UI not loading**: Clear browser cache and check network connectivity
+
+#### "Installation error. Check logs for details."
+- Check debug log: `/tmp/filebrowser_install.log`
+- Ensure internet connectivity for FileBrowser download
+- Verify architecture compatibility (x86_64, ARM64, ARMv7)
+
+#### "Service management error. Check logs for details."
+- Try "Setup Admin" to initialize FileBrowser database
+- Check if port 8080 is available or configure different port
+- Verify FileBrowser binary is installed at `/usr/local/bin/filebrowser`
+
+#### "XML file doesn't exist or xml parse error"
+- Clear UNRAID plugin cache
+- Try reinstalling the plugin
+- Check internet connectivity
+
+#### FileBrowser login issues
+- Use "Setup Admin" button to create initial user credentials
+- Default credentials: admin/admin (change after first login)
+- Check FileBrowser is running on the correct port
 
 ### Getting Help
 1. Check the [Issues](https://github.com/N85UK/UnRiaid_Apps/issues) page
-2. Search existing discussions
-3. Create a new issue with:
+2. Include in your report:
    - UNRAID version
    - Plugin version
-   - Error logs
+   - Error messages
+   - Debug log contents (`/tmp/filebrowser_install.log`)
    - Steps to reproduce
 
 ## 🤝 Contributing

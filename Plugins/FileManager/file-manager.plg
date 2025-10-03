@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.6">
-<!ENTITY md5       "c675c848ef43bb045bc3ed0970ca3f19">
+<!ENTITY version   "2025.10.03.8">
+<!ENTITY md5       "f0c1d84168cffd38fe557119bce11cb8">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
@@ -14,7 +14,23 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
-###2025.10.03.6 (v1.5 - Enhanced Error Handling & Debugging)
+###2025.10.03.8 (v1.7 - Comprehensive Validation &amp; Cleanup)
+- Complete documentation overhaul and accuracy improvements
+- Updated README to reflect actual current plugin capabilities
+- Standardized configuration file naming (file-manager.cfg → settings.ini)
+- Improved installation script consistency (wget → curl)
+- Updated CONTRIBUTING.md to remove outdated Node.js/TypeScript references
+- Validated and cleaned all plugin components
+- Enhanced troubleshooting documentation with current common issues
+- Removed references to non-existent development dependencies
+
+###2025.10.03.7 (v1.6 - XML Parse Error Fix)
+- Fixed XML parsing error caused by unescaped ampersand in changelog
+- Properly escaped &amp; character for XML compliance
+- Validated XML syntax with xmllint to ensure no parse errors
+- Plugin should now install without "XML file doesn't exist or xml parse error"
+
+###2025.10.03.6 (v1.5 - Enhanced Error Handling &amp; Debugging)
 - Completely rewritten install_binary.php with comprehensive error handling
 - Added detailed debug logging to /tmp/filebrowser_install.log
 - Improved download reliability using curl instead of wget

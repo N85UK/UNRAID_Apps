@@ -46,7 +46,7 @@ if [ ! -f /usr/local/bin/filebrowser ]; then
     FB_URL="https://github.com/filebrowser/filebrowser/releases/download/${FB_VERSION}/linux-${FB_ARCH}-filebrowser.tar.gz"
     
     echo "Downloading FileBrowser ${FB_VERSION} for linux-${FB_ARCH}..."
-    if wget -O /tmp/filebrowser.tar.gz "$FB_URL"; then
+    if curl -L -o /tmp/filebrowser.tar.gz "$FB_URL"; then
         tar -xzf /tmp/filebrowser.tar.gz -C /tmp/
         mv /tmp/filebrowser /usr/local/bin/filebrowser
         chmod +x /usr/local/bin/filebrowser

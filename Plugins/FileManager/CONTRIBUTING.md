@@ -23,25 +23,31 @@ Thank you for considering contributing to the UNRAID File Manager Plugin! This d
 ### Code Contributions
 
 #### Prerequisites
-- Node.js 18+
-- TypeScript knowledge
-- Basic understanding of NestJS framework
+- Basic understanding of PHP and JavaScript
 - Familiarity with UNRAID plugin development
+- Knowledge of FileBrowser configuration
+- Understanding of XML and shell scripting
 
 #### Development Setup
 ```bash
-# Fork and clone the repository
-git clone https://github.com/YOUR_USERNAME/unraid-file-manager.git
-cd unraid-file-manager
+```bash
+# Clone the repository
+git clone https://github.com/N85UK/UnRiaid_Apps.git
+cd UnRiaid_Apps/Plugins/FileManager
 
-# Install dependencies
-npm install
+# Make your changes to webgui/ or scripts/
+# Test on a UNRAID system
+# Build new archive if needed
+tar -cJf file-manager-test.txz webgui/ scripts/
+```
 
-# Start development mode
-npm run dev
-
-# Run tests
-npm test
+#### Pull Request Process
+1. **Fork the repository** and create a feature branch
+2. **Make your changes** following our coding standards
+3. **Test on UNRAID system** to ensure functionality
+4. **Update documentation** if needed
+5. **Update version and changelog** for significant changes
+6. **Submit a pull request** with clear description
 ```
 
 #### Pull Request Process
