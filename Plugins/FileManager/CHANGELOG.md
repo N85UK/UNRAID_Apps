@@ -34,11 +34,12 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - First stable production release
-- UNRAID 7.2+ native API integration
+- UNRAID 7.2+ native API integration (compatible with 7.2.0-rc.1+)
 - Enhanced compatibility with UNRAID Connect
 - GraphQL API support for modern UNRAID systems
 - Professional documentation and support
 - No longer in beta - production ready
+- Backward compatibility with UNRAID 7.0+ systems
 
 ### Features
 - **File Operations**: Upload, download, move, copy, delete

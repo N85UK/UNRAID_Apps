@@ -8,7 +8,7 @@
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
 <!ENTITY support   "&gitURL;/issues">
-<!ENTITY min       "7.2.0">
+<!ENTITY min       "7.0.0">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
@@ -16,11 +16,12 @@
 <CHANGES>
 ###2025.10.03.1 (v1 Release)
 - First stable production release of File Manager for UNRAID
-- Full UNRAID 7.2+ native API integration
+- Full UNRAID 7.2+ native API integration (compatible with 7.2.0-rc.1+)
 - Complete compatibility with UNRAID Connect and GraphQL API
 - Professional documentation and support
 - No longer in beta - ready for production use
 - Meets all requirements from UNRAID API issue #1599
+- Compatible with UNRAID 7.0+ (optimized for 7.2+ features)
 
 ###2025.10.03b
 - Fixed service management with improved PHP scripts for direct FileBrowser control
