@@ -2,29 +2,61 @@
 /* FileBrowser Binary Installation Script */
 
 // Ensure proper JSON output
+// Start output buffering so we can control and sanitize anything emitted
 ob_start();
 header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
+// Defensive: record script start time for diagnostics
+$__fm_start = microtime(true);
+
+// Register a shutdown handler to catch fatal errors or empty responses
+register_shutdown_function(function() {
+    // If headers already sent and some JSON was produced we leave it; otherwise we emit a fallback
+    $buffer = ob_get_contents();
+    $hasOutput = trim($buffer) !== '';
+    $lastError = error_get_last();
+    if ($lastError && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        if (ob_get_length()) ob_clean();
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Fatal error: '.$lastError['message'].' in '.$lastError['file'].' on line '.$lastError['line'],
+            'timestamp' => date('Y-m-d H:i:s'),
+            'phase' => 'shutdown-handler'
+        ]);
+        return; // ensure nothing else appended
+    }
+    if (!$hasOutput) {
+        if (ob_get_length()) ob_clean();
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Script ended with no output (unexpected). Check PHP error log or /var/log/file-manager/install.log',
+            'timestamp' => date('Y-m-d H:i:s'),
+            'phase' => 'shutdown-empty'
+        ]);
+    }
+});
+
 // Function to ensure JSON output on exit
 function jsonExit($status, $message, $data = []) {
-    // Clean any output buffer
+    // Clean any output buffer (discard stray text / warnings)
     if (ob_get_length()) ob_clean();
-    
     $response = array_merge([
         'status' => $status,
         'message' => $message,
-        'timestamp' => date('Y-m-d H:i:s')
+        'timestamp' => date('Y-m-d H:i:s'),
+        'duration_ms' => (int) round((microtime(true) - $GLOBALS['__fm_start']) * 1000)
     ], $data);
-    
-    echo json_encode($response);
+    echo json_encode($response, JSON_UNESCAPED_SLASHES);
     exit;
 }
 
 // Set error handler to return JSON
 set_error_handler(function($severity, $message, $file, $line) {
-    jsonExit('error', "PHP Error: $message in $file on line $line");
+    // Convert all errors to JSON responses (except notices we may choose to ignore)
+    if (!(error_reporting() & $severity)) return; // respect @ operator
+    jsonExit('error', "PHP Error: $message in $file on line $line", ['error_severity' => $severity]);
 });
 
 // Allow both GET, POST, and command line for testing
@@ -58,6 +90,7 @@ function logDebug($message) {
 
 try {
     logDebug('Starting FileBrowser installation');
+    logDebug('Request method: '.($_SERVER['REQUEST_METHOD'] ?? 'unknown'));
     
     // Check network connectivity first
     logDebug('Checking network connectivity...');
