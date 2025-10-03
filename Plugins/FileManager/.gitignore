@@ -11,6 +11,8 @@ dist/
 build/
 *.tgz
 *.tar.xz
+# Exception: Allow the plugin archive
+!file-manager-2025.10.03.tar.xz
 
 # Environment files
 .env
