@@ -168,7 +168,14 @@ function safeFetchJson(url, options) {
     return fetch(url, options).then(async resp => {
         const raw = await resp.text();
         if (!raw.trim()) {
-            throw new Error('Empty response from server (HTTP ' + resp.status + ').');
+            const headersObj = {}; resp.headers.forEach((v,k)=>{headersObj[k]=v});
+            console.warn('safeFetchJson: empty body', {url, status: resp.status, headers: headersObj});
+            try {
+                const healthResp = await fetch('health.php?_ts=' + Date.now());
+                const healthText = await healthResp.text();
+                console.info('Health probe response', healthResp.status, healthText);
+            } catch (e) { console.error('Health probe failed', e); }
+            throw new Error('Empty response from server (HTTP ' + resp.status + '). See console for diagnostics.');
         }
         try {
             return JSON.parse(raw);
