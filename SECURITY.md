@@ -44,7 +44,7 @@ We encourage responsible disclosure of security vulnerabilities. Please **DO NOT
 ### How to Report
 To report a security vulnerability, please email us directly at:
 
-**security@unraidapps.com** (if available)
+**security@git.n85.uk**
 
 Or create a private security advisory on GitHub:
 1. Go to the repository's Security tab
@@ -150,12 +150,13 @@ Our security practices align with:
 
 ### Security Team
 For security-related inquiries:
-- **Email**: security@unraidapps.com (if available)
+- **Email**: security@git.n85.uk
 - **GitHub**: Private security advisories
 - **Response Time**: 24-48 hours
 
 ### General Support
 For non-security issues:
+- **Email**: hello@git.n85.uk
 - **GitHub Issues**: Bug reports and feature requests
 - **GitHub Discussions**: Community support and questions
 
@@ -180,7 +181,7 @@ Currently, we do not offer a formal bug bounty program, but we deeply appreciate
 
 ---
 
-**Last Updated**: January 3, 2025
-**Version**: 1.0
+**Last Updated**: October 3, 2025
+**Version**: 1.1
 
 This security policy is subject to updates. Please check regularly for changes.

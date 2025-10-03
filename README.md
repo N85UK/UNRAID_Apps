@@ -8,7 +8,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 **Professional file management for UNRAID**
 
 - **Location**: [`Plugins/FileManager/`](Plugins/FileManager/)
-- **Author**: Paul McCann
+- **Author**: N85UK
 - **License**: MIT
 - **Status**: ✅ Production Ready
 
@@ -148,7 +148,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## 🙏 Acknowledgments
+## � Contact & Support
+
+### 💬 General Questions & Support
+- **Email**: hello@git.n85.uk
+- **GitHub Issues**: [Create an Issue](https://github.com/N85UK/UnRiaid_Apps/issues)
+- **GitHub Discussions**: [Join the Discussion](https://github.com/N85UK/UnRiaid_Apps/discussions)
+
+### 🔒 Security Issues
+- **Email**: security@git.n85.uk
+- **GitHub Security**: [Report a Vulnerability](https://github.com/N85UK/UnRiaid_Apps/security/advisories)
+
+### 🤝 Contributing
+- **Pull Requests**: [Contributing Guide](CONTRIBUTING.md)
+- **Bug Reports**: Use GitHub Issues with appropriate labels
+- **Feature Requests**: Use GitHub Issues or Discussions
+
+## �🙏 Acknowledgments
 
 - **UNRAID Team**: For creating an excellent platform
 - **Community Applications Team**: For the plugin distribution system
