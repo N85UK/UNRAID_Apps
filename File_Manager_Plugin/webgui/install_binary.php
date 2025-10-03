@@ -27,8 +27,11 @@ set_error_handler(function($severity, $message, $file, $line) {
     jsonExit('error', "PHP Error: $message in $file on line $line");
 });
 
-// Allow both GET and POST for testing
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
+// Allow both GET, POST, and command line for testing
+if (php_sapi_name() === 'cli') {
+    // Command line execution - simulate POST
+    $_SERVER['REQUEST_METHOD'] = 'POST';
+} elseif ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
     jsonExit('error', 'Method not allowed');
 }
