@@ -16,6 +16,46 @@ require_once "$docroot/webGui/include/Helpers.php";
 $_SERVER['REQUEST_URI'] = 'filemanager';
 require_once "$docroot/webGui/include/Translations.php";
 
+// Helper functions for UNRAID integration
+function parse_plugin_cfg($plugin_name) {
+  $cfg_file = "/boot/config/plugins/{$plugin_name}/settings.cfg";
+  if (!file_exists($cfg_file)) {
+    $cfg_file = "/usr/local/emhttp/plugins/{$plugin_name}/default.cfg";
+  }
+  
+  if (file_exists($cfg_file)) {
+    return parse_ini_file($cfg_file, false, INI_SCANNER_RAW);
+  }
+  
+  return [];
+}
+
+function autov($path) {
+  $version = @filemtime($_SERVER['DOCUMENT_ROOT'] . $path) ?: time();
+  return $path . '?v=' . $version;
+}
+
+function plugin($attribute, $plugin_file) {
+  if (!file_exists($plugin_file)) return 'Unknown';
+  
+  $content = file_get_contents($plugin_file);
+  
+  switch ($attribute) {
+    case 'version':
+      if (preg_match('/<!ENTITY version\s+"([^"]+)"/', $content, $matches)) {
+        return $matches[1];
+      }
+      break;
+    case 'author':
+      if (preg_match('/<!ENTITY author\s+"([^"]+)"/', $content, $matches)) {
+        return $matches[1];
+      }
+      break;
+  }
+  
+  return 'Unknown';
+}
+
 $plugin_cfg = parse_plugin_cfg('file-manager');
 $filemanager_enabled = $plugin_cfg['enabled'] ?? 'yes';
 $filemanager_port = $plugin_cfg['port'] ?? '8080';

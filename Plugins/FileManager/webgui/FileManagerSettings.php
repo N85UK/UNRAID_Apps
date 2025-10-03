@@ -10,6 +10,25 @@ require_once "$docroot/webGui/include/Helpers.php";
 $_SERVER['REQUEST_URI'] = 'filemanager';
 require_once "$docroot/webGui/include/Translations.php";
 
+// Helper functions for UNRAID integration
+function parse_plugin_cfg($plugin_name) {
+  $cfg_file = "/boot/config/plugins/{$plugin_name}/settings.cfg";
+  if (!file_exists($cfg_file)) {
+    $cfg_file = "/usr/local/emhttp/plugins/{$plugin_name}/default.cfg";
+  }
+  
+  if (file_exists($cfg_file)) {
+    return parse_ini_file($cfg_file, false, INI_SCANNER_RAW);
+  }
+  
+  return [];
+}
+
+function autov($path) {
+  $version = @filemtime($_SERVER['DOCUMENT_ROOT'] . $path) ?: time();
+  return $path . '?v=' . $version;
+}
+
 $plugin_cfg = parse_plugin_cfg('file-manager');
 $config_file = '/boot/config/plugins/file-manager/config/settings.ini';
 
