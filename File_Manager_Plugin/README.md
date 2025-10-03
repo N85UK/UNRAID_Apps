@@ -168,10 +168,14 @@ To remove the plugin:
 
 ## 📋 Version History
 
-### v2025.10.03.19 (Latest - Enhanced Installation)
+### v2025.10.03.20 (Latest - FileBrowser Installation Fix)
+- **Fixed FileBrowser Binary Installation**: Corrected version command from `--version` to `version` for CLI compatibility
+- **Resolved Installation Failures**: Binary testing now works correctly across all architectures
+- **Enhanced Reliability**: Improved error handling and diagnostic reporting
+
+### v2025.10.03.19 (Enhanced Installation)
 - **Enhanced Binary Installation**: Network checks, multiple download sources, comprehensive error handling
-- **Improved Reliability**: Fallback URLs (GitHub, JSDeliver, Raw GitHub), retry logic, timeout handling
-- **Better Diagnostics**: Detailed logging, binary testing, error messages
+- **Improved Reliability Features**: Fallback URLs, retry logic, detailed diagnostics
 - **Code Cleanup**: Removed unused files, optimized archive
 - **Version Consistency**: Fixed version mismatches across all files
 - **Security**: Enhanced input validation and secure operations

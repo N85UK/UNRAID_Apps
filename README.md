@@ -8,7 +8,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 **Modern web-based file management for UNRAID**
 
 - **Location**: [`File_Manager_Plugin/`](File_Manager_Plugin/)
-- **Status**: ✅ **Ready for Production Use - v2025.10.03.19**
+- **Status**: ✅ **Ready for Production Use - v2025.10.03.20**
 - **Installation**: `https://github.com/N85UK/UnRiaid_Apps/raw/main/File_Manager_Plugin/file-manager.plg`
 
 **Key Features:**
@@ -29,13 +29,13 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 4. Click "Start Service"
 5. Access at `http://your-server:8080`
 
-**Latest Improvements (v2025.10.03.19):**
+**Latest Improvements (v2025.10.03.20):**
 - ✅ Network connectivity verification before download
 - ✅ Multiple download sources (GitHub, JSDeliver, Raw GitHub)
 - ✅ Comprehensive error diagnostics and logging
 - ✅ Binary testing before and after installation
 - ✅ Automatic fallback and retry mechanisms
-- ✅ Enhanced security and input validation
+- ✅ **Fixed FileBrowser version command compatibility**
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**
@@ -91,7 +91,7 @@ import { FileManagerModule } from './modules/filemanager/filemanager.module';
 ### Repository Structure
 ```
 UnRiaid_Apps/
-├── File_Manager_Plugin/        # Ready-to-install UNRAID plugin v2025.10.03.19
+├── File_Manager_Plugin/        # Ready-to-install UNRAID plugin v2025.10.03.20
 │   ├── file-manager.plg        # Plugin manifest (XML validated)
 │   ├── webgui/                 # PHP-based interface with enhanced error handling
 │   ├── scripts/                # Installation/removal scripts
@@ -150,7 +150,7 @@ UnRiaid_Apps/
 ## 🔄 **Version Status**
 
 ### Current Active Projects
-- ✅ **File Manager Plugin v2025.10.03.19**: Production ready with enhanced installation
+- ✅ **File Manager Plugin v2025.10.03.20**: Production ready with enhanced installation
 - ✅ **Bounty Submission**: Complete, ready for UNRAID API integration
 - ✅ **AWS EUM**: Stable, minimal maintenance
 

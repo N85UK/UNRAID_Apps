@@ -32,6 +32,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented secure file access controls
 - Added input validation for all user inputs
 
+## [2025.10.03.20] - 2025-10-03
+
+### Fixed
+- **FileBrowser Binary Installation**: Corrected version command from `--version` to `version` for proper CLI compatibility
+- **Installation Failures**: Resolved binary testing errors that prevented successful FileBrowser installation
+- **Cross-Platform Compatibility**: Enhanced binary verification across different architectures
+
+### Changed
+- Updated plugin version to v2025.10.03.20
+- Improved installation script reliability
+
 ## [2025.10.03.19] - 2025-10-03
 
 ### Added
@@ -77,8 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release Notes
 
-### File Manager Plugin v2025.10.03
-This release provides a comprehensive file management solution for UNRAID servers, featuring:
+### File Manager Plugin v2025.10.03.20
+This release provides a comprehensive file management solution for UNRAID servers with enhanced installation reliability:
 
 - **Advanced File Operations**: Copy, move, delete, rename, upload, download
 - **Web Interface**: Modern, responsive file browser accessible via UNRAID webGUI
@@ -86,6 +97,7 @@ This release provides a comprehensive file management solution for UNRAID server
 - **Real-time Updates**: Live file system monitoring and updates
 - **Security**: Role-based access control and secure file operations
 - **Integration**: Seamless UNRAID webGUI integration with status monitoring
+- **Enhanced Installation**: Fixed FileBrowser binary installation issues
 
 ### Installation Requirements
 - UNRAID 6.8.0 or higher
