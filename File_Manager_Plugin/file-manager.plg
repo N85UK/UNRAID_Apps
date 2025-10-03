@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.15">
+<!ENTITY version   "2025.10.03.16">
 <!ENTITY md5       "fd11c0d137fcd17caae5b340a1620ddd">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
@@ -11,9 +11,15 @@
 <!ENTITY min       "7.0.0">
 ]>
 
+<!-- Cache refresh version - 2025.10.03.16 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.16 (Cache Refresh Force)
+- Further version increment to force UNRAID cache refresh
+- Same working content, different filename to bypass cached downloads
+- Forces fresh download of corrected archive and manifest
+
 ###2025.10.03.15 (Archive Rebuild)
 - Force fresh download by incrementing version number
 - Same fixed content as v2025.10.03.14 but with new filename
