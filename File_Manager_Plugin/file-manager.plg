@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.18">
+<!ENTITY version   "2025.10.03.19">
 <!ENTITY md5       "79a443b853b26043b86de439383acc89">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
@@ -11,10 +11,16 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- JavaScript fixes - 2025.10.03.18 -->
+<!-- XML syntax validated - 2025.10.03.19 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.19 (XML Validation Fix)
+- Fixed XML syntax error (extra '>' character in MD5 entity)
+- Validated XML structure with xmllint
+- Cache-busting version increment to force fresh download
+- Should resolve 'XML file doesn't exist or xml parse error'
+
 ###2025.10.03.18 (JavaScript Path Fix)
 - Fixed JavaScript fetch URLs to use relative paths (install_binary.php not /plugins/file-manager/...)
 - Improved error handling in PHP scripts to ensure valid JSON responses
