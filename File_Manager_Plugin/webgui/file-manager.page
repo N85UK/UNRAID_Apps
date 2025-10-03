@@ -199,7 +199,7 @@ function installBinary() {
     btn.innerHTML = '⏳ Installing...';
     btn.disabled = true;
 
-    safeFetchJson('install_binary.php', {method: 'POST'})
+    safeFetchJson('/plugins/file-manager/install_binary.php', {method: 'POST'})
         .then(data => {
             alert((data.status === 'success' ? '✅ ' : '❌ ') + data.message);
             if (data.status === 'success') {
@@ -227,7 +227,7 @@ function setupAdmin() {
     btn.innerHTML = '⏳ Setting up...';
     btn.disabled = true;
     
-    safeFetchJson('setup_admin.php', {
+    safeFetchJson('/plugins/file-manager/setup_admin.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({username, password})
@@ -253,7 +253,7 @@ function startService() {
     btn.innerHTML = '⏳ Starting...';
     btn.disabled = true;
     
-    safeFetchJson('start_service.php', {method: 'POST'})
+    safeFetchJson('/plugins/file-manager/start_service.php', {method: 'POST'})
         .then(data => {
             alert((data.status === 'success' ? '✅ ' : '❌ ') + data.message);
             if (data.status === 'success') {
@@ -277,7 +277,7 @@ function stopService() {
     btn.innerHTML = '⏳ Stopping...';
     btn.disabled = true;
     
-    safeFetchJson('stop_service.php', {method: 'POST'})
+    safeFetchJson('/plugins/file-manager/stop_service.php', {method: 'POST'})
         .then(data => {
             alert((data.status === 'success' ? '✅ ' : '❌ ') + data.message);
             setTimeout(() => location.reload(), 1500);
