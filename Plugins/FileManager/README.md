@@ -1,15 +1,23 @@
 # UNRAID File Manager Plugin
 
-A modern, feature-rich file management plugin for UNRAID systems with an intuitive web interface and robust backend API.
+A modern, feature-rich file management plugin for UNRAID 7.2+ systems with native API integration and an intuitive web interface.
 
 ## 🚀 Features
 
-- **Modern Web Interface**: Clean, responsive design with dark/light theme support
+- **UNRAID 7.2+ Native Integration**: Built for UNRAID's native API system
+- **Modern Web Interface**: Clean, responsive FileBrowser-based design with dark/light theme support
 - **Secure File Operations**: Upload, download, move, copy, and delete files safely
-- **User Management**: Role-based access control with admin and user permissions
-- **Real-time Updates**: Live file system monitoring and status updates
+- **API Authentication**: Seamless integration with UNRAID's native authentication system
+- **Real-time Updates**: Live file system monitoring and status updates via WebSocket
 - **Mobile Responsive**: Works seamlessly on desktop, tablet, and mobile devices
-- **Integration Ready**: Built on NestJS with comprehensive API endpoints
+- **GraphQL API Ready**: Compatible with UNRAID's native GraphQL API
+
+## 📋 Requirements
+
+- **UNRAID 7.2 or higher** (Required for native API integration)
+- **64-bit architecture** (x86_64, ARM64 supported)
+- **1GB+ available disk space**
+- **Network access** for initial setup
 
 ## 📦 Installation
 
@@ -26,13 +34,14 @@ https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/FileManager/file-manager.
 4. Paste the URL above
 5. Click **Install**
 
-**Features:**
-- ✅ Complete NestJS backend with FileBrowser integration
-- ✅ Advanced file operations and management
-- ✅ User authentication and permissions
-- ✅ Real-time status monitoring
-- ✅ Professional web interface
-- ✅ Mobile responsive design
+**Modern Features:**
+- ✅ Native UNRAID 7.2+ API integration
+- ✅ GraphQL API compatibility
+- ✅ Advanced file operations with FileBrowser v2.44.0
+- ✅ UNRAID Connect authentication support
+- ✅ Real-time status monitoring via native API
+- ✅ Professional web interface with UNRAID theming
+- ✅ Mobile responsive design optimized for UNRAID 7.2
 
 ## 🛠️ Configuration
 
