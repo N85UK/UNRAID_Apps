@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.03.17">
-<!ENTITY md5       "9745ed214edd59365f7f8dac03054b7b">
+<!ENTITY version   "2025.10.03.18">
+<!ENTITY md5       "79a443b853b26043b86de439383acc89">>
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -11,10 +11,16 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- Clean archive rebuild - 2025.10.03.17 -->
+<!-- JavaScript fixes - 2025.10.03.18 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.03.18 (JavaScript Path Fix)
+- Fixed JavaScript fetch URLs to use relative paths (install_binary.php not /plugins/file-manager/...)
+- Improved error handling in PHP scripts to ensure valid JSON responses
+- Added proper output buffering and error handlers to prevent JSON parsing errors
+- This should resolve the "Unexpected token 'F', 'File not found.' is not valid JSON" error
+
 ###2025.10.03.17 (Clean Archive Creation)
 - Completely removed all old archive files
 - Created fresh XZ compressed archive with verbose verification

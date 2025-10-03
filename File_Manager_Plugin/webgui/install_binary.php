@@ -1,15 +1,36 @@
 <?php
 /* FileBrowser Binary Installation Script */
 
+// Ensure proper JSON output
+ob_start();
 header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
+// Function to ensure JSON output on exit
+function jsonExit($status, $message, $data = []) {
+    // Clean any output buffer
+    if (ob_get_length()) ob_clean();
+    
+    $response = array_merge([
+        'status' => $status,
+        'message' => $message,
+        'timestamp' => date('Y-m-d H:i:s')
+    ], $data);
+    
+    echo json_encode($response);
+    exit;
+}
+
+// Set error handler to return JSON
+set_error_handler(function($severity, $message, $file, $line) {
+    jsonExit('error', "PHP Error: $message in $file on line $line");
+});
+
 // Allow both GET and POST for testing
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
-    echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
-    exit;
+    jsonExit('error', 'Method not allowed');
 }
 
 function logDebug($message) {
@@ -26,8 +47,7 @@ try {
     
     // Check if binary already exists
     if (file_exists('/usr/local/bin/filebrowser')) {
-        echo json_encode(['status' => 'success', 'message' => 'FileBrowser binary already installed']);
-        exit;
+        jsonExit('success', 'FileBrowser binary already installed', ['path' => '/usr/local/bin/filebrowser']);
     }
     
     // Detect architecture
@@ -112,9 +132,7 @@ try {
     // Verify installation
     if (file_exists('/usr/local/bin/filebrowser') && is_executable('/usr/local/bin/filebrowser')) {
         logDebug('Installation completed successfully');
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'FileBrowser binary installed successfully',
+        jsonExit('success', 'FileBrowser binary installed successfully', [
             'version' => $version,
             'path' => '/usr/local/bin/filebrowser'
         ]);
@@ -125,10 +143,6 @@ try {
 } catch (Exception $e) {
     logDebug('Exception: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode([
-        'status' => 'error',
-        'message' => $e->getMessage(),
-        'log_file' => '/var/log/file-manager/install.log'
-    ]);
+    jsonExit('error', $e->getMessage(), ['log_file' => '/var/log/file-manager/install.log']);
 }
 ?>
