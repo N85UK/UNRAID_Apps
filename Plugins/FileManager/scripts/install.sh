@@ -38,26 +38,45 @@ if [ ! -f /usr/local/bin/filebrowser ]; then
             ;;
         *)
             echo "Error: Unsupported architecture: $ARCH"
-            exit 1
+            echo "You will need to install FileBrowser manually or use the 'Install FileBrowser Binary' button in the web interface"
+            # Don't exit, continue with rest of installation
             ;;
     esac
     
-    FB_VERSION="v2.44.0"
-    FB_URL="https://github.com/filebrowser/filebrowser/releases/download/${FB_VERSION}/linux-${FB_ARCH}-filebrowser.tar.gz"
-    
-    echo "Downloading FileBrowser ${FB_VERSION} for linux-${FB_ARCH}..."
-    if curl -L -o /tmp/filebrowser.tar.gz "$FB_URL"; then
-        tar -xzf /tmp/filebrowser.tar.gz -C /tmp/
-        mv /tmp/filebrowser /usr/local/bin/filebrowser
-        chmod +x /usr/local/bin/filebrowser
-        rm -f /tmp/filebrowser.tar.gz
-        echo "FileBrowser binary installed successfully"
-    else
-        echo "Warning: Failed to download FileBrowser binary"
-        echo "You may need to install it manually"
+    if [ -n "${FB_ARCH:-}" ]; then
+        FB_VERSION="v2.44.0"
+        FB_URL="https://github.com/filebrowser/filebrowser/releases/download/${FB_VERSION}/linux-${FB_ARCH}-filebrowser.tar.gz"
+        
+        echo "Downloading FileBrowser ${FB_VERSION} for linux-${FB_ARCH}..."
+        echo "URL: $FB_URL"
+        
+        # Create temp directory
+        TEMP_DIR=$(mktemp -d)
+        cd "$TEMP_DIR"
+        
+        if curl -L -f -o filebrowser.tar.gz "$FB_URL"; then
+            if tar -xzf filebrowser.tar.gz; then
+                if [ -f filebrowser ]; then
+                    mv filebrowser /usr/local/bin/filebrowser
+                    chmod +x /usr/local/bin/filebrowser
+                    echo "FileBrowser binary installed successfully at /usr/local/bin/filebrowser"
+                else
+                    echo "Warning: FileBrowser binary not found in archive"
+                fi
+            else
+                echo "Warning: Failed to extract FileBrowser archive"
+            fi
+        else
+            echo "Warning: Failed to download FileBrowser binary from $FB_URL"
+            echo "You can install it manually using the 'Install FileBrowser Binary' button in the web interface"
+        fi
+        
+        # Cleanup
+        cd /
+        rm -rf "$TEMP_DIR"
     fi
 else
-    echo "FileBrowser binary already exists"
+    echo "FileBrowser binary already exists at /usr/local/bin/filebrowser"
 fi
 
 # Create default configuration if not exists

@@ -19,7 +19,13 @@ require_once "$docroot/webGui/include/Translations.php";
 $plugin_cfg = parse_plugin_cfg('file-manager', true);
 $filemanager_enabled = $plugin_cfg['enabled'] ?? 'yes';
 $filemanager_port = $plugin_cfg['port'] ?? '8080';
-$filemanager_url = "http://{$_SERVER['HTTP_HOST']}:$filemanager_port";
+
+// Build URL with better server detection
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+// Remove any existing port from HOST header to avoid conflicts
+$host = preg_replace('/:[0-9]+$/', '', $host);
+$filemanager_url = "{$protocol}://{$host}:{$filemanager_port}";
 
 function check_filemanager_status() {
   global $filemanager_port;
@@ -177,30 +183,114 @@ function toggleFullscreen() {
 }
 
 function startFileManager() {
+  // Show loading indicator
+  var originalText = event.target.innerHTML;
+  event.target.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Starting...';
+  event.target.disabled = true;
+  
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/plugins/file-manager/start_service.php', true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
+      // Restore button
+      event.target.innerHTML = originalText;
+      event.target.disabled = false;
+      
       try {
         var response = JSON.parse(xhr.responseText);
         if (xhr.status === 200) {
-          alert('Success: ' + response.message);
+          alert('Success: ' + response.message + (response.pid ? '\nPID: ' + response.pid : ''));
           setTimeout(function() {
             window.location.reload();
           }, 2000);
         } else {
-          alert('Error: ' + response.message);
+          alert('Error: ' + response.message + '\n\nCheck if FileBrowser binary is installed. If not, click "Install FileBrowser Binary" first.');
         }
       } catch(e) {
-        alert('Service management error. Check logs for details.');
+        alert('Service management error. Check logs for details.\nResponse: ' + xhr.responseText);
       }
     }
   };
   xhr.send();
 }
 
-function installFileBrowser() {\n  if (confirm('This will download and install the FileBrowser binary. Continue?')) {\n    var xhr = new XMLHttpRequest();\n    xhr.open('POST', '/plugins/file-manager/install_binary.php', true);\n    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');\n    xhr.onreadystatechange = function() {\n      if (xhr.readyState === 4) {\n        try {\n          var response = JSON.parse(xhr.responseText);\n          if (xhr.status === 200) {\n            alert('Success: ' + response.message);\n            setTimeout(function() {\n              window.location.reload();\n            }, 3000);\n          } else {\n            alert('Error: ' + response.message + (response.details ? '\\n\\nDetails: ' + response.details : ''));\n          }\n        } catch(e) {\n          alert('Installation error. Response: ' + xhr.responseText);\n        }\n      }\n    };\n    xhr.send();\n  }\n}\n\nfunction showAdminSetup() {\n  var username = prompt('Enter admin username:', 'admin');\n  if (username === null) return;\n  \n  var password = prompt('Enter admin password:', 'admin');\n  if (password === null) return;\n  \n  if (!username || !password) {\n    alert('Both username and password are required');\n    return;\n  }\n  \n  var xhr = new XMLHttpRequest();\n  xhr.open('POST', '/plugins/file-manager/setup_admin.php', true);\n  xhr.setRequestHeader('Content-Type', 'application/json');\n  xhr.onreadystatechange = function() {\n    if (xhr.readyState === 4) {\n      try {\n        var response = JSON.parse(xhr.responseText);\n        if (xhr.status === 200) {\n          alert('Success: ' + response.message + '\\n\\nUsername: ' + response.username + '\\nURL: ' + response.url);\n          setTimeout(function() {\n            window.location.reload();\n          }, 3000);\n        } else {\n          alert('Error: ' + response.message);\n        }\n      } catch(e) {\n        alert('Setup error. Response: ' + xhr.responseText);\n      }\n    }\n  };\n  xhr.send(JSON.stringify({username: username, password: password}));\n}
+function installFileBrowser() {
+  if (confirm('This will download and install the FileBrowser binary. Continue?')) {
+    // Show loading indicator
+    var originalText = event.target.innerHTML;
+    event.target.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Installing...';
+    event.target.disabled = true;
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/plugins/file-manager/install_binary.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        // Restore button
+        event.target.innerHTML = originalText;
+        event.target.disabled = false;
+        
+        try {
+          var response = JSON.parse(xhr.responseText);
+          if (xhr.status === 200) {
+            alert('Success: ' + response.message + '\n\nPath: ' + (response.path || '/usr/local/bin/filebrowser'));
+            setTimeout(function() {
+              window.location.reload();
+            }, 2000);
+          } else {
+            alert('Error: ' + response.message + (response.details ? '\n\nDetails: ' + response.details : '') + '\n\nTry checking the log: /tmp/filebrowser_install.log');
+          }
+        } catch(e) {
+          alert('Installation error. Response: ' + xhr.responseText + '\n\nCheck log: /tmp/filebrowser_install.log');
+        }
+      }
+    };
+    xhr.send();
+  }
+}\n\nfunction showAdminSetup() {
+  var username = prompt('Enter admin username:', 'admin');
+  if (username === null) return;
+  
+  var password = prompt('Enter admin password:', 'admin');
+  if (password === null) return;
+  
+  if (!username || !password) {
+    alert('Both username and password are required');
+    return;
+  }
+  
+  // Show loading indicator
+  var originalText = event.target.innerHTML;
+  event.target.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Setting up...';
+  event.target.disabled = true;
+  
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/plugins/file-manager/setup_admin.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      // Restore button
+      event.target.innerHTML = originalText;
+      event.target.disabled = false;
+      
+      try {
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) {
+          alert('Success: ' + response.message + '\n\nUsername: ' + response.username + '\nURL: ' + response.url + '\n\nYou can now login with your credentials.');
+          setTimeout(function() {
+            window.location.reload();
+          }, 2000);
+        } else {
+          alert('Error: ' + response.message + '\n\nMake sure FileBrowser binary is installed first.');
+        }
+      } catch(e) {
+        alert('Setup error. Response: ' + xhr.responseText);
+      }
+    }
+  };
+  xhr.send(JSON.stringify({username: username, password: password}));
+}
 </script>
 
 <style>
