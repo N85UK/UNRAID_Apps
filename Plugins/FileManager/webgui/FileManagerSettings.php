@@ -1,5 +1,5 @@
 <?PHP
-/* Copyright 2024, Paul McCann
+/* Copyright 2024, N85UK
  * File Manager Settings Page
  */
 

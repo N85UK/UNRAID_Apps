@@ -1,7 +1,7 @@
 %name: AWS End User Messaging (EUM)
 %slug: AWS_EUM
 %version: 1.0.0
-%author: Paul McCann
+%author: N85UK
 %category: Utilities
 %description: Simple web UI for sending SMS using AWS Pinpoint SMS (originators provided by user). No keys are included; end users must set their own credentials.
 

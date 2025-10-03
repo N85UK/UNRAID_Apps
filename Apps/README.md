@@ -91,4 +91,4 @@ For issues with specific applications, please check their respective documentati
 
 ---
 
-**Copyright (c) 2025 Paul McCann**
+**Copyright (c) 2025 N85UK**

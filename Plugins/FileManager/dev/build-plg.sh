@@ -116,7 +116,7 @@ cat > "$PLUGIN_DIR/package.json" << EOF
     "start": "node dist/index.js"
   },
   "keywords": ["unraid", "file-manager", "plugin"],
-  "author": "Paul McCann",
+  "author": "N85UK",
   "license": "GPL-2.0"
 }
 EOF
@@ -129,7 +129,7 @@ cat > "$PLUGIN_DIR/plugin.cfg" << EOF
 name=file-manager
 version=$VERSION
 description=File Manager integration (FileBrowser) for UNRAID
-author=Paul McCann
+author=N85UK
 category=Utilities
 support=https://github.com/yourusername/unraid-file-manager/issues
 icon=icons/file-manager.png
@@ -195,7 +195,7 @@ cat > "$TMP_DIR/file-manager.plg" << 'EOF'
 <?xml version='1.0' standalone='yes'?>
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
-<!ENTITY author    "Paul McCann">
+<!ENTITY author    "N85UK">
 <!ENTITY version   "VERSION_PLACEHOLDER">
 <!ENTITY md5       "MD5_PLACEHOLDER">
 <!ENTITY launch    "Settings/FileManager">

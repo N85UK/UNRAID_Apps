@@ -84,4 +84,4 @@ docker run -d \
 
 ---
 
-**Copyright (c) 2025 Paul McCann**
+**Copyright (c) 2025 N85UK**

@@ -29,7 +29,7 @@ https://github.com/N85UK/UnRiaid_Apps/raw/main/Plugins/FileManager/file-manager.
 **Send SMS messages via AWS Pinpoint**
 
 - **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
-- **Author**: Paul McCann  
+- **Author**: N85UK
 - **License**: MIT
 - **Status**: ✅ Production Ready
 
@@ -127,7 +127,7 @@ This repository and its applications are licensed under the MIT License unless o
 ```
 MIT License
 
-Copyright (c) 2025 Paul McCann
+Copyright (c) 2025 N85UK
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

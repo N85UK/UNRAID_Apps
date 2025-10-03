@@ -32,7 +32,7 @@ If you have access to submit PRs directly:
 - **Name**: AWS End User Messaging (EUM)
 - **Category**: Utilities
 - **Docker Image**: ghcr.io/n85uk/aws-eum:latest
-- **Author**: Paul McCann
+- **Author**: N85UK
 - **Description**: Web-based SMS sending application using AWS Pinpoint SMS services
 
 ### Features

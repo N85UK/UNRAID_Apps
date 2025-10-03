@@ -1,9 +1,9 @@
 <?xml version='1.0' standalone='yes'?>
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
-<!ENTITY author    "Paul McCann">
+<!ENTITY author    "N85UK">
 <!ENTITY version   "2025.10.03">
-<!ENTITY md5       "8c73fb8f078e44691213cdf42fb531f5">
+<!ENTITY md5       "48d79a35318c5312fa0f1a588ea63665">
 <!ENTITY launch    "Settings/FileManager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/Plugins/FileManager/file-manager.plg">
