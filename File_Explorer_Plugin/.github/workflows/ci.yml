@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install proxy deps
+        working-directory: File_Explorer_Plugin/proxy
+        run: npm ci
+      - name: Run proxy tests
+        working-directory: File_Explorer_Plugin/proxy
+        run: npm test
+      - name: Run shell integration tests
+        run: |
+          cd File_Explorer_Plugin/scripts/__tests__
+          bash startstop.test.sh
+
+  release:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build plugin archive
+        run: |
+          cd File_Explorer_Plugin
+          bash build/build-txz.sh ${GITHUB_REF#refs/tags/v}
+          md5 -q file-explorer-${GITHUB_REF#refs/tags/v}.txz > archive.md5
+      - name: Create GitHub release and upload asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${GITHUB_REF#refs/tags/v}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: File_Explorer_Plugin/file-explorer-${GITHUB_REF#refs/tags/v}.txz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

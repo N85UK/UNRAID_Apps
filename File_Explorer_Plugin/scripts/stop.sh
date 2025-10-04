@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PIDFILE=/var/run/file-explorer.pid
+PIDFILE=${PIDFILE:-/var/run/file-explorer.pid}
 if [ -f "$PIDFILE" ]; then
   PID=$(cat $PIDFILE)
   if kill -0 "$PID" 2>/dev/null; then

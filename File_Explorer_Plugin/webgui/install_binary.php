@@ -1,5 +1,5 @@
 <?php
-// Minimal FileBrowser installer - scaffold
+// Minimal FileBrowser installer - hardened scaffold
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 if (!ob_get_level()) ob_start();
@@ -28,10 +28,17 @@ function jsonExit($status,$message,$data=[]) {
 }
 
 try {
-    // Very small installer for prototype: download FileBrowser for linux/amd64
-    $version = 'v2.44.0';
+    // Multi-arch detection
     $arch = trim(shell_exec('uname -m')) ?: 'x86_64';
-    $fbArch = $arch === 'x86_64' ? 'amd64' : (strpos($arch,'arm')!==false? 'arm64': 'amd64');
+    switch ($arch) {
+        case 'x86_64': $fbArch = 'amd64'; break;
+        case 'aarch64': case 'arm64': $fbArch = 'arm64'; break;
+        case 'armv7l': $fbArch = 'armv7'; break;
+        default: $fbArch = 'amd64';
+    }
+
+    $version = isset($_POST['version']) ? $_POST['version'] : 'v2.44.0';
+    $checksum = isset($_POST['checksum']) ? $_POST['checksum'] : null; // optional sha256 from caller
 
     $url = "https://github.com/filebrowser/filebrowser/releases/download/$version/linux-$fbArch-filebrowser.tar.gz";
     $tmp = '/tmp/file-explorer-install-'.uniqid();
@@ -40,8 +47,14 @@ try {
     $cmd = "curl -L -f -s -o '$out' '$url'";
     exec($cmd,$o,$r);
     if ($r !== 0) throw new Exception('Download failed');
-    // quick size check
+
     if (!file_exists($out) || filesize($out)<1000) throw new Exception('Download invalid');
+
+    // If caller supplied expected checksum, verify sha256
+    if ($checksum) {
+        $sha = hash_file('sha256', $out);
+        if (strcasecmp($sha, $checksum) !== 0) throw new Exception('Checksum mismatch (sha256)');
+    }
 
     // Extract and move binary
     chdir($tmp);
@@ -53,10 +66,20 @@ try {
     if (!is_executable($bin)) chmod($bin,0755);
 
     $final = '/usr/local/bin/filebrowser';
+    if (!is_dir(dirname($final))) mkdir(dirname($final),0755,true);
+    // Backup existing binary if present
+    if (file_exists($final)) rename($final, $final.'.backup.'.time());
     rename($bin,$final);
     chmod($final,0755);
 
-    jsonExit('success','installed',['path'=>$final]);
+    // Persist plugin config dir
+    $cfgDir = '/boot/config/plugins/file-explorer';
+    if (!is_dir($cfgDir)) mkdir($cfgDir,0755,true);
+    $dbPath = $cfgDir.'/filebrowser.db';
+    // Create empty DB placeholder if needed
+    if (!file_exists($dbPath)) touch($dbPath);
+
+    jsonExit('success','installed',['path'=>$final,'arch'=>$fbArch]);
 } catch (Exception $e) {
     jsonExit('error',$e->getMessage());
 }

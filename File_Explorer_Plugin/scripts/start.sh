@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
-PIDFILE=/var/run/file-explorer.pid
-BIN=/usr/local/bin/filebrowser
-DB=/boot/config/plugins/file-explorer/filebrowser.db
+PIDFILE=${PIDFILE:-/var/run/file-explorer.pid}
+BIN=${FILEBROWSER_BIN:-/usr/local/bin/filebrowser}
+DB=${DB_PATH:-/boot/config/plugins/file-explorer/filebrowser.db}
+LOG=${FILE_EXPLORER_LOG:-/var/log/file-explorer.log}
 
 if [ -f "$PIDFILE" ] && kill -0 "$(cat $PIDFILE)" 2>/dev/null; then
   echo "Already running"
@@ -15,8 +16,7 @@ if [ ! -x "$BIN" ]; then
   exit 1
 fi
 
-# Start FileBrowser as sidecar with proxy-auth header disabled; proxy will handle auth
-nohup "$BIN" --database "$DB" --noauth -r /mnt/user > /var/log/file-explorer.log 2>&1 &
+nohup "$BIN" --database "$DB" --noauth -r /mnt/user > "$LOG" 2>&1 &
 PID=$!
 echo $PID > $PIDFILE
 
