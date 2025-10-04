@@ -1,7 +1,7 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const cookieParser = require('cookie-parser');
-const { getUserFromCookie } = require('./auth');
+const { getUserFromCookie, getCachedUserForCookie } = require('./auth');
 
 const app = express();
 app.use(cookieParser());
@@ -9,9 +9,31 @@ app.use(cookieParser());
 // Configure target of FileBrowser sidecar
 const target = process.env.FILEBROWSER_URL || 'http://127.0.0.1:8080';
 
-async function addUnraidHeaders(proxyReq, req, res) {
+// Pre-middleware to populate req.user for normal HTTP requests
+app.use('/proxy', async (req, res, next) => {
   try {
     const user = await getUserFromCookie(req);
+    if (user) req.user = user;
+  } catch (e) {
+    // ignore
+  }
+  next();
+});
+
+// Endpoint for iframe to fetch resolved session (avoids probing GraphQL every request)
+app.get('/proxy/_session', async (req, res) => {
+  try {
+    const user = await getUserFromCookie(req);
+    if (user) return res.json({ok:true,user});
+    return res.json({ok:false,user:null});
+  } catch (e) {
+    return res.status(500).json({ok:false,error:e.message});
+  }
+});
+
+async function addUnraidHeaders(proxyReq, req, res) {
+  try {
+    const user = req.user || (req.headers && req.headers.cookie && getCachedUserForCookie(req.headers.cookie));
     if (user) {
       proxyReq.setHeader('X-Unraid-User', user.username);
       proxyReq.setHeader('X-Unraid-Roles', Array.isArray(user.roles) ? user.roles.join(',') : String(user.roles));
@@ -20,7 +42,6 @@ async function addUnraidHeaders(proxyReq, req, res) {
       proxyReq.setHeader('X-Unraid-Roles', 'guest');
     }
   } catch (e) {
-    // Best-effort; do not block request
     proxyReq.setHeader('X-Unraid-User', 'anonymous');
     proxyReq.setHeader('X-Unraid-Roles', 'guest');
   }
@@ -39,13 +60,20 @@ const proxy = createProxyMiddleware({
     addUnraidHeaders(proxyReq, req, res);
   },
   onProxyReqWs: (proxyReq, req, socket, options, head) => {
-    // set headers for websocket upgrade requests
-    // Note: addUserFromCookie is async, but this callback is sync; attempt best-effort sync header
-    if (req.headers && req.headers.cookie) {
-      // Lightweight parsing to extract username cookie if present
-      // Real-world should pre-populate req.user earlier via middleware
-      proxyReq.setHeader('X-Unraid-User', 'ws-user');
-      proxyReq.setHeader('X-Unraid-Roles', 'user');
+    // set headers for websocket upgrade requests using cached user
+    try {
+      const cookie = req.headers && req.headers.cookie;
+      const user = cookie ? getCachedUserForCookie(cookie) : null;
+      if (user) {
+        proxyReq.setHeader('X-Unraid-User', user.username);
+        proxyReq.setHeader('X-Unraid-Roles', Array.isArray(user.roles) ? user.roles.join(',') : String(user.roles));
+      } else {
+        proxyReq.setHeader('X-Unraid-User', 'anonymous');
+        proxyReq.setHeader('X-Unraid-Roles', 'guest');
+      }
+    } catch (e) {
+      proxyReq.setHeader('X-Unraid-User', 'anonymous');
+      proxyReq.setHeader('X-Unraid-Roles', 'guest');
     }
   }
 });
