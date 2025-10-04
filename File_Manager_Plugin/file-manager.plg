@@ -13,6 +13,10 @@
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
+<CHANGES>
+- 2025.10.04.09: Add diagnostic JSON responses for installer; unify shutdown and error handling; remove old build archives from repository.
+</CHANGES>
+
 <FILE Run="/bin/bash">
 <INLINE>
 # Remove old plugin files
