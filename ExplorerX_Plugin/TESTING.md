@@ -5,6 +5,7 @@ This document outlines the testing procedures for ExplorerX plugin before releas
 ## Test Environment Setup
 
 ### Requirements
+
 - Unraid 7.2.0-rc.1 or later
 - Test data directories with various file types
 - Minimum 10GB free space for testing large file operations
@@ -30,6 +31,7 @@ done
 ### 1. Installation Tests
 
 **Test 1.1: Plugin Installation**
+
 - [ ] Install plugin via URL
 - [ ] Verify plugin appears in Plugins page
 - [ ] Verify plugin appears in Tools menu
@@ -37,6 +39,7 @@ done
 - [ ] Check config file created at `/boot/config/plugins/explorerx/settings.cfg`
 
 **Test 1.2: Post-Installation Verification**
+
 - [ ] Access plugin page from Tools menu
 - [ ] Verify no PHP errors in nginx log
 - [ ] Verify no JavaScript console errors
@@ -45,6 +48,7 @@ done
 ### 2. Navigation Tests
 
 **Test 2.1: Basic Navigation**
+
 - [ ] Load default directory (`/mnt`)
 - [ ] Click into subdirectory
 - [ ] Use breadcrumb to navigate back

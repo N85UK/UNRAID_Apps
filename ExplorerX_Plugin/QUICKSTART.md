@@ -9,7 +9,8 @@
    - Click **Install Plugin**
 
 2. **Enter Plugin URL**
-   ```
+
+   ```text
    https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
    ```
 
@@ -106,6 +107,7 @@ cp -r source/usr/local/emhttp/plugins/explorerx/* \
 ## 🧪 Quick Test Scenarios
 
 ### Test 1: Basic Navigation
+
 ```bash
 # Access plugin
 # Navigate to /mnt/user
@@ -114,6 +116,7 @@ cp -r source/usr/local/emhttp/plugins/explorerx/* \
 ```
 
 ### Test 2: Create & Delete
+
 ```bash
 # Click "New Folder" button
 # Enter name: "test_folder"
@@ -123,6 +126,7 @@ cp -r source/usr/local/emhttp/plugins/explorerx/* \
 ```
 
 ### Test 3: Copy & Paste
+
 ```bash
 # Select a file
 # Click Copy button
@@ -132,6 +136,7 @@ cp -r source/usr/local/emhttp/plugins/explorerx/* \
 ```
 
 ### Test 4: Upload & Download
+
 ```bash
 # Click Upload button
 # Select a file from your computer
@@ -245,8 +250,8 @@ ls -la /mnt/
 
 ## 🆘 Getting Help
 
-- **GitHub Issues:** https://github.com/N85UK/UNRAID_Apps/issues
-- **Unraid Forums:** https://forums.unraid.net
+- **GitHub Issues:** [Report Issues](https://github.com/N85UK/UNRAID_Apps/issues)
+- **Unraid Forums:** [Community Support](https://forums.unraid.net)
 
 ---
 

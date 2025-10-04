@@ -9,6 +9,7 @@ ExplorerX is a **native Unraid plugin** (no Docker required) that provides advan
 ## ✨ Key Features
 
 ### Core Capabilities
+
 - ✅ **Multi-pane navigation** - Browse multiple directories simultaneously
 - ✅ **Bulk operations** - Select and act on multiple files at once
 - ✅ **Background task queue** - Copy/move large files without blocking UI
@@ -18,6 +19,7 @@ ExplorerX is a **native Unraid plugin** (no Docker required) that provides advan
 - ✅ **Zero Docker overhead** - Pure native implementation
 
 ### Operations
+
 - 📂 Browse, create, rename, delete directories
 - 📄 Upload, download, copy, move, delete files
 - 🔄 Bulk copy/move with progress tracking
@@ -27,6 +29,7 @@ ExplorerX is a **native Unraid plugin** (no Docker required) that provides advan
 - 📊 Disk usage visualization
 
 ### Security
+
 - 🔒 CSRF protection on all operations
 - 🛡️ Path sanitization and traversal prevention
 - 🚫 Operations restricted to `/mnt` by default
@@ -45,9 +48,11 @@ ExplorerX is a **native Unraid plugin** (no Docker required) that provides advan
 
 1. Go to **Plugins → Install Plugin** in Unraid webGUI
 2. Enter the following URL:
-   ```
+
+   ```text
    https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
    ```
+
 3. Click **Install**
 4. Navigate to **Tools → ExplorerX** to start using
 
@@ -78,14 +83,16 @@ chmod -R 755 /usr/local/emhttp/plugins/explorerx
 - Hold **Shift** and click to select a range
 - Use **Ctrl/Cmd + A** to select all visible items
 
-### Operations
+### File Operations
 
 #### Single File/Folder
+
 - **Right-click** → Context menu with available actions
 - **Double-click** folder to navigate into it
 - **Click preview icon** to view file content
 
 #### Bulk Operations
+
 1. Select multiple items
 2. Use toolbar buttons: Copy, Move, Delete, Download as ZIP
 3. Monitor progress in the background tasks panel
@@ -130,7 +137,8 @@ SHOW_HIDDEN_FILES=false
 ## 🏗️ Architecture
 
 ### Directory Structure
-```
+
+```text
 /usr/local/emhttp/plugins/explorerx/
 ├── explorerx.page           # Main webGUI page
 ├── include/
@@ -152,6 +160,7 @@ SHOW_HIDDEN_FILES=false
 ```
 
 ### Technology Stack
+
 - **Frontend**: Vanilla JavaScript (ES6+), CSS3
 - **Backend**: PHP 8.x, Bash
 - **Storage**: JSON files for task queue state
@@ -320,13 +329,14 @@ This project is licensed under the MIT License - see [LICENSE](../LICENSE) for d
 
 ## 📞 Support
 
-- **Issues**: https://github.com/N85UK/UNRAID_Apps/issues
-- **Forum**: https://forums.unraid.net
-- **Documentation**: https://github.com/N85UK/UNRAID_Apps/wiki
+- **Issues**: [GitHub Issues](https://github.com/N85UK/UNRAID_Apps/issues)
+- **Forum**: [Unraid Community Forums](https://forums.unraid.net)
+- **Documentation**: [Project Wiki](https://github.com/N85UK/UNRAID_Apps/wiki)
 
 ## 📜 Changelog
 
 ### v0.1.0 (2025-10-04)
+
 - Initial release
 - Multi-pane file browser
 - Bulk operations support

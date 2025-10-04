@@ -33,7 +33,7 @@
 
 ### A) Repository Structure
 
-```
+```text
 ExplorerX_Plugin/
 ├── explorerx.plg                          # Plugin manifest
 ├── README.md                              # User documentation

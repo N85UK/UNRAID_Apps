@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-10-04
 
 ### Added
+
 - Initial release of ExplorerX plugin for Unraid 7.2.0-rc.1
 - Multi-pane file browser with dual-pane navigation capability
 - Comprehensive file operations:
@@ -62,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extensive testing documentation
 
 ### Technical Details
+
 - **Frontend**: Vanilla JavaScript (ES6+), CSS3
 - **Backend**: PHP 8.x, Bash
 - **Architecture**: Native Unraid plugin with .plg manifest
@@ -70,28 +72,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Performance**: Optimized for directories with 20,000+ files
 
 ### Installation
+
 Plugin can be installed via URL:
-```
+
+```text
 https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
 ```
 
 ### Known Limitations
+
 - Background queue is functional but simplified (full implementation planned)
 - Preview feature stubbed (implementation planned for v0.2.0)
 - Search is directory-local only (recursive search planned)
 - Maximum tested file count: 20,000 files per directory
 
 ### Requirements
+
 - Unraid 7.2.0-rc.1 or later
 - PHP 8.x with JSON and ZIP extensions
 - x86_64 architecture
 
 ### Compatibility
+
 - Tested on Unraid 7.2.0-rc.1
 - Compatible with all modern browsers (Chrome, Firefox, Safari, Edge)
 - Mobile responsive (tablets and smartphones)
 
 ### Security Notes
+
 - All file operations are logged to `/var/log/explorerx/`
 - Operations are restricted to `/mnt` by default
 - Protected system paths cannot be deleted
@@ -99,26 +107,31 @@ https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explor
 - Path traversal attempts are blocked and logged
 
 ### Documentation
+
 - README.md: Installation and usage guide
 - TESTING.md: Comprehensive testing procedures
 - CHANGELOG.md: This file
 - Inline code documentation
 
 ### Support
-- Issues: https://github.com/N85UK/UNRAID_Apps/issues
-- Documentation: https://github.com/N85UK/UNRAID_Apps/wiki
+
+- Issues: [GitHub Issues](https://github.com/N85UK/UNRAID_Apps/issues)
+- Documentation: [Project Wiki](https://github.com/N85UK/UNRAID_Apps/wiki)
 
 ---
 
 ## Version History
 
 ### Version Numbering
+
 ExplorerX uses Semantic Versioning:
+
 - **MAJOR**: Breaking changes or major feature releases
 - **MINOR**: New features, backwards compatible
 - **PATCH**: Bug fixes, security patches
 
 ### Release Process
+
 1. Update version in `explorerx.plg` and source files
 2. Update `CHANGELOG.md` with changes
 3. Build package with `createpackage.sh`
@@ -130,6 +143,7 @@ ExplorerX uses Semantic Versioning:
 ### Future Roadmap
 
 #### v0.2.0 (Planned - Q4 2025)
+
 - Full file preview implementation (images, videos, text, PDFs)
 - Recursive directory search
 - Enhanced background queue with real-time progress
@@ -140,6 +154,7 @@ ExplorerX uses Semantic Versioning:
 - Multiple theme support
 
 #### v0.3.0 (Planned - Q1 2026)
+
 - Integration with Unraid shares API
 - Disk space visualization
 - File comparison tool
@@ -149,6 +164,7 @@ ExplorerX uses Semantic Versioning:
 - Advanced permission management
 
 #### v1.0.0 (Planned - Q2 2026)
+
 - Stable production release
 - Full feature parity with requirements
 - Comprehensive test coverage
@@ -158,7 +174,7 @@ ExplorerX uses Semantic Versioning:
 
 ---
 
-**Note:** This is an initial release focused on core functionality and security. 
+**Note:** This is an initial release focused on core functionality and security.
 Features will be expanded based on community feedback and requirements.
 
 [Unreleased]: https://github.com/N85UK/UNRAID_Apps/compare/v0.1.0...HEAD
