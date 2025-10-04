@@ -1,9 +1,9 @@
-<?xml version='1.0' standalone='yes'?>
+<?xml version="1.0" standalone="yes"?>
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.04.03">
-<!ENTITY md5       "bb1b03c0d7112e93ff645b088667c98f">
+<!ENTITY version   "2025.10.04.07">
+<!ENTITY md5       "c2fdc7d61370204da1846ff9cb2ba638">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -11,110 +11,7 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- XML syntax validated - 2025.10.04.03 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
-
-<CHANGES>
-###2025.10.04.03 (Sanitized Manifest For XML Parser)
-- Removed backticks and fancy quoting from changelog lines to avoid any XML entity edge cases
-- Retained prior structural fixes (correct archive root, logical AND escaping)
-- No functional code changes in scripts
-
-###2025.10.04.02 (XML Escapes & GUI Version Update)
-###2025.10.04.02 (XML Escapes and GUI Version Update)
-- Escaped logical AND (&&) in install inline script to &amp;&amp; preventing XML parse errors
-- Quoted plugin directory reference in rename fallback for clarity
-- Updated displayed plugin version in UI to 2025.10.04.02
-- No functional runtime code changes beyond manifest formatting
-
-###2025.10.04.01 (Correct Archive Root and Fallback Rename)
-- Repackaged archive with proper file-manager/ top-level directory instead of build/
-- Added install fallback to rename build to file-manager if an older archive layout is encountered
-- Ensures extraction populates /usr/local/emhttp/plugins/file-manager and GUI updates version
-- No code changes to runtime scripts; distribution structure fix only
-
-###2025.10.03.24 (Absolute Paths &amp; Installer Fail-safe Distribution)
-- Updated all frontend fetch calls to absolute `/plugins/file-manager/*.php` paths to avoid resolution under `/Settings/` causing empty/HTML responses
-- Synchronized distributed `install_binary.php` with shutdown fail-safe (always-JSON) and enhanced diagnostics
-- Preparing for wider testing of binary installation reliability on Unraid hosts
-- No change to core FileBrowser logic; packaging/UX improvements only
-
-###2025.10.03.23 (Build Sync &amp; Version Display)
-- Synchronized build/webgui and source/webgui `install_binary.php` (shutdown fail-safe ensured in distributed build)
-- Updated GUI displayed version to 2025.10.03.22+ (previous page still showed .21)
-- Formatting fix for changelog bullet indentation
-- No functional code changes besides distribution sync
-
-###2025.10.03.22 (Health Endpoint &amp; Diagnostics)
-- Added `health.php` endpoint for quick PHP/JSON verification
-- Enhanced frontend `safeFetchJson` with header logging &amp; health probe fallback
-- Added shutdown-based always-JSON installer earlier (carried forward)
-- Preparing for persistent empty-response root cause isolation
-
-###2025.10.03.21 (Robust JSON Handling &amp; Frontend Improvements)
-- Added safe JSON fetch wrapper with raw response fallback
-- Improved error diagnostics for installation, setup, start/stop actions
-- Frontend buttons now re-enable reliably after failures
-- Preparation for environment-specific logging
-
-###2025.10.03.20 (FileBrowser Binary Installation Fix)
-- Fixed FileBrowser binary testing command from --version to version
-- Resolved installation failures caused by incorrect CLI command usage
-- Enhanced cross-platform compatibility for binary verification
-
-###2025.10.03.19 (Enhanced Binary Installation &amp; Bug Fixes)
-- **Enhanced FileBrowser Installation**: Added network connectivity checks, multiple download sources (GitHub, JSDeliver, Raw GitHub), and comprehensive error handling
-- **Improved Error Diagnostics**: Better logging, binary testing before/after installation, and detailed error messages
-- **Version Consistency**: Fixed version number mismatch across all files
-- **Code Cleanup**: Removed unused debug files and optimized archive size
-- **Reliability Improvements**: Added fallback download URLs, retry logic, and timeout handling
-- **Security**: Enhanced input validation and secure file operations
-- **Cache-busting**: Updated MD5 hash for fresh download
-
-###2025.10.03.18 (JavaScript Path Fix)
-- Fixed JavaScript fetch URLs to use relative paths (install_binary.php not /plugins/file-manager/...)
-- Improved error handling in PHP scripts to ensure valid JSON responses
-- Added proper output buffering and error handlers to prevent JSON parsing errors
-- This should resolve the "Unexpected token 'F', 'File not found.' is not valid JSON" error
-
-###2025.10.03.17 (Clean Archive Creation)
-- Completely removed all old archive files
-- Created fresh XZ compressed archive with verbose verification
-- Verified archive structure: webgui/file-manager.page (correct naming)
-- Tested XZ decompression compatibility
-- Clean build process to eliminate any corruption issues
-
-###2025.10.03.16 (Proper TXZ Format)
-- Created proper XZ compressed tar archive (.txz format)
-- Previous archives were gzip compressed, causing UNRAID compatibility issues
-- Now uses correct `tar -cJf` format that UNRAID expects
-- Should resolve "tar archive is corrupt" installation error
-
-###2025.10.03.15 (Archive Rebuild)
-- Force fresh download by incrementing version number
-- Same fixed content as v2025.10.03.14 but with new filename
-- Resolves GitHub caching issue with corrupt archive download
-
-###2025.10.03.14 (File Path Fix)
-- Fixed page file naming to match launch path (file-manager.page)
-- This should resolve the blank page issue in Settings -> File Manager
-- Page files now correctly named for UNRAID webGUI system
-
-###2025.10.03.10 (v2.0 - Complete Rebuild)
-- Complete plugin rebuild with working functionality
-- Fixed installation issues requiring Force Install
-- Enhanced FileBrowser integration with automatic setup
-- Improved service management and reliability
-- Better error handling and user feedback
-- Modern responsive web interface
-- Automatic FileBrowser binary installation
-- Simplified configuration and setup process
-- Real-time service status monitoring
-- Comprehensive logging and debugging
-
-###Previous Versions
-- See CHANGELOG.md for complete version history
-</CHANGES>
 
 <FILE Run="/bin/bash">
 <INLINE>
