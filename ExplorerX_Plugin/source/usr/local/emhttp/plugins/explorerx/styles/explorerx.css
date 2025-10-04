@@ -113,6 +113,29 @@
 
 .btn-icon {
     padding: 6px 8px;
+    min-width: 32px;
+    background: #333;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+.btn-icon:hover {
+    background: #444;
+    border-color: #666;
+}
+
+/* File list action buttons */
+.col-actions .btn-icon {
+    padding: 4px 6px;
+    min-width: 24px;
+    font-size: 14px;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+.col-actions .btn-icon:hover {
+    background: #333;
+    border-color: #555;
 }
 
 .btn-danger {
