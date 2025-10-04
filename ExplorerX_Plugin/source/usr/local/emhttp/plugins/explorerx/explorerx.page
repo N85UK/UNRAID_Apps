@@ -1,0 +1,304 @@
+Menu="Tools"
+Title="ExplorerX"
+Icon="explorerx.png"
+---
+<?php
+/*
+ * ExplorerX - Advanced Native File Manager for Unraid
+ * Copyright (c) 2025 N85UK
+ * 
+ * A powerful native file manager with multi-pane navigation,
+ * bulk operations, and background task queue.
+ */
+
+require_once '/usr/local/emhttp/plugins/explorerx/include/ExplorerX.php';
+require_once '/usr/local/emhttp/plugins/explorerx/include/security.php';
+
+// Initialize security
+$csrf_token = ExplorerX_Security::getCSRFToken();
+
+// Load configuration
+$config = ExplorerX::loadConfig();
+$root_path = $config['ROOT_PATH'] ?? '/mnt';
+
+// Get initial path from query or use root
+$current_path = $_GET['path'] ?? $root_path;
+$current_path = ExplorerX_Security::sanitizePath($current_path, $root_path);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo htmlspecialchars($csrf_token); ?>">
+    <title>ExplorerX - Advanced File Manager</title>
+    
+    <link rel="stylesheet" href="/webGui/styles/default.css">
+    <link rel="stylesheet" href="/plugins/explorerx/styles/explorerx.css">
+</head>
+<body>
+
+<!-- Main Container -->
+<div id="explorerx-app">
+    
+    <!-- Header -->
+    <div id="explorerx-header">
+        <div class="header-left">
+            <h1>
+                <img src="/plugins/explorerx/images/icon-explorerx.png" alt="ExplorerX" class="title-icon">
+                ExplorerX
+            </h1>
+            <span class="subtitle">Advanced File Manager</span>
+        </div>
+        <div class="header-right">
+            <button id="btn-dual-pane" class="btn btn-icon" title="Toggle Dual Pane (Ctrl+P)">
+                <span class="icon">⚌</span>
+            </button>
+            <button id="btn-refresh" class="btn btn-icon" title="Refresh (F5)">
+                <span class="icon">↻</span>
+            </button>
+            <button id="btn-settings" class="btn btn-icon" title="Settings">
+                <span class="icon">⚙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div id="explorerx-toolbar">
+        <div class="toolbar-section">
+            <button id="btn-new-folder" class="btn" title="New Folder (Ctrl+N)">
+                <span class="icon">📁</span> New Folder
+            </button>
+            <button id="btn-upload" class="btn" title="Upload Files">
+                <span class="icon">⬆️</span> Upload
+            </button>
+            <button id="btn-download" class="btn" title="Download Selected">
+                <span class="icon">⬇️</span> Download
+            </button>
+        </div>
+        <div class="toolbar-section">
+            <button id="btn-copy" class="btn" title="Copy (Ctrl+C)" disabled>
+                <span class="icon">📋</span> Copy
+            </button>
+            <button id="btn-cut" class="btn" title="Cut (Ctrl+X)" disabled>
+                <span class="icon">✂️</span> Cut
+            </button>
+            <button id="btn-paste" class="btn" title="Paste (Ctrl+V)" disabled>
+                <span class="icon">📌</span> Paste
+            </button>
+            <button id="btn-delete" class="btn btn-danger" title="Delete (Del)" disabled>
+                <span class="icon">🗑️</span> Delete
+            </button>
+        </div>
+        <div class="toolbar-section">
+            <button id="btn-zip" class="btn" title="Create ZIP" disabled>
+                <span class="icon">🗜️</span> ZIP
+            </button>
+            <button id="btn-checksum" class="btn" title="Generate Checksum" disabled>
+                <span class="icon">🔐</span> Checksum
+            </button>
+        </div>
+        <div class="toolbar-section toolbar-search">
+            <input type="text" id="search-input" placeholder="Search... (Ctrl+F)" />
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div id="quick-links">
+        <div class="quick-link-group">
+            <span class="group-title">Quick Access:</span>
+            <a href="#" class="quick-link" data-path="/mnt">Root</a>
+            <a href="#" class="quick-link" data-path="/mnt/user">User Shares</a>
+            <a href="#" class="quick-link" data-path="/mnt/disk1">Disk 1</a>
+            <a href="#" class="quick-link" data-path="/mnt/cache">Cache</a>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="explorerx-content">
+        
+        <!-- Left Pane -->
+        <div class="file-pane active" id="pane-left" data-pane="left">
+            
+            <!-- Breadcrumb Navigation -->
+            <div class="breadcrumb" id="breadcrumb-left">
+                <a href="#" class="breadcrumb-item" data-path="<?php echo htmlspecialchars($root_path); ?>">
+                    <span class="icon">🏠</span>
+                </a>
+            </div>
+
+            <!-- File List -->
+            <div class="file-list-container">
+                <table class="file-list" id="file-list-left">
+                    <thead>
+                        <tr>
+                            <th class="col-checkbox">
+                                <input type="checkbox" class="select-all" />
+                            </th>
+                            <th class="col-icon"></th>
+                            <th class="col-name sortable" data-sort="name">
+                                Name <span class="sort-indicator">▼</span>
+                            </th>
+                            <th class="col-size sortable" data-sort="size">
+                                Size <span class="sort-indicator"></span>
+                            </th>
+                            <th class="col-modified sortable" data-sort="modified">
+                                Modified <span class="sort-indicator"></span>
+                            </th>
+                            <th class="col-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="loading">
+                            <td colspan="6">
+                                <div class="spinner"></div>
+                                Loading...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span class="status-items">0 items</span>
+                <span class="status-selected">0 selected</span>
+                <span class="status-size">0 B</span>
+            </div>
+        </div>
+
+        <!-- Right Pane (hidden by default) -->
+        <div class="file-pane" id="pane-right" data-pane="right" style="display: none;">
+            
+            <!-- Breadcrumb Navigation -->
+            <div class="breadcrumb" id="breadcrumb-right">
+                <a href="#" class="breadcrumb-item" data-path="<?php echo htmlspecialchars($root_path); ?>">
+                    <span class="icon">🏠</span>
+                </a>
+            </div>
+
+            <!-- File List -->
+            <div class="file-list-container">
+                <table class="file-list" id="file-list-right">
+                    <thead>
+                        <tr>
+                            <th class="col-checkbox">
+                                <input type="checkbox" class="select-all" />
+                            </th>
+                            <th class="col-icon"></th>
+                            <th class="col-name sortable" data-sort="name">
+                                Name <span class="sort-indicator">▼</span>
+                            </th>
+                            <th class="col-size sortable" data-sort="size">
+                                Size <span class="sort-indicator"></span>
+                            </th>
+                            <th class="col-modified sortable" data-sort="modified">
+                                Modified <span class="sort-indicator"></span>
+                            </th>
+                            <th class="col-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="loading">
+                            <td colspan="6">
+                                <div class="spinner"></div>
+                                Loading...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span class="status-items">0 items</span>
+                <span class="status-selected">0 selected</span>
+                <span class="status-size">0 B</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Tasks Panel -->
+    <div id="tasks-panel" class="collapsed">
+        <div class="tasks-header">
+            <h3>
+                <span class="icon">⚙️</span>
+                Background Tasks
+                <span class="task-count">0</span>
+            </h3>
+            <button id="btn-toggle-tasks" class="btn-icon">
+                <span class="icon">▼</span>
+            </button>
+        </div>
+        <div class="tasks-body">
+            <div class="tasks-list" id="tasks-list">
+                <p class="no-tasks">No active tasks</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Context Menu -->
+<div id="context-menu" class="context-menu" style="display: none;">
+    <div class="context-menu-item" data-action="open">
+        <span class="icon">📂</span> Open
+    </div>
+    <div class="context-menu-item" data-action="preview">
+        <span class="icon">👁️</span> Quick Preview
+    </div>
+    <div class="context-menu-separator"></div>
+    <div class="context-menu-item" data-action="copy">
+        <span class="icon">📋</span> Copy
+    </div>
+    <div class="context-menu-item" data-action="cut">
+        <span class="icon">✂️</span> Cut
+    </div>
+    <div class="context-menu-item" data-action="rename">
+        <span class="icon">✏️</span> Rename
+    </div>
+    <div class="context-menu-separator"></div>
+    <div class="context-menu-item" data-action="download">
+        <span class="icon">⬇️</span> Download
+    </div>
+    <div class="context-menu-item" data-action="zip">
+        <span class="icon">🗜️</span> Create ZIP
+    </div>
+    <div class="context-menu-item" data-action="checksum">
+        <span class="icon">🔐</span> Checksum
+    </div>
+    <div class="context-menu-separator"></div>
+    <div class="context-menu-item" data-action="delete">
+        <span class="icon">🗑️</span> Delete
+    </div>
+    <div class="context-menu-item" data-action="properties">
+        <span class="icon">ℹ️</span> Properties
+    </div>
+</div>
+
+<!-- Modal Dialogs -->
+<div id="modal-overlay" class="modal-overlay" style="display: none;"></div>
+
+<!-- File Upload Input (hidden) -->
+<input type="file" id="file-upload-input" multiple style="display: none;">
+
+<!-- Scripts -->
+<script>
+    // Configuration from PHP
+    window.ExplorerXConfig = {
+        rootPath: <?php echo json_encode($root_path); ?>,
+        currentPath: <?php echo json_encode($current_path); ?>,
+        csrfToken: <?php echo json_encode($csrf_token); ?>,
+        apiEndpoint: '/plugins/explorerx/include/api.php',
+        enableZip: <?php echo $config['ENABLE_ZIP'] === 'true' ? 'true' : 'false'; ?>,
+        enableChecksums: <?php echo $config['ENABLE_CHECKSUMS'] === 'true' ? 'true' : 'false'; ?>,
+        enablePreviews: <?php echo $config['ENABLE_PREVIEWS'] === 'true' ? 'true' : 'false'; ?>,
+        showHiddenFiles: <?php echo $config['SHOW_HIDDEN_FILES'] === 'true' ? 'true' : 'false'; ?>
+    };
+</script>
+<script src="/plugins/explorerx/js/explorerx.js"></script>
+<script src="/plugins/explorerx/js/file-operations.js"></script>
+<script src="/plugins/explorerx/js/background-queue.js"></script>
+<script src="/plugins/explorerx/js/keyboard.js"></script>
+
+</body>
+</html>
