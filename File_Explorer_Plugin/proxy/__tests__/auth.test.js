@@ -1,12 +1,13 @@
 const nock = require('nock');
 const { fetchUserWithCookie, getUserFromCookie } = require('../auth');
 
-describe('auth bridge (GraphQL)', () => {
+describe('auth bridge', () => {
   afterEach(() => nock.cleanAll());
 
-  test('fetchUserWithCookie returns user from GraphQL viewer field', async () => {
+  test('fetchUserWithCookie tries endpoints and returns user when found', async () => {
     const cookie = 'CAKE=abc';
-    const graphql = nock('http://127.0.0.1').post('/graphql').reply(200, { data: { viewer: { username: 'alice', roles: ['admin'] } } });
+    // mock /api/session
+    nock('http://127.0.0.1').get('/api/session').reply(200, { username: 'alice', roles: ['admin'] });
     const user = await fetchUserWithCookie(cookie);
     expect(user).not.toBeNull();
     expect(user.username).toBe('alice');
