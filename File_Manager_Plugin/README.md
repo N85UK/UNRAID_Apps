@@ -1,5 +1,19 @@
 # File Manager Plugin for UNRAID
 
+**Repository policy:** This repository keeps source files (PHP, web UI, scripts) under version control. Generated artifacts such as `.txz` plugin archives, temporary staging directories, and local logs are not tracked by default and are listed in `.gitignore`. A release archive (e.g. `file-manager-<version>.txz`) may be force-added for convenient testing, but in general releases should be published through GitHub Releases or an external build pipeline.
+
+**Building a release:** To create a release archive locally run:
+
+```
+cd File_Manager_Plugin
+rm -rf staging_release && mkdir -p staging_release
+cp -R build staging_release/file-manager
+tar -cJf file-manager-<version>.txz -C staging_release file-manager
+md5 -q file-manager-<version>.txz
+```
+
+Replace `<version>` with the desired version string (for example `2025.10.04.09`).
+
 A modern, user-friendly file management plugin for UNRAID servers, providing a web-based interface for file operations.
 
 ## ✨ Features
