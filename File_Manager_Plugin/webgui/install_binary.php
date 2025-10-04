@@ -1,72 +1,70 @@
 <?php
 /* FileBrowser Binary Installation Script */
 
-// Ensure proper JSON output
-// Start output buffering so we can control and sanitize anything emitted
-ob_start();
-header('Content-Type: application/json');
-error_reporting(E_ALL);
+// Run with minimal visible PHP warnings; we capture and present errors as JSON
 ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
 
-// Defensive: record script start time for diagnostics
+// Start output buffering to capture any accidental output
+if (!ob_get_level()) ob_start();
+
+// Record script start time
 $__fm_start = microtime(true);
 
-// Register a shutdown handler to catch fatal errors or empty responses
+// Unified shutdown handler: report fatal errors and empty responses as JSON
 register_shutdown_function(function() {
-    // If headers already sent and some JSON was produced we leave it; otherwise we emit a fallback
-    $buffer = ob_get_contents();
-    $hasOutput = trim($buffer) !== '';
     $lastError = error_get_last();
-    if ($lastError && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+    if ($lastError && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
         if (ob_get_length()) ob_clean();
+        header('Content-Type: application/json');
         echo json_encode([
             'status' => 'error',
-            'message' => 'Fatal error: '.$lastError['message'].' in '.$lastError['file'].' on line '.$lastError['line'],
+            'message' => 'Fatal error: ' . ($lastError['message'] ?? '(unknown)'),
+            'file' => ($lastError['file'] ?? '(unknown)'),
+            'line' => ($lastError['line'] ?? 0),
             'timestamp' => date('Y-m-d H:i:s'),
-            'phase' => 'shutdown-handler'
+            'phase' => 'shutdown-fatal'
         ]);
-        return; // ensure nothing else appended
+        return;
     }
+
+    $buffer = ob_get_contents();
+    $hasOutput = trim((string)$buffer) !== '';
     if (!$hasOutput) {
         if (ob_get_length()) ob_clean();
+        header('Content-Type: application/json');
         echo json_encode([
             'status' => 'error',
-            'message' => 'Script ended with no output (unexpected). Check PHP error log or /var/log/file-manager/install.log',
+            'message' => 'Script ended with no output (unexpected). Please check PHP logs and /var/log/file-manager/install.log',
             'timestamp' => date('Y-m-d H:i:s'),
             'phase' => 'shutdown-empty'
         ]);
     }
 });
 
-// Function to ensure JSON output on exit
-function jsonExit($status, $message, $data = []) {
-    // Clean any output buffer (discard stray text / warnings)
-    if (ob_get_length()) ob_clean();
-    $response = array_merge([
-        'status' => $status,
-        'message' => $message,
-        'timestamp' => date('Y-m-d H:i:s'),
-        'duration_ms' => (int) round((microtime(true) - $GLOBALS['__fm_start']) * 1000)
-    ], $data);
-    echo json_encode($response, JSON_UNESCAPED_SLASHES);
-    exit;
-}
-
-// Set error handler to return JSON
+// Convert PHP errors to exceptions so they can be caught by try/catch
 set_error_handler(function($severity, $message, $file, $line) {
-    // Convert all errors to JSON responses (except notices we may choose to ignore)
     if (!(error_reporting() & $severity)) return; // respect @ operator
-    jsonExit('error', "PHP Error: $message in $file on line $line", ['error_severity' => $severity]);
+    throw new ErrorException($message, 0, $severity, $file, $line);
 });
 
-// Allow both GET, POST, and command line for testing
-if (php_sapi_name() === 'cli') {
-    // Command line execution - simulate POST
-    $_SERVER['REQUEST_METHOD'] = 'POST';
-} elseif ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    jsonExit('error', 'Method not allowed');
-}
+// Convert uncaught exceptions to a JSON response
+set_exception_handler(function($e) {
+    if (ob_get_length()) ob_clean();
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Uncaught exception: ' . $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'timestamp' => date('Y-m-d H:i:s')
+    ]);
+    exit(1);
+});
+
+// Ensure JSON header for successful responses
+header('Content-Type: application/json');
 
 function logDebug($message) {
     // Detect if we're on UNRAID or development environment

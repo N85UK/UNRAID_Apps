@@ -1,36 +1,58 @@
 <?php
 /* FileBrowser Binary Installation Script (enhanced build copy with shutdown handler) */
 
-ob_start();
-header('Content-Type: application/json');
-error_reporting(E_ALL);
+// Minimal visible errors; present errors as JSON
 ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+
+if (!ob_get_level()) ob_start();
 $__fm_start = microtime(true);
 
 register_shutdown_function(function() {
-    $buffer = ob_get_contents();
-    $hasOutput = trim($buffer) !== '';
     $lastError = error_get_last();
-    if ($lastError && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+    if ($lastError && in_array($lastError['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
         if (ob_get_length()) ob_clean();
+        header('Content-Type: application/json');
         echo json_encode([
             'status' => 'error',
-            'message' => 'Fatal error: '.$lastError['message'].' in '.$lastError['file'].' on line '.$lastError['line'],
+            'message' => 'Fatal error: ' . ($lastError['message'] ?? '(unknown)'),
+            'file' => ($lastError['file'] ?? '(unknown)'),
+            'line' => ($lastError['line'] ?? 0),
             'timestamp' => date('Y-m-d H:i:s'),
-            'phase' => 'shutdown-handler'
+            'phase' => 'shutdown-fatal'
         ]);
         return;
     }
+    $buffer = ob_get_contents();
+    $hasOutput = trim((string)$buffer) !== '';
     if (!$hasOutput) {
         if (ob_get_length()) ob_clean();
+        header('Content-Type: application/json');
         echo json_encode([
             'status' => 'error',
-            'message' => 'Script ended with no output (unexpected). Check PHP error log or /var/log/file-manager/install.log',
+            'message' => 'Script ended with no output (unexpected).',
             'timestamp' => date('Y-m-d H:i:s'),
             'phase' => 'shutdown-empty'
         ]);
     }
 });
+
+set_error_handler(function($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) return;
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
+
+set_exception_handler(function($e) {
+    if (ob_get_length()) ob_clean();
+    header('Content-Type: application/json');
+    echo json_encode(['status' => 'error', 'message' => 'Uncaught exception: ' . $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine(), 'timestamp' => date('Y-m-d H:i:s')]);
+    exit(1);
+});
+
+header('Content-Type: application/json');
+
+$__fm_start = microtime(true);
 
 function jsonExit($status, $message, $data = []) {
     if (ob_get_length()) ob_clean();
