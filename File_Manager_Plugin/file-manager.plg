@@ -33,7 +33,7 @@ echo "Cleaned old installation"
 </FILE>
 
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.txz" Run="upgradepkg --install-new">
-<URL>&gitURL;/raw/main/File_Manager_Plugin/&name;-&version;.txz</URL>
+<URL>&gitURL;/releases/download/v&version;/&name;-&version;.txz</URL>
 <MD5>&md5;</MD5>
 </FILE>
 
