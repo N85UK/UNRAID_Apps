@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "file-manager">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.04.02">
-<!ENTITY md5       "95fe670e10a5f83e514104a88f632292">
+<!ENTITY version   "2025.10.04.03">
+<!ENTITY md5       "bb1b03c0d7112e93ff645b088667c98f">
 <!ENTITY launch    "Settings/file-manager">
 <!ENTITY gitURL    "https://github.com/N85UK/UnRiaid_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/File_Manager_Plugin/file-manager.plg">
@@ -11,19 +11,25 @@
 <!ENTITY min       "7.0.0">
 ]>
 
-<!-- XML syntax validated - 2025.10.04.02 -->
+<!-- XML syntax validated - 2025.10.04.03 -->
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###2025.10.04.03 (Sanitized Manifest For XML Parser)
+- Removed backticks and fancy quoting from changelog lines to avoid any XML entity edge cases
+- Retained prior structural fixes (correct archive root, logical AND escaping)
+- No functional code changes in scripts
+
 ###2025.10.04.02 (XML Escapes & GUI Version Update)
-- Escaped logical AND (&&) in install inline script to `&amp;&amp;` preventing XML parse errors
+###2025.10.04.02 (XML Escapes and GUI Version Update)
+- Escaped logical AND (&&) in install inline script to &amp;&amp; preventing XML parse errors
 - Quoted plugin directory reference in rename fallback for clarity
 - Updated displayed plugin version in UI to 2025.10.04.02
 - No functional runtime code changes beyond manifest formatting
 
-###2025.10.04.01 (Correct Archive Root &amp; Fallback Rename)
-- Repackaged archive with proper `file-manager/` top-level directory instead of `build/`
-- Added install fallback to rename `build` to `file-manager` if an older archive layout is encountered
+###2025.10.04.01 (Correct Archive Root and Fallback Rename)
+- Repackaged archive with proper file-manager/ top-level directory instead of build/
+- Added install fallback to rename build to file-manager if an older archive layout is encountered
 - Ensures extraction populates /usr/local/emhttp/plugins/file-manager and GUI updates version
 - No code changes to runtime scripts; distribution structure fix only
 
