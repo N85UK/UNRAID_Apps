@@ -1,0 +1,256 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "explorerx">
+<!ENTITY author    "N85UK">
+<!ENTITY version   "0.1.0">
+<!ENTITY md5       "PLACEHOLDER_MD5">
+<!ENTITY launch    "Tools/ExplorerX">
+<!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
+<!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
+<!ENTITY packageURL "&gitURL;/releases/download/v&version;/explorerx-&version;-x86_64-1.txz">
+<!ENTITY support   "&gitURL;/issues">
+<!ENTITY min       "7.2.0-rc.1">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="&support;" min="&min;">
+
+<CHANGES>
+###v0.1.0 (2025-10-04)
+- Initial release of ExplorerX
+- Multi-pane file browser with dual-pane navigation
+- Bulk file operations (copy, move, delete)
+- Background task queue with progress tracking
+- Safe path guards restricted to /mnt by default
+- Quick file previews (text, image, video)
+- Keyboard shortcuts for power users
+- ZIP/unzip support for archives
+- Checksum generation (MD5, SHA256)
+- CSRF protection on all operations
+- Path sanitization and traversal prevention
+- Responsive UI for mobile devices
+- Integration with Unraid 7.2.0-rc.1 webGUI
+- No Docker overhead - pure native implementation
+</CHANGES>
+
+<!--
+ExplorerX - Advanced Native File Manager for Unraid
+====================================================
+
+A powerful, native file manager plugin for Unraid 7.2.0-rc.1 that provides:
+- Multi-pane navigation for browsing multiple directories
+- Bulk operations with background task queue
+- Advanced features: quick previews, keyboard shortcuts, checksums
+- Security: CSRF protection, path guards, operation logging
+- Zero Docker overhead
+
+INSTALLATION:
+1. Go to Plugins → Install Plugin
+2. Enter URL: https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
+3. Click Install
+4. Navigate to Tools → ExplorerX
+
+REQUIREMENTS:
+- Unraid 7.2.0-rc.1 or later
+- x86_64 architecture
+- PHP 8.x (included in Unraid)
+
+SUPPORT:
+https://github.com/N85UK/UNRAID_Apps/issues
+-->
+
+<!-- Cleanup previous installation -->
+<FILE Run="/bin/bash">
+<INLINE>
+<![CDATA[
+echo "================================================="
+echo "ExplorerX Plugin Installation"
+echo "Version: &version;"
+echo "================================================="
+
+# Stop any running background processes
+if pgrep -f "explorerx.*queue-processor" > /dev/null 2>&1; then
+  echo "Stopping background queue processor..."
+  pkill -f "explorerx.*queue-processor"
+fi
+
+# Remove old plugin files
+if [ -d /usr/local/emhttp/plugins/&name; ]; then
+  echo "Removing previous installation..."
+  rm -rf /usr/local/emhttp/plugins/&name;
+fi
+
+# Clean up old config (preserve user settings)
+if [ -d /boot/config/plugins/&name; ]; then
+  echo "Preserving user configuration..."
+  # Keep settings.cfg if it exists, remove everything else
+  if [ -f /boot/config/plugins/&name;/settings.cfg ]; then
+    mv /boot/config/plugins/&name;/settings.cfg /tmp/explorerx-settings.cfg.bak
+  fi
+  rm -rf /boot/config/plugins/&name;
+  mkdir -p /boot/config/plugins/&name;
+  if [ -f /tmp/explorerx-settings.cfg.bak ]; then
+    mv /tmp/explorerx-settings.cfg.bak /boot/config/plugins/&name;/settings.cfg
+    echo "Restored user settings"
+  fi
+fi
+
+echo "Cleanup completed"
+]]>
+</INLINE>
+</FILE>
+
+<!-- Download and verify package -->
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.txz" Run="upgradepkg --install-new">
+<URL>&packageURL;</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<!-- Extract and install plugin -->
+<FILE Run="/bin/bash">
+<INLINE>
+<![CDATA[
+echo "================================================="
+echo "Installing ExplorerX Plugin"
+echo "================================================="
+
+# Extract plugin package
+cd /usr/local/emhttp/plugins
+if ! tar -xf /boot/config/plugins/&name;/&name;-&version;.txz; then
+  echo "ERROR: Failed to extract plugin package"
+  exit 1
+fi
+
+# Verify extraction
+if [ ! -d /usr/local/emhttp/plugins/&name; ]; then
+  echo "ERROR: Plugin directory not found after extraction"
+  exit 1
+fi
+
+# Set proper permissions
+echo "Setting permissions..."
+chmod -R 755 /usr/local/emhttp/plugins/&name;
+chown -R root:root /usr/local/emhttp/plugins/&name;
+
+# Make scripts executable
+if [ -d /usr/local/emhttp/plugins/&name;/scripts ]; then
+  chmod +x /usr/local/emhttp/plugins/&name;/scripts/*
+fi
+
+# Create required directories
+echo "Creating directories..."
+mkdir -p /boot/config/plugins/&name;
+mkdir -p /var/log/&name;
+mkdir -p /tmp/&name;
+
+# Create default configuration if not exists
+if [ ! -f /boot/config/plugins/&name;/settings.cfg ]; then
+  echo "Creating default configuration..."
+  cat > /boot/config/plugins/&name;/settings.cfg << 'EOFCONFIG'
+# ExplorerX Configuration
+# Created: $(date)
+
+# Security: Default root path (do not modify unless you know what you're doing)
+ROOT_PATH=/mnt
+
+# Features
+ENABLE_ZIP=true
+ENABLE_CHECKSUMS=true
+ENABLE_PREVIEWS=true
+ENABLE_BULK_OPS=true
+
+# Background task limits
+MAX_CONCURRENT_TASKS=3
+TASK_TIMEOUT=3600
+
+# UI preferences
+DEFAULT_VIEW=list
+SHOW_HIDDEN_FILES=false
+DUAL_PANE_DEFAULT=false
+
+# Logging
+LOG_LEVEL=info
+LOG_RETENTION_DAYS=7
+EOFCONFIG
+  chmod 644 /boot/config/plugins/&name;/settings.cfg
+  echo "Default configuration created"
+fi
+
+# Initialize task queue
+if [ ! -f /boot/config/plugins/&name;/queue.json ]; then
+  echo '{"tasks":[],"version":"&version;"}' > /boot/config/plugins/&name;/queue.json
+  chmod 644 /boot/config/plugins/&name;/queue.json
+fi
+
+# Run installation script if exists
+if [ -f /usr/local/emhttp/plugins/&name;/scripts/install.sh ]; then
+  echo "Running installation script..."
+  bash /usr/local/emhttp/plugins/&name;/scripts/install.sh
+fi
+
+echo "================================================="
+echo "ExplorerX Plugin Installed Successfully!"
+echo "================================================="
+echo ""
+echo "Access ExplorerX via: Tools → ExplorerX"
+echo ""
+echo "Features:"
+echo "  • Multi-pane file browser"
+echo "  • Bulk operations with background queue"
+echo "  • Quick file previews"
+echo "  • Keyboard shortcuts"
+echo "  • ZIP/checksum support"
+echo ""
+echo "Default root: /mnt"
+echo "Config: /boot/config/plugins/&name;/settings.cfg"
+echo ""
+echo "For support: &support;"
+echo "================================================="
+]]>
+</INLINE>
+</FILE>
+
+<!-- Uninstall procedure -->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+<![CDATA[
+echo "================================================="
+echo "Uninstalling ExplorerX Plugin"
+echo "================================================="
+
+# Stop background processes
+if pgrep -f "explorerx.*queue-processor" > /dev/null 2>&1; then
+  echo "Stopping background processes..."
+  pkill -f "explorerx.*queue-processor"
+fi
+
+# Cancel any pending tasks
+if [ -f /boot/config/plugins/&name;/queue.json ]; then
+  echo "Clearing task queue..."
+  echo '{"tasks":[],"version":"&version;"}' > /boot/config/plugins/&name;/queue.json
+fi
+
+# Remove plugin files
+echo "Removing plugin files..."
+rm -rf /usr/local/emhttp/plugins/&name;
+
+# Remove logs
+rm -rf /var/log/&name;
+
+# Remove temporary files
+rm -rf /tmp/&name;
+
+# Ask user about configuration
+echo ""
+echo "Note: User configuration preserved at /boot/config/plugins/&name;"
+echo "To completely remove all data, manually delete:"
+echo "  rm -rf /boot/config/plugins/&name;"
+echo ""
+
+echo "================================================="
+echo "ExplorerX Plugin Uninstalled"
+echo "================================================="
+]]>
+</INLINE>
+</FILE>
+
+</PLUGIN>
