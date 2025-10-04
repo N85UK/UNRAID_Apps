@@ -1,0 +1,34 @@
+<div style="height:100%;display:flex;flex-direction:column">
+  <h1>File Explorer (Prototype)</h1>
+  <div style="padding:8px">
+    <button id="install">Install FileBrowser Binary</button>
+    <button id="start">Start Service</button>
+    <button id="stop">Stop Service</button>
+    <span id="status">Status: unknown</span>
+  </div>
+  <div style="flex:1; border-top:1px solid #ccc">
+    <iframe id="frame" src="/plugins/file-explorer/proxy/" style="width:100%;height:100%;border:0"></iframe>
+  </div>
+</div>
+
+<script>
+async function postJson(url, body={}){
+  const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+  return r.json().catch(()=>({status:'error',message:'non-json response'}));
+}
+
+document.getElementById('install').addEventListener('click', async ()=>{
+  const res = await postJson('/plugins/file-explorer/webgui/install_binary.php');
+  alert(JSON.stringify(res));
+});
+
+document.getElementById('start').addEventListener('click', async ()=>{
+  const res = await postJson('/plugins/file-explorer/scripts/start.sh');
+  alert(JSON.stringify(res));
+});
+
+document.getElementById('stop').addEventListener('click', async ()=>{
+  const res = await postJson('/plugins/file-explorer/scripts/stop.sh');
+  alert(JSON.stringify(res));
+});
+</script>
