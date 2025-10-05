@@ -39,7 +39,7 @@ jobs:
       - name: Get current version
         id: current_version
         run: |
-          CURRENT=$(grep -o 'version.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          CURRENT=$(grep '<!ENTITY version' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
           echo "current=$CURRENT" >> $GITHUB_OUTPUT
           echo "Current version: $CURRENT"
 
@@ -47,8 +47,50 @@ jobs:
         id: new_version
         run: |
           CURRENT="${{ steps.current_version.outputs.current }}"
+          TODAY=$(date +%Y.%m.%d)
           
           if [ -n "${{ github.event.inputs.custom_version }}" ]; then
+            NEW_VERSION="${{ github.event.inputs.custom_version }}"
+            # Validate custom version format
+            if [[ ! $NEW_VERSION =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}$ ]]; then
+              echo "ERROR: Invalid custom version format. Use YYYY.MM.DD.XX.XX"
+              exit 1
+            fi
+          else
+            # Auto-generate version based on type and date
+            if [[ $CURRENT == $TODAY.* ]]; then
+              # Same day, increment based on type
+              PATCH=$(echo $CURRENT | cut -d'.' -f4)
+              BUILD=$(echo $CURRENT | cut -d'.' -f5)
+              
+              case "${{ github.event.inputs.version_type }}" in
+                "patch")
+                  NEW_PATCH=$((PATCH + 1))
+                  NEW_VERSION="$TODAY.$NEW_PATCH.$BUILD"
+                  ;;
+                "minor")
+                  NEW_BUILD=$((BUILD + 1))
+                  NEW_VERSION="$TODAY.$PATCH.$NEW_BUILD"
+                  ;;
+                "major")
+                  NEW_VERSION="$TODAY.02.00"
+                  ;;
+              esac
+            else
+              # New day, start fresh based on type
+              case "${{ github.event.inputs.version_type }}" in
+                "patch")
+                  NEW_VERSION="$TODAY.01.00"
+                  ;;
+                "minor")
+                  NEW_VERSION="$TODAY.01.01"
+                  ;;
+                "major")
+                  NEW_VERSION="$TODAY.02.00"
+                  ;;
+              esac
+            fi
+          fi
             NEW_VERSION="${{ github.event.inputs.custom_version }}"
             echo "Using custom version: $NEW_VERSION"
           else

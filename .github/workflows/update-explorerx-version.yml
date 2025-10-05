@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to update to'
+        description: 'Version to update to (YYYY.MM.DD.XX.XX format)'
         required: true
         type: string
 
@@ -26,10 +26,17 @@ jobs:
       run: |
         if [ "${{ github.event_name }}" = "release" ]; then
           VERSION="${{ github.event.release.tag_name }}"
-          VERSION=${VERSION#explorerx-}  # Remove explorerx- prefix
+          VERSION=${VERSION#v}  # Remove v prefix if present
         else
           VERSION="${{ github.event.inputs.version }}"
         fi
+        
+        # Validate version format
+        if [[ ! $VERSION =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}$ ]]; then
+          echo "ERROR: Invalid version format: $VERSION (expected: YYYY.MM.DD.XX.XX)"
+          exit 1
+        fi
+        
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
         
@@ -84,7 +91,7 @@ jobs:
         # Update version in .plg file
         sed -i "s/<!ENTITY version   \"[^\"]*\">/<!ENTITY version   \"$VERSION\">/" ExplorerX_Plugin/explorerx.plg
         
-        # Update plugin page version
+        # Update plugin page version  
         sed -i "s/window.pluginVersion = '[^']*'/window.pluginVersion = '$VERSION'/" ExplorerX_Plugin/source/usr/local/emhttp/plugins/explorerx/explorerx.page
         
     - name: Commit changes
