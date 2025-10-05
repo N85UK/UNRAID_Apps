@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2025.10.05.03.00] - 2025-10-05
+
+### Added
+- ExplorerX Plugin v2025.10.05.03.00
+- Automated release process via GitHub Actions
+- Enhanced plugin documentation
+
+### Changed
+- Updated plugin manifest and packaging
+- Improved installation reliability
+
+### Fixed
+- Package download URL issues
+- MD5 hash validation
+
+## [Unreleased]
+
 ### Added
 - ExplorerX Plugin with advanced multi-pane file management
 - Background task queue for bulk operations
