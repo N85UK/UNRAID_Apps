@@ -1,72 +1,215 @@
 <?php
-/**
- * ExplorerX API Router
- * 
- * Handles all JSON API requests for file operations
+/*
+ * ExplorerX Simple API Endpoint
+ * Handles AJAX requests for basic file operations
  */
 
 header('Content-Type: application/json');
-
-require_once __DIR__ . '/ExplorerX.php';
-require_once __DIR__ . '/security.php';
+header('Cache-Control: no-cache, must-revalidate');
 
 // Error handler to return JSON
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => "PHP Error: $errstr"]);
+    exit;
 });
 
-// Main request handler
+$action = $_GET['action'] ?? $_POST['action'] ?? '';
+$path = $_GET['path'] ?? $_POST['path'] ?? '/mnt';
+
+// Basic path sanitization
+$path = realpath($path) ?: '/mnt';
+if (strpos($path, '/mnt') !== 0) {
+    $path = '/mnt';
+}
+
 try {
-    // Only allow POST requests for operations (GET for read-only)
-    $method = $_SERVER['REQUEST_METHOD'];
-    $input = file_get_contents('php://input');
-    $data = json_decode($input, true) ?: [];
-    
-    // Merge with POST data if available
-    $data = array_merge($_POST, $data);
-    
-    // Get action
-    $action = $data['action'] ?? $_GET['action'] ?? null;
-    
-    if (!$action) {
-        throw new Exception('No action specified');
+    switch ($action) {
+        case 'list':
+            listDirectory($path);
+            break;
+        
+        case 'mkdir':
+            $name = $_POST['name'] ?? '';
+            createDirectory($path, $name);
+            break;
+        
+        case 'delete':
+            $items = $_POST['items'] ?? [];
+            deleteItems($items);
+            break;
+        
+        case 'rename':
+            $oldName = $_POST['oldName'] ?? '';
+            $newName = $_POST['newName'] ?? '';
+            renameItem($path, $oldName, $newName);
+            break;
+        
+        default:
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Invalid action']);
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+}
+
+function listDirectory($path) {
+    if (!is_dir($path)) {
+        throw new Exception('Directory not found');
     }
     
-    // Load configuration
-    $config = ExplorerX::loadConfig();
-    $rootPath = $config['ROOT_PATH'];
+    $items = [];
+    $handle = opendir($path);
     
-    // Validate CSRF for write operations
-    $writeOperations = ['mkdir', 'rename', 'delete', 'copy', 'move', 'upload', 'zip', 'extract'];
-    if (in_array($action, $writeOperations)) {
-        ExplorerX_Security::validateRequest();
+    if ($handle) {
+        while (($file = readdir($handle)) !== false) {
+            if ($file === '.' || $file === '..') continue;
+            
+            $filePath = $path . '/' . $file;
+            $stat = stat($filePath);
+            
+            $items[] = [
+                'name' => $file,
+                'path' => $filePath,
+                'type' => is_dir($filePath) ? 'directory' : 'file',
+                'size' => $stat['size'] ?? 0,
+                'modified' => $stat['mtime'] ?? 0,
+                'permissions' => substr(sprintf('%o', fileperms($filePath)), -4),
+                'icon' => getFileIcon($file, is_dir($filePath))
+            ];
+        }
+        closedir($handle);
     }
     
-    // Route to appropriate handler
-    $response = handleAction($action, $data, $config, $rootPath);
+    // Sort: directories first, then by name
+    usort($items, function($a, $b) {
+        if ($a['type'] !== $b['type']) {
+            return $a['type'] === 'directory' ? -1 : 1;
+        }
+        return strcasecmp($a['name'], $b['name']);
+    });
     
     echo json_encode([
         'success' => true,
-        'action' => $action,
-        'data' => $response
-    ]);
-    
-} catch (SecurityException $e) {
-    http_response_code(403);
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage(),
-        'code' => 'security_error'
-    ]);
-    
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage(),
-        'code' => 'error'
+        'data' => [
+            'path' => $path,
+            'items' => $items
+        ]
     ]);
 }
+
+function createDirectory($basePath, $name) {
+    if (empty($name) || strpos($name, '/') !== false) {
+        throw new Exception('Invalid directory name');
+    }
+    
+    $newPath = $basePath . '/' . $name;
+    if (file_exists($newPath)) {
+        throw new Exception('Directory already exists');
+    }
+    
+    if (!mkdir($newPath, 0755)) {
+        throw new Exception('Failed to create directory');
+    }
+    
+    echo json_encode(['success' => true, 'message' => 'Directory created']);
+}
+
+function deleteItems($items) {
+    $deleted = 0;
+    $errors = [];
+    
+    foreach ($items as $item) {
+        $path = realpath($item);
+        if (!$path || strpos($path, '/mnt') !== 0) {
+            $errors[] = "Invalid path: $item";
+            continue;
+        }
+        
+        if (is_dir($path)) {
+            if (rmdir($path)) {
+                $deleted++;
+            } else {
+                $errors[] = "Failed to delete directory: " . basename($path);
+            }
+        } else {
+            if (unlink($path)) {
+                $deleted++;
+            } else {
+                $errors[] = "Failed to delete file: " . basename($path);
+            }
+        }
+    }
+    
+    echo json_encode([
+        'success' => empty($errors),
+        'deleted' => $deleted,
+        'errors' => $errors
+    ]);
+}
+
+function renameItem($basePath, $oldName, $newName) {
+    if (empty($oldName) || empty($newName)) {
+        throw new Exception('Invalid file names');
+    }
+    
+    $oldPath = $basePath . '/' . $oldName;
+    $newPath = $basePath . '/' . $newName;
+    
+    if (!file_exists($oldPath)) {
+        throw new Exception('Source file not found');
+    }
+    
+    if (file_exists($newPath)) {
+        throw new Exception('Target file already exists');
+    }
+    
+    if (!rename($oldPath, $newPath)) {
+        throw new Exception('Failed to rename file');
+    }
+    
+    echo json_encode(['success' => true, 'message' => 'File renamed']);
+}
+
+function getFileIcon($filename, $isDir) {
+    if ($isDir) {
+        return 'folder';
+    }
+    
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    
+    $iconMap = [
+        'txt' => 'file-text',
+        'log' => 'file-text',
+        'conf' => 'file-text',
+        'cfg' => 'file-text',
+        'jpg' => 'file-image',
+        'jpeg' => 'file-image',
+        'png' => 'file-image',
+        'gif' => 'file-image',
+        'bmp' => 'file-image',
+        'mp4' => 'file-video',
+        'avi' => 'file-video',
+        'mkv' => 'file-video',
+        'mov' => 'file-video',
+        'mp3' => 'file-audio',
+        'wav' => 'file-audio',
+        'flac' => 'file-audio',
+        'zip' => 'file-archive',
+        'rar' => 'file-archive',
+        'tar' => 'file-archive',
+        'gz' => 'file-archive',
+        'pdf' => 'file-pdf',
+        'doc' => 'file-word',
+        'docx' => 'file-word',
+        'xls' => 'file-excel',
+        'xlsx' => 'file-excel'
+    ];
+    
+    return $iconMap[$ext] ?? 'file';
+}
+?>
 
 /**
  * Handle action routing

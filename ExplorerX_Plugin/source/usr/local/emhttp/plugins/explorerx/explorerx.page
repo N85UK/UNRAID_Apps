@@ -158,6 +158,14 @@ if (strpos($current_path, $root_path) !== 0) {
         <button class="btn" onclick="refreshDirectory()">🔄 Refresh</button>
         <button class="btn" onclick="goToParent()">⬆️ Parent Directory</button>
         <button class="btn" onclick="goHome()">🏠 Home (/mnt)</button>
+        <div style="float: right;">
+            <span id="version-info" style="margin-right: 15px; color: #666;">v<?php echo htmlspecialchars($current_path); ?></span>
+            <div id="update-notification" style="display: none; background: #d4edda; color: #155724; padding: 4px 8px; border: 1px solid #c3e6cb; border-radius: 4px; font-size: 12px;">
+                <span id="update-message">Update available!</span>
+                <a href="#" onclick="checkForUpdates(true)" style="margin-left: 8px; color: #155724; text-decoration: underline;">Details</a>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
     </div>
     
     <div class="breadcrumb" id="current-path">
@@ -172,11 +180,86 @@ if (strpos($current_path, $root_path) !== 0) {
 <script>
 // Simple configuration
 window.currentPath = <?php echo json_encode($current_path); ?>;
+window.pluginVersion = '0.1.0';
+window.versionCheckURL = 'https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/version.json';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     loadDirectory(window.currentPath);
+    checkForUpdates();
+    
+    // Check for updates every 6 hours
+    setInterval(checkForUpdates, 6 * 60 * 60 * 1000);
 });
+
+function checkForUpdates(showDetails = false) {
+    fetch(window.versionCheckURL)
+        .then(response => response.json())
+        .then(data => {
+            const currentVersion = window.pluginVersion;
+            const latestVersion = data.version;
+            
+            document.getElementById('version-info').textContent = 'v' + currentVersion;
+            
+            if (compareVersions(latestVersion, currentVersion) > 0) {
+                const notification = document.getElementById('update-notification');
+                const message = document.getElementById('update-message');
+                
+                message.textContent = `Update available: v${latestVersion}`;
+                notification.style.display = 'inline-block';
+                
+                if (showDetails) {
+                    showUpdateDetails(data);
+                }
+            } else if (showDetails) {
+                alert('ExplorerX is up to date (v' + currentVersion + ')');
+            }
+        })
+        .catch(error => {
+            console.log('Version check failed:', error);
+            if (showDetails) {
+                alert('Could not check for updates. Please check your internet connection.');
+            }
+        });
+}
+
+function showUpdateDetails(versionData) {
+    const changes = versionData.changelog[0]?.changes || [];
+    const changeList = changes.map(change => '• ' + change).join('\n');
+    
+    const message = `ExplorerX Update Available!
+    
+Current Version: v${window.pluginVersion}
+Latest Version: v${versionData.version}
+Release Date: ${versionData.date}
+
+What's New:
+${changeList}
+
+To update:
+1. Go to Plugins tab in UNRAID
+2. Check for plugin updates
+3. Click "Update" next to ExplorerX
+
+Support: ${versionData.support_url}`;
+
+    alert(message);
+}
+
+function compareVersions(a, b) {
+    const partsA = a.split('.').map(Number);
+    const partsB = b.split('.').map(Number);
+    
+    for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
+        const partA = partsA[i] || 0;
+        const partB = partsB[i] || 0;
+        
+        if (partA > partB) return 1;
+        if (partA < partB) return -1;
+    }
+    
+    return 0;
+}
 
 function loadDirectory(path) {
     const fileList = document.getElementById('file-list');
