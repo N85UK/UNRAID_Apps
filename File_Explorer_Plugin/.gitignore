@@ -1,8 +1,0 @@
-# Build artifacts and local logs
-*.txz
-/staging/
-/staging_release/
-/logs/
-/tmp/
-node_modules/
-.DS_Store
