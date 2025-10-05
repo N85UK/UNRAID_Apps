@@ -54,9 +54,9 @@ jobs:
           echo "Validating plugin metadata..."
           
           # Extract metadata from plugin using proper XML entity parsing
-          VERSION=$(grep '<!ENTITY version' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
-          AUTHOR=$(grep '<!ENTITY author' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
-          NAME=$(grep '<!ENTITY name' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          VERSION=$(grep '<!ENTITY version ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          AUTHOR=$(grep '<!ENTITY author ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          NAME=$(grep '<!ENTITY name ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
           
           echo "Debug - Raw version line:"
           grep '<!ENTITY version' ExplorerX_Plugin/explorerx.plg || echo "Version line not found"
@@ -88,8 +88,8 @@ jobs:
           if [ -d "ExplorerX_Plugin/packages" ] && [ -n "$(ls -A ExplorerX_Plugin/packages/)" ]; then
             echo "Checking package consistency..."
             
-            VERSION=$(grep '<!ENTITY version' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
-            MD5_IN_MANIFEST=$(grep '<!ENTITY md5' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+            VERSION=$(grep '<!ENTITY version ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+            MD5_IN_MANIFEST=$(grep '<!ENTITY md5 ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
             
             EXPECTED_PACKAGE="explorerx-${VERSION}-x86_64-1.txz"
             
@@ -150,7 +150,7 @@ jobs:
             echo "Testing package creation..."
             
             cd ExplorerX_Plugin
-            VERSION=$(grep '<!ENTITY version' explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+            VERSION=$(grep '<!ENTITY version ' explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
             TEST_PACKAGE="test-explorerx-${VERSION}-x86_64-1.txz"
             
             # Create test package
@@ -185,9 +185,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📊 Plugin Info:" >> $GITHUB_STEP_SUMMARY
           
-          VERSION=$(grep '<!ENTITY version' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
-          AUTHOR=$(grep '<!ENTITY author' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
-          NAME=$(grep '<!ENTITY name' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          VERSION=$(grep '<!ENTITY version ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          AUTHOR=$(grep '<!ENTITY author ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          NAME=$(grep '<!ENTITY name ' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
           
           echo "- **Name:** $NAME" >> $GITHUB_STEP_SUMMARY
           echo "- **Version:** $VERSION" >> $GITHUB_STEP_SUMMARY
