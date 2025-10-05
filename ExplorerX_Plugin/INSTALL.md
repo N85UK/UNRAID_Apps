@@ -31,7 +31,7 @@ If you prefer manual installation:
 
 ```bash
 # Download the package
-VERSION="2025.10.05.07.00"
+VERSION="2025.10.05.08.00"
 PACKAGE="explorerx-${VERSION}-x86_64-1.txz"
 wget "https://github.com/N85UK/UNRAID_Apps/releases/download/v${VERSION}/${PACKAGE}"
 
@@ -122,7 +122,7 @@ DUAL_PANE_DEFAULT=false
 
 2. **Clear stuck tasks**:
    ```bash
-   echo '{"tasks":[],"version":"2025.10.05.07.00"}' > /boot/config/plugins/explorerx/queue.json
+   echo '{"tasks":[],"version":"2025.10.05.08.00"}' > /boot/config/plugins/explorerx/queue.json
    ```
 
 ## Uninstallation
@@ -154,6 +154,6 @@ rm -rf /var/log/explorerx
 
 ---
 
-**Version**: 2025.10.05.07.00  
+**Version**: 2025.10.05.08.00  
 **Author**: N85UK  
 **Updated**: $(date '+%Y-%m-%d')
