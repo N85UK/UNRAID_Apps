@@ -108,34 +108,40 @@ print_success "Version: $CURRENT_VERSION → $NEW_VERSION"
 # Step 2: Update version in all files
 print_status "Updating version references..."
 
-# Update plugin manifest
-sed -i.bak 's/<!ENTITY version[[:space:]]*"[^"]*">/<!ENTITY version   "'$NEW_VERSION'">/' explorerx.plg
+# Update plugin manifest using perl with safer quoting
+perl -i.bak -pe "s/<!ENTITY version\\s+\"[^\"]*\">/<!ENTITY version   \"$NEW_VERSION\">/" explorerx.plg
 print_success "Updated explorerx.plg"
 
 # Update version.json
-sed -i.bak 's/"version": "[^"]*"/"version": "'$NEW_VERSION'"/' version.json
-sed -i.bak 's|explorerx-[0-9.]*-x86_64-1.txz|explorerx-'$NEW_VERSION'-x86_64-1.txz|g' version.json
+perl -i.bak -pe "s/\"version\": \"[^\"]*\"/\"version\": \"$NEW_VERSION\"/" version.json
+perl -i.bak -pe "s|explorerx-[0-9.]*-x86_64-1\\.txz|explorerx-$NEW_VERSION-x86_64-1.txz|g" version.json
 print_success "Updated version.json"
 
 # Step 3: Update changelog in plugin manifest
 print_status "Updating changelog..."
 CURRENT_DATE=$(date +%Y-%m-%d)
 
-# Create new changelog entry
-NEW_CHANGELOG="###v$NEW_VERSION ($CURRENT_DATE)
-- $COMMIT_MESSAGE
-- Updated to version $NEW_VERSION
-- Auto-generated documentation updates
-- Package rebuilt with latest changes"
+# Create backup of original file
+cp explorerx.plg explorerx.plg.bak
 
-# Update the CHANGES section
-sed -i.bak "/^<CHANGES>/,/^###v/ { 
-    /^<CHANGES>/ {
-        a\\
-$NEW_CHANGELOG\\
+# Create new changelog entry and update the file
+{
+    # Print everything up to the <CHANGES> line
+    awk '/<CHANGES>/ {print; exit} {print}' explorerx.plg.bak
+    
+    # Add new changelog entry
+    echo "###v$NEW_VERSION ($CURRENT_DATE)"
+    echo "- $COMMIT_MESSAGE"
+    echo "- Updated to version $NEW_VERSION" 
+    echo "- Auto-generated documentation updates"
+    echo "- Package rebuilt with latest changes"
+    echo ""
+    
+    # Print everything after the first ###v line (skip the old first entry header)
+    awk 'BEGIN{found=0} /<CHANGES>/ {found=1; next} found && /^###v/ && !seen {seen=1; next} found {print}' explorerx.plg.bak
+} > explorerx.plg.tmp
 
-    }
-}" explorerx.plg
+mv explorerx.plg.tmp explorerx.plg
 
 print_success "Updated changelog in plugin manifest"
 
@@ -164,8 +170,8 @@ if [ -f "./build-package.sh" ]; then
     NEW_MD5=$(md5sum "packages/explorerx-$NEW_VERSION-x86_64-1.txz" | cut -d' ' -f1)
     
     # Update MD5 in files
-    sed -i.bak 's/<!ENTITY md5[[:space:]]*"[^"]*">/<!ENTITY md5       "'$NEW_MD5'">/' explorerx.plg
-    sed -i.bak 's/"md5": "[^"]*"/"md5": "'$NEW_MD5'"/' version.json
+    perl -i.bak -pe "s/<!ENTITY md5\\s+\"[^\"]*\">/<!ENTITY md5       \"$NEW_MD5\">/" explorerx.plg
+    perl -i.bak -pe "s/\"md5\": \"[^\"]*\"/\"md5\": \"$NEW_MD5\"/" version.json
     echo "$NEW_MD5  explorerx-$NEW_VERSION-x86_64-1.txz" > "packages/explorerx-$NEW_VERSION-x86_64-1.txz.md5"
     
     print_success "Built package with MD5: $NEW_MD5"
@@ -175,8 +181,8 @@ else
     NEW_MD5=$(md5sum "packages/explorerx-$NEW_VERSION-x86_64-1.txz" | cut -d' ' -f1)
     
     # Update MD5 in files  
-    sed -i.bak 's/<!ENTITY md5[[:space:]]*"[^"]*">/<!ENTITY md5       "'$NEW_MD5'">/' explorerx.plg
-    sed -i.bak 's/"md5": "[^"]*"/"md5": "'$NEW_MD5'"/' version.json
+    perl -i.bak -pe "s/<!ENTITY md5\\s+\"[^\"]*\">/<!ENTITY md5       \"$NEW_MD5\">/" explorerx.plg
+    perl -i.bak -pe "s/\"md5\": \"[^\"]*\"/\"md5\": \"$NEW_MD5\"/" version.json
     echo "$NEW_MD5  explorerx-$NEW_VERSION-x86_64-1.txz" > "packages/explorerx-$NEW_VERSION-x86_64-1.txz.md5"
     
     print_success "Built package with MD5: $NEW_MD5"
