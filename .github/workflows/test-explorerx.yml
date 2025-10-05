@@ -58,13 +58,18 @@ jobs:
           AUTHOR=$(grep '<!ENTITY author' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
           NAME=$(grep '<!ENTITY name' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
           
-          echo "Plugin Name: $NAME"
-          echo "Version: $VERSION"
-          echo "Author: $AUTHOR"
+          echo "Debug - Raw version line:"
+          grep '<!ENTITY version' ExplorerX_Plugin/explorerx.plg || echo "Version line not found"
+          echo "Extracted values:"
+          echo "Plugin Name: '$NAME'"
+          echo "Version: '$VERSION'"
+          echo "Author: '$AUTHOR'"
           
           # Validate version format (date-based: YYYY.MM.DD.XX.XX)
           if [[ ! $VERSION =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}$ ]]; then
             echo "❌ Invalid version format: $VERSION (expected: YYYY.MM.DD.XX.XX)"
+            echo "Current version: '$VERSION'"
+            echo "Length: ${#VERSION}"
             exit 1
           fi
           
