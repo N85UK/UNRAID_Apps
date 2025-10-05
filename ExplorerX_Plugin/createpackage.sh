@@ -8,7 +8,7 @@ set -euo pipefail
 
 # Configuration
 PLUGIN_NAME="explorerx"
-VERSION="0.1.0"
+VERSION="0.1.1"
 ARCH="x86_64"
 BUILD="1"
 PACKAGE_NAME="${PLUGIN_NAME}-${VERSION}-${ARCH}-${BUILD}"

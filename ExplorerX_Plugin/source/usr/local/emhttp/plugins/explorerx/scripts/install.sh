@@ -72,7 +72,7 @@ fi
 # Initialize task queue
 QUEUE_FILE="$CONFIG_DIR/queue.json"
 if [ ! -f "$QUEUE_FILE" ]; then
-    echo '{"tasks":[],"version":"0.1.0"}' > "$QUEUE_FILE"
+    echo '{"tasks":[],"version":"0.1.1"}' > "$QUEUE_FILE"
     chmod 644 "$QUEUE_FILE"
     echo "✓ Task queue initialized"
 fi

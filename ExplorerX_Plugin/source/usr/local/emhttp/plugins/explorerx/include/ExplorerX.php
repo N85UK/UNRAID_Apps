@@ -8,7 +8,7 @@
 
 class ExplorerX {
     
-    const VERSION = '0.1.0';
+    const VERSION = '0.1.1';
     const CONFIG_FILE = '/boot/config/plugins/explorerx/settings.cfg';
     const LOG_FILE = '/var/log/explorerx/explorerx.log';
     const QUEUE_FILE = '/boot/config/plugins/explorerx/queue.json';

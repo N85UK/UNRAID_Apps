@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2025-01-28
+
+### Fixed
+
+- **CRITICAL**: Fixed webGUI Error 500 during plugin uninstall that could render Unraid webGUI unusable
+- Enhanced uninstall script with proper PHP cache clearing and service restarts
+- Improved cleanup process to prevent system lockup during plugin removal
+
 ## [0.1.0] - 2025-10-04
 
 ### Added
