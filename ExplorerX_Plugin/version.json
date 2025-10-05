@@ -1,20 +1,17 @@
 {
-  "version": "2025.10.05.02.00",
+  "version": "2025.10.05.03.00",
   "date": "2025-10-05",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.05.02.00-x86_64-1.txz",
-  "md5": "261286c0e809ceab046f05320c0af5ee",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.05.03.00-x86_64-1.txz",
+  "md5": "e5aeac87b34e34ebf4cbf736d0de1bf4",
   "changelog": [
     {
-      "version": "2025.10.05.02.00",
+      "version": "2025.10.05.03.00",
       "date": "2025-10-05", 
       "changes": [
-        "Initial release of ExplorerX",
-        "Simplified native file manager implementation",
-        "Standalone tab interface (moved from Tools menu)",
-        "Basic directory navigation and file listing",
-        "Real-time file operations via API",
-        "Clean, responsive UI design",
-        "Auto-update notification system",
+        "Fixed API issues causing PHP code display instead of file browser",
+        "Cleaned up api.php file - removed unused functions and dead code", 
+        "Simplified plugin architecture for better stability",
+        "Fixed plugin interface display problems",
         "Compatible with UNRAID 7.2.0+"
       ]
     }
@@ -23,5 +20,5 @@
   "plugin_url": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/explorerx.plg",
   "support_url": "https://github.com/N85UK/UNRAID_Apps/issues",
   "author": "N85UK",
-  "description": "Advanced native file manager for UNRAID with multi-pane navigation and bulk operations"
+  "description": "Simple native file manager for UNRAID with directory navigation and file listing"
 }
