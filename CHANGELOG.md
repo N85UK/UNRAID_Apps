@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the UnRaid Apps project will be documented in this file.
+All notable changes to the UNRAID Apps project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,114 +8,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial release of File Manager Plugin for UNRAID
-- Advanced file management capabilities with NestJS backend
-- FileBrowser integration for web-based file operations
-- Multi-user support with role-based access control
-- Real-time file system monitoring
-- UNRAID webGUI integration
-- Automated installation and configuration scripts
-- AWS EUM (Extended User Management) application
+- ExplorerX Plugin with advanced multi-pane file management
+- Background task queue for bulk operations
+- Native UNRAID integration without Docker overhead
+- Enhanced security with path validation and CSRF protection
+- Keyboard shortcuts for power users
+- ZIP/unzip and checksum support
+- Real-time progress monitoring
 
 ### Changed
-- Moved plugin directory from "File Manager" to "FileManager" to fix XML parsing issues
-- Updated all repository URLs to use correct GitHub raw file paths
-- Standardized documentation across all components
+- Repository focus shifted to ExplorerX Plugin as the primary file manager
+- Updated documentation to reflect current active projects
+- Standardized project structure and naming conventions
+
+### Removed
+- **File_Explorer_Plugin**: Old prototype plugin removed as superseded by ExplorerX Plugin
+- References to deprecated plugin projects in documentation
 
 ### Fixed
-- XML parsing error in plugin manifest due to URL encoding issues
-- MD5 hash validation for plugin archives
-- Installation script permissions and directory structure
+- Repository structure cleanup and organization
+- Updated installation URLs and references
+
+## [0.1.1] - 2025-10-04
+
+### Fixed
+- **ExplorerX Plugin**: Fixed webGUI Error 500 during plugin uninstall
+- Added proper service restart in uninstall script
+- Added PHP cache clearing during uninstall
+- Improved cleanup of temporary files and references
+
+## [0.1.0] - 2025-10-04
+
+### Added
+- **ExplorerX Plugin**: Initial release
+- Multi-pane file browser with dual-pane navigation
+- Bulk file operations (copy, move, delete)
+- Background task queue with progress tracking
+- Safe path guards restricted to /mnt by default
+- Quick file previews (text, image, video)
+- Keyboard shortcuts for power users
+- ZIP/unzip support for archives
+- Checksum generation (MD5, SHA256)
+- CSRF protection on all operations
+- Path sanitization and traversal prevention
+- Responsive UI for mobile devices
+- Integration with UNRAID 7.2.0-rc.1 webGUI
+- No Docker overhead - pure native implementation
+- AWS EUM (Extended User Management) application
+- UNRAID API integration bounty submission
 
 ### Security
 - Added security policy and vulnerability reporting guidelines
-- Implemented secure file access controls
-- Added input validation for all user inputs
-
-## [2025.10.03.21] - 2025-10-03
-
-### Added
-- Robust frontend JSON handling with safeFetchJson utility
-
-### Fixed
-- Unexpected end of JSON input errors caused by empty / partial responses
-- Improved resilience when server returns non-JSON or network interrupts
-
-### Changed
-- Installation, setup, start/stop actions now provide clearer diagnostic errors
-- Version bump for frontend reliability improvements
-
-## [2025.10.03.20] - 2025-10-03
-
-### Fixed
-- **FileBrowser Binary Installation**: Corrected version command from `--version` to `version` for proper CLI compatibility
-- **Installation Failures**: Resolved binary testing errors that prevented successful FileBrowser installation
-- **Cross-Platform Compatibility**: Enhanced binary verification across different architectures
-
-### Changed
-- Updated plugin version to v2025.10.03.20
-- Improved installation script reliability
-
-## [2025.10.03.19] - 2025-10-03
-
-### Added
-- **Enhanced FileBrowser Installation System**
-  - Network connectivity verification before download attempts
-  - Multiple download sources (GitHub primary, JSDeliver and Raw GitHub fallbacks)
-  - Comprehensive error handling with detailed diagnostic messages
-  - Binary testing before and after installation
-  - Automatic retry logic with exponential backoff
-  - Timeout handling for network operations
-- **Improved Reliability Features**
-  - Backup creation for existing binaries during updates
-  - Enhanced logging system with debug information
-  - Better error recovery and user feedback
-  - Input validation and security enhancements
-
-### Changed
-- Updated plugin version consistency across all files
-- Optimized archive size by removing unused files
-- Enhanced user interface with better error messaging
-- Improved installation workflow with progress indicators
-
-### Fixed
-- Version number mismatches in various files
-- Potential installation failures due to network issues
-- Incomplete error reporting during binary download
-- Archive corruption issues from previous builds
-
-### Security
-- Enhanced input validation for all user inputs
-- Secure file operations with proper permissions
-- Improved error handling to prevent information disclosure
-
-## [Initial] - 2025-01-01
-
-### Added
-- Project repository initialization
-- Basic project structure
-- Initial development environment setup
-- AWS EUM application foundation
+- Implemented secure file access controls with path validation
+- Added comprehensive input validation for all user inputs
+- CSRF protection on all file operations
 
 ---
 
 ## Release Notes
 
-### File Manager Plugin v2025.10.03.21
-This release provides a comprehensive file management solution for UNRAID servers with enhanced installation reliability:
+### ExplorerX Plugin v0.1.1
+This release provides a comprehensive native file management solution for UNRAID servers:
 
-- **Advanced File Operations**: Copy, move, delete, rename, upload, download
-- **Web Interface**: Modern, responsive file browser accessible via UNRAID webGUI
-- **User Management**: Multi-user support with configurable permissions
-- **Real-time Updates**: Live file system monitoring and updates
-- **Security**: Role-based access control and secure file operations
-- **Integration**: Seamless UNRAID webGUI integration with status monitoring
-- **Enhanced Installation**: Fixed FileBrowser binary installation issues
+- **Advanced File Operations**: Copy, move, delete, rename, upload, download with bulk support
+- **Multi-Pane Interface**: Dual-pane navigation for power users
+- **Background Processing**: Large operations run in background without blocking UI
+- **Security**: Role-based access control, path validation, and CSRF protection
+- **Native Integration**: Seamless UNRAID webGUI integration with no Docker overhead
+- **Enhanced Reliability**: Fixed uninstall issues and improved error handling
 
 ### Installation Requirements
-- UNRAID 6.8.0 or higher
-- Minimum 1GB available disk space
-- Network access for initial plugin download
+- UNRAID 7.2.0-rc.1 or higher
+- x86_64 architecture
+- PHP 8.x (included in UNRAID)
 
 ### Upgrade Path
 - New installations: Use the plugin URL directly in UNRAID plugin installer
@@ -126,4 +91,4 @@ This release provides a comprehensive file management solution for UNRAID server
 
 ### Support
 For issues, feature requests, or contributions, please visit the project repository:
-https://github.com/paulmccann140689/UnRiaid_Apps
+https://github.com/N85UK/UNRAID_Apps

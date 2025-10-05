@@ -25,8 +25,8 @@ By participating in this project, you agree to abide by our Code of Conduct:
 
 ### Prerequisites
 - Git installed on your development machine
-- Node.js 18.x or higher (for File Manager Plugin development)
-- Docker (for containerized development)
+- PHP 8.x for ExplorerX Plugin development
+- Docker (for AWS EUM development)
 - UNRAID server for testing (recommended)
 
 ### Fork and Clone
@@ -39,17 +39,17 @@ By participating in this project, you agree to abide by our Code of Conduct:
 
 ## Development Setup
 
-### File Manager Plugin Development
+### ExplorerX Plugin Development
 ```bash
-cd Plugins/FileManager
-npm install
-npm run build
-npm run test
+cd ExplorerX_Plugin/source
+# Make changes to the plugin source code
+# Test on UNRAID system
+bash ../createpackage.sh  # Build new package
 ```
 
 ### AWS EUM Development
 ```bash
-cd AWS_EUM
+cd Apps/AWS_EUM
 # Follow specific setup instructions in AWS_EUM/README.md
 ```
 
@@ -178,12 +178,16 @@ Examples:
 
 ## Plugin-Specific Guidelines
 
-### File Manager Plugin
-- Follow NestJS best practices
-- Use TypeScript strict mode
-- Implement proper error handling
-- Ensure UNRAID webGUI compatibility
-- Test with multiple file types and sizes
+### ExplorerX Plugin
+- Follow UNRAID plugin best practices
+- Use vanilla JavaScript and PHP for compatibility
+- Implement proper error handling and security
+- Ensure responsive design for mobile devices
+- Test with various file types and large directories
+- Maintain compatibility with UNRAID 7.2.0+
+- Follow multi-pane UI design patterns
+- Implement proper CSRF protection
+- Use background task queue for large operations
 
 ### AWS EUM
 - Follow AWS best practices
