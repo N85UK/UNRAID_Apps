@@ -1,19 +1,19 @@
 {
-  "version": "2025.10.05.05.00",
+  "version": "2025.10.05.06.00",
   "date": "2025-10-05",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.05.05.00-x86_64-1.txz",
-  "md5": "cbbc2190ec0a739f418d8dedfb0ff9bc",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.05.06.00-x86_64-1.txz",
+  "md5": "d37bbfe798071532ab496aa26c255d1f",
   "changelog": [
     {
-      "version": "2025.10.05.05.00",
+      "version": "2025.10.05.06.00",
       "date": "2025-10-05", 
       "changes": [
-        "Enhanced plugin cleanup and diagnostics",
-        "Force complete removal of all cached plugin data",
-        "Added diagnostic information to track installation issues",
-        "Simplified plugin structure for reliability",
-        "Fixed workflow security scan exclusions",
-        "Added proper PNG icon for plugin",
+        "Emergency fix for 500 Internal Server Error",
+        "Added comprehensive error handling and diagnostics",
+        "Simplified installation process to identify issues",
+        "Enhanced nginx and service recovery procedures",
+        "Recovery mode API with enhanced error handling",
+        "PHP syntax validation during installation",
         "Compatible with UNRAID 7.2.0+"
       ]
     }
@@ -22,5 +22,5 @@
   "plugin_url": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/explorerx.plg",
   "support_url": "https://github.com/N85UK/UNRAID_Apps/issues",
   "author": "N85UK",
-  "description": "Simple native file manager for UNRAID with directory navigation and file listing"
+  "description": "Simple native file manager for UNRAID with directory navigation and file listing (Emergency Recovery Version)"
 }

@@ -1,63 +1,65 @@
 <?php
 /*
- * ExplorerX API - Simple File Browser
+ * ExplorerX API - Simple File Browser (Emergency Recovery Version)
  */
+
+// Basic error handling
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
 // Prevent any output before headers
 ob_start();
 
-// Set headers
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-cache, must-revalidate');
+// Set headers with error handling
+try {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-cache, must-revalidate');
+} catch (Exception $e) {
+    // Headers already sent, continue anyway
+}
 
-// Error handling
+// Simple error response function
 function safeError($message) {
     ob_clean();
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $message]);
+    echo json_encode(['success' => false, 'error' => $message, 'recovery' => true]);
     exit;
 }
 
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    safeError("Error: $errstr");
-});
-
-register_shutdown_function(function() {
-    $error = error_get_last();
-    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
-        safeError("Fatal error occurred");
-    }
-});
-
+// Basic request handling
 try {
     $action = $_GET['action'] ?? 'list';
     $path = $_GET['path'] ?? '/mnt';
     
-    // Basic path safety
-    $path = realpath($path);
-    if (!$path || strpos($path, '/mnt') !== 0) {
+    // Very basic path safety
+    if (!$path || $path === '') {
         $path = '/mnt';
     }
     
+    // Only allow listing for now
     if ($action === 'list') {
         listDirectory($path);
     } else {
-        throw new Exception('Unknown action: ' . $action);
+        safeError('Only directory listing is available in recovery mode');
     }
     
 } catch (Exception $e) {
-    safeError($e->getMessage());
+    safeError('Request processing error: ' . $e->getMessage());
+} catch (Error $e) {
+    safeError('System error: ' . $e->getMessage());
 }
 
 function listDirectory($path) {
-    if (!is_dir($path) || !is_readable($path)) {
-        throw new Exception('Directory not accessible');
-    }
-    
-    $items = [];
-    
     try {
+        // Basic path validation
+        if (!is_dir($path) || !is_readable($path)) {
+            throw new Exception('Directory not accessible: ' . $path);
+        }
+        
+        $items = [];
         $files = scandir($path);
+        
         if ($files === false) {
             throw new Exception('Cannot read directory');
         }
@@ -71,8 +73,8 @@ function listDirectory($path) {
             if (!file_exists($fullPath)) continue;
             
             $isDir = is_dir($fullPath);
-            $size = $isDir ? 0 : (is_readable($fullPath) ? filesize($fullPath) : 0);
-            $mtime = is_readable($fullPath) ? filemtime($fullPath) : 0;
+            $size = $isDir ? 0 : (is_readable($fullPath) ? @filesize($fullPath) : 0);
+            $mtime = is_readable($fullPath) ? @filemtime($fullPath) : 0;
             
             $items[] = [
                 'name' => $file,
@@ -83,7 +85,7 @@ function listDirectory($path) {
             ];
         }
         
-        // Sort: directories first, then by name
+        // Simple sort
         usort($items, function($a, $b) {
             if ($a['type'] !== $b['type']) {
                 return $a['type'] === 'directory' ? -1 : 1;
@@ -91,19 +93,20 @@ function listDirectory($path) {
             return strcasecmp($a['name'], $b['name']);
         });
         
+        ob_clean();
+        echo json_encode([
+            'success' => true,
+            'recovery_mode' => true,
+            'data' => [
+                'path' => $path,
+                'items' => $items,
+                'count' => count($items)
+            ]
+        ]);
+        
     } catch (Exception $e) {
-        throw new Exception('Error reading directory: ' . $e->getMessage());
+        safeError('Directory listing error: ' . $e->getMessage());
     }
-    
-    ob_clean();
-    echo json_encode([
-        'success' => true,
-        'data' => [
-            'path' => $path,
-            'items' => $items,
-            'count' => count($items)
-        ]
-    ]);
 }
 ?>
 

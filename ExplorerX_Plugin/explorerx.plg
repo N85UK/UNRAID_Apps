@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.05.05.00">
-<!ENTITY md5       "cbbc2190ec0a739f418d8dedfb0ff9bc">
+<!ENTITY version   "2025.10.05.06.00">
+<!ENTITY md5       "d37bbfe798071532ab496aa26c255d1f">
 <!ENTITY launch    "ExplorerX">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,6 +16,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.05.06.00 (2025-10-05)
+- Emergency fix for 500 Internal Server Error
+- Added comprehensive error handling and diagnostics
+- Simplified installation process to identify issues
+- Enhanced nginx and service recovery procedures
+- Updated to version 2025.10.05.06.00
+
 ###v2025.10.05.05.00 (2025-10-05)
 - Enhanced plugin cleanup and diagnostics
 - Force complete removal of all cached plugin data
@@ -86,39 +93,39 @@ https://github.com/N85UK/UNRAID_Apps/issues
 <INLINE>
 <![CDATA[
 echo "================================================="
-echo "ExplorerX Plugin Installation (Enhanced Cleanup)"
+echo "ExplorerX Plugin Installation (Emergency Recovery)"
 echo "Version: &version;"
 echo "================================================="
 
-# Stop any web services that might be caching
-echo "Stopping nginx to clear any cached content..."
-/etc/rc.d/rc.nginx stop 2>/dev/null || true
-sleep 2
+# Check current nginx status
+echo "Checking nginx status..."
+nginx_status=$(/etc/rc.d/rc.nginx status 2>&1)
+echo "Nginx status: $nginx_status"
 
-# Remove ALL plugin-related files and directories
-echo "Performing complete plugin cleanup..."
-rm -rf /usr/local/emhttp/plugins/&name;
-rm -rf /tmp/plugins/&name;
-rm -rf /var/log/plugins/&name;
+# Gentle restart of nginx without forcing stop
+echo "Gracefully restarting nginx..."
+/etc/rc.d/rc.nginx restart 2>&1 || echo "Nginx restart completed"
 
-# Clear any web server caches
-echo "Clearing web server caches..."
-rm -rf /tmp/nginx_cache/* 2>/dev/null || true
-rm -rf /var/cache/nginx/* 2>/dev/null || true
-
-# Force browser cache clear by removing any cached versions  
-if [ -d /boot/config/plugins/&name; ]; then
-  echo "Cleaning all previous downloads..."
-  rm -rf /boot/config/plugins/&name;/*
+# Remove old plugin files safely
+echo "Removing old plugin files..."
+if [ -d /usr/local/emhttp/plugins/&name; ]; then
+  rm -rf /usr/local/emhttp/plugins/&name;
+  echo "Removed old plugin directory"
 fi
 
-# Restart nginx to ensure clean state
-echo "Restarting nginx..."
-/etc/rc.d/rc.nginx start 2>/dev/null || true
+# Clear only specific caches (not wildcards that might cause issues)
+echo "Clearing plugin-specific caches..."
+rm -rf /tmp/plugins/&name; 2>/dev/null || true
+rm -rf /var/log/plugins/&name; 2>/dev/null || true
 
-echo "Enhanced cleanup completed"
-echo "Waiting for services to stabilize..."
-sleep 3
+# Clean old downloads more safely
+if [ -d /boot/config/plugins/&name; ]; then
+  echo "Cleaning old downloads..."
+  find /boot/config/plugins/&name; -name "*.txz" -type f -delete 2>/dev/null || true
+fi
+
+echo "Safe cleanup completed"
+sleep 2
 ]]>
 </INLINE>
 </FILE>
@@ -134,43 +141,63 @@ sleep 3
 <INLINE>
 <![CDATA[
 echo "================================================="
-echo "Installing ExplorerX Plugin with Diagnostics"
+echo "Installing ExplorerX Plugin (Emergency Recovery)"
 echo "================================================="
 
-# Extract plugin package
+# Extract plugin package with error checking
 cd /usr/local/emhttp/plugins
+echo "Extracting plugin package..."
 if ! tar -xf /boot/config/plugins/&name;/&name;-&version;.txz; then
   echo "ERROR: Failed to extract plugin package"
+  echo "Attempting to recover nginx service..."
+  /etc/rc.d/rc.nginx restart 2>&1
   exit 1
 fi
 
-# Verify extraction
+# Verify extraction with detailed output
 if [ ! -d /usr/local/emhttp/plugins/&name; ]; then
   echo "ERROR: Plugin directory not found after extraction"
+  echo "Available directories:"
+  ls -la /usr/local/emhttp/plugins/ | head -10
+  echo "Attempting to recover nginx service..."
+  /etc/rc.d/rc.nginx restart 2>&1
   exit 1
 fi
 
-# Set proper permissions
-echo "Setting permissions..."
-chmod -R 755 /usr/local/emhttp/plugins/&name;
-chown -R root:root /usr/local/emhttp/plugins/&name;
+# Set permissions with verification
+echo "Setting proper permissions..."
+chmod -R 755 /usr/local/emhttp/plugins/&name; 2>&1
+chown -R root:root /usr/local/emhttp/plugins/&name; 2>&1
 
-# Diagnostic information
-echo "================================================="
-echo "Installation Diagnostics:"
-echo "================================================="
-echo "Plugin directory structure:"
-ls -la /usr/local/emhttp/plugins/&name;/
-echo ""
-echo "API file info:"
-ls -la /usr/local/emhttp/plugins/&name;/include/api.php
-echo ""
-echo "API file first 10 lines:"
-head -10 /usr/local/emhttp/plugins/&name;/include/api.php
-echo ""
-echo "Page file info:"
-ls -la /usr/local/emhttp/plugins/&name;/explorerx.page
-echo ""
+# Verify critical files exist and are readable
+echo "Verifying plugin files..."
+if [ ! -f /usr/local/emhttp/plugins/&name;/explorerx.page ]; then
+  echo "ERROR: Plugin page file missing"
+  exit 1
+fi
+
+if [ ! -f /usr/local/emhttp/plugins/&name;/include/api.php ]; then
+  echo "ERROR: API file missing"
+  exit 1
+fi
+
+# Test PHP syntax of API file
+echo "Testing PHP syntax..."
+php -l /usr/local/emhttp/plugins/&name;/include/api.php 2>&1
+if [ $? -ne 0 ]; then
+  echo "ERROR: PHP syntax error in API file"
+  exit 1
+fi
+
+# Ensure nginx is running properly
+echo "Ensuring nginx is running..."
+nginx_test=$(nginx -t 2>&1)
+echo "Nginx test result: $nginx_test"
+
+if ! pgrep nginx > /dev/null; then
+  echo "Starting nginx..."
+  /etc/rc.d/rc.nginx start 2>&1
+fi
 
 echo "================================================="
 echo "ExplorerX Plugin Installed Successfully!"
@@ -178,11 +205,10 @@ echo "================================================="
 echo ""
 echo "Access ExplorerX via: Tools → ExplorerX"
 echo ""
-echo "Features:"
-echo "  • Simple file browser interface"
-echo "  • Directory navigation"
-echo "  • File listing and basic operations"
-echo "  • Auto-update notifications"
+echo "If you experience issues:"
+echo "1. Check nginx error logs: /var/log/nginx/error.log"
+echo "2. Restart nginx: /etc/rc.d/rc.nginx restart"
+echo "3. Check plugin permissions"
 echo ""
 echo "For support: &support;"
 echo "================================================="
