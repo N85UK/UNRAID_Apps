@@ -1,18 +1,19 @@
 {
-  "version": "2025.10.05.04.00",
+  "version": "2025.10.05.05.00",
   "date": "2025-10-05",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.05.04.00-x86_64-1.txz",
-  "md5": "185b82bd10a467ad03b45daeaa8e2765",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.05.05.00-x86_64-1.txz",
+  "md5": "cbbc2190ec0a739f418d8dedfb0ff9bc",
   "changelog": [
     {
-      "version": "2025.10.05.04.00",
+      "version": "2025.10.05.05.00",
       "date": "2025-10-05", 
       "changes": [
-        "Force clean installation to fix PHP code display issue",
-        "Fixed GitHub Actions security scan for legitimate plugin cleanup",
-        "Improved plugin architecture and caching issues", 
-        "Ensured proper plugin interface loading",
-        "Added enhanced cleanup during installation",
+        "Enhanced plugin cleanup and diagnostics",
+        "Force complete removal of all cached plugin data",
+        "Added diagnostic information to track installation issues",
+        "Simplified plugin structure for reliability",
+        "Fixed workflow security scan exclusions",
+        "Added proper PNG icon for plugin",
         "Compatible with UNRAID 7.2.0+"
       ]
     }

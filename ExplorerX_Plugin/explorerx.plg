@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.05.04.00">
-<!ENTITY md5       "185b82bd10a467ad03b45daeaa8e2765">
+<!ENTITY version   "2025.10.05.05.00">
+<!ENTITY md5       "cbbc2190ec0a739f418d8dedfb0ff9bc">
 <!ENTITY launch    "ExplorerX">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,6 +16,14 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.05.05.00 (2025-10-05)
+- Enhanced plugin cleanup and diagnostics
+- Force complete removal of all cached plugin data
+- Added diagnostic information to track installation issues
+- Simplified plugin structure for reliability
+- Fixed workflow security scan exclusions
+- Updated to version 2025.10.05.05.00
+
 ###v2025.10.05.04.00 (2025-10-05)
 - Force clean installation to fix PHP code display issue
 - Fixed GitHub Actions security scan to allow legitimate plugin cleanup
@@ -78,29 +86,39 @@ https://github.com/N85UK/UNRAID_Apps/issues
 <INLINE>
 <![CDATA[
 echo "================================================="
-echo "ExplorerX Plugin Installation"
+echo "ExplorerX Plugin Installation (Enhanced Cleanup)"
 echo "Version: &version;"
 echo "================================================="
 
-# Remove old plugin files completely
-if [ -d /usr/local/emhttp/plugins/&name; ]; then
-  echo "Removing previous installation..."
-  rm -rf /usr/local/emhttp/plugins/&name;
-fi
+# Stop any web services that might be caching
+echo "Stopping nginx to clear any cached content..."
+/etc/rc.d/rc.nginx stop 2>/dev/null || true
+sleep 2
 
-# Clear any cached plugin data
-if [ -d /tmp/plugins/&name; ]; then
-  echo "Clearing plugin cache..."
-  rm -rf /tmp/plugins/&name;
-fi
+# Remove ALL plugin-related files and directories
+echo "Performing complete plugin cleanup..."
+rm -rf /usr/local/emhttp/plugins/&name;
+rm -rf /tmp/plugins/&name;
+rm -rf /var/log/plugins/&name;
 
-# Force browser cache clear by removing any cached versions
+# Clear any web server caches
+echo "Clearing web server caches..."
+rm -rf /tmp/nginx_cache/* 2>/dev/null || true
+rm -rf /var/cache/nginx/* 2>/dev/null || true
+
+# Force browser cache clear by removing any cached versions  
 if [ -d /boot/config/plugins/&name; ]; then
-  echo "Cleaning previous downloads..."
-  find /boot/config/plugins/&name; -name "*.txz" -type f -delete 2>/dev/null || true
+  echo "Cleaning all previous downloads..."
+  rm -rf /boot/config/plugins/&name;/*
 fi
 
-echo "Cleanup completed"
+# Restart nginx to ensure clean state
+echo "Restarting nginx..."
+/etc/rc.d/rc.nginx start 2>/dev/null || true
+
+echo "Enhanced cleanup completed"
+echo "Waiting for services to stabilize..."
+sleep 3
 ]]>
 </INLINE>
 </FILE>
@@ -116,7 +134,7 @@ echo "Cleanup completed"
 <INLINE>
 <![CDATA[
 echo "================================================="
-echo "Installing ExplorerX Plugin"
+echo "Installing ExplorerX Plugin with Diagnostics"
 echo "================================================="
 
 # Extract plugin package
@@ -136,6 +154,23 @@ fi
 echo "Setting permissions..."
 chmod -R 755 /usr/local/emhttp/plugins/&name;
 chown -R root:root /usr/local/emhttp/plugins/&name;
+
+# Diagnostic information
+echo "================================================="
+echo "Installation Diagnostics:"
+echo "================================================="
+echo "Plugin directory structure:"
+ls -la /usr/local/emhttp/plugins/&name;/
+echo ""
+echo "API file info:"
+ls -la /usr/local/emhttp/plugins/&name;/include/api.php
+echo ""
+echo "API file first 10 lines:"
+head -10 /usr/local/emhttp/plugins/&name;/include/api.php
+echo ""
+echo "Page file info:"
+ls -la /usr/local/emhttp/plugins/&name;/explorerx.page
+echo ""
 
 echo "================================================="
 echo "ExplorerX Plugin Installed Successfully!"

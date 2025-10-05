@@ -124,8 +124,8 @@ jobs:
         run: |
           echo "Running basic security checks..."
           
-          # Check for dangerous rm commands (but allow legitimate plugin cleanup)
-          if grep -r "rm -rf /[^u]" ExplorerX_Plugin/explorerx.plg || grep -r "rm -rf \$[^{]" ExplorerX_Plugin/explorerx.plg; then
+          # Check for dangerous rm commands (exclude legitimate plugin paths)
+          if grep -r "rm -rf /" ExplorerX_Plugin/explorerx.plg | grep -v "/usr/local/emhttp/plugins/" | grep -v "/tmp/plugins/" | grep -v "/boot/config/plugins/"; then
             echo "❌ Potentially dangerous rm commands found"
             exit 1
           fi
