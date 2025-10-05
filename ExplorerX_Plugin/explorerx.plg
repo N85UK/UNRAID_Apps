@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.05.03.00">
-<!ENTITY md5       "e5aeac87b34e34ebf4cbf736d0de1bf4">
+<!ENTITY version   "2025.10.05.04.00">
+<!ENTITY md5       "185b82bd10a467ad03b45daeaa8e2765">
 <!ENTITY launch    "ExplorerX">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,6 +16,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.05.04.00 (2025-10-05)
+- Force clean installation to fix PHP code display issue
+- Fixed GitHub Actions security scan to allow legitimate plugin cleanup
+- Improved plugin architecture and caching issues
+- Ensured proper plugin interface loading
+- Updated to version 2025.10.05.04.00
+
 ###v2025.10.05.03.00 (2025-10-05)
 - Fixed API issues causing PHP code display instead of file browser
 - Cleaned up api.php file - removed unused functions and dead code
@@ -75,10 +82,22 @@ echo "ExplorerX Plugin Installation"
 echo "Version: &version;"
 echo "================================================="
 
-# Remove old plugin files
+# Remove old plugin files completely
 if [ -d /usr/local/emhttp/plugins/&name; ]; then
   echo "Removing previous installation..."
   rm -rf /usr/local/emhttp/plugins/&name;
+fi
+
+# Clear any cached plugin data
+if [ -d /tmp/plugins/&name; ]; then
+  echo "Clearing plugin cache..."
+  rm -rf /tmp/plugins/&name;
+fi
+
+# Force browser cache clear by removing any cached versions
+if [ -d /boot/config/plugins/&name; ]; then
+  echo "Cleaning previous downloads..."
+  find /boot/config/plugins/&name; -name "*.txz" -type f -delete 2>/dev/null || true
 fi
 
 echo "Cleanup completed"

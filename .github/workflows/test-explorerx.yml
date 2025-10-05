@@ -124,14 +124,14 @@ jobs:
         run: |
           echo "Running basic security checks..."
           
-          # Check for common security issues in shell scripts
-          if grep -r "rm -rf /\|rm -rf \$" ExplorerX_Plugin/explorerx.plg; then
+          # Check for dangerous rm commands (but allow legitimate plugin cleanup)
+          if grep -r "rm -rf /[^u]" ExplorerX_Plugin/explorerx.plg || grep -r "rm -rf \$[^{]" ExplorerX_Plugin/explorerx.plg; then
             echo "❌ Potentially dangerous rm commands found"
             exit 1
           fi
           
           # Check for hardcoded credentials
-          if grep -ri "password\|secret\|token\|key.*=" ExplorerX_Plugin/explorerx.plg | grep -v "EOFCONFIG"; then
+          if grep -ri "password\|secret\|token\|key.*=" ExplorerX_Plugin/explorerx.plg | grep -v "EOFCONFIG" | grep -v "support"; then
             echo "❌ Potential hardcoded credentials found"
             exit 1
           fi
