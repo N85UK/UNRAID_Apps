@@ -1,213 +1,109 @@
 <?php
 /*
- * ExplorerX Simple API Endpoint
- * Handles AJAX requests for basic file operations
+ * ExplorerX Minimal API - Safe Implementation
  */
 
-header('Content-Type: application/json');
+// Prevent any output before headers
+ob_start();
+
+// Set headers safely
+header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-cache, must-revalidate');
 
-// Error handler to return JSON
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
+// Error handling - catch all errors and return JSON
+function safeError($message) {
+    ob_clean();
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => "PHP Error: $errstr"]);
+    echo json_encode(['success' => false, 'error' => $message]);
     exit;
-});
-
-$action = $_GET['action'] ?? $_POST['action'] ?? '';
-$path = $_GET['path'] ?? $_POST['path'] ?? '/mnt';
-
-// Basic path sanitization
-$path = realpath($path) ?: '/mnt';
-if (strpos($path, '/mnt') !== 0) {
-    $path = '/mnt';
 }
 
-try {
-    switch ($action) {
-        case 'list':
-            listDirectory($path);
-            break;
-        
-        case 'mkdir':
-            $name = $_POST['name'] ?? '';
-            createDirectory($path, $name);
-            break;
-        
-        case 'delete':
-            $items = $_POST['items'] ?? [];
-            deleteItems($items);
-            break;
-        
-        case 'rename':
-            $oldName = $_POST['oldName'] ?? '';
-            $newName = $_POST['newName'] ?? '';
-            renameItem($path, $oldName, $newName);
-            break;
-        
-        default:
-            http_response_code(400);
-            echo json_encode(['success' => false, 'error' => 'Invalid action']);
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    safeError("Error: $errstr");
+});
+
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        safeError("Fatal error occurred");
     }
+});
+
+try {
+    $action = $_GET['action'] ?? 'list';
+    $path = $_GET['path'] ?? '/mnt';
+    
+    // Basic path safety
+    $path = realpath($path);
+    if (!$path || strpos($path, '/mnt') !== 0) {
+        $path = '/mnt';
+    }
+    
+    if ($action === 'list') {
+        listDirectory($path);
+    } else {
+        throw new Exception('Unknown action: ' . $action);
+    }
+    
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    safeError($e->getMessage());
 }
 
 function listDirectory($path) {
-    if (!is_dir($path)) {
-        throw new Exception('Directory not found');
+    if (!is_dir($path) || !is_readable($path)) {
+        throw new Exception('Directory not accessible');
     }
     
     $items = [];
-    $handle = opendir($path);
     
-    if ($handle) {
-        while (($file = readdir($handle)) !== false) {
+    try {
+        $files = scandir($path);
+        if ($files === false) {
+            throw new Exception('Cannot read directory');
+        }
+        
+        foreach ($files as $file) {
             if ($file === '.' || $file === '..') continue;
             
-            $filePath = $path . '/' . $file;
-            $stat = stat($filePath);
+            $fullPath = $path . '/' . $file;
+            
+            // Skip if we can't access the file
+            if (!file_exists($fullPath)) continue;
+            
+            $isDir = is_dir($fullPath);
+            $size = $isDir ? 0 : (is_readable($fullPath) ? filesize($fullPath) : 0);
+            $mtime = is_readable($fullPath) ? filemtime($fullPath) : 0;
             
             $items[] = [
                 'name' => $file,
-                'path' => $filePath,
-                'type' => is_dir($filePath) ? 'directory' : 'file',
-                'size' => $stat['size'] ?? 0,
-                'modified' => $stat['mtime'] ?? 0,
-                'permissions' => substr(sprintf('%o', fileperms($filePath)), -4),
-                'icon' => getFileIcon($file, is_dir($filePath))
+                'path' => $fullPath,
+                'type' => $isDir ? 'directory' : 'file',
+                'size' => $size ?: 0,
+                'modified' => $mtime ?: 0
             ];
         }
-        closedir($handle);
+        
+        // Sort: directories first, then by name
+        usort($items, function($a, $b) {
+            if ($a['type'] !== $b['type']) {
+                return $a['type'] === 'directory' ? -1 : 1;
+            }
+            return strcasecmp($a['name'], $b['name']);
+        });
+        
+    } catch (Exception $e) {
+        throw new Exception('Error reading directory: ' . $e->getMessage());
     }
     
-    // Sort: directories first, then by name
-    usort($items, function($a, $b) {
-        if ($a['type'] !== $b['type']) {
-            return $a['type'] === 'directory' ? -1 : 1;
-        }
-        return strcasecmp($a['name'], $b['name']);
-    });
-    
+    ob_clean();
     echo json_encode([
         'success' => true,
         'data' => [
             'path' => $path,
-            'items' => $items
+            'items' => $items,
+            'count' => count($items)
         ]
     ]);
-}
-
-function createDirectory($basePath, $name) {
-    if (empty($name) || strpos($name, '/') !== false) {
-        throw new Exception('Invalid directory name');
-    }
-    
-    $newPath = $basePath . '/' . $name;
-    if (file_exists($newPath)) {
-        throw new Exception('Directory already exists');
-    }
-    
-    if (!mkdir($newPath, 0755)) {
-        throw new Exception('Failed to create directory');
-    }
-    
-    echo json_encode(['success' => true, 'message' => 'Directory created']);
-}
-
-function deleteItems($items) {
-    $deleted = 0;
-    $errors = [];
-    
-    foreach ($items as $item) {
-        $path = realpath($item);
-        if (!$path || strpos($path, '/mnt') !== 0) {
-            $errors[] = "Invalid path: $item";
-            continue;
-        }
-        
-        if (is_dir($path)) {
-            if (rmdir($path)) {
-                $deleted++;
-            } else {
-                $errors[] = "Failed to delete directory: " . basename($path);
-            }
-        } else {
-            if (unlink($path)) {
-                $deleted++;
-            } else {
-                $errors[] = "Failed to delete file: " . basename($path);
-            }
-        }
-    }
-    
-    echo json_encode([
-        'success' => empty($errors),
-        'deleted' => $deleted,
-        'errors' => $errors
-    ]);
-}
-
-function renameItem($basePath, $oldName, $newName) {
-    if (empty($oldName) || empty($newName)) {
-        throw new Exception('Invalid file names');
-    }
-    
-    $oldPath = $basePath . '/' . $oldName;
-    $newPath = $basePath . '/' . $newName;
-    
-    if (!file_exists($oldPath)) {
-        throw new Exception('Source file not found');
-    }
-    
-    if (file_exists($newPath)) {
-        throw new Exception('Target file already exists');
-    }
-    
-    if (!rename($oldPath, $newPath)) {
-        throw new Exception('Failed to rename file');
-    }
-    
-    echo json_encode(['success' => true, 'message' => 'File renamed']);
-}
-
-function getFileIcon($filename, $isDir) {
-    if ($isDir) {
-        return 'folder';
-    }
-    
-    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-    
-    $iconMap = [
-        'txt' => 'file-text',
-        'log' => 'file-text',
-        'conf' => 'file-text',
-        'cfg' => 'file-text',
-        'jpg' => 'file-image',
-        'jpeg' => 'file-image',
-        'png' => 'file-image',
-        'gif' => 'file-image',
-        'bmp' => 'file-image',
-        'mp4' => 'file-video',
-        'avi' => 'file-video',
-        'mkv' => 'file-video',
-        'mov' => 'file-video',
-        'mp3' => 'file-audio',
-        'wav' => 'file-audio',
-        'flac' => 'file-audio',
-        'zip' => 'file-archive',
-        'rar' => 'file-archive',
-        'tar' => 'file-archive',
-        'gz' => 'file-archive',
-        'pdf' => 'file-pdf',
-        'doc' => 'file-word',
-        'docx' => 'file-word',
-        'xls' => 'file-excel',
-        'xlsx' => 'file-excel'
-    ];
-    
-    return $iconMap[$ext] ?? 'file';
 }
 ?>
 

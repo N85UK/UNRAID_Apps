@@ -30,10 +30,10 @@ jobs:
       - name: Extract plugin metadata
         id: plugin_info
         run: |
-          VERSION=$(grep -o 'version.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
-          AUTHOR=$(grep -o 'author.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
-          NAME=$(grep -o 'name.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
-          MIN_VERSION=$(grep -o 'min.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          VERSION=$(grep '<!ENTITY version' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          AUTHOR=$(grep '<!ENTITY author' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          NAME=$(grep '<!ENTITY name' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
+          MIN_VERSION=$(grep '<!ENTITY min' ExplorerX_Plugin/explorerx.plg | sed 's/.*"\([^"]*\)".*/\1/')
           
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "author=$AUTHOR" >> $GITHUB_OUTPUT
@@ -80,7 +80,7 @@ jobs:
              ```
              - Click `Install`
           4. **Access ExplorerX**
-             - Navigate to `Tools` → `ExplorerX`
+             - Navigate to `ExplorerX` tab (standalone tab, not in Tools menu)
           
           ### Method 2: Community Applications
           
@@ -120,7 +120,7 @@ jobs:
           
           ## First Launch
           
-          1. **Navigate to Tools → ExplorerX**
+          1. **Navigate to ExplorerX tab**
           2. **Review default settings**
              - Default root path: `/mnt`
              - All features enabled by default

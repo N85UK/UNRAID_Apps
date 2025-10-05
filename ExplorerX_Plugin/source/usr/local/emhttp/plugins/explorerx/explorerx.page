@@ -1,367 +1,163 @@
+Menu="Tools"
 Title="ExplorerX"
 Icon="explorerx.png"
 ---
-<?php
-/*
- * ExplorerX - Advanced Native File Manager for Unraid
- * Copyright (c) 2025 N85UK
- * 
- * A powerful native file manager with multi-pane navigation,
- * bulk operations, and background task queue.
- */
-
-// Basic configuration
-$root_path = '/mnt';
-$current_path = $_GET['path'] ?? $root_path;
-
-// Simple path sanitization
-$current_path = realpath($current_path) ?: $root_path;
-if (strpos($current_path, $root_path) !== 0) {
-    $current_path = $root_path;
-}
-?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExplorerX - File Manager</title>
-    
-    <link rel="stylesheet" href="/webGui/styles/default.css">
+    <title>ExplorerX File Manager</title>
     <style>
-        .explorerx-container {
-            padding: 20px;
-            background: #f0f0f0;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        .explorerx-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .explorerx-header h1 {
-            margin: 0;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .breadcrumb {
-            background: #fff;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-family: monospace;
-        }
-        
-        .file-list {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .file-list table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .file-list th {
-            background: #f5f5f5;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-            font-weight: bold;
-        }
-        
-        .file-list td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .file-list tr:hover {
-            background: #f9f9f9;
-        }
-        
-        .file-icon {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
-        }
-        
-        .file-link {
-            color: #0066cc;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        
-        .file-link:hover {
-            text-decoration: underline;
-        }
-        
-        .toolbar {
-            margin-bottom: 15px;
-        }
-        
-        .btn {
-            background: #4CAF50;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        
-        .btn:hover {
-            background: #45a049;
-        }
-        
-        .btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            margin: 10px 0;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; }
+        .toolbar { margin-bottom: 15px; }
+        .btn { background: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .breadcrumb { background: #f5f5f5; padding: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        .file-list { border: 1px solid #ddd; }
+        .file-list table { width: 100%; border-collapse: collapse; }
+        .file-list th, .file-list td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; }
+        .file-list th { background: #f5f5f5; font-weight: bold; }
+        .file-link { color: #0066cc; text-decoration: none; cursor: pointer; }
+        .file-link:hover { text-decoration: underline; }
+        .error { color: #d32f2f; background: #ffebee; padding: 10px; border: 1px solid #f8bbd9; border-radius: 4px; }
+        .loading { text-align: center; padding: 20px; color: #666; }
     </style>
 </head>
 <body>
-
-<div class="explorerx-container">
-    <div class="explorerx-header">
-        <h1>
-            📁 ExplorerX File Manager
-        </h1>
-    </div>
-    
-    <div class="toolbar">
-        <button class="btn" onclick="refreshDirectory()">🔄 Refresh</button>
-        <button class="btn" onclick="goToParent()">⬆️ Parent Directory</button>
-        <button class="btn" onclick="goHome()">🏠 Home (/mnt)</button>
-        <div style="float: right;">
-            <span id="version-info" style="margin-right: 15px; color: #666;">v<?php echo htmlspecialchars($current_path); ?></span>
-            <div id="update-notification" style="display: none; background: #d4edda; color: #155724; padding: 4px 8px; border: 1px solid #c3e6cb; border-radius: 4px; font-size: 12px;">
-                <span id="update-message">Update available!</span>
-                <a href="#" onclick="checkForUpdates(true)" style="margin-left: 8px; color: #155724; text-decoration: underline;">Details</a>
+    <div class="container">
+        <div class="header">
+            <h1>📁 ExplorerX File Manager</h1>
+            <p>Simple file browser for UNRAID</p>
+        </div>
+        
+        <div class="toolbar">
+            <button class="btn" onclick="refreshDirectory()">🔄 Refresh</button>
+            <button class="btn" onclick="goToParent()">⬆️ Parent</button>
+            <button class="btn" onclick="goHome()">🏠 Home</button>
+        </div>
+        
+        <div class="breadcrumb" id="current-path">
+            Current: /mnt
+        </div>
+        
+        <div class="file-list">
+            <div id="file-content" class="loading">
+                Loading directory contents...
             </div>
         </div>
-        <div style="clear: both;"></div>
     </div>
-    
-    <div class="breadcrumb" id="current-path">
-        Current Path: <?php echo htmlspecialchars($current_path); ?>
-    </div>
-    
-    <div class="file-list" id="file-list">
-        <div class="loading">Loading directory contents...</div>
-    </div>
-</div>
 
-<script>
-// Simple configuration
-window.currentPath = <?php echo json_encode($current_path); ?>;
-window.pluginVersion = '0.1.0';
-window.versionCheckURL = 'https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/version.json';
-
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    loadDirectory(window.currentPath);
-    checkForUpdates();
-    
-    // Check for updates every 6 hours
-    setInterval(checkForUpdates, 6 * 60 * 60 * 1000);
-});
-
-function checkForUpdates(showDetails = false) {
-    fetch(window.versionCheckURL)
-        .then(response => response.json())
-        .then(data => {
-            const currentVersion = window.pluginVersion;
-            const latestVersion = data.version;
-            
-            document.getElementById('version-info').textContent = 'v' + currentVersion;
-            
-            if (compareVersions(latestVersion, currentVersion) > 0) {
-                const notification = document.getElementById('update-notification');
-                const message = document.getElementById('update-message');
-                
-                message.textContent = `Update available: v${latestVersion}`;
-                notification.style.display = 'inline-block';
-                
-                if (showDetails) {
-                    showUpdateDetails(data);
-                }
-            } else if (showDetails) {
-                alert('ExplorerX is up to date (v' + currentVersion + ')');
-            }
-        })
-        .catch(error => {
-            console.log('Version check failed:', error);
-            if (showDetails) {
-                alert('Could not check for updates. Please check your internet connection.');
-            }
+    <script>
+        let currentPath = '/mnt';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDirectory(currentPath);
         });
-}
-
-function showUpdateDetails(versionData) {
-    const changes = versionData.changelog[0]?.changes || [];
-    const changeList = changes.map(change => '• ' + change).join('\n');
-    
-    const message = `ExplorerX Update Available!
-    
-Current Version: v${window.pluginVersion}
-Latest Version: v${versionData.version}
-Release Date: ${versionData.date}
-
-What's New:
-${changeList}
-
-To update:
-1. Go to Plugins tab in UNRAID
-2. Check for plugin updates
-3. Click "Update" next to ExplorerX
-
-Support: ${versionData.support_url}`;
-
-    alert(message);
-}
-
-function compareVersions(a, b) {
-    const partsA = a.split('.').map(Number);
-    const partsB = b.split('.').map(Number);
-    
-    for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
-        const partA = partsA[i] || 0;
-        const partB = partsB[i] || 0;
         
-        if (partA > partB) return 1;
-        if (partA < partB) return -1;
-    }
-    
-    return 0;
-}
-
-function loadDirectory(path) {
-    const fileList = document.getElementById('file-list');
-    fileList.innerHTML = '<div class="loading">Loading directory contents...</div>';
-    
-    // Simple fetch to list directory
-    fetch('/plugins/explorerx/include/api.php?action=list&path=' + encodeURIComponent(path))
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                displayFiles(data.data);
-                updateBreadcrumb(path);
-            } else {
-                showError(data.error || 'Failed to load directory');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showError('Failed to connect to server');
-        });
-}
-
-function displayFiles(data) {
-    const fileList = document.getElementById('file-list');
-    
-    if (!data.items || data.items.length === 0) {
-        fileList.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Directory is empty</div>';
-        return;
-    }
-    
-    let html = '<table><thead><tr>';
-    html += '<th>Type</th>';
-    html += '<th>Name</th>';
-    html += '<th>Size</th>';
-    html += '<th>Modified</th>';
-    html += '</tr></thead><tbody>';
-    
-    data.items.forEach(item => {
-        const icon = item.type === 'directory' ? '📁' : '📄';
-        const size = item.type === 'directory' ? '-' : formatBytes(item.size);
-        const modified = new Date(item.modified * 1000).toLocaleString();
-        
-        html += '<tr>';
-        html += '<td>' + icon + '</td>';
-        
-        if (item.type === 'directory') {
-            html += '<td><a href="#" class="file-link" onclick="navigateToDirectory(\'' + 
-                    escapeHtml(item.path) + '\')">' + escapeHtml(item.name) + '</a></td>';
-        } else {
-            html += '<td>' + escapeHtml(item.name) + '</td>';
+        function loadDirectory(path) {
+            const content = document.getElementById('file-content');
+            content.innerHTML = '<div class="loading">Loading...</div>';
+            
+            fetch('/plugins/explorerx/include/api.php?action=list&path=' + encodeURIComponent(path))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.data) {
+                        displayFiles(data.data);
+                        updateBreadcrumb(path);
+                        currentPath = path;
+                    } else {
+                        showError('Failed to load directory: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('Connection error: ' + error.message);
+                });
         }
         
-        html += '<td>' + size + '</td>';
-        html += '<td>' + modified + '</td>';
-        html += '</tr>';
-    });
-    
-    html += '</tbody></table>';
-    fileList.innerHTML = html;
-}
-
-function navigateToDirectory(path) {
-    window.currentPath = path;
-    loadDirectory(path);
-}
-
-function updateBreadcrumb(path) {
-    document.getElementById('current-path').textContent = 'Current Path: ' + path;
-}
-
-function showError(message) {
-    const fileList = document.getElementById('file-list');
-    fileList.innerHTML = '<div class="error">Error: ' + escapeHtml(message) + '</div>';
-}
-
-function refreshDirectory() {
-    loadDirectory(window.currentPath);
-}
-
-function goToParent() {
-    const parentPath = window.currentPath.replace(/\/[^\/]*$/, '') || '/mnt';
-    navigateToDirectory(parentPath);
-}
-
-function goHome() {
-    navigateToDirectory('/mnt');
-}
-
-function formatBytes(bytes) {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-</script>
-
+        function displayFiles(data) {
+            const content = document.getElementById('file-content');
+            
+            if (!data.items || data.items.length === 0) {
+                content.innerHTML = '<div style="padding: 20px; text-align: center;">Directory is empty</div>';
+                return;
+            }
+            
+            let html = '<table><thead><tr><th>Name</th><th>Type</th><th>Size</th><th>Modified</th></tr></thead><tbody>';
+            
+            data.items.forEach(item => {
+                const size = item.type === 'directory' ? '-' : formatBytes(item.size || 0);
+                const modified = new Date((item.modified || 0) * 1000).toLocaleString();
+                const icon = item.type === 'directory' ? '📁' : '📄';
+                
+                html += '<tr>';
+                
+                if (item.type === 'directory') {
+                    html += '<td><a href="#" class="file-link" onclick="navigateToDirectory(\'' + 
+                            escapeHtml(item.path || '') + '\')">' + icon + ' ' + escapeHtml(item.name || '') + '</a></td>';
+                } else {
+                    html += '<td>' + icon + ' ' + escapeHtml(item.name || '') + '</td>';
+                }
+                
+                html += '<td>' + escapeHtml(item.type || '') + '</td>';
+                html += '<td>' + size + '</td>';
+                html += '<td>' + modified + '</td>';
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            content.innerHTML = html;
+        }
+        
+        function navigateToDirectory(path) {
+            if (path) {
+                loadDirectory(path);
+            }
+        }
+        
+        function updateBreadcrumb(path) {
+            document.getElementById('current-path').textContent = 'Current: ' + (path || '/mnt');
+        }
+        
+        function showError(message) {
+            const content = document.getElementById('file-content');
+            content.innerHTML = '<div class="error">Error: ' + escapeHtml(message || 'Unknown error') + '</div>';
+        }
+        
+        function refreshDirectory() {
+            loadDirectory(currentPath);
+        }
+        
+        function goToParent() {
+            const parentPath = currentPath.replace(/\/[^\/]*$/, '') || '/mnt';
+            if (parentPath !== currentPath) {
+                loadDirectory(parentPath);
+            }
+        }
+        
+        function goHome() {
+            loadDirectory('/mnt');
+        }
+        
+        function formatBytes(bytes) {
+            if (!bytes || bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
 </body>
 </html>

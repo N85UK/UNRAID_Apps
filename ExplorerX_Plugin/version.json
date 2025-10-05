@@ -1,11 +1,11 @@
 {
-  "version": "0.1.0",
+  "version": "2025.10.05.01.00",
   "date": "2025-10-05",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-0.1.0-x86_64-1.txz",
-  "md5": "dcc2270c3ea2c626e6bbea519f8524ab",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.05.01.00-x86_64-1.txz",
+  "md5": "9a2850f26e47b17cac16481a42ca3531",
   "changelog": [
     {
-      "version": "0.1.0",
+      "version": "2025.10.05.01.00",
       "date": "2025-10-05", 
       "changes": [
         "Initial release of ExplorerX",

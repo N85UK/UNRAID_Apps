@@ -1,30 +1,70 @@
 #!/bin/bash
 
 # ExplorerX Version Update Script
-# Usage: ./update-version.sh <new_version>
+# Usage: ./update-version.sh [increment_type]
+# increment_type: patch (default), minor, major, or specific version like 2025.10.05.02.00
 
-if [ $# -eq 0 ]; then
-    echo "Usage: $0 <new_version>"
-    echo "Example: $0 0.1.1"
-    exit 1
-fi
-
-NEW_VERSION=$1
-DATE=$(date +%Y-%m-%d)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DATE=$(date +%Y.%m.%d)
 
 echo "================================================="
 echo "ExplorerX Version Update Script"
 echo "================================================="
-echo "New Version: $NEW_VERSION"
-echo "Date: $DATE"
-echo ""
 
-# Validate version format (simple check)
-if ! echo "$NEW_VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-    echo "ERROR: Invalid version format. Use semantic versioning (e.g., 0.1.1)"
-    exit 1
+# Get current version
+CURRENT_VERSION=$(grep '<!ENTITY version' "$SCRIPT_DIR/explorerx.plg" | sed 's/.*"\([^"]*\)".*/\1/')
+echo "Current Version: $CURRENT_VERSION"
+
+# Determine new version
+if [ $# -eq 0 ]; then
+    # Default: increment patch version for today
+    if [[ $CURRENT_VERSION == $DATE.* ]]; then
+        # Same day, increment patch
+        PATCH=$(echo $CURRENT_VERSION | cut -d'.' -f4)
+        BUILD=$(echo $CURRENT_VERSION | cut -d'.' -f5)
+        NEW_PATCH=$((PATCH + 1))
+        NEW_VERSION="$DATE.$NEW_PATCH.$BUILD"
+    else
+        # New day, start fresh
+        NEW_VERSION="$DATE.01.00"
+    fi
+elif [[ $1 =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}$ ]]; then
+    # Specific version provided
+    NEW_VERSION=$1
+else
+    case $1 in
+        "patch")
+            if [[ $CURRENT_VERSION == $DATE.* ]]; then
+                PATCH=$(echo $CURRENT_VERSION | cut -d'.' -f4)
+                BUILD=$(echo $CURRENT_VERSION | cut -d'.' -f5)
+                NEW_PATCH=$((PATCH + 1))
+                NEW_VERSION="$DATE.$NEW_PATCH.$BUILD"
+            else
+                NEW_VERSION="$DATE.01.00"
+            fi
+            ;;
+        "minor")
+            if [[ $CURRENT_VERSION == $DATE.* ]]; then
+                PATCH=$(echo $CURRENT_VERSION | cut -d'.' -f4)
+                BUILD=$(echo $CURRENT_VERSION | cut -d'.' -f5)
+                NEW_BUILD=$((BUILD + 1))
+                NEW_VERSION="$DATE.$PATCH.$NEW_BUILD"
+            else
+                NEW_VERSION="$DATE.01.01"
+            fi
+            ;;
+        "major")
+            NEW_VERSION="$DATE.02.00"
+            ;;
+        *)
+            echo "ERROR: Invalid increment type. Use: patch, minor, major, or specific version (YYYY.MM.DD.XX.XX)"
+            exit 1
+            ;;
+    esac
 fi
+
+echo "New Version: $NEW_VERSION"
+echo ""
 
 # Update plugin manifest (.plg file)
 echo "Updating plugin manifest..."

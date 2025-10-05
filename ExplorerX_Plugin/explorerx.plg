@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "0.1.0">
-<!ENTITY md5       "dcc2270c3ea2c626e6bbea519f8524ab">
+<!ENTITY version   "2025.10.05.01.00">
+<!ENTITY md5       "9a2850f26e47b17cac16481a42ca3531">
 <!ENTITY launch    "ExplorerX">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,7 +16,7 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
-###v0.1.0 (2025-10-05)
+###v2025.10.05.01.00 (2025-10-05)
 - Initial release of ExplorerX
 - Simplified native file manager implementation
 - Standalone tab interface (not in Tools menu)
@@ -109,7 +109,7 @@ echo "================================================="
 echo "ExplorerX Plugin Installed Successfully!"
 echo "================================================="
 echo ""
-echo "Access ExplorerX via the ExplorerX tab"
+echo "Access ExplorerX via: Tools → ExplorerX"
 echo ""
 echo "Features:"
 echo "  • Simple file browser interface"
