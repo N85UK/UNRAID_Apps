@@ -1,0 +1,189 @@
+name: Test ExplorerX Plugin
+
+on:
+  push:
+    branches: [ main ]
+    paths: 
+      - 'ExplorerX_Plugin/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'ExplorerX_Plugin/**'
+
+jobs:
+  validate-plugin:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate XML syntax
+        run: |
+          # Install xmllint
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
+          
+          # Validate plugin XML syntax
+          echo "Validating explorerx.plg XML syntax..."
+          xmllint --noout ExplorerX_Plugin/explorerx.plg
+          echo "✅ XML syntax is valid"
+
+      - name: Check plugin structure
+        run: |
+          # Check required files exist
+          echo "Checking plugin structure..."
+          
+          if [ ! -f "ExplorerX_Plugin/explorerx.plg" ]; then
+            echo "❌ Missing explorerx.plg"
+            exit 1
+          fi
+          
+          echo "✅ Plugin manifest exists"
+          
+          # Check if packages directory exists
+          if [ ! -d "ExplorerX_Plugin/packages" ]; then
+            echo "⚠️ Packages directory not found - this is expected for development"
+          else
+            echo "✅ Packages directory exists"
+            ls -la ExplorerX_Plugin/packages/
+          fi
+
+      - name: Validate plugin metadata
+        run: |
+          echo "Validating plugin metadata..."
+          
+          # Extract metadata from plugin
+          VERSION=$(grep -o 'version.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          AUTHOR=$(grep -o 'author.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          NAME=$(grep -o 'name.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          
+          echo "Plugin Name: $NAME"
+          echo "Version: $VERSION"
+          echo "Author: $AUTHOR"
+          
+          # Validate version format (semantic versioning)
+          if [[ ! $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid version format: $VERSION (expected: x.y.z)"
+            exit 1
+          fi
+          
+          echo "✅ Version format is valid"
+          
+          # Check required fields
+          if [ -z "$NAME" ] || [ -z "$VERSION" ] || [ -z "$AUTHOR" ]; then
+            echo "❌ Missing required metadata"
+            exit 1
+          fi
+          
+          echo "✅ All required metadata present"
+
+      - name: Check package consistency
+        run: |
+          if [ -d "ExplorerX_Plugin/packages" ] && [ -n "$(ls -A ExplorerX_Plugin/packages/)" ]; then
+            echo "Checking package consistency..."
+            
+            VERSION=$(grep -o 'version.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+            MD5_IN_MANIFEST=$(grep -o 'md5.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+            
+            EXPECTED_PACKAGE="explorerx-${VERSION}-x86_64-1.txz"
+            
+            if [ -f "ExplorerX_Plugin/packages/$EXPECTED_PACKAGE" ]; then
+              echo "✅ Package file exists: $EXPECTED_PACKAGE"
+              
+              # Check MD5 if .md5 file exists
+              if [ -f "ExplorerX_Plugin/packages/${EXPECTED_PACKAGE}.md5" ]; then
+                MD5_IN_FILE=$(cut -d' ' -f1 "ExplorerX_Plugin/packages/${EXPECTED_PACKAGE}.md5")
+                
+                if [ "$MD5_IN_MANIFEST" = "$MD5_IN_FILE" ]; then
+                  echo "✅ MD5 hash matches between manifest and .md5 file"
+                else
+                  echo "❌ MD5 mismatch:"
+                  echo "  Manifest: $MD5_IN_MANIFEST"
+                  echo "  File:     $MD5_IN_FILE"
+                  exit 1
+                fi
+              else
+                echo "⚠️ No .md5 file found for package verification"
+              fi
+            else
+              echo "⚠️ Expected package not found: $EXPECTED_PACKAGE"
+              echo "Available packages:"
+              ls -la ExplorerX_Plugin/packages/
+            fi
+          else
+            echo "ℹ️ No packages to validate (development mode)"
+          fi
+
+      - name: Security scan
+        run: |
+          echo "Running basic security checks..."
+          
+          # Check for common security issues in shell scripts
+          if grep -r "rm -rf /\|rm -rf \$" ExplorerX_Plugin/explorerx.plg; then
+            echo "❌ Potentially dangerous rm commands found"
+            exit 1
+          fi
+          
+          # Check for hardcoded credentials
+          if grep -ri "password\|secret\|token\|key.*=" ExplorerX_Plugin/explorerx.plg | grep -v "EOFCONFIG"; then
+            echo "❌ Potential hardcoded credentials found"
+            exit 1
+          fi
+          
+          # Check for eval or dangerous exec patterns
+          if grep -r "eval\|exec.*\$" ExplorerX_Plugin/explorerx.plg; then
+            echo "❌ Potentially dangerous eval/exec patterns found"
+            exit 1
+          fi
+          
+          echo "✅ Basic security checks passed"
+
+      - name: Test package creation (if source exists)
+        run: |
+          if [ -d "ExplorerX_Plugin/source" ]; then
+            echo "Testing package creation..."
+            
+            cd ExplorerX_Plugin
+            VERSION=$(grep -o 'version.*"[^"]*"' explorerx.plg | cut -d'"' -f2)
+            TEST_PACKAGE="test-explorerx-${VERSION}-x86_64-1.txz"
+            
+            # Create test package
+            cd source
+            tar -cJf "../$TEST_PACKAGE" usr/ 2>/dev/null || {
+              echo "❌ Failed to create test package"
+              exit 1
+            }
+            cd ..
+            
+            # Verify package contents
+            echo "Package contents:"
+            tar -tJf "$TEST_PACKAGE" | head -20
+            
+            # Clean up
+            rm -f "$TEST_PACKAGE"
+            
+            echo "✅ Package creation test passed"
+          else
+            echo "ℹ️ No source directory found - skipping package creation test"
+          fi
+
+      - name: Summary
+        run: |
+          echo "## 🎉 Plugin Validation Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Checks Passed:" >> $GITHUB_STEP_SUMMARY
+          echo "- XML syntax validation" >> $GITHUB_STEP_SUMMARY
+          echo "- Plugin structure verification" >> $GITHUB_STEP_SUMMARY
+          echo "- Metadata validation" >> $GITHUB_STEP_SUMMARY
+          echo "- Basic security scan" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Plugin Info:" >> $GITHUB_STEP_SUMMARY
+          
+          VERSION=$(grep -o 'version.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          AUTHOR=$(grep -o 'author.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          NAME=$(grep -o 'name.*"[^"]*"' ExplorerX_Plugin/explorerx.plg | cut -d'"' -f2)
+          
+          echo "- **Name:** $NAME" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** $VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "- **Author:** $AUTHOR" >> $GITHUB_STEP_SUMMARY
