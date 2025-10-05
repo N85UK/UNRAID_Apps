@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.05.06.00">
-<!ENTITY md5       "d37bbfe798071532ab496aa26c255d1f">
+<!ENTITY version   "2025.10.05.07.00">
+<!ENTITY md5       "2cfa510411b2bbf56491e72910d65d68">
 <!ENTITY launch    "ExplorerX">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,6 +16,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.05.07.00 (2025-10-05)
+- Fixed PHP syntax checking path issue
+- Improved installation error handling and recovery
+- Enhanced path validation in installation script
+- Better error messages and troubleshooting
+- Updated to version 2025.10.05.07.00
+
 ###v2025.10.05.06.00 (2025-10-05)
 - Emergency fix for 500 Internal Server Error
 - Added comprehensive error handling and diagnostics
@@ -171,22 +178,42 @@ chown -R root:root /usr/local/emhttp/plugins/&name; 2>&1
 
 # Verify critical files exist and are readable
 echo "Verifying plugin files..."
-if [ ! -f /usr/local/emhttp/plugins/&name;/explorerx.page ]; then
-  echo "ERROR: Plugin page file missing"
+PLUGIN_DIR="/usr/local/emhttp/plugins/&name;"
+PAGE_FILE="$PLUGIN_DIR/explorerx.page"
+API_FILE="$PLUGIN_DIR/include/api.php"
+
+echo "Plugin directory: $PLUGIN_DIR"
+echo "Checking for page file: $PAGE_FILE"
+if [ ! -f "$PAGE_FILE" ]; then
+  echo "ERROR: Plugin page file missing at $PAGE_FILE"
   exit 1
+else
+  echo "✅ Page file found"
 fi
 
-if [ ! -f /usr/local/emhttp/plugins/&name;/include/api.php ]; then
-  echo "ERROR: API file missing"
+echo "Checking for API file: $API_FILE"
+if [ ! -f "$API_FILE" ]; then
+  echo "ERROR: API file missing at $API_FILE"
+  echo "Available files in include directory:"
+  ls -la "$PLUGIN_DIR/include/" 2>/dev/null || echo "Include directory not found"
   exit 1
+else
+  echo "✅ API file found"
 fi
 
 # Test PHP syntax of API file
-echo "Testing PHP syntax..."
-php -l /usr/local/emhttp/plugins/&name;/include/api.php 2>&1
-if [ $? -ne 0 ]; then
+echo "Testing PHP syntax of API file..."
+php_output=$(php -l "$API_FILE" 2>&1)
+php_result=$?
+echo "PHP syntax check output: $php_output"
+
+if [ $php_result -ne 0 ]; then
   echo "ERROR: PHP syntax error in API file"
+  echo "Attempting to recover nginx service..."
+  /etc/rc.d/rc.nginx restart 2>&1
   exit 1
+else
+  echo "✅ PHP syntax check passed"
 fi
 
 # Ensure nginx is running properly
