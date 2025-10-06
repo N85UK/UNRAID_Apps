@@ -1,19 +1,20 @@
 {
-  "version": "2025.10.06.01.00",
+  "version": "2025.10.06.02.00",
   "date": "2025-10-06",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.06.01.00-x86_64-1.txz",
-  "md5": "49db9f497eebf270505dd1d2728e862c",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.06.02.00-x86_64-1.txz",
+  "md5": "869f4ece9cffa8c99d17f9322213c932",
   "changelog": [
     {
-      "version": "2025.10.06.01.00",
+      "version": "2025.10.06.02.00",
       "date": "2025-10-06", 
       "changes": [
-        "CRITICAL FIX: Fixed permission issues causing plugin installation failure",
-        "Removed macOS metadata files that interfere with installation",
-        "Enhanced permission fixing to handle ownership problems",
-        "Fixed page file verification and plugin interface loading",
-        "Comprehensive cleanup of problematic files before installation",
-        "Improved error handling and diagnostic output",
+        "SAFE INSTALLATION: Fixed all dangerous installation scripts",
+        "Only touches ExplorerX files - never modifies other plugins",
+        "Standalone tab interface (not in Tools menu)",
+        "Safe permission handling - only for ExplorerX directory",
+        "Completely rewritten installation scripts for safety",
+        "No global plugin directory modifications",
+        "Enhanced error handling and recovery",
         "Compatible with UNRAID 7.2.0+"
       ]
     }
@@ -22,5 +23,5 @@
   "plugin_url": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/explorerx.plg",
   "support_url": "https://github.com/N85UK/UNRAID_Apps/issues",
   "author": "N85UK",
-  "description": "Simple native file manager for UNRAID (PERMISSION FIX)"
+  "description": "Simple native file manager for UNRAID (SAFE VERSION)"
 }
