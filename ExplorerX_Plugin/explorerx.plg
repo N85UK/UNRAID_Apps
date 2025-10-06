@@ -3,7 +3,7 @@
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
 <!ENTITY version   "2025.10.06.02.00">
-<!ENTITY md5       "869f4ece9cffa8c99d17f9322213c932">
+<!ENTITY md5       "1cdbc7c3a3b146a4e9d7e24fbcefcbbc">
 <!ENTITY launch    "ExplorerX">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">

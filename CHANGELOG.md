@@ -10,45 +10,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.06.02.00] - 2025-10-06
 
 ### Added
-- ExplorerX Plugin v2025.10.06.02.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
+- ExplorerX Plugin v2025.10.06.02.00 - **SAFE VERSION**
+- Completely safe installation scripts that only touch ExplorerX files
+- Standalone tab interface (not in Tools menu)
+- Simple file browser with directory navigation
+- Enhanced error handling and recovery
+- Comprehensive documentation cleanup
 
 ### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
+- Completely rewritten installation scripts for safety
+- Removed all dangerous global plugin directory modifications
+- Simplified interface to single-pane file browser
+- Updated all documentation to reflect current functionality
 
 ### Fixed
-- Package download URL issues
-- MD5 hash validation
+- **CRITICAL**: Fixed installation scripts that were breaking plugin systems
+- Removed dangerous `chown -R root:root /usr/local/emhttp/plugins/` commands
+- Safe permission handling only for ExplorerX directory
+- Eliminated macOS metadata files from packages
+- Fixed plugin interface to be standalone tab
 
-## [Unreleased]
+### Removed
+- Complex multi-pane interface (simplified to basic file browser)
+- Unnecessary CSS and JavaScript files
+- Dangerous global plugin permission modifications
+- Outdated installation scripts and automation
 
-## [2025.10.06.01.00] - 2025-10-06
+## [2025.10.06.01.00] - 2025-10-06 (Deprecated - Had permission issues)
 
-### Added
-- ExplorerX Plugin v2025.10.06.02.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
-
-### Fixed
-- Package download URL issues
-- MD5 hash validation
-
-## [Unreleased]
-
-## [2025.10.05.08.00] - 2025-10-05
-
-### Added
-- ExplorerX Plugin v2025.10.06.02.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
+### Issues
+- Still contained dangerous global plugin directory permission changes
+- Installation scripts could break other plugins
+- **Replaced by v2025.10.06.02.00**
 - Updated plugin manifest and packaging
 - Improved installation reliability
 
