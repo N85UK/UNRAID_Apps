@@ -7,10 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2025.10.06.02.00] - 2025-10-06
+
+### Added
+- ExplorerX Plugin v2025.10.06.02.00
+- Automated release process via GitHub Actions
+- Enhanced plugin documentation
+
+### Changed
+- Updated plugin manifest and packaging
+- Improved installation reliability
+
+### Fixed
+- Package download URL issues
+- MD5 hash validation
+
+## [Unreleased]
+
 ## [2025.10.06.01.00] - 2025-10-06
 
 ### Added
-- ExplorerX Plugin v2025.10.06.01.00
+- ExplorerX Plugin v2025.10.06.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
@@ -27,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.05.08.00] - 2025-10-05
 
 ### Added
-- ExplorerX Plugin v2025.10.06.01.00
+- ExplorerX Plugin v2025.10.06.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
@@ -44,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.05.07.00] - 2025-10-05
 
 ### Added
-- ExplorerX Plugin v2025.10.06.01.00
+- ExplorerX Plugin v2025.10.06.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
@@ -61,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.05.06.00] - 2025-10-05
 
 ### Added
-- ExplorerX Plugin v2025.10.06.01.00
+- ExplorerX Plugin v2025.10.06.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
@@ -78,7 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.05.05.00] - 2025-10-05
 
 ### Added
-- ExplorerX Plugin v2025.10.06.01.00
+- ExplorerX Plugin v2025.10.06.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
@@ -95,7 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.05.04.00] - 2025-10-05
 
 ### Added
-- ExplorerX Plugin v2025.10.06.01.00
+- ExplorerX Plugin v2025.10.06.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
@@ -112,7 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.05.03.00] - 2025-10-05
 
 ### Added
-- ExplorerX Plugin v2025.10.06.01.00
+- ExplorerX Plugin v2025.10.06.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
