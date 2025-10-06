@@ -4,39 +4,34 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 
 ## 🚀 **Available Projects**
 
-### 📁 **ExplorerX Plugin** (Production Ready)
-**Advanced native file manager for UNRAID with multi-pane navigation and bulk operations**
+### 📁 **ExplorerX Plugin** (Safe & Stable)
+**Simple, native file manager for UNRAID with clean interface and safe installation**
 
 - **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
-- **Status**: ✅ **Ready for Production Use - v0.1.1**
+- **Status**: ✅ **Safe & Ready - v2025.10.06.02.00**
 - **Installation**: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
 
 **Key Features:**
-- 🌐 Multi-pane navigation for power users
-- 📱 Responsive design for mobile and desktop
+- 🌐 Simple directory navigation and file listing
+- 📱 Responsive design for mobile and desktop  
 - 🔧 **Native Integration**: No Docker required, pure UNRAID plugin
-- 🔒 Secure path validation and CSRF protection
+- 🔒 Safe installation that won't break other plugins
 - 📂 Access to all UNRAID shares and drives
-- ⬆️⬇️ Bulk operations with background task queue
-- 🗜️ ZIP/unzip and checksum support
-- 🔄 Real-time progress monitoring
-- ⌨️ **Keyboard Shortcuts**: Power-user navigation
-- 🛡️ **Advanced Security**: Path guards, operation logging, session integration
+- 🛡️ **Enhanced Security**: Safe permission handling, no global modifications
+- 🎯 **Standalone Tab**: Clean interface not buried in Tools menu
 
 **Quick Setup:**
 1. Install plugin via URL above
-2. Navigate to Tools → ExplorerX
-3. Start browsing with enhanced file management
-4. Use dual-pane mode for advanced operations
+2. Navigate to ExplorerX tab (standalone)
+3. Browse your files with simple, safe interface
 
-**Latest Features (v0.1.1):**
-- ✅ Multi-pane file browser with bulk operations
-- ✅ Background task queue for large operations
-- ✅ Comprehensive security with path validation
-- ✅ ZIP archive creation and extraction
-- ✅ Keyboard shortcuts for power users
-- ✅ **Mobile-responsive interface**
-- ✅ **Fixed webGUI Error 500 during uninstall**
+**Latest Features (v2025.10.06.02.00):**
+- ✅ Completely safe installation (won't break plugin system)
+- ✅ Simple file browser with directory navigation
+- ✅ Standalone tab interface (not in Tools menu)
+- ✅ Only touches ExplorerX files during install/uninstall
+- ✅ Enhanced error handling and recovery
+- ✅ No dangerous global plugin directory modifications
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**
@@ -69,7 +64,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 1. Go to Plugins → Install Plugin
 2. Enter: https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
 3. Click Install
-4. Navigate to Tools → ExplorerX to start using
+4. Navigate to ExplorerX tab to start using
 ```
 
 **Option 2: Community Applications**

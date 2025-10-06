@@ -1,1 +1,0 @@
-quick-update.sh
