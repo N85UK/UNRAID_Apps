@@ -1,0 +1,42 @@
+name: Test Docker Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Apps/AWS_EUM/**'
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test Docker build (no push)
+        run: |
+          cd Apps/AWS_EUM
+          echo "Testing Docker build..."
+          docker build -t test-aws-eum .
+          echo "✅ Docker build successful"
+          
+      - name: Test container run
+        run: |
+          echo "Testing container startup..."
+          docker run --name test-container -d -p 8080:80 test-aws-eum
+          sleep 10
+          
+          # Test if container is running
+          if docker ps | grep test-container; then
+            echo "✅ Container is running"
+          else
+            echo "❌ Container failed to start"
+            docker logs test-container
+            exit 1
+          fi
+          
+          # Cleanup
+          docker stop test-container
+          docker rm test-container
