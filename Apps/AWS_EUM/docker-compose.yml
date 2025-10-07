@@ -1,20 +1,69 @@
 version: '3.8'
+
 services:
   aws-eum:
-    image: ghcr.io/N85UK/aws-eum:latest
-    container_name: aws-eum
+    build: .
+    # For production, use: image: ghcr.io/n85uk/aws-eum:2.0
+    container_name: aws-eum-v2
     restart: unless-stopped
+    ports:
+      - "8280:80"
     environment:
+      # AWS Configuration (set these in .env file)
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - PORT=${PORT}
-      - ORIGINATORS=${ORIGINATORS}
+      - AWS_REGION=${AWS_REGION:-eu-west-2}
+      
+      # Application Settings
+      - PORT=80
+      - RATE_LIMIT_MESSAGES=${RATE_LIMIT_MESSAGES:-10}
+      - MAX_MESSAGE_LENGTH=${MAX_MESSAGE_LENGTH:-1600}
+      - HISTORY_RETENTION=${HISTORY_RETENTION:-100}
+      - ENABLE_DEBUG=${ENABLE_DEBUG:-false}
+      
+      # Optional Manual Originators
+      - ORIGINATORS=${ORIGINATORS:-}
+    
     volumes:
+      # Persistent data storage
       - ./data:/app/data
-    networks:
-      - br0.100
+      # Development: Mount source for live reload (uncomment for development)
+      # - .:/app
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Security
+    security_opt:
+      - no-new-privileges:true
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-networks:
-  br0.100:
-    external: true
+    # Use default bridge network or specify custom network
+    # networks:
+    #   - br0.100
+
+# For custom networks (uncomment if needed)
+# networks:
+#   br0.100:
+#     external: true

@@ -3,50 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS End User Messaging</title>
+    <title>AWS End User Messaging v2.0</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>AWS End User Messaging</h1>
-            <p>Send SMS messages using AWS Pinpoint</p>
+            <h1>AWS End User Messaging v2.0</h1>
+            <p>Enhanced SMS messaging with AWS integration</p>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-label">AWS:</span>
+                    <span class="status-value <%= config.aws_configured ? 'connected' : 'disconnected' %>">
+                        <%= config.aws_configured ? 'Connected' : 'Not Configured' %>
+                    </span>
+                </div>
+                <% if (config.aws_configured) { %>
+                    <div class="status-item">
+                        <span class="status-label">Region:</span>
+                        <span class="status-value"><%= config.aws_region %></span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">AWS Numbers:</span>
+                        <span class="status-value"><%= config.aws_originators || 0 %></span>
+                    </div>
+                    <% if (config.manual_originators > 0) { %>
+                        <div class="status-item">
+                            <span class="status-label">Manual:</span>
+                            <span class="status-value"><%= config.manual_originators %></span>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
         </header>
 
         <main>
-            <section class="sms-form">
-                <h2>Send SMS</h2>
-                <form id="smsForm">
-                    <div class="form-group">
-                        <label for="originator">Originator:</label>
-                        <select id="originator" name="originator" required>
-                            <option value="">Select originator...</option>
-                            <% Object.keys(originators).forEach(label => { %>
-                                <option value="<%= label %>"><%= label %></option>
-                            <% }); %>
-                        </select>
+            <% if (!config.aws_configured) { %>
+                <section class="config-warning">
+                    <h2>⚠️ AWS Configuration Required</h2>
+                    <p>Please configure your AWS credentials in the UNRAID template settings:</p>
+                    <ul>
+                        <li>AWS Access Key ID</li>
+                        <li>AWS Secret Access Key</li>
+                        <li>AWS Region</li>
+                    </ul>
+                    <p>Once configured, restart the container to connect to AWS.</p>
+                </section>
+            <% } else { %>
+                <section class="sms-form">
+                    <div class="form-header">
+                        <h2>Send SMS Message</h2>
+                        <button id="refreshOriginators" class="btn-refresh" title="Refresh phone numbers from AWS">
+                            🔄 Refresh Numbers
+                        </button>
                     </div>
+                    
+                    <form id="smsForm">
+                        <div class="form-group">
+                            <label for="originator">Phone Number / Originator:</label>
+                            <select id="originator" name="originator" required>
+                                <option value="">Loading phone numbers from AWS...</option>
+                                <% Object.keys(originators).forEach(label => { %>
+                                    <option value="<%= label %>"><%= label %></option>
+                                <% }); %>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="phoneNumber">Phone Number:</label>
-                        <input type="tel" id="phoneNumber" name="phoneNumber"
-                               placeholder="+447700900000" required>
+                        <div class="form-group">
+                            <label for="phoneNumber">Destination Phone Number:</label>
+                            <input type="tel" id="phoneNumber" name="phoneNumber"
+                                   placeholder="+447700900000 or +1234567890" required>
+                            <small>Include country code (e.g., +44 for UK, +1 for US)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message:</label>
+                            <textarea id="message" name="message" rows="6"
+                                      placeholder="Enter your message... Longer messages will be automatically split into multiple SMS segments."
+                                      required></textarea>
+                            <div class="message-info">
+                                <div class="char-count">
+                                    <span id="charCount">0 characters</span>
+                                </div>
+                                <div class="message-details">
+                                    <span id="segmentInfo">1 SMS segment</span>
+                                    <span id="costEstimate" class="cost-info"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="sendBtn" class="btn-primary">
+                            <span class="btn-text">Send SMS</span>
+                            <span class="btn-loading" style="display: none;">Sending...</span>
+                        </button>
+                    </form>
+                </section>
+
+                <section class="message-preview" id="messagePreview" style="display: none;">
+                    <h3>Message Preview</h3>
+                    <div class="preview-content">
+                        <div class="preview-segments" id="previewSegments"></div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="message">Message:</label>
-                        <textarea id="message" name="message" rows="4"
-                                  placeholder="Enter your message..." required
-                                  maxlength="160"></textarea>
-                        <small id="charCount">0/160 characters</small>
-                    </div>
-
-                    <button type="submit" id="sendBtn">Send SMS</button>
-                </form>
-            </section>
+                </section>
+            <% } %>
 
             <section class="message-history">
-                <h2>Message History</h2>
+                <div class="history-header">
+                    <h2>Message History</h2>
+                    <button id="refreshHistory" class="btn-refresh">🔄 Refresh</button>
+                </div>
+                
                 <div id="history">
                     <% if (history.length === 0) { %>
                         <p class="no-history">No messages sent yet.</p>
@@ -57,18 +123,37 @@
                                     <span class="timestamp"><%= new Date(msg.timestamp).toLocaleString() %></span>
                                     <span class="originator"><%= msg.originator %></span>
                                 </div>
-                                <div class="phone-number"><%= msg.phoneNumber %></div>
+                                <div class="phone-number">📱 <%= msg.phoneNumber %></div>
                                 <div class="message-body"><%= msg.message %></div>
-                                <% if (msg.messageId) { %>
-                                    <div class="message-id">ID: <%= msg.messageId %></div>
-                                <% } %>
+                                <div class="message-meta">
+                                    <% if (msg.messageId) { %>
+                                        <span class="message-id">ID: <%= msg.messageId %></span>
+                                    <% } %>
+                                    <% if (msg.messageInfo) { %>
+                                        <span class="message-segments">
+                                            <%= msg.messageInfo.segments %> segment<%= msg.messageInfo.segments > 1 ? 's' : '' %>
+                                        </span>
+                                        <span class="message-length">
+                                            <%= msg.messageInfo.length %> chars
+                                        </span>
+                                    <% } %>
+                                </div>
                             </div>
                         <% }); %>
                     <% } %>
                 </div>
             </section>
         </main>
+
+        <footer>
+            <div class="footer-info">
+                <p>AWS End User Messaging v2.0 | Enhanced with UNRAID integration</p>
+                <p>Longer messages are automatically split into SMS segments</p>
+            </div>
+        </footer>
     </div>
+
+    <div id="notification" class="notification" style="display: none;"></div>
 
     <script src="/js/app.js"></script>
 </body>

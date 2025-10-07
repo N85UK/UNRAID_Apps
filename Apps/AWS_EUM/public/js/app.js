@@ -1,25 +1,126 @@
-// AWS End User Messaging - Client-side JavaScript
+// AWS End User Messaging v2.0 - Enhanced Client-side JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
     const smsForm = document.getElementById('smsForm');
     const sendBtn = document.getElementById('sendBtn');
     const messageTextarea = document.getElementById('message');
     const charCount = document.getElementById('charCount');
+    const segmentInfo = document.getElementById('segmentInfo');
+    const costEstimate = document.getElementById('costEstimate');
+    const messagePreview = document.getElementById('messagePreview');
+    const previewSegments = document.getElementById('previewSegments');
+    const refreshOriginators = document.getElementById('refreshOriginators');
+    const refreshHistory = document.getElementById('refreshHistory');
 
-    // Character counter
-    messageTextarea.addEventListener('input', function() {
-        const count = this.value.length;
-        charCount.textContent = `${count}/160 characters`;
+    let messageInfoCache = {};
 
-        if (count > 160) {
-            charCount.style.color = '#dc3545';
+    // Enhanced character counter with segment calculation
+    messageTextarea?.addEventListener('input', async function() {
+        const message = this.value;
+        const count = message.length;
+        
+        // Update character count
+        charCount.textContent = `${count} characters`;
+
+        // Get message info from server
+        if (message.length > 0) {
+            try {
+                const messageInfo = await getMessageInfo(message);
+                updateMessageDisplay(messageInfo, message);
+            } catch (error) {
+                console.error('Error getting message info:', error);
+                // Fallback to basic calculation
+                const segments = message.length > 160 ? Math.ceil(message.length / 153) : 1;
+                updateMessageDisplay({ segments, length: count, is_multipart: segments > 1 }, message);
+            }
         } else {
-            charCount.style.color = '#666';
+            resetMessageDisplay();
         }
     });
 
-    // Form submission
-    smsForm.addEventListener('submit', async function(e) {
+    // Get message info from server
+    async function getMessageInfo(message) {
+        const cacheKey = message.length;
+        if (messageInfoCache[cacheKey] && messageInfoCache[cacheKey].message === message) {
+            return messageInfoCache[cacheKey].info;
+        }
+
+        const response = await fetch('/api/message-info', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+        });
+
+        if (!response.ok) throw new Error('Failed to get message info');
+        
+        const info = await response.json();
+        messageInfoCache[cacheKey] = { message, info };
+        return info;
+    }
+
+    // Update message display with segment info
+    function updateMessageDisplay(messageInfo, message) {
+        const { segments, length, is_multipart, estimated_cost_multiplier } = messageInfo;
+
+        // Update segment info
+        segmentInfo.textContent = `${segments} SMS segment${segments > 1 ? 's' : ''}`;
+        segmentInfo.className = segments > 1 ? 'segments-multiple' : 'segments-single';
+
+        // Update cost estimate
+        if (estimated_cost_multiplier > 1) {
+            costEstimate.textContent = `${estimated_cost_multiplier}x cost`;
+            costEstimate.style.display = 'inline';
+        } else {
+            costEstimate.style.display = 'none';
+        }
+
+        // Show preview for long messages
+        if (is_multipart && message.length > 160) {
+            showMessagePreview(message, messageInfo);
+        } else {
+            messagePreview.style.display = 'none';
+        }
+
+        // Color coding
+        if (segments > 3) {
+            charCount.style.color = '#dc3545'; // Red for very long
+        } else if (segments > 1) {
+            charCount.style.color = '#ffc107'; // Orange for multi-segment
+        } else {
+            charCount.style.color = '#28a745'; // Green for single segment
+        }
+    }
+
+    // Reset message display
+    function resetMessageDisplay() {
+        segmentInfo.textContent = '1 SMS segment';
+        segmentInfo.className = 'segments-single';
+        costEstimate.style.display = 'none';
+        messagePreview.style.display = 'none';
+        charCount.style.color = '#666';
+    }
+
+    // Show message preview for long messages
+    function showMessagePreview(message, messageInfo) {
+        const maxLength = messageInfo.segments === 1 ? 160 : 153;
+        const segments = [];
+        
+        for (let i = 0; i < message.length; i += maxLength) {
+            segments.push(message.substring(i, i + maxLength));
+        }
+
+        previewSegments.innerHTML = segments.map((segment, index) => `
+            <div class="segment">
+                <div class="segment-header">Segment ${index + 1} (${segment.length} chars)</div>
+                <div class="segment-content">${escapeHtml(segment)}</div>
+            </div>
+        `).join('');
+
+        messagePreview.style.display = 'block';
+    }
+
+    // Form submission with enhanced error handling
+    smsForm?.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const formData = new FormData(smsForm);
@@ -29,87 +130,187 @@ document.addEventListener('DOMContentLoaded', function() {
             message: formData.get('message')
         };
 
-        // Basic validation
+        // Enhanced validation
         if (!data.originator || !data.phoneNumber || !data.message) {
-            showMessage('Please fill in all fields', 'error');
+            showNotification('Please fill in all fields', 'error');
             return;
         }
 
-        if (data.message.length > 160) {
-            showMessage('Message must be 160 characters or less', 'error');
+        if (data.message.length > 1600) {
+            showNotification('Message is too long (max 1600 characters)', 'error');
             return;
         }
 
-        // Disable button and show loading
-        sendBtn.disabled = true;
-        sendBtn.textContent = 'Sending...';
+        // Show loading state
+        setLoadingState(true);
 
         try {
             const response = await fetch('/send-sms', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
             const result = await response.json();
 
             if (response.ok && result.success) {
-                showMessage(`SMS sent successfully! Message ID: ${result.messageId}`, 'success');
+                const { messageId, messageInfo } = result;
+                const segmentText = messageInfo.segments > 1 ? ` (${messageInfo.segments} segments)` : '';
+                showNotification(`SMS sent successfully!${segmentText} Message ID: ${messageId}`, 'success');
+                
+                // Reset form
                 smsForm.reset();
-                charCount.textContent = '0/160 characters';
-                charCount.style.color = '#666';
+                resetMessageDisplay();
 
-                // Refresh history
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                // Refresh history after delay
+                setTimeout(refreshMessageHistory, 2000);
             } else {
-                showMessage(result.error || 'Failed to send SMS', 'error');
+                if (response.status === 429) {
+                    showNotification(`Rate limit exceeded. Try again in ${result.retryAfter} seconds.`, 'error');
+                } else {
+                    showNotification(result.error || 'Failed to send SMS', 'error');
+                }
             }
         } catch (error) {
             console.error('Error:', error);
-            showMessage('Network error. Please try again.', 'error');
+            showNotification('Network error. Please check your connection and try again.', 'error');
         } finally {
-            sendBtn.disabled = false;
-            sendBtn.textContent = 'Send SMS';
+            setLoadingState(false);
         }
     });
 
-    // Utility function to show messages
-    function showMessage(text, type) {
-        // Remove existing messages
-        const existingMessages = document.querySelectorAll('.message');
-        existingMessages.forEach(msg => msg.remove());
+    // Loading state management
+    function setLoadingState(loading) {
+        if (!sendBtn) return;
+        
+        const btnText = sendBtn.querySelector('.btn-text');
+        const btnLoading = sendBtn.querySelector('.btn-loading');
+        
+        sendBtn.disabled = loading;
+        if (btnText) btnText.style.display = loading ? 'none' : 'inline';
+        if (btnLoading) btnLoading.style.display = loading ? 'inline' : 'none';
+    }
 
-        // Create new message
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
-        messageDiv.textContent = text;
+    // Refresh originators from AWS
+    refreshOriginators?.addEventListener('click', async function() {
+        this.disabled = true;
+        this.textContent = '🔄 Refreshing...';
 
-        // Insert after the form
-        smsForm.parentNode.insertBefore(messageDiv, smsForm.nextSibling);
+        try {
+            const response = await fetch('/api/refresh-originators', {
+                method: 'POST'
+            });
 
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.remove();
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                showNotification(`Refreshed ${result.count} phone numbers from AWS`, 'success');
+                
+                // Update originator dropdown
+                const originatorSelect = document.getElementById('originator');
+                if (originatorSelect) {
+                    originatorSelect.innerHTML = '<option value="">Select phone number...</option>';
+                    Object.keys(result.originators).forEach(label => {
+                        const option = document.createElement('option');
+                        option.value = label;
+                        option.textContent = label;
+                        originatorSelect.appendChild(option);
+                    });
+                }
+            } else {
+                showNotification(result.error || 'Failed to refresh originators', 'error');
             }
+        } catch (error) {
+            console.error('Error refreshing originators:', error);
+            showNotification('Failed to refresh phone numbers', 'error');
+        } finally {
+            this.disabled = false;
+            this.textContent = '🔄 Refresh Numbers';
+        }
+    });
+
+    // Refresh message history
+    refreshHistory?.addEventListener('click', refreshMessageHistory);
+
+    async function refreshMessageHistory() {
+        try {
+            const response = await fetch('/history');
+            const history = await response.json();
+
+            const historyDiv = document.getElementById('history');
+            if (historyDiv) {
+                if (history.length === 0) {
+                    historyDiv.innerHTML = '<p class="no-history">No messages sent yet.</p>';
+                } else {
+                    historyDiv.innerHTML = history.map(msg => `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span class="timestamp">${new Date(msg.timestamp).toLocaleString()}</span>
+                                <span class="originator">${escapeHtml(msg.originator)}</span>
+                            </div>
+                            <div class="phone-number">📱 ${escapeHtml(msg.phoneNumber)}</div>
+                            <div class="message-body">${escapeHtml(msg.message)}</div>
+                            <div class="message-meta">
+                                ${msg.messageId ? `<span class="message-id">ID: ${escapeHtml(msg.messageId)}</span>` : ''}
+                                ${msg.messageInfo ? `
+                                    <span class="message-segments">${msg.messageInfo.segments} segment${msg.messageInfo.segments > 1 ? 's' : ''}</span>
+                                    <span class="message-length">${msg.messageInfo.length} chars</span>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+            showNotification('History refreshed', 'success');
+        } catch (error) {
+            console.error('Error refreshing history:', error);
+            showNotification('Failed to refresh history', 'error');
+        }
+    }
+
+    // Enhanced notification system
+    function showNotification(text, type) {
+        const notification = document.getElementById('notification');
+        if (!notification) return;
+
+        notification.textContent = text;
+        notification.className = `notification ${type} show`;
+        notification.style.display = 'block';
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 300);
         }, 5000);
     }
 
-    // Phone number formatting
+    // Enhanced phone number formatting
     const phoneInput = document.getElementById('phoneNumber');
-    phoneInput.addEventListener('input', function() {
-        // Remove all non-digit characters except +
+    phoneInput?.addEventListener('input', function() {
         let value = this.value.replace(/[^\d+]/g, '');
 
-        // Ensure it starts with +
         if (value && !value.startsWith('+')) {
             value = '+' + value;
         }
 
         this.value = value;
     });
+
+    // Auto-focus first input
+    const firstInput = document.querySelector('input, select, textarea');
+    if (firstInput && !firstInput.value) {
+        firstInput.focus();
+    }
+
+    // Utility function
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
 });
