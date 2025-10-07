@@ -15,10 +15,10 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -31,12 +31,6 @@ jobs:
         run: |
           cd Apps/AWS_EUM
           npm ci --only=production
-
-      - name: Run tests
-        run: |
-          cd Apps/AWS_EUM
-          # Skip AWS connectivity test since we don't have credentials in CI
-          echo "Build tests passed"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -69,6 +63,4 @@ jobs:
             org.opencontainers.image.vendor=${{ github.repository_owner }}
             org.opencontainers.image.licenses=MIT
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          platforms: linux/amd64

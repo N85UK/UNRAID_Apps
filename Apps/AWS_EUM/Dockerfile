@@ -4,11 +4,16 @@ FROM node:20-bullseye-slim
 # Set working directory
 WORKDIR /app
 
-# Install security updates and clean up
+# Install system dependencies and security updates in one layer
 RUN apt-get update && \
     apt-get upgrade -y && \
+    apt-get install -y curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for security
+RUN groupadd -r appuser && \
+    useradd -r -g appuser -d /app -s /bin/bash appuser
 
 # Copy package files and install dependencies
 COPY package.json package-lock.json* ./
@@ -18,30 +23,19 @@ RUN npm ci --only=production && \
 # Copy application source
 COPY . .
 
-# Create non-root user for security
-RUN groupadd -r appuser && \
-    useradd -r -g appuser -d /app -s /bin/bash appuser && \
-    chown -R appuser:appuser /app
-
-# Create data directory with proper permissions
+# Create data directory and set proper permissions
 RUN mkdir -p /app/data && \
-    chown -R appuser:appuser /app/data
-
-# Add health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-80}/health || exit 1
-
-# Install curl for health check
-RUN apt-get update && \
-    apt-get install -y curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser
 
 # Expose port
-EXPOSE ${PORT:-80}
+EXPOSE 80
+
+# Add health check (after curl is installed and user is set)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:80/health || exit 1
 
 # Start application
 CMD ["node", "server.js"]
