@@ -50,7 +50,17 @@ app.use(helmet({
             imgSrc: ["'self'", "data:", "https:"],
         },
     },
+    hsts: false, // Disable HTTPS strict transport security
 }));
+
+// Force HTTP headers (disable any HTTPS redirects)
+app.use((req, res, next) => {
+    // Remove any HTTPS enforcement headers
+    res.removeHeader('Strict-Transport-Security');
+    // Ensure we're serving over HTTP
+    res.setHeader('X-Forwarded-Proto', 'http');
+    next();
+});
 
 // Rate limiting
 const rateLimiter = new RateLimiterMemory({
@@ -64,7 +74,22 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+
+// Static files with explicit headers
+app.use(express.static('public', {
+    setHeaders: (res, path) => {
+        // Ensure static files are served properly over HTTP
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        if (path.endsWith('.css')) {
+            res.setHeader('Content-Type', 'text/css; charset=utf-8');
+        } else if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        } else if (path.endsWith('.ico')) {
+            res.setHeader('Content-Type', 'image/x-icon');
+        }
+    }
+}));
 
 // Ensure data directory exists
 const dataDir = path.join(__dirname, 'data');
@@ -700,9 +725,33 @@ app.post('/api/webhook/update', (req, res) => {
     }
 });
 
+// Debug route for static file issues
+app.get('/api/debug/static', (req, res) => {
+    const fs = require('fs');
+    const path = require('path');
+    
+    try {
+        const publicDir = path.join(__dirname, 'public');
+        const files = {
+            publicExists: fs.existsSync(publicDir),
+            cssExists: fs.existsSync(path.join(publicDir, 'css', 'style.css')),
+            jsExists: fs.existsSync(path.join(publicDir, 'js', 'app.js')),
+            faviconExists: fs.existsSync(path.join(publicDir, 'favicon.ico')),
+            protocol: req.protocol,
+            headers: req.headers,
+            url: req.url
+        };
+        
+        res.json(files);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
+    console.log(`🌐 HTTP Server: http://0.0.0.0:${PORT}`);
     console.log(`🌍 AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
     
     const awsConfigured = !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY);
@@ -711,7 +760,7 @@ app.listen(PORT, () => {
     if (awsConfigured) {
         const accessKey = process.env.AWS_ACCESS_KEY_ID;
         console.log(`🔑 AWS Access Key: ${accessKey.substring(0, 4)}****${accessKey.substring(accessKey.length - 4)}`);
-        console.log('💡 Test AWS connection at: /api/aws/test');
+        console.log(`💡 Test AWS connection at: http://0.0.0.0:${PORT}/api/aws/test`);
     } else {
         console.log('⚠️  Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to enable AWS features');
     }
