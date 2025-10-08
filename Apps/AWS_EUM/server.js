@@ -99,11 +99,30 @@ app.use('/js', express.static(path.join(__dirname, 'public', 'js'), {
 // Method 2: Explicit routes for critical files
 app.get('/css/style.css', (req, res) => {
     const cssPath = path.join(__dirname, 'public', 'css', 'style.css');
+    console.log(`🎨 CSS requested: ${req.url} from ${req.ip}`);
+    console.log(`📄 CSS path: ${cssPath}`);
+    console.log(`📋 User-Agent: ${req.get('User-Agent')}`);
+    
     if (fs.existsSync(cssPath)) {
-        res.setHeader('Content-Type', 'text/css; charset=utf-8');
-        res.setHeader('Cache-Control', 'public, max-age=3600');
-        res.sendFile(cssPath);
+        try {
+            const cssContent = fs.readFileSync(cssPath, 'utf8');
+            console.log(`✅ CSS loaded: ${cssContent.length} characters`);
+            
+            // Set all possible CSS headers
+            res.setHeader('Content-Type', 'text/css; charset=utf-8');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+            res.setHeader('X-Content-Type-Options', 'nosniff');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            
+            res.send(cssContent);
+        } catch (error) {
+            console.error('❌ Error reading CSS file:', error);
+            res.status(500).send('Error reading CSS file');
+        }
     } else {
+        console.error(`❌ CSS file not found: ${cssPath}`);
         res.status(404).send('CSS file not found');
     }
 });
@@ -822,6 +841,34 @@ app.get('/api/debug/css-content', (req, res) => {
     } else {
         res.status(404).send('CSS file not found at: ' + cssPath);
     }
+});
+
+// Test route with embedded CSS to verify styling
+app.get('/api/debug/test-css', (req, res) => {
+    const testHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>CSS Test</title>
+        <style>
+            body { font-family: Arial; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; }
+            .test-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+            h1 { color: #232f3e; text-align: center; }
+            .status { padding: 10px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; color: #155724; }
+        </style>
+    </head>
+    <body>
+        <div class="test-container">
+            <h1>🎨 CSS Test Page</h1>
+            <div class="status">✅ If you see this styled properly, CSS rendering works!</div>
+            <p>This page has embedded CSS to test if the browser can render styles correctly.</p>
+            <a href="/">← Back to main page</a>
+        </div>
+    </body>
+    </html>`;
+    
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(testHtml);
 });
 
 // Start server
