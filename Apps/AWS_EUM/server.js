@@ -134,12 +134,24 @@ async function fetchOriginatorsFromAWS() {
       
       const phoneNumbers = phoneResponse.PhoneNumbers
         ?.filter(phoneNumber => phoneNumber.PhoneNumber)
-        ?.map(phoneNumber => ({
-          value: phoneNumber.PhoneNumber,
-          name: `${phoneNumber.PhoneNumber} (Phone Number - ${phoneNumber.PhoneNumberCountryCode || 'Unknown'})`,
-          type: 'PhoneNumber',
-          country: phoneNumber.PhoneNumberCountryCode
-        })) || [];
+        ?.map(phoneNumber => {
+          // Extract country from phone number if country code is missing
+          let country = phoneNumber.PhoneNumberCountryCode;
+          if (!country && phoneNumber.PhoneNumber.startsWith('+44')) {
+            country = 'GB';
+          } else if (!country && phoneNumber.PhoneNumber.startsWith('+1')) {
+            country = 'US';
+          } else if (!country) {
+            country = 'Unknown';
+          }
+          
+          return {
+            value: phoneNumber.PhoneNumber,
+            name: `${phoneNumber.PhoneNumber} (Phone Number - ${country})`,
+            type: 'PhoneNumber',
+            country: country
+          };
+        }) || [];
       
       allOriginators = allOriginators.concat(phoneNumbers);
       console.log(`📱 Found ${phoneNumbers.length} phone numbers`);
@@ -152,6 +164,8 @@ async function fetchOriginatorsFromAWS() {
       console.log('🏷️  Fetching sender IDs...');
       const senderCommand = new DescribeSenderIdsCommand({});
       const senderResponse = await smsClient.send(senderCommand);
+      
+      console.log('📋 Sender ID API response:', JSON.stringify(senderResponse, null, 2));
       
       const senderIds = senderResponse.SenderIds
         ?.filter(senderId => senderId.SenderId)
@@ -166,6 +180,7 @@ async function fetchOriginatorsFromAWS() {
       console.log(`🏷️  Found ${senderIds.length} sender IDs`);
     } catch (senderError) {
       console.error('❌ Error fetching sender IDs:', senderError.message);
+      console.error('🔍 Full sender ID error:', JSON.stringify(senderError, null, 2));
       // Don't fail completely if sender IDs can't be fetched
     }
     
