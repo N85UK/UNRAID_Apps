@@ -75,35 +75,28 @@ let cacheExpiry = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Fetch originators from AWS
+// Function to fetch originators from AWS
 async function fetchOriginatorsFromAWS() {
-    if (!smsClient) {
-        console.warn('AWS client not initialized');
-        return {};
-    }
-
-    try {
-        const command = new DescribeOriginationIdentitiesCommand({});
-        const response = await smsClient.send(command);
-        
-        const originators = {};
-        
-        if (response.OriginationIdentities) {
-            response.OriginationIdentities.forEach(identity => {
-                const label = identity.OriginationIdentityArn?.split('/').pop() || identity.OriginationIdentity;
-                originators[`${label} (${identity.IdentityType})`] = identity.OriginationIdentityArn;
-            });
-        }
-
-        // Cache the results
-        cachedOriginators = originators;
-        cacheExpiry = Date.now() + CACHE_DURATION;
-        
-        console.log(`Fetched ${Object.keys(originators).length} originators from AWS`);
-        return originators;
-    } catch (error) {
-        console.error('Error fetching originators from AWS:', error.message);
-        return {};
-    }
+  try {
+    console.log('Fetching originators from AWS...');
+    
+    const command = new DescribeOriginationIdentitiesCommand({});
+    const response = await pinpointClient.send(command);
+    
+    const originators = response.OriginationIdentities
+      ?.filter(identity => identity.OriginationIdentityArn)
+      ?.map(identity => ({
+        value: identity.OriginationIdentity,
+        name: `${identity.OriginationIdentity} (${identity.IdentityType})`,
+        type: identity.IdentityType
+      })) || [];
+    
+    console.log(`Found ${originators.length} originators from AWS`);
+    return originators;
+  } catch (error) {
+    console.error('Error fetching originators from AWS:', error.message);
+    return [];
+  }
 }
 
 // Get originators (AWS + manual config)
