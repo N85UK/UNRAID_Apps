@@ -165,7 +165,8 @@ async function fetchOriginatorsFromAWS() {
       const senderCommand = new DescribeSenderIdsCommand({});
       const senderResponse = await smsClient.send(senderCommand);
       
-      console.log('📋 Sender ID API response:', JSON.stringify(senderResponse, null, 2));
+      console.log('� Sender ID response keys:', Object.keys(senderResponse));
+      console.log('📋 Number of sender IDs found:', senderResponse.SenderIds?.length || 0);
       
       const senderIds = senderResponse.SenderIds
         ?.filter(senderId => senderId.SenderId)
@@ -180,7 +181,8 @@ async function fetchOriginatorsFromAWS() {
       console.log(`🏷️  Found ${senderIds.length} sender IDs`);
     } catch (senderError) {
       console.error('❌ Error fetching sender IDs:', senderError.message);
-      console.error('🔍 Full sender ID error:', JSON.stringify(senderError, null, 2));
+      console.error('� Error code:', senderError.code || 'unknown');
+      console.error('🔧 Error name:', senderError.name || 'unknown');
       // Don't fail completely if sender IDs can't be fetched
     }
     
