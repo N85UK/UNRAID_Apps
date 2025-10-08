@@ -11,9 +11,23 @@ const {
 } = require('@aws-sdk/client-pinpoint-sms-voice-v2');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 80;
+
+// Auto-update configuration
+const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
+const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
+const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
+const CURRENT_VERSION = '2.0.0';
+const GITHUB_REPO = 'N85UK/UNRAID_Apps';
+const UPDATE_FILE = '/app/data/update-info.json';
+
+// Update checking state
+let updateInfo = { available: false, version: null, url: null, lastCheck: 0 };
+let updateCheckTimer = null;
 
 // Security middleware
 app.use(helmet({
@@ -97,6 +111,123 @@ async function fetchOriginatorsFromAWS() {
     console.error('Error fetching originators from AWS:', error.message);
     return [];
   }
+}
+
+// Update checking functions
+async function checkForUpdates() {
+  if (!AUTO_UPDATE_CHECK) return null;
+  
+  try {
+    console.log('🔍 Checking for updates...');
+    
+    const options = {
+      hostname: 'api.github.com',
+      path: `/repos/${GITHUB_REPO}/releases/latest`,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'AWS-EUM-v2.0',
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    };
+    
+    return new Promise((resolve, reject) => {
+      const req = https.request(options, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          try {
+            const release = JSON.parse(data);
+            const latestVersion = release.tag_name?.replace(/^v/, '') || release.name;
+            const isNewer = latestVersion && latestVersion !== CURRENT_VERSION;
+            
+            const updateResult = {
+              available: isNewer,
+              version: latestVersion,
+              currentVersion: CURRENT_VERSION,
+              url: release.html_url,
+              publishedAt: release.published_at,
+              description: release.body,
+              lastCheck: Date.now()
+            };
+            
+            updateInfo = updateResult;
+            saveUpdateInfo(updateResult);
+            
+            if (isNewer) {
+              console.log(`🆕 Update available: v${latestVersion} (current: v${CURRENT_VERSION})`);
+            } else {
+              console.log('✅ Application is up to date');
+            }
+            
+            resolve(updateResult);
+          } catch (error) {
+            console.error('Error parsing update response:', error.message);
+            reject(error);
+          }
+        });
+      });
+      
+      req.on('error', (error) => {
+        console.error('Error checking for updates:', error.message);
+        reject(error);
+      });
+      
+      req.setTimeout(10000, () => {
+        req.destroy();
+        reject(new Error('Update check timeout'));
+      });
+      
+      req.end();
+    });
+  } catch (error) {
+    console.error('Update check failed:', error.message);
+    return null;
+  }
+}
+
+function saveUpdateInfo(info) {
+  try {
+    const dataDir = path.dirname(UPDATE_FILE);
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(UPDATE_FILE, JSON.stringify(info, null, 2));
+  } catch (error) {
+    console.error('Error saving update info:', error.message);
+  }
+}
+
+function loadUpdateInfo() {
+  try {
+    if (fs.existsSync(UPDATE_FILE)) {
+      const data = fs.readFileSync(UPDATE_FILE, 'utf8');
+      updateInfo = JSON.parse(data);
+      return updateInfo;
+    }
+  } catch (error) {
+    console.error('Error loading update info:', error.message);
+  }
+  return updateInfo;
+}
+
+function startUpdateChecker() {
+  if (!AUTO_UPDATE_CHECK) {
+    console.log('📱 Auto-update checking disabled');
+    return;
+  }
+  
+  console.log(`📱 Auto-update checking enabled (every ${UPDATE_CHECK_INTERVAL} hours)`);
+  
+  // Load previous update info
+  loadUpdateInfo();
+  
+  // Check immediately on startup
+  setTimeout(() => checkForUpdates(), 5000);
+  
+  // Set up periodic checking
+  updateCheckTimer = setInterval(() => {
+    checkForUpdates();
+  }, UPDATE_CHECK_INTERVAL * 60 * 60 * 1000);
 }
 
 // Get originators (AWS + manual config)
@@ -323,16 +454,58 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
+        version: CURRENT_VERSION,
         aws_configured: !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY),
-        originators_cached: !!cachedOriginators
+        originators_cached: !!cachedOriginators,
+        updateAvailable: updateInfo.available
     });
+});
+
+// Update check endpoint
+app.get('/api/updates/check', async (req, res) => {
+    try {
+        const result = await checkForUpdates();
+        res.json(result || updateInfo);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to check for updates' });
+    }
+});
+
+// Get update status
+app.get('/api/updates/status', (req, res) => {
+    res.json(updateInfo);
+});
+
+// Webhook endpoint for GitHub releases
+app.post('/api/webhook/update', (req, res) => {
+    try {
+        const { action, release } = req.body;
+        
+        if (action === 'published' && release) {
+            console.log('🚀 New release webhook received:', release.tag_name);
+            
+            // Trigger immediate update check
+            setTimeout(() => checkForUpdates(), 1000);
+            
+            res.json({ status: 'webhook received' });
+        } else {
+            res.json({ status: 'ignored' });
+        }
+    } catch (error) {
+        console.error('Webhook error:', error.message);
+        res.status(500).json({ error: 'Webhook processing failed' });
+    }
 });
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`AWS EUM server running on port ${PORT}`);
+    console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
     console.log(`AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
     console.log(`AWS Configured: ${!!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY)}`);
+    console.log(`Auto-update: ${AUTO_UPDATE_CHECK ? 'enabled' : 'disabled'}`);
+    
+    // Start update checker
+    startUpdateChecker();
     
     // Initial fetch of originators
     if (smsClient) {

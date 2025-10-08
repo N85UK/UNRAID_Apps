@@ -1,4 +1,12 @@
-// AWS End User Messaging v2.0 - Enhanced Client-side JavaScript
+// AWS EUM v2.0 Enhanced Frontend JavaScript
+
+// Global variables
+let segmentCount = 1;
+let characterCount = 0;
+let maxLength = 1600;
+let isRefreshing = false;
+let updateCheckInterval = null;
+let lastUpdateCheck = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
     const smsForm = document.getElementById('smsForm');
@@ -313,4 +321,82 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
+});
+// Update checking functions
+function checkForUpdates() {
+    fetch('/api/updates/status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.available && data.version) {
+                showUpdateNotification(data);
+            }
+        })
+        .catch(error => {
+            console.error('Error checking for updates:', error);
+        });
+}
+
+function showUpdateNotification(updateInfo) {
+    // Remove existing update notification
+    const existing = document.querySelector('.update-notification');
+    if (existing) existing.remove();
+    
+    // Create update notification
+    const notification = document.createElement('div');
+    notification.className = 'update-notification';
+    notification.innerHTML = `
+        <div class="update-content">
+            <div class="update-icon">🆕</div>
+            <div class="update-text">
+                <strong>Update Available!</strong><br>
+                Version ${updateInfo.version} is now available<br>
+                <small>Current version: ${updateInfo.currentVersion}</small>
+            </div>
+            <div class="update-actions">
+                <button onclick="dismissUpdateNotification()" class="btn-dismiss">Dismiss</button>
+                <button onclick="window.open('${updateInfo.url}', '_blank')" class="btn-update">View Release</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-show the notification
+    setTimeout(() => notification.classList.add('show'), 100);
+}
+
+function dismissUpdateNotification() {
+    const notification = document.querySelector('.update-notification');
+    if (notification) {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }
+}
+
+function manualUpdateCheck() {
+    showNotification('Checking for updates...', 'info');
+    
+    fetch('/api/updates/check')
+        .then(response => response.json())
+        .then(data => {
+            if (data.available) {
+                showUpdateNotification(data);
+                showNotification(`Update available: v${data.version}`, 'success');
+            } else {
+                showNotification('You have the latest version!', 'success');
+            }
+        })
+        .catch(error => {
+            console.error('Error checking for updates:', error);
+            showNotification('Failed to check for updates', 'error');
+        });
+}
+
+// Initialize update checking when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for updates on load
+    setTimeout(checkForUpdates, 2000);
+    
+    // Set up periodic update checking (every 4 hours)
+    setInterval(checkForUpdates, 4 * 60 * 60 * 1000);
 });
