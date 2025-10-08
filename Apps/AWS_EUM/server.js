@@ -32,6 +32,14 @@ let updateCheckTimer = null;
 // AWS Client
 let smsClient = null;
 
+// Message history and cache
+let messageHistory = [];
+let cachedOriginators = null;
+let cacheExpiry = 0;
+
+// Rate limiting
+const HISTORY_RETENTION = parseInt(process.env.HISTORY_RETENTION) || 100;
+
 // Security middleware
 app.use(helmet({
     contentSecurityPolicy: {
@@ -47,7 +55,7 @@ app.use(helmet({
 // Rate limiting
 const rateLimiter = new RateLimiterMemory({
     keyPrefix: 'sms_send',
-    points: 10, // 10 SMS per window
+    points: parseInt(process.env.RATE_LIMIT_MESSAGES) || 10, // Messages per window
     duration: 60, // per 60 seconds
 });
 
@@ -108,10 +116,7 @@ function initializeAWSClient() {
 // Initialize AWS client
 initializeAWSClient();
 
-// Cache for AWS data
-let cachedOriginators = null;
-let cacheExpiry = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+// Initialize AWS client\ninitializeAWSClient();\n\n// Cache for AWS data (using variables declared above)\nconst CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Fetch originators from AWS
 // Function to fetch originators from AWS
