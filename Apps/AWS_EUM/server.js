@@ -67,18 +67,41 @@ if (!fs.existsSync(dataDir)) {
 
 function initializeAWSClient() {
     if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
-        console.warn('AWS credentials not configured');
+        console.warn('⚠️  AWS credentials not configured');
+        console.warn('Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables');
         return null;
     }
 
-    smsClient = new PinpointSMSVoiceV2Client({
-        region: process.env.AWS_REGION || 'eu-west-2',
-        credentials: {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-        }
-    });
-    return smsClient;
+    // Validate credential format
+    const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+    
+    if (accessKeyId.length < 16 || accessKeyId.length > 32) {
+        console.warn('⚠️  AWS_ACCESS_KEY_ID appears to have invalid format');
+    }
+    
+    if (secretAccessKey.length < 20) {
+        console.warn('⚠️  AWS_SECRET_ACCESS_KEY appears to have invalid format');
+    }
+
+    try {
+        smsClient = new PinpointSMSVoiceV2Client({
+            region: process.env.AWS_REGION || 'eu-west-2',
+            credentials: {
+                accessKeyId: accessKeyId,
+                secretAccessKey: secretAccessKey
+            }
+        });
+        
+        console.log('✅ AWS SMS client initialized successfully');
+        console.log(`📍 Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
+        console.log(`🔑 Access Key: ${accessKeyId.substring(0, 4)}****${accessKeyId.substring(accessKeyId.length - 4)}`);
+        
+        return smsClient;
+    } catch (error) {
+        console.error('❌ Failed to initialize AWS client:', error.message);
+        return null;
+    }
 }
 
 // Initialize AWS client
@@ -93,14 +116,14 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 // Function to fetch originators from AWS
 async function fetchOriginatorsFromAWS() {
   try {
-    console.log('Fetching originators from AWS...');
+    console.log('🔍 Fetching originators from AWS...');
     
     if (!smsClient) {
-      console.error('SMS client not initialized');
+      console.error('❌ SMS client not initialized');
       return [];
     }
     
-    // Use DescribePhoneNumbersCommand instead - it's available and gives us phone numbers
+    // Test AWS connectivity with a simple call first
     const command = new DescribePhoneNumbersCommand({});
     const response = await smsClient.send(command);
     
@@ -112,15 +135,32 @@ async function fetchOriginatorsFromAWS() {
         type: 'PhoneNumber'
       })) || [];
     
-    console.log(`Found ${originators.length} phone numbers from AWS`);
+    console.log(`✅ Found ${originators.length} phone numbers from AWS`);
     return originators;
   } catch (error) {
-    console.error('Error fetching originators from AWS:', error.message);
+    console.error('❌ Error fetching originators from AWS:', error.message);
     
-    // Fallback to a simpler approach if the above fails
-    if (error.message.includes('DescribePhoneNumbers')) {
-      console.log('Falling back to environment variable configuration...');
-      return [];
+    // Provide specific guidance for common errors
+    if (error.message.includes('security token')) {
+      console.error('🔐 AWS Credential Issue:');
+      console.error('   • Check that your AWS_ACCESS_KEY_ID is correct');
+      console.error('   • Check that your AWS_SECRET_ACCESS_KEY is correct');
+      console.error('   • Ensure credentials are not expired (if using temporary credentials)');
+      console.error('   • Verify the credentials belong to the correct AWS account');
+    } else if (error.message.includes('not authorized')) {
+      console.error('🚫 AWS Permission Issue:');
+      console.error('   • Your AWS user needs PinpointSMSVoice permissions');
+      console.error('   • Required permission: pinpoint-sms-voice-v2:DescribePhoneNumbers');
+      console.error('   • Check your IAM user or role has the correct policies');
+    } else if (error.message.includes('region')) {
+      console.error('🌍 AWS Region Issue:');
+      console.error(`   • Current region: ${process.env.AWS_REGION || 'eu-west-2'}`);
+      console.error('   • Ensure your phone numbers are in this region');
+      console.error('   • Try changing AWS_REGION environment variable');
+    } else {
+      console.error('🔧 General AWS Error:');
+      console.error(`   • Error code: ${error.code || 'unknown'}`);
+      console.error(`   • Error type: ${error.name || 'unknown'}`);
     }
     
     return [];
@@ -500,6 +540,65 @@ app.get('/api/updates/status', (req, res) => {
     res.json(updateInfo);
 });
 
+// AWS credential testing endpoint
+app.get('/api/aws/test', async (req, res) => {
+    try {
+        if (!smsClient) {
+            return res.status(500).json({ 
+                error: 'AWS client not initialized',
+                configured: false,
+                message: 'Check AWS credentials are set'
+            });
+        }
+        
+        // Test basic AWS connectivity
+        const command = new DescribePhoneNumbersCommand({ MaxResults: 1 });
+        const response = await smsClient.send(command);
+        
+        res.json({
+            success: true,
+            configured: true,
+            region: process.env.AWS_REGION || 'eu-west-2',
+            phoneNumbers: response.PhoneNumbers?.length || 0,
+            message: 'AWS connection successful'
+        });
+    } catch (error) {
+        let errorType = 'unknown';
+        let suggestions = [];
+        
+        if (error.message.includes('security token')) {
+            errorType = 'credentials';
+            suggestions = [
+                'Check AWS_ACCESS_KEY_ID is correct',
+                'Check AWS_SECRET_ACCESS_KEY is correct',
+                'Ensure credentials are not expired'
+            ];
+        } else if (error.message.includes('not authorized')) {
+            errorType = 'permissions';
+            suggestions = [
+                'User needs PinpointSMSVoice permissions',
+                'Required: pinpoint-sms-voice-v2:DescribePhoneNumbers',
+                'Check IAM policies'
+            ];
+        } else if (error.message.includes('region')) {
+            errorType = 'region';
+            suggestions = [
+                `Current region: ${process.env.AWS_REGION || 'eu-west-2'}`,
+                'Ensure phone numbers exist in this region',
+                'Try different AWS_REGION'
+            ];
+        }
+        
+        res.status(500).json({
+            success: false,
+            configured: true,
+            error: error.message,
+            errorType: errorType,
+            suggestions: suggestions
+        });
+    }
+});
+
 // Webhook endpoint for GitHub releases
 app.post('/api/webhook/update', (req, res) => {
     try {
@@ -524,9 +623,20 @@ app.post('/api/webhook/update', (req, res) => {
 // Start server
 app.listen(PORT, () => {
     console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
-    console.log(`AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
-    console.log(`AWS Configured: ${!!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY)}`);
-    console.log(`Auto-update: ${AUTO_UPDATE_CHECK ? 'enabled' : 'disabled'}`);
+    console.log(`🌍 AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
+    
+    const awsConfigured = !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY);
+    console.log(`🔐 AWS Configured: ${awsConfigured}`);
+    
+    if (awsConfigured) {
+        const accessKey = process.env.AWS_ACCESS_KEY_ID;
+        console.log(`🔑 AWS Access Key: ${accessKey.substring(0, 4)}****${accessKey.substring(accessKey.length - 4)}`);
+        console.log('💡 Test AWS connection at: /api/aws/test');
+    } else {
+        console.log('⚠️  Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to enable AWS features');
+    }
+    
+    console.log(`🔄 Auto-update: ${AUTO_UPDATE_CHECK ? 'enabled' : 'disabled'}`);
     
     // Start update checker
     startUpdateChecker();
@@ -534,7 +644,7 @@ app.listen(PORT, () => {
     // Initial fetch of originators
     if (smsClient) {
         getOriginators().then(originators => {
-            console.log(`Total originators available: ${Object.keys(originators).length}`);
+            console.log(`📞 Total originators available: ${Object.keys(originators).length}`);
         });
     }
 });
