@@ -80,19 +80,56 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.set('view engine', 'ejs');
 
-// Static files with explicit headers
-app.use(express.static('public', {
+// Static files with multiple approaches to ensure they work
+// Method 1: Standard express.static
+app.use('/css', express.static(path.join(__dirname, 'public', 'css'), {
     setHeaders: (res, path) => {
-        // Ensure static files are served properly over HTTP
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
         res.setHeader('Cache-Control', 'public, max-age=3600');
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-        if (path.endsWith('.css')) {
+    }
+}));
+
+app.use('/js', express.static(path.join(__dirname, 'public', 'js'), {
+    setHeaders: (res, path) => {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+    }
+}));
+
+// Method 2: Explicit routes for critical files
+app.get('/css/style.css', (req, res) => {
+    const cssPath = path.join(__dirname, 'public', 'css', 'style.css');
+    if (fs.existsSync(cssPath)) {
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        res.sendFile(cssPath);
+    } else {
+        res.status(404).send('CSS file not found');
+    }
+});
+
+app.get('/js/app.js', (req, res) => {
+    const jsPath = path.join(__dirname, 'public', 'js', 'app.js');
+    if (fs.existsSync(jsPath)) {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        res.sendFile(jsPath);
+    } else {
+        res.status(404).send('JS file not found');
+    }
+});
+
+// Method 3: General static file serving as fallback
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.css')) {
             res.setHeader('Content-Type', 'text/css; charset=utf-8');
-        } else if (path.endsWith('.js')) {
+        } else if (filePath.endsWith('.js')) {
             res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-        } else if (path.endsWith('.ico')) {
+        } else if (filePath.endsWith('.ico')) {
             res.setHeader('Content-Type', 'image/x-icon');
         }
+        res.setHeader('Cache-Control', 'public, max-age=3600');
     }
 }));
 
@@ -744,19 +781,29 @@ app.post('/api/webhook/update', (req, res) => {
 
 // Debug route for static file issues
 app.get('/api/debug/static', (req, res) => {
-    const fs = require('fs');
     const path = require('path');
     
     try {
         const publicDir = path.join(__dirname, 'public');
+        const cssDir = path.join(publicDir, 'css');
+        const jsDir = path.join(publicDir, 'js');
+        const cssFile = path.join(cssDir, 'style.css');
+        const jsFile = path.join(jsDir, 'app.js');
+        
         const files = {
+            __dirname: __dirname,
+            publicDir: publicDir,
             publicExists: fs.existsSync(publicDir),
-            cssExists: fs.existsSync(path.join(publicDir, 'css', 'style.css')),
-            jsExists: fs.existsSync(path.join(publicDir, 'js', 'app.js')),
-            faviconExists: fs.existsSync(path.join(publicDir, 'favicon.ico')),
+            cssDir: cssDir,
+            cssExists: fs.existsSync(cssFile),
+            cssSize: fs.existsSync(cssFile) ? fs.statSync(cssFile).size : 0,
+            jsDir: jsDir,
+            jsExists: fs.existsSync(jsFile),
+            jsSize: fs.existsSync(jsFile) ? fs.statSync(jsFile).size : 0,
             protocol: req.protocol,
-            headers: req.headers,
-            url: req.url
+            host: req.get('host'),
+            baseUrl: req.baseUrl,
+            originalUrl: req.originalUrl
         };
         
         res.json(files);
@@ -765,11 +812,37 @@ app.get('/api/debug/static', (req, res) => {
     }
 });
 
+// Test route for CSS content
+app.get('/api/debug/css-content', (req, res) => {
+    const cssPath = path.join(__dirname, 'public', 'css', 'style.css');
+    if (fs.existsSync(cssPath)) {
+        const content = fs.readFileSync(cssPath, 'utf8');
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(content.substring(0, 500) + '...'); // First 500 chars
+    } else {
+        res.status(404).send('CSS file not found at: ' + cssPath);
+    }
+});
+
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
     console.log(`🌐 HTTP Server: http://0.0.0.0:${PORT}`);
     console.log(`🌍 AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
+    
+    // Verify static file structure
+    const publicDir = path.join(__dirname, 'public');
+    const cssFile = path.join(publicDir, 'css', 'style.css');
+    const jsFile = path.join(publicDir, 'js', 'app.js');
+    
+    console.log(`📁 Public directory: ${publicDir}`);
+    console.log(`📄 CSS file exists: ${fs.existsSync(cssFile)} (${cssFile})`);
+    console.log(`📄 JS file exists: ${fs.existsSync(jsFile)} (${jsFile})`);
+    
+    if (fs.existsSync(cssFile)) {
+        const cssSize = fs.statSync(cssFile).size;
+        console.log(`📊 CSS file size: ${cssSize} bytes`);
+    }
     
     const awsConfigured = !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY);
     console.log(`🔐 AWS Configured: ${awsConfigured}`);
@@ -783,6 +856,8 @@ app.listen(PORT, '0.0.0.0', () => {
     }
     
     console.log(`🔄 Auto-update: ${AUTO_UPDATE_CHECK ? 'enabled' : 'disabled'}`);
+    console.log(`🧪 Debug static files: http://0.0.0.0:${PORT}/api/debug/static`);
+    console.log(`🎨 CSS direct access: http://0.0.0.0:${PORT}/css/style.css`);
     
     // Start update checker
     startUpdateChecker();
