@@ -4,27 +4,26 @@ FROM node:20-bullseye-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies and security updates in one layer
+# Install system dependencies (including curl for health checks)
 RUN apt-get update && \
-    apt-get upgrade -y && \
     apt-get install -y curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Create non-root user for security
-RUN groupadd -r appuser && \
-    useradd -r -g appuser -d /app -s /bin/bash appuser
+# Copy package files first for better layer caching
+COPY package*.json ./
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json* ./
-RUN npm ci --only=production && \
+# Install Node.js dependencies
+RUN npm ci --only=production --no-audit --no-fund && \
     npm cache clean --force
 
 # Copy application source
 COPY . .
 
-# Create data directory and set proper permissions
-RUN mkdir -p /app/data && \
+# Create non-root user for security
+RUN groupadd -r appuser && \
+    useradd -r -g appuser -s /bin/bash appuser && \
+    mkdir -p /app/data && \
     chown -R appuser:appuser /app
 
 # Switch to non-root user
@@ -33,19 +32,14 @@ USER appuser
 # Expose port
 EXPOSE 80
 
-# Add health check (after curl is installed and user is set)
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:80/health || exit 1
 
 # Start application
 CMD ["node", "server.js"]
 
-# Labels for better container management
+# Metadata labels
 LABEL maintainer="N85UK <hello@git.n85.uk>" \
       version="2.0.0" \
-      description="AWS End User Messaging - Enhanced SMS application with UNRAID integration" \
-      org.opencontainers.image.title="AWS EUM v2.0" \
-      org.opencontainers.image.description="Enhanced AWS SMS application with UNRAID integration" \
-      org.opencontainers.image.version="2.0.0" \
-      org.opencontainers.image.vendor="N85UK" \
-      org.opencontainers.image.licenses="MIT"
+      description="AWS End User Messaging - Enhanced SMS application with UNRAID integration"
