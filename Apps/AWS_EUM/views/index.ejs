@@ -62,11 +62,22 @@
                         <div class="form-group">
                             <label for="originator">Phone Number / Originator:</label>
                             <select id="originator" name="originator" required>
-                                <option value="">Loading phone numbers from AWS...</option>
-                                <% Object.keys(originators).forEach(label => { %>
-                                    <option value="<%= label %>"><%= label %></option>
-                                <% }); %>
+                                <% if (Object.keys(originators).length === 0) { %>
+                                    <% if (config.aws_configured) { %>
+                                        <option value="">No phone numbers found - Check AWS credentials</option>
+                                    <% } else { %>
+                                        <option value="">Configure AWS credentials to load phone numbers</option>
+                                    <% } %>
+                                <% } else { %>
+                                    <option value="">Select a phone number...</option>
+                                    <% Object.keys(originators).forEach(label => { %>
+                                        <option value="<%= originators[label] %>"><%= label %></option>
+                                    <% }); %>
+                                <% } %>
                             </select>
+                            <button type="button" id="refreshOriginators" class="refresh-btn">
+                                🔄 Refresh Numbers
+                            </button>
                         </div>
 
                         <div class="form-group">

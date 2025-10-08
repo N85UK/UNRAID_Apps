@@ -8,6 +8,8 @@ let isRefreshing = false;
 let updateCheckInterval = null;
 let lastUpdateCheck = 0;
 
+console.log('🚀 AWS EUM v2.0 JavaScript loading...');
+
 document.addEventListener('DOMContentLoaded', function() {
     const smsForm = document.getElementById('smsForm');
     const sendBtn = document.getElementById('sendBtn');
@@ -321,7 +323,38 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
+
+    // Initialize update checking
+    console.log('🔄 Setting up update checking...');
+    setTimeout(checkForUpdates, 2000);
+    setInterval(checkForUpdates, 4 * 60 * 60 * 1000);
+    
+    console.log('✅ AWS EUM v2.0 Frontend initialization complete');
 });
+
+// Simple notification function
+function showNotification(message, type = 'info') {
+    console.log(`📢 ${type.toUpperCase()}: ${message}`);
+    
+    // Create or update notification element
+    let notification = document.getElementById('notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.className = 'notification';
+        document.body.appendChild(notification);
+    }
+    
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'block';
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
 // Update checking functions
 function checkForUpdates() {
     fetch('/api/updates/status')
@@ -392,11 +425,28 @@ function manualUpdateCheck() {
         });
 }
 
-// Initialize update checking when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Check for updates on load
-    setTimeout(checkForUpdates, 2000);
+// Simple notification function
+function showNotification(message, type = 'info') {
+    console.log(`📢 ${type.toUpperCase()}: ${message}`);
     
-    // Set up periodic update checking (every 4 hours)
-    setInterval(checkForUpdates, 4 * 60 * 60 * 1000);
-});
+    // Create or update notification element
+    let notification = document.getElementById('notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.className = 'notification';
+        document.body.appendChild(notification);
+    }
+    
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'block';
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+// Initialize the application when DOM is loaded (integrated with main initialization)
+// Note: Update checking is integrated into the main DOMContentLoaded listener above
