@@ -59,6 +59,11 @@ app.use((req, res, next) => {
     res.removeHeader('Strict-Transport-Security');
     // Ensure we're serving over HTTP
     res.setHeader('X-Forwarded-Proto', 'http');
+    // Fix CORS and origin issues
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'false');
     next();
 });
 
@@ -449,10 +454,22 @@ app.get('/', async (req, res) => {
 app.get('/api/originators', async (req, res) => {
     try {
         const originators = await getOriginators();
-        res.json(originators);
+        const count = Object.keys(originators).length;
+        
+        res.json({
+            success: true,
+            count: count,
+            originators: originators,
+            message: `Found ${count} originators`
+        });
     } catch (error) {
         console.error('Error fetching originators:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ 
+            success: false,
+            error: error.message,
+            count: 0,
+            originators: {}
+        });
     }
 });
 

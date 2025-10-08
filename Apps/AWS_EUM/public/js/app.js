@@ -214,18 +214,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (response.ok && result.success) {
-                showNotification(`Refreshed ${result.count} phone numbers from AWS`, 'success');
+                showNotification(`Refreshed ${result.count} originators from AWS`, 'success');
                 
                 // Update originator dropdown
                 const originatorSelect = document.getElementById('originator');
                 if (originatorSelect) {
-                    originatorSelect.innerHTML = '<option value="">Select phone number...</option>';
-                    Object.keys(result.originators).forEach(label => {
-                        const option = document.createElement('option');
-                        option.value = label;
-                        option.textContent = label;
-                        originatorSelect.appendChild(option);
-                    });
+                    originatorSelect.innerHTML = '<option value="">Select a phone number or originator...</option>';
+                    
+                    if (result.originators && Object.keys(result.originators).length > 0) {
+                        Object.entries(result.originators).forEach(([label, info]) => {
+                            const option = document.createElement('option');
+                            option.value = info.value;
+                            option.textContent = label;
+                            originatorSelect.appendChild(option);
+                        });
+                    }
                 }
             } else {
                 showNotification(result.error || 'Failed to refresh originators', 'error');
@@ -241,6 +244,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Refresh message history
     refreshHistory?.addEventListener('click', refreshMessageHistory);
+
+    // Load originators on page load
+    async function loadInitialOriginators() {
+        try {
+            console.log('🔄 Loading AWS originators...');
+            const response = await fetch('/api/originators');
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                console.log(`✅ Loaded ${result.count} originators from AWS`);
+                
+                // Update originator dropdown
+                const originatorSelect = document.getElementById('originator');
+                if (originatorSelect) {
+                    originatorSelect.innerHTML = '<option value="">Select a phone number or originator...</option>';
+                    
+                    if (result.originators && Object.keys(result.originators).length > 0) {
+                        Object.entries(result.originators).forEach(([label, info]) => {
+                            const option = document.createElement('option');
+                            option.value = info.value;
+                            option.textContent = label;
+                            originatorSelect.appendChild(option);
+                        });
+                        console.log('📋 Dropdown populated with originators');
+                    } else {
+                        console.log('⚠️ No originators available');
+                    }
+                }
+            } else {
+                console.error('❌ Failed to load originators:', result.error);
+                showNotification(result.error || 'Failed to load AWS originators', 'error');
+            }
+        } catch (error) {
+            console.error('❌ Error loading originators:', error);
+            showNotification('Failed to connect to AWS service', 'error');
+        }
+    }
+
+    // Load originators when page loads
+    loadInitialOriginators();
+
+    // Also check for updates and refresh status
+    setTimeout(() => {
+        checkForUpdates();
+        refreshMessageHistory();
+    }, 1000);
 
     async function refreshMessageHistory() {
         try {
