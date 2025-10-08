@@ -862,6 +862,8 @@ app.get('/api/debug/test-css', (req, res) => {
             <h1>🎨 CSS Test Page</h1>
             <div class="status">✅ If you see this styled properly, CSS rendering works!</div>
             <p>This page has embedded CSS to test if the browser can render styles correctly.</p>
+            <p><strong>Version Check:</strong> This endpoint was added in the latest update.</p>
+            <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
             <a href="/">← Back to main page</a>
         </div>
     </body>
@@ -869,6 +871,21 @@ app.get('/api/debug/test-css', (req, res) => {
     
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.send(testHtml);
+});
+
+// Simple version check endpoint
+app.get('/api/version', (req, res) => {
+    res.json({
+        version: CURRENT_VERSION,
+        timestamp: new Date().toISOString(),
+        hasLatestUpdates: true,
+        endpoints: [
+            '/api/debug/test-css',
+            '/api/debug/static', 
+            '/api/debug/css-content',
+            '/api/version'
+        ]
+    });
 });
 
 // Start server
