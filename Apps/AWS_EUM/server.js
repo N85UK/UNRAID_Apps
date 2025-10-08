@@ -6,8 +6,7 @@ const { RateLimiterMemory } = require('rate-limiter-flexible');
 const { 
     PinpointSMSVoiceV2Client, 
     SendTextMessageCommand,
-    DescribePhoneNumbersCommand,
-    DescribeOriginationIdentitiesCommand 
+    DescribePhoneNumbersCommand
 } = require('@aws-sdk/client-pinpoint-sms-voice-v2');
 const fs = require('fs');
 const path = require('path');
@@ -28,6 +27,9 @@ const UPDATE_FILE = '/app/data/update-info.json';
 // Update checking state
 let updateInfo = { available: false, version: null, url: null, lastCheck: 0 };
 let updateCheckTimer = null;
+
+// AWS Client
+let smsClient = null;
 
 // Security middleware
 app.use(helmet({
@@ -61,8 +63,7 @@ if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }
 
-// AWS Pinpoint SMS client
-let smsClient;
+// AWS Pinpoint SMS client (using the declaration from above)
 
 function initializeAWSClient() {
     if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
@@ -94,21 +95,34 @@ async function fetchOriginatorsFromAWS() {
   try {
     console.log('Fetching originators from AWS...');
     
-    const command = new DescribeOriginationIdentitiesCommand({});
-    const response = await pinpointClient.send(command);
+    if (!smsClient) {
+      console.error('SMS client not initialized');
+      return [];
+    }
     
-    const originators = response.OriginationIdentities
-      ?.filter(identity => identity.OriginationIdentityArn)
-      ?.map(identity => ({
-        value: identity.OriginationIdentity,
-        name: `${identity.OriginationIdentity} (${identity.IdentityType})`,
-        type: identity.IdentityType
+    // Use DescribePhoneNumbersCommand instead - it's available and gives us phone numbers
+    const command = new DescribePhoneNumbersCommand({});
+    const response = await smsClient.send(command);
+    
+    const originators = response.PhoneNumbers
+      ?.filter(phoneNumber => phoneNumber.PhoneNumber)
+      ?.map(phoneNumber => ({
+        value: phoneNumber.PhoneNumber,
+        name: `${phoneNumber.PhoneNumber} (${phoneNumber.PhoneNumberCountryCode})`,
+        type: 'PhoneNumber'
       })) || [];
     
-    console.log(`Found ${originators.length} originators from AWS`);
+    console.log(`Found ${originators.length} phone numbers from AWS`);
     return originators;
   } catch (error) {
     console.error('Error fetching originators from AWS:', error.message);
+    
+    // Fallback to a simpler approach if the above fails
+    if (error.message.includes('DescribePhoneNumbers')) {
+      console.log('Falling back to environment variable configuration...');
+      return [];
+    }
+    
     return [];
   }
 }
@@ -237,7 +251,17 @@ async function getOriginators() {
     // Get from AWS if available and cache is expired
     if (smsClient && (!cachedOriginators || Date.now() > cacheExpiry)) {
         const awsOriginators = await fetchOriginatorsFromAWS();
-        originators = { ...originators, ...awsOriginators };
+        
+        // Convert array to object format
+        awsOriginators.forEach(originator => {
+            originators[originator.name] = originator.value;
+        });
+        
+        // Cache the results
+        cachedOriginators = originators;
+        cacheExpiry = Date.now() + 30 * 60 * 1000; // 30 minutes
+        
+        console.log(`Cached ${awsOriginators.length} originators from AWS`);
     } else if (cachedOriginators) {
         originators = { ...originators, ...cachedOriginators };
     }
