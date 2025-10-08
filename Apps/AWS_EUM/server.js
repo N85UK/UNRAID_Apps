@@ -485,6 +485,7 @@ function calculateMessageInfo(message) {
 
 // Routes
 app.get('/', async (req, res) => {
+    console.log('🌐 Main page requested from:', req.ip);
     try {
         const originators = await getOriginators();
         const history = getMessageHistory();
@@ -494,15 +495,25 @@ app.get('/', async (req, res) => {
             manual_originators: process.env.ORIGINATORS ? process.env.ORIGINATORS.split(',').length : 0,
             aws_originators: Object.keys(originators).filter(k => !k.includes('Manual')).length,
             aws_phone_numbers: Object.keys(originators).filter(k => k.includes('Phone Number')).length,
-            aws_sender_ids: Object.keys(originators).filter(k => k.includes('Sender ID')).length
+            aws_sender_ids: Object.keys(originators).filter(k => k.includes('Sender ID')).length,
+            version: CURRENT_VERSION,
+            build_timestamp: new Date().toISOString(),
+            has_latest_features: true
         };
+        console.log('📊 Rendering page with config:', JSON.stringify(config, null, 2));
         res.render('index', { originators, history, config });
     } catch (error) {
         console.error('Error loading page:', error);
         res.render('index', { 
             originators: {}, 
             history: [], 
-            config: { aws_configured: false, error: error.message }
+            config: { 
+                aws_configured: false, 
+                error: error.message,
+                version: CURRENT_VERSION,
+                build_timestamp: new Date().toISOString(),
+                has_latest_features: true
+            }
         });
     }
 });
