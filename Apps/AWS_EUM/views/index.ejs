@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWS End User Messaging v2.0</title>
     <link rel="stylesheet" href="/css/style.css?v=<%= Date.now() %>" type="text/css">
+    <script>
+        console.log('🎨 CSS Link URL:', '/css/style.css?v=<%= Date.now() %>');
+        // Check if CSS loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM loaded, checking CSS...');
+            var link = document.querySelector('link[rel="stylesheet"]');
+            if (link) {
+                console.log('🔗 CSS link found:', link.href);
+            } else {
+                console.log('❌ No CSS link found');
+            }
+        });
+    </script>
     <style>
         /* Inline fallback CSS to ensure basic styling */
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
