@@ -44,13 +44,16 @@ const HISTORY_RETENTION = parseInt(process.env.HISTORY_RETENTION) || 100;
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
-            defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            scriptSrc: ["'self'"],
-            imgSrc: ["'self'", "data:", "https:"],
+            defaultSrc: ["'self'", "http://10.0.2.11"],
+            styleSrc: ["'self'", "'unsafe-inline'", "http://10.0.2.11"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "http://10.0.2.11"],
+            imgSrc: ["'self'", "data:", "http:", "https:"],
+            connectSrc: ["'self'", "http://10.0.2.11"],
+            upgradeInsecureRequests: null, // Disable HTTPS upgrade
         },
     },
     hsts: false, // Disable HTTPS strict transport security
+    forceHTTPSRedirect: false
 }));
 
 // Force HTTP headers (disable any HTTPS redirects)
@@ -64,6 +67,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'false');
+    // Prevent HTTPS upgrades with proper CSP
+    res.setHeader('Content-Security-Policy', "default-src 'self' http://10.0.2.11; style-src 'self' 'unsafe-inline' http://10.0.2.11; script-src 'self' 'unsafe-inline' http://10.0.2.11;");
     next();
 });
 
