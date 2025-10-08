@@ -65,6 +65,7 @@ Your AWS user/role needs these permissions:
             "Effect": "Allow",
             "Action": [
                 "pinpoint-sms-voice-v2:DescribePhoneNumbers",
+                "pinpoint-sms-voice-v2:DescribeSenderIds",
                 "pinpoint-sms-voice-v2:SendTextMessage",
                 "pinpoint-sms-voice-v2:DescribeOriginationIdentities"
             ],

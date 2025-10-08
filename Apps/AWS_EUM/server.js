@@ -6,7 +6,8 @@ const { RateLimiterMemory } = require('rate-limiter-flexible');
 const { 
     PinpointSMSVoiceV2Client, 
     SendTextMessageCommand,
-    DescribePhoneNumbersCommand
+    DescribePhoneNumbersCommand,
+    DescribeSenderIdsCommand
 } = require('@aws-sdk/client-pinpoint-sms-voice-v2');
 const fs = require('fs');
 const path = require('path');
@@ -123,20 +124,53 @@ async function fetchOriginatorsFromAWS() {
       return [];
     }
     
-    // Test AWS connectivity with a simple call first
-    const command = new DescribePhoneNumbersCommand({});
-    const response = await smsClient.send(command);
+    let allOriginators = [];
     
-    const originators = response.PhoneNumbers
-      ?.filter(phoneNumber => phoneNumber.PhoneNumber)
-      ?.map(phoneNumber => ({
-        value: phoneNumber.PhoneNumber,
-        name: `${phoneNumber.PhoneNumber} (${phoneNumber.PhoneNumberCountryCode})`,
-        type: 'PhoneNumber'
-      })) || [];
+    // Fetch Phone Numbers
+    try {
+      console.log('📱 Fetching phone numbers...');
+      const phoneCommand = new DescribePhoneNumbersCommand({});
+      const phoneResponse = await smsClient.send(phoneCommand);
+      
+      const phoneNumbers = phoneResponse.PhoneNumbers
+        ?.filter(phoneNumber => phoneNumber.PhoneNumber)
+        ?.map(phoneNumber => ({
+          value: phoneNumber.PhoneNumber,
+          name: `${phoneNumber.PhoneNumber} (Phone Number - ${phoneNumber.PhoneNumberCountryCode || 'Unknown'})`,
+          type: 'PhoneNumber',
+          country: phoneNumber.PhoneNumberCountryCode
+        })) || [];
+      
+      allOriginators = allOriginators.concat(phoneNumbers);
+      console.log(`📱 Found ${phoneNumbers.length} phone numbers`);
+    } catch (phoneError) {
+      console.error('❌ Error fetching phone numbers:', phoneError.message);
+    }
     
-    console.log(`✅ Found ${originators.length} phone numbers from AWS`);
-    return originators;
+    // Fetch Sender IDs
+    try {
+      console.log('🏷️  Fetching sender IDs...');
+      const senderCommand = new DescribeSenderIdsCommand({});
+      const senderResponse = await smsClient.send(senderCommand);
+      
+      const senderIds = senderResponse.SenderIds
+        ?.filter(senderId => senderId.SenderId)
+        ?.map(senderId => ({
+          value: senderId.SenderId,
+          name: `${senderId.SenderId} (Sender ID - ${senderId.IsoCountryCode || 'Unknown'})`,
+          type: 'SenderId',
+          country: senderId.IsoCountryCode
+        })) || [];
+      
+      allOriginators = allOriginators.concat(senderIds);
+      console.log(`🏷️  Found ${senderIds.length} sender IDs`);
+    } catch (senderError) {
+      console.error('❌ Error fetching sender IDs:', senderError.message);
+      // Don't fail completely if sender IDs can't be fetched
+    }
+    
+    console.log(`✅ Total found: ${allOriginators.length} originators (${allOriginators.filter(o => o.type === 'PhoneNumber').length} phone numbers, ${allOriginators.filter(o => o.type === 'SenderId').length} sender IDs)`);
+    return allOriginators;
   } catch (error) {
     console.error('❌ Error fetching originators from AWS:', error.message);
     
@@ -150,12 +184,12 @@ async function fetchOriginatorsFromAWS() {
     } else if (error.message.includes('not authorized')) {
       console.error('🚫 AWS Permission Issue:');
       console.error('   • Your AWS user needs PinpointSMSVoice permissions');
-      console.error('   • Required permission: pinpoint-sms-voice-v2:DescribePhoneNumbers');
+      console.error('   • Required permissions: pinpoint-sms-voice-v2:DescribePhoneNumbers, pinpoint-sms-voice-v2:DescribeSenderIds');
       console.error('   • Check your IAM user or role has the correct policies');
     } else if (error.message.includes('region')) {
       console.error('🌍 AWS Region Issue:');
       console.error(`   • Current region: ${process.env.AWS_REGION || 'eu-west-2'}`);
-      console.error('   • Ensure your phone numbers are in this region');
+      console.error('   • Ensure your phone numbers and sender IDs are in this region');
       console.error('   • Try changing AWS_REGION environment variable');
     } else {
       console.error('🔧 General AWS Error:');
@@ -350,7 +384,9 @@ app.get('/', async (req, res) => {
             aws_configured: !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY),
             aws_region: process.env.AWS_REGION || 'eu-west-2',
             manual_originators: process.env.ORIGINATORS ? process.env.ORIGINATORS.split(',').length : 0,
-            aws_originators: Object.keys(originators).filter(k => !k.includes('Manual')).length
+            aws_originators: Object.keys(originators).filter(k => !k.includes('Manual')).length,
+            aws_phone_numbers: Object.keys(originators).filter(k => k.includes('Phone Number')).length,
+            aws_sender_ids: Object.keys(originators).filter(k => k.includes('Sender ID')).length
         };
         res.render('index', { originators, history, config });
     } catch (error) {
@@ -551,16 +587,37 @@ app.get('/api/aws/test', async (req, res) => {
             });
         }
         
-        // Test basic AWS connectivity
-        const command = new DescribePhoneNumbersCommand({ MaxResults: 1 });
-        const response = await smsClient.send(command);
+        let phoneNumbers = 0;
+        let senderIds = 0;
+        let errors = [];
+        
+        // Test phone numbers
+        try {
+            const phoneCommand = new DescribePhoneNumbersCommand({ MaxResults: 10 });
+            const phoneResponse = await smsClient.send(phoneCommand);
+            phoneNumbers = phoneResponse.PhoneNumbers?.length || 0;
+        } catch (phoneError) {
+            errors.push(`Phone Numbers: ${phoneError.message}`);
+        }
+        
+        // Test sender IDs
+        try {
+            const senderCommand = new DescribeSenderIdsCommand({ MaxResults: 10 });
+            const senderResponse = await smsClient.send(senderCommand);
+            senderIds = senderResponse.SenderIds?.length || 0;
+        } catch (senderError) {
+            errors.push(`Sender IDs: ${senderError.message}`);
+        }
         
         res.json({
-            success: true,
+            success: errors.length === 0,
             configured: true,
             region: process.env.AWS_REGION || 'eu-west-2',
-            phoneNumbers: response.PhoneNumbers?.length || 0,
-            message: 'AWS connection successful'
+            phoneNumbers: phoneNumbers,
+            senderIds: senderIds,
+            totalOriginators: phoneNumbers + senderIds,
+            errors: errors,
+            message: errors.length === 0 ? 'AWS connection successful' : 'Partial connection issues'
         });
     } catch (error) {
         let errorType = 'unknown';
@@ -578,13 +635,14 @@ app.get('/api/aws/test', async (req, res) => {
             suggestions = [
                 'User needs PinpointSMSVoice permissions',
                 'Required: pinpoint-sms-voice-v2:DescribePhoneNumbers',
+                'Required: pinpoint-sms-voice-v2:DescribeSenderIds',
                 'Check IAM policies'
             ];
         } else if (error.message.includes('region')) {
             errorType = 'region';
             suggestions = [
                 `Current region: ${process.env.AWS_REGION || 'eu-west-2'}`,
-                'Ensure phone numbers exist in this region',
+                'Ensure originators exist in this region',
                 'Try different AWS_REGION'
             ];
         }

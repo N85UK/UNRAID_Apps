@@ -26,6 +26,9 @@
                     <div class="status-item">
                         <span class="status-label">AWS Numbers:</span>
                         <span class="status-value"><%= config.aws_originators || 0 %></span>
+                        <% if (config.aws_phone_numbers > 0 || config.aws_sender_ids > 0) { %>
+                            <small>(<%= config.aws_phone_numbers || 0 %> phone, <%= config.aws_sender_ids || 0 %> sender ID)</small>
+                        <% } %>
                     </div>
                     <% if (config.manual_originators > 0) { %>
                         <div class="status-item">
