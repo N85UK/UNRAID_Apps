@@ -18,16 +18,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        working-directory: ./Apps/AWS_EUM
-        run: |
-          docker build -t ghcr.io/n85uk/aws-eum:latest .
-          docker tag ghcr.io/n85uk/aws-eum:latest ghcr.io/n85uk/aws-eum:2.0.0
-      
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      
-      - name: Push Docker image
-        run: |
-          docker push ghcr.io/n85uk/aws-eum:latest
-          docker push ghcr.io/n85uk/aws-eum:2.0.0
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/n85uk/aws-eum
+          tags: |
+            type=raw,value=latest,enable=true
+            type=raw,value=2.0,enable=true
+            type=raw,value=2.0.0,enable=true
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Apps/AWS_EUM
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
