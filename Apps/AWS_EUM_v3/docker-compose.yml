@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   aws-eum:
-    build: .
-    # For production, use: image: ghcr.io/n85uk/aws-eum:2.0
-    container_name: aws-eum-v2
+    # build: .
+    image: ghcr.io/n85uk/aws-eum-v3:latest
+    container_name: aws-eum-v3
     restart: unless-stopped
     ports:
       - "8280:80"
