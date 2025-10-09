@@ -1,9 +1,21 @@
 {
-  "version": "2025.10.09.01.00",
+  "version": "2025.10.09.02.00",
   "date": "2025-10-09",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.09.01.00-x86_64-1.txz",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.09.02.00-x86_64-1.txz",
   "md5": "136a795e8fd7ad5f706b9c2d2614a4fd",
   "changelog": [
+    {
+      "version": "2025.10.09.02.00",
+      "date": "2025-10-09", 
+      "changes": [
+        "CRITICAL FIX: Fixed package extraction failure during installation",
+        "Corrected tar extraction directory from plugins/ to root (/) for proper path handling",
+        "Fixed 'Plugin directory not found after extraction' error",
+        "Package structure now properly extracts to /usr/local/emhttp/plugins/explorerx/",
+        "Installation process now works correctly on UNRAID systems",
+        "Updated to version 2025.10.09.02.00"
+      ]
+    },
     {
       "version": "2025.10.09.01.00",
       "date": "2025-10-09", 
