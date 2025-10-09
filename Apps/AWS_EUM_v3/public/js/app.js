@@ -1,4 +1,4 @@
-// AWS EUM v2.0 Enhanced Frontend JavaScript
+// AWS EUM v3.0 Enhanced Frontend JavaScript
 
 // Global variables
 let segmentCount = 1;
@@ -8,7 +8,7 @@ let isRefreshing = false;
 let updateCheckInterval = null;
 let lastUpdateCheck = 0;
 
-console.log('🚀 AWS EUM v2.0 JavaScript loading...');
+console.log('🚀 AWS EUM v3.0 JavaScript loading...');
 
 document.addEventListener('DOMContentLoaded', function() {
     const smsForm = document.getElementById('smsForm');

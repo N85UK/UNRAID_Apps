@@ -26,12 +26,13 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 3. Browse your files with simple, safe interface
 
 **Latest Features (v2025.10.09.01.00):**
+- ✅ CRITICAL FIX: Resolved blank page issue when navigating to /ExplorerX
+- ✅ Fixed launch URL and page header formatting issues
+- ✅ Corrected menu placement for standalone tab interface
+- ✅ Package compression fixed (xz format for .txz files)
 - ✅ Completely safe installation (won't break plugin system)
 - ✅ Simple file browser with directory navigation
-- ✅ Standalone tab interface (not in Tools menu)
 - ✅ Only touches ExplorerX files during install/uninstall
-- ✅ Enhanced error handling and recovery
-- ✅ No dangerous global plugin directory modifications
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**

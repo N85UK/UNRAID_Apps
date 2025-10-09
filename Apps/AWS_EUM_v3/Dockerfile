@@ -11,7 +11,7 @@ RUN apk add --no-cache curl
 COPY package.json ./
 
 # Install Node.js dependencies
-RUN npm install --only=production --no-audit --no-fund && \
+RUN npm install --omit=dev --no-audit --no-fund && \
     npm cache clean --force
 
 # Copy application source

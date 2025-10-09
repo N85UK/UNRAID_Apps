@@ -33,13 +33,13 @@ ExplorerX is a **native UNRAID plugin** (no Docker required) that provides basic
 ### Operations
 
 - 📂 Browse directories and files
-- � Basic file and folder operations
+- 🔧 Basic file and folder operations
 - 🔍 Simple directory listing
 - 📊 File size and modification date display
 
 ### Security & Safety
 
-- �️ **Safe Installation**: Only modifies ExplorerX files, never touches other plugins
+- 🛡️ **Safe Installation**: Only modifies ExplorerX files, never touches other plugins
 - 🔒 Proper path validation
 - 🚫 Operations restricted to safe directories
 - 🔑 Respects UNRAID session model

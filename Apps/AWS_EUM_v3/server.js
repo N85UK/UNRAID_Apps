@@ -823,7 +823,7 @@ app.post('/api/webhook/update', (req, res) => {
     }
 });
 
-// Debug route for static file issues
+// Static file diagnostics for production monitoring
 app.get('/api/debug/static', (req, res) => {
     const path = require('path');
     
@@ -945,7 +945,7 @@ app.listen(PORT, '0.0.0.0', () => {
     }
     
     console.log(`🔄 Auto-update: ${AUTO_UPDATE_CHECK ? 'enabled' : 'disabled'}`);
-    console.log(`🧪 Debug static files: http://0.0.0.0:${PORT}/api/debug/static`);
+    console.log(`🧪 Static file diagnostics: http://0.0.0.0:${PORT}/api/debug/static`);
     console.log(`🎨 CSS direct access: http://0.0.0.0:${PORT}/css/style.css`);
     
     // Start update checker
