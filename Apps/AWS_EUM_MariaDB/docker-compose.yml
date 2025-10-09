@@ -1,0 +1,245 @@
+version: '3.8'version: '3.8'version: '3.8'version: '3.8'
+
+
+
+services:
+
+  mariadb:
+
+    image: mariadb:10.11services:
+
+    container_name: aws-eum-mariadb-db
+
+    restart: unless-stopped  mariadb:
+
+    environment:
+
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}    image: mariadb:10.11services:services:
+
+      MYSQL_DATABASE: aws_eum
+
+      MYSQL_USER: aws_eum    container_name: aws-eum-mariadb-db
+
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    volumes:    restart: unless-stopped  mariadb:  aws-eum:
+
+      - mariadb_data:/var/lib/mysql
+
+    ports:    environment:
+
+      - "3306:3306"
+
+    networks:      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}    image: mariadb:10.11    build: .
+
+      - aws-eum-network
+
+      MYSQL_DATABASE: aws_eum
+
+  aws-eum-app:
+
+    image: ghcr.io/n85uk/aws-eum-mariadb:latest      MYSQL_USER: aws_eum    container_name: aws-eum-mariadb-db    # For production, use: image: ghcr.io/n85uk/aws-eum:2.0
+
+    container_name: aws-eum-mariadb-app
+
+    restart: unless-stopped      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    depends_on:
+
+      - mariadb    volumes:    restart: unless-stopped    container_name: aws-eum-v2
+
+    environment:
+
+      DB_HOST: mariadb      - mariadb_data:/var/lib/mysql
+
+      DB_PORT: 3306
+
+      DB_USER: aws_eum    ports:    environment:    restart: unless-stopped
+
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+
+      DB_NAME: aws_eum      - "3306:3306"
+
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}    networks:      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}    ports:
+
+      AWS_REGION: ${AWS_REGION:-eu-west-2}
+
+      JWT_SECRET: ${JWT_SECRET}      - aws-eum-network
+
+      SESSION_SECRET: ${SESSION_SECRET}
+
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}      MYSQL_DATABASE: aws_eum      - "8280:80"
+
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+
+    ports:  aws-eum-app:
+
+      - "8080:80"
+
+    volumes:    image: ghcr.io/n85uk/aws-eum-mariadb:latest      MYSQL_USER: aws_eum    environment:
+
+      - app_data:/app/data
+
+    networks:    container_name: aws-eum-mariadb-app
+
+      - aws-eum-network
+
+    restart: unless-stopped      MYSQL_PASSWORD: ${MYSQL_PASSWORD}      # AWS Configuration (set these in .env file)
+
+volumes:
+
+  mariadb_data:    depends_on:
+
+    driver: local
+
+  app_data:      - mariadb    volumes:      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+
+    driver: local
+
+    environment:
+
+networks:
+
+  aws-eum-network:      # Database Configuration      - mariadb_data:/var/lib/mysql      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
+    driver: bridge
+      DB_HOST: mariadb
+
+      DB_PORT: 3306    ports:      - AWS_REGION=${AWS_REGION:-eu-west-2}
+
+      DB_USER: aws_eum
+
+      DB_PASSWORD: ${MYSQL_PASSWORD}      - "3306:3306"      
+
+      DB_NAME: aws_eum
+
+          networks:      # Application Settings
+
+      # AWS Configuration
+
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}      - aws-eum-network      - PORT=80
+
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+
+      AWS_REGION: ${AWS_REGION:-eu-west-2}    healthcheck:      - RATE_LIMIT_MESSAGES=${RATE_LIMIT_MESSAGES:-10}
+
+      
+
+      # Security Configuration      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]      - MAX_MESSAGE_LENGTH=${MAX_MESSAGE_LENGTH:-1600}
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      SESSION_SECRET: ${SESSION_SECRET}      start_period: 10s      - HISTORY_RETENTION=${HISTORY_RETENTION:-100}
+
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}      interval: 10s      - ENABLE_DEBUG=${ENABLE_DEBUG:-false}
+
+    ports:
+
+      - "8080:80"      timeout: 5s      
+
+    volumes:
+
+      - app_data:/app/data      retries: 3      # Optional Manual Originators
+
+    networks:
+
+      - aws-eum-network      - ORIGINATORS=${ORIGINATORS:-}
+
+
+
+volumes:  aws-eum-app:    
+
+  mariadb_data:
+
+    driver: local    image: ghcr.io/n85uk/aws-eum-mariadb:latest    volumes:
+
+  app_data:
+
+    driver: local    container_name: aws-eum-mariadb-app      # Persistent data storage
+
+
+
+networks:    restart: unless-stopped      - ./data:/app/data
+
+  aws-eum-network:
+
+    driver: bridge    depends_on:      # Development: Mount source for live reload (uncomment for development)
+
+      mariadb:      # - .:/app
+
+        condition: service_healthy    
+
+    environment:    # Resource limits
+
+      # Database Configuration    deploy:
+
+      DB_HOST: mariadb      resources:
+
+      DB_PORT: 3306        limits:
+
+      DB_USER: aws_eum          memory: 512M
+
+      DB_PASSWORD: ${MYSQL_PASSWORD}          cpus: '1.0'
+
+      DB_NAME: aws_eum        reservations:
+
+                memory: 256M
+
+      # AWS Configuration          cpus: '0.5'
+
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}    
+
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}    # Health check
+
+      AWS_REGION: ${AWS_REGION:-eu-west-2}    healthcheck:
+
+            test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+
+      # Security Configuration      interval: 30s
+
+      JWT_SECRET: ${JWT_SECRET}      timeout: 10s
+
+      SESSION_SECRET: ${SESSION_SECRET}      retries: 3
+
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}      start_period: 40s
+
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}    
+
+    ports:    # Security
+
+      - "8080:80"    security_opt:
+
+    volumes:      - no-new-privileges:true
+
+      - app_data:/app/data    
+
+    networks:    # Logging
+
+      - aws-eum-network    logging:
+
+      driver: "json-file"
+
+volumes:      options:
+
+  mariadb_data:        max-size: "10m"
+
+    driver: local        max-file: "3"
+
+  app_data:
+
+    driver: local    # Use default bridge network or specify custom network
+
+    # networks:
+
+networks:    #   - br0.100
+
+  aws-eum-network:
+
+    driver: bridge# For custom networks (uncomment if needed)
+# networks:
+#   br0.100:
+#     external: true

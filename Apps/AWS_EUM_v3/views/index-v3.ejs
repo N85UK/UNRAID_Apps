@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS End User Messaging v3.0</title>
+    <link rel="stylesheet" href="http://10.0.2.11/css/style-v3.css?v=<%= Date.now() %>" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <style>
+        /* Inline critical CSS for immediate styling */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-paper-plane"></i> AWS End User Messaging v3.0</h1>
+            <p class="subtitle">Enhanced SMS messaging with beautiful UI, analytics, and real-time features</p>
+            
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-label"><i class="fas fa-cloud"></i> AWS Status</span>
+                    <span class="status-value <%= config.aws_configured ? 'connected' : 'disconnected' %>">
+                        <%= config.aws_configured ? 'Connected' : 'Not Configured' %>
+                    </span>
+                </div>
+                <% if (config.aws_configured) { %>
+                    <div class="status-item">
+                        <span class="status-label"><i class="fas fa-globe"></i> Region</span>
+                        <span class="status-value"><%= config.aws_region %></span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label"><i class="fas fa-phone"></i> Originators</span>
+                        <span class="status-value"><%= config.aws_originators || 0 %></span>
+                        <% if (config.aws_phone_numbers > 0 || config.aws_sender_ids > 0) { %>
+                            <small>(<%= config.aws_phone_numbers || 0 %> phone, <%= config.aws_sender_ids || 0 %> sender ID)</small>
+                        <% } %>
+                    </div>
+                <% } %>
+                <div class="status-item">
+                    <span class="status-label"><i class="fas fa-clock"></i> Uptime</span>
+                    <span class="status-value" id="uptime">Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <% if (!config.aws_configured) { %>
+            <div class="card config-warning">
+                <div class="card-body">
+                    <h2><i class="fas fa-exclamation-triangle"></i> AWS Configuration Required</h2>
+                    <p>Please configure your AWS credentials to enable SMS functionality:</p>
+                    <ul>
+                        <li>AWS_ACCESS_KEY_ID</li>
+                        <li>AWS_SECRET_ACCESS_KEY</li>
+                        <li>AWS_REGION (optional, defaults to eu-west-2)</li>
+                    </ul>
+                    <p>Set these as environment variables in your container configuration.</p>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- Analytics Charts Section -->
+        <% if (config.aws_configured) { %>
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fas fa-chart-line"></i> Message Statistics</h3>
+                <canvas id="messageChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title"><i class="fas fa-chart-doughnut"></i> Success Rate</h3>
+                <canvas id="successChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        <% } %>
+
+        <!-- Send SMS Form -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-envelope"></i> Send SMS Message</h2>
+                <button class="btn btn-secondary" onclick="refreshOriginators()">
+                    <i class="fas fa-sync-alt"></i> Refresh Numbers
+                </button>
+            </div>
+            <div class="card-body">
+                <form id="smsForm">
+                    <div class="form-group">
+                        <label class="form-label" for="originator">
+                            <i class="fas fa-phone"></i> Phone Number / Originator:
+                        </label>
+                        <select class="form-control" id="originator" name="originator" required>
+                            <option value="">Select a phone number or originator...</option>
+                            <% Object.entries(originators).forEach(([label, info]) => { %>
+                                <option value="<%= info.value %>"><%= label %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="destination">
+                            <i class="fas fa-mobile-alt"></i> Destination Phone Number:
+                        </label>
+                        <input 
+                            type="tel" 
+                            class="form-control" 
+                            id="destination" 
+                            name="destination" 
+                            placeholder="+447518384350"
+                            required
+                        >
+                        <small class="form-text">Include country code (e.g., +44 for UK, +1 for US)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="message">
+                            <i class="fas fa-comment"></i> Message:
+                        </label>
+                        <textarea 
+                            class="form-control" 
+                            id="message" 
+                            name="message" 
+                            rows="6" 
+                            placeholder="Enter your message..."
+                            maxlength="1600"
+                            required
+                        ></textarea>
+                        
+                        <div class="message-info" id="messageInfo">
+                            <div class="info-item">
+                                <div class="info-label">Characters</div>
+                                <div class="info-value" id="charCount">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">SMS Segments</div>
+                                <div class="info-value" id="segmentCount">1</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Estimated Cost</div>
+                                <div class="info-value" id="costEstimate">$0.00</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Message Type</div>
+                                <div class="info-value" id="messageType">Single</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span id="btnText">Send SMS</span>
+                        <i class="fas fa-spinner fa-spin" id="btnLoading" style="display: none;"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Message Preview -->
+        <div class="card" id="messagePreview" style="display: none;">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-eye"></i> Message Preview</h2>
+            </div>
+            <div class="card-body">
+                <div id="previewContent"></div>
+            </div>
+        </div>
+
+        <!-- Message History -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-history"></i> Message History</h2>
+                <button class="btn btn-secondary" onclick="refreshHistory()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="historyContainer">
+                    <% if (history.length === 0) { %>
+                        <div class="no-history">
+                            <i class="fas fa-inbox"></i>
+                            <p>No messages sent yet.</p>
+                        </div>
+                    <% } else { %>
+                        <% history.forEach(msg => { %>
+                            <div class="history-item">
+                                <div class="history-header">
+                                    <span class="timestamp">
+                                        <i class="fas fa-clock"></i>
+                                        <%= new Date(msg.timestamp).toLocaleString() %>
+                                    </span>
+                                    <span class="originator">
+                                        <i class="fas fa-tag"></i>
+                                        <%= msg.originator %>
+                                    </span>
+                                </div>
+                                <div class="phone-number">
+                                    <i class="fas fa-phone"></i>
+                                    <%= msg.destination %>
+                                </div>
+                                <div class="message-body"><%= msg.message %></div>
+                                <div class="message-meta">
+                                    <span class="message-id">
+                                        <i class="fas fa-fingerprint"></i>
+                                        ID: <%= msg.messageId %>
+                                    </span>
+                                    <span class="message-segments">
+                                        <i class="fas fa-layer-group"></i>
+                                        <%= msg.segments %> segment<%= msg.segments !== 1 ? 's' : '' %>
+                                    </span>
+                                    <span class="message-length">
+                                        <i class="fas fa-text-width"></i>
+                                        <%= msg.length %> chars
+                                    </span>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-info">
+                <p><i class="fas fa-rocket"></i> AWS End User Messaging v<%= config.version || '3.0' %> | Enhanced UI Edition</p>
+                <% if (config.has_latest_features) { %>
+                    <p><small><i class="fas fa-check-circle"></i> Latest features enabled | Build: <%= config.build_timestamp || 'Unknown' %></small></p>
+                <% } else { %>
+                    <p><small><i class="fas fa-exclamation-triangle"></i> Running older version - update container for latest features</small></p>
+                <% } %>
+                <p><small><i class="fas fa-info-circle"></i> Longer messages are automatically split into SMS segments</small></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="http://10.0.2.11/js/app-v3.js?v=<%= Date.now() %>"></script>
+    <script>
+        // Theme management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icon = document.getElementById('theme-icon');
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const icon = document.getElementById('theme-icon');
+            icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Update uptime
+        function updateUptime() {
+            // This would be connected to real server data
+            const uptime = document.getElementById('uptime');
+            if (uptime) {
+                uptime.textContent = 'Online';
+            }
+        }
+
+        updateUptime();
+        setInterval(updateUptime, 30000); // Update every 30 seconds
+    </script>
+</body>
+</html>

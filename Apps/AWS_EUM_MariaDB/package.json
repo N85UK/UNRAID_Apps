@@ -1,0 +1,59 @@
+{
+  "name": "aws-eum-mariadb",
+  "version": "2.1.0",
+  "description": "AWS End User Messaging with MariaDB - Enterprise SMS application with database integration, user management, and advanced analytics",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-pinpoint-sms-voice-v2": "^3.645.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "rate-limiter-flexible": "^5.0.3",
+    "mysql2": "^3.6.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "express-session": "^1.17.3",
+    "connect-mysql2": "^3.0.1",
+    "express-validator": "^7.0.1",
+    "moment": "^2.29.4",
+    "cron": "^3.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "aws",
+    "sms",
+    "pinpoint",
+    "messaging",
+    "unraid",
+    "docker",
+    "mariadb",
+    "mysql",
+    "database",
+    "enterprise",
+    "user-management",
+    "analytics"
+  ],
+  "author": "N85UK <hello@git.n85.uk>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/N85UK/UNRAID_Apps.git",
+    "directory": "Apps/AWS_EUM_MariaDB"
+  }
+}
