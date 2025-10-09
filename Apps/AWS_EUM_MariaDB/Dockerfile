@@ -1,14 +1,11 @@
-# AWS End User Messaging v2.0 - Enhanced Docker Image
-FROM node:20-bullseye-slim
+# AWS End User Messaging MariaDB Edition - Docker Image
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
 
 # Install system dependencies (including curl for health checks)
-RUN apt-get update && \
-    apt-get install -y curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl
 
 # Copy package files first for better layer caching
 COPY package*.json ./
@@ -21,8 +18,8 @@ RUN npm ci --only=production --no-audit --no-fund && \
 COPY . .
 
 # Create non-root user for security
-RUN groupadd -r appuser && \
-    useradd -r -g appuser -s /bin/bash appuser && \
+RUN addgroup -S appuser && \
+    adduser -S -G appuser appuser && \
     mkdir -p /app/data && \
     chown -R appuser:appuser /app
 
@@ -41,5 +38,5 @@ CMD ["node", "server.js"]
 
 # Metadata labels
 LABEL maintainer="N85UK <hello@git.n85.uk>" \
-      version="2.0.0" \
-      description="AWS End User Messaging - Enhanced SMS application with UNRAID integration"
+      version="MariaDB" \
+      description="AWS End User Messaging - MariaDB Enterprise Edition with external database support"

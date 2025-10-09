@@ -2,16 +2,19 @@ version: '3.8'
 
 services:
   mariadb:
-    image: mariadb:10.11
+    image: lscr.io/linuxserver/mariadb:latest
     container_name: aws-eum-mariadb-db
     restart: unless-stopped
     environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: aws_eum
       MYSQL_USER: aws_eum
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb_data:/config
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "3306:3306"
