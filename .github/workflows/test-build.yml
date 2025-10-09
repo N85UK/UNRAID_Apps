@@ -36,11 +36,11 @@ jobs:
       - name: Test v3 dependencies
         run: |
           cd Apps/AWS_EUM_v3
-          npm install --only=production
+          npm install --omit=dev
           node -e "console.log('AWS EUM v3 dependencies OK')"
           
       - name: Test MariaDB dependencies
         run: |
           cd Apps/AWS_EUM_MariaDB
-          npm install --only=production
+          npm install --omit=dev
           node -e "console.log('AWS EUM MariaDB dependencies OK')"
