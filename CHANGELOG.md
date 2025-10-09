@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **ExplorerX Plugin**: CRITICAL FIX - Resolved blank page issue when navigating to /ExplorerX
+- **ExplorerX Plugin**: Fixed launch URL mismatch between "ExplorerX" and "explorerx.page" filename  
+- **ExplorerX Plugin**: Fixed invalid page header formatting preventing UNRAID recognition
+- **ExplorerX Plugin**: Fixed package compression format (xz instead of gzip for .txz files)
 - **AWS EUM Docker Builds**: Fixed GitHub Actions workflow failures
 - Resolved npm ci dependency conflicts after node_modules cleanup
 - Updated test workflows to use npm install instead of npm ci
