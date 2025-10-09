@@ -1,9 +1,23 @@
 {
-  "version": "2025.10.06.02.00",
-  "date": "2025-10-06",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.06.02.00-x86_64-1.txz",
-  "md5": "1cdbc7c3a3b146a4e9d7e24fbcefcbbc",
+  "version": "2025.10.09.01.00",
+  "date": "2025-10-09",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.09.01.00-x86_64-1.txz",
+  "md5": "796af1b6041b1b8f0e38494ab0f77587",
   "changelog": [
+    {
+      "version": "2025.10.09.01.00",
+      "date": "2025-10-09", 
+      "changes": [
+        "CRITICAL FIX: Resolved blank page issue when navigating to /ExplorerX",
+        "Fixed launch URL mismatch: Changed from 'ExplorerX' to 'explorerx' to match page filename",
+        "Fixed page header formatting: Removed invalid indentation and delimiter issues", 
+        "Updated menu placement: Changed from invalid 'UNRAID:5' to '61' for standalone tab",
+        "Corrected icon reference to use available PNG file",
+        "Fixed case-sensitive filesystem compatibility issue",
+        "Plugin should now load properly and display file browser interface",
+        "Addresses all issues identified in detailed analysis"
+      ]
+    },
     {
       "version": "2025.10.06.02.00",
       "date": "2025-10-06", 

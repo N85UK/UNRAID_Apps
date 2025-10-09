@@ -2,6 +2,19 @@
 
 **A simple, safe file manager plugin for UNRAID 7.2.0+ with clean interface and secure installation.**
 
+## 🔧 **Latest Update (v2025.10.09.01.00)**
+
+✅ **CRITICAL FIX**: Resolved blank page issue when navigating to `/ExplorerX`
+
+**Issues Fixed:**
+- ✅ **URL Mismatch**: Fixed `launch="ExplorerX"` vs `explorerx.page` filename conflict
+- ✅ **Invalid Page Header**: Corrected menu placement from `UNRAID:5` to `61` for standalone tab
+- ✅ **Header Formatting**: Removed invalid indentation that prevented UNRAID from recognizing the page
+- ✅ **Icon Reference**: Ensured icon path matches available files
+- ✅ **Case Sensitivity**: Fixed filesystem compatibility on UNRAID's case-sensitive system
+
+**Result**: Plugin should now display the file browser interface instead of a blank page!
+
 ## 🎯 Overview
 
 ExplorerX is a **native UNRAID plugin** (no Docker required) that provides basic file management capabilities directly integrated into the UNRAID webGUI. It offers a clean, simple interface for browsing and managing your files safely.
