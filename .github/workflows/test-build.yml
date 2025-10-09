@@ -1,0 +1,46 @@
+name: Test Build Validation
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate AWS_EUM_v3 structure
+        run: |
+          echo "Checking AWS_EUM_v3 structure..."
+          ls -la Apps/AWS_EUM_v3/
+          cat Apps/AWS_EUM_v3/package.json
+          echo "Dockerfile validation..."
+          cat Apps/AWS_EUM_v3/Dockerfile
+          
+      - name: Validate AWS_EUM_MariaDB structure
+        run: |
+          echo "Checking AWS_EUM_MariaDB structure..."
+          ls -la Apps/AWS_EUM_MariaDB/
+          cat Apps/AWS_EUM_MariaDB/package.json
+          echo "Dockerfile validation..."
+          cat Apps/AWS_EUM_MariaDB/Dockerfile
+          
+      - name: Check Node.js setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Test v3 dependencies
+        run: |
+          cd Apps/AWS_EUM_v3
+          npm ci --only=production
+          node -e "console.log('AWS EUM v3 dependencies OK')"
+          
+      - name: Test MariaDB dependencies
+        run: |
+          cd Apps/AWS_EUM_MariaDB
+          npm ci --only=production
+          node -e "console.log('AWS EUM MariaDB dependencies OK')"
