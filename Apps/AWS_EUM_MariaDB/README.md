@@ -2,6 +2,12 @@
 
 🏢 **Enterprise-grade SMS messaging platform with external database integration, multi-user support, and advanced analytics**
 
+## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
+
+✅ **Status**: Production ready with automated Docker builds  
+📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-mariadb:latest`  
+🔄 **CI/CD**: Automated builds with Alpine Linux and clean dependency management
+
 ## 🌟 Enterprise Features
 
 ### 🗄️ **External Database Integration**

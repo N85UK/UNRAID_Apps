@@ -1,16 +1,34 @@
 # AWS End User Messaging v3.0 - Enhanced UI Edition
 
-🎨 **Beautiful, modern interface with dark mode, real-time analytics, and advanced features**
+🎨 **Beautiful, modern interface with dark mode, real-time analytics, and Chart.js integration**
 
-## ✨ New Features in v3.0
+## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
 
-### 🌙 **Dark Mode Support**
-- Toggle between light and dark themes
-- Automatic theme persistence  
-- System preference detection
-- Beautiful color schemes optimized for both modes
+✅ **Status**: Production ready with automated Docker builds  
+📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest`  
+🔄 **CI/CD**: Automated builds with Alpine Linux optimization
 
-### 📊 **Real-time Analytics Dashboard**
+## ✨ Enhanced Features in v3.0
+
+### 🌙 **Advanced Dark Mode**
+- Beautiful toggle between light and dark themes
+- Automatic theme persistence across sessions
+- System preference detection and automatic switching
+- Optimized color schemes for readability in both modes
+
+### 📊 **Real-time Analytics with Chart.js**
+- **Dynamic charts** powered by Chart.js for beautiful data visualization
+- **Message delivery metrics** with real-time updates
+- **Cost analysis charts** showing spending trends over time
+- **Interactive dashboards** with hover effects and animations
+- **Performance metrics** displaying response times and success rates
+
+### 🎨 **Modern Material Design**
+- **Smooth animations** and micro-interactions
+- **Enhanced typography** with Google Fonts integration
+- **Responsive grid system** for perfect mobile adaptation
+- **Material Design components** with elevation and shadows
+- **Progressive enhancement** for all devices
 - **Automatic phone number detection** - Pulls all available phone numbers from your AWS account
 - **Real-time originator refresh** - Click refresh to update available numbers
 - **Smart caching** - Reduces AWS API calls while keeping data fresh
@@ -21,17 +39,18 @@
 - **Real-time cost estimation** - See how many SMS segments your message will use
 - **Message preview** - See exactly how your long message will be split
 
-### 🛡️ **Security & Rate Limiting**
-- **Rate limiting** - Prevents SMS abuse with configurable limits
-- **Enhanced security** - Helmet.js security headers and CSP
-- **Input validation** - Comprehensive validation for all inputs
-- **Error handling** - Better error messages and recovery
+### 🛡️ **Enhanced Security & Performance**
+- **Rate limiting** with `express-rate-limit` and `rate-limiter-flexible`
+- **Helmet.js security** with comprehensive CSP and security headers
+- **Advanced validation** with sanitization for all inputs
+- **Error boundaries** with graceful degradation and recovery
+- **Performance monitoring** with real-time metrics
 
-### 🔧 **UNRAID Integration**
-- **Full configuration interface** - Configure everything through UNRAID
-- **Dropdown region selection** - Easy AWS region selection
-- **Secure credential storage** - AWS credentials stored securely
-- **Health monitoring** - Built-in health checks and status monitoring
+### 🔧 **Improved UNRAID Integration**
+- **Streamlined configuration** through UNRAID templates
+- **Better health monitoring** with detailed status reporting
+- **Enhanced logging** with structured output for debugging
+- **Resource optimization** with Alpine Linux base image
 
 ## 📋 Features
 

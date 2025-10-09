@@ -51,9 +51,11 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 ### 📧 **AWS End User Messaging (Multi-Version Suite)**
 **Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features**
 
+🚀 **All versions now building successfully with GitHub Actions CI/CD!**
+
 #### **Version 2.0** (Current Stable)
 - **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
-- **Status**: ✅ Production Ready
+- **Status**: ✅ Production Ready - Auto-deployed
 - **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 
@@ -66,7 +68,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 
 #### **Version 3.0** (Enhanced UI Edition) 🎨
 - **Location**: [`Apps/AWS_EUM_v3/`](Apps/AWS_EUM_v3/)
-- **Status**: ✅ Ready for Testing
+- **Status**: ✅ Production Ready - Auto-deployed
 - **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_v3/template.cfg`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest`
 
@@ -81,7 +83,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 
 #### **MariaDB Enterprise Edition** 🏢
 - **Location**: [`Apps/AWS_EUM_MariaDB/`](Apps/AWS_EUM_MariaDB/)
-- **Status**: ✅ Enterprise Ready
+- **Status**: ✅ Production Ready - Auto-deployed
 - **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/template.cfg`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
 
@@ -232,9 +234,11 @@ UNRAID_Apps/
 - ✅ **CA Submission Tools**: Community Applications integration
 
 ### Deployment Status
+- ✅ **Build Status**: All GitHub Actions workflows passing
 - 🚀 **All AWS EUM versions**: Auto-deployed via GitHub Actions
-- 📦 **Docker Images**: Available on GitHub Container Registry
-- 🔄 **CI/CD**: Automated builds for all versions
+- 📦 **Docker Images**: Available on GitHub Container Registry  
+- 🔄 **CI/CD**: Automated builds with Alpine Linux optimization
+- 🧹 **Clean Dependencies**: npm install with fresh package-lock.json generation
 - 📊 **Monitoring**: Build status and health checks active
 
 ## 🤝 **Contributing**
