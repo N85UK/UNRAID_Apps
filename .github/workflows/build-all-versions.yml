@@ -1,0 +1,164 @@
+name: Build All AWS EUM Versions
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Apps/AWS_EUM/**'
+      - 'Apps/AWS_EUM_v3/**'
+      - 'Apps/AWS_EUM_MariaDB/**'
+      - '.github/workflows/build-all-versions.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (all, v2, v3, mariadb)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - v2
+          - v3
+          - mariadb
+
+jobs:
+  build-v2:
+    if: github.event.inputs.version == 'all' || github.event.inputs.version == 'v2' || github.event.inputs.version == '' || contains(github.event.head_commit.modified, 'Apps/AWS_EUM/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/n85uk/aws-eum
+          tags: |
+            type=raw,value=latest,enable=true
+            type=raw,value=2.0,enable=true
+            type=raw,value=2.0.0,enable=true
+            type=raw,value=v2,enable=true
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Apps/AWS_EUM
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  build-v3:
+    if: github.event.inputs.version == 'all' || github.event.inputs.version == 'v3' || github.event.inputs.version == '' || contains(github.event.head_commit.modified, 'Apps/AWS_EUM_v3/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/n85uk/aws-eum-v3
+          tags: |
+            type=raw,value=latest,enable=true
+            type=raw,value=3.0,enable=true
+            type=raw,value=3.0.0,enable=true
+            type=raw,value=v3,enable=true
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Apps/AWS_EUM_v3
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  build-mariadb:
+    if: github.event.inputs.version == 'all' || github.event.inputs.version == 'mariadb' || github.event.inputs.version == '' || contains(github.event.head_commit.modified, 'Apps/AWS_EUM_MariaDB/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/n85uk/aws-eum-mariadb
+          tags: |
+            type=raw,value=latest,enable=true
+            type=raw,value=enterprise,enable=true
+            type=raw,value=mariadb,enable=true
+            type=raw,value=1.0,enable=true
+            type=raw,value=1.0.0,enable=true
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Apps/AWS_EUM_MariaDB
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  summary:
+    needs: [build-v2, build-v3, build-mariadb]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Summary
+        run: |
+          echo "## 🚀 AWS EUM Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Built Versions:" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.build-v2.result }}" == "success" ]]; then
+            echo "✅ **AWS EUM v2.0** - Built and published successfully" >> $GITHUB_STEP_SUMMARY
+          elif [[ "${{ needs.build-v2.result }}" == "skipped" ]]; then
+            echo "⏭️ **AWS EUM v2.0** - Skipped (no changes)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **AWS EUM v2.0** - Build failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [[ "${{ needs.build-v3.result }}" == "success" ]]; then
+            echo "✅ **AWS EUM v3.0** - Built and published successfully" >> $GITHUB_STEP_SUMMARY
+          elif [[ "${{ needs.build-v3.result }}" == "skipped" ]]; then
+            echo "⏭️ **AWS EUM v3.0** - Skipped (no changes)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **AWS EUM v3.0** - Build failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [[ "${{ needs.build-mariadb.result }}" == "success" ]]; then
+            echo "✅ **AWS EUM MariaDB** - Built and published successfully" >> $GITHUB_STEP_SUMMARY
+          elif [[ "${{ needs.build-mariadb.result }}" == "skipped" ]]; then
+            echo "⏭️ **AWS EUM MariaDB** - Skipped (no changes)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **AWS EUM MariaDB** - Build failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Available Images:" >> $GITHUB_STEP_SUMMARY
+          echo "- **v2.0**: \`ghcr.io/n85uk/aws-eum:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **v3.0**: \`ghcr.io/n85uk/aws-eum-v3:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **MariaDB**: \`ghcr.io/n85uk/aws-eum-mariadb:latest\`" >> $GITHUB_STEP_SUMMARY

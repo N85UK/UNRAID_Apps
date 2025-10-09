@@ -1,11 +1,11 @@
-name: Build and publish AWS EUM v2.0
+name: Build and publish AWS EUM MariaDB
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'Apps/AWS_EUM/**'
-      - '.github/workflows/build-and-publish.yml'
+      - 'Apps/AWS_EUM_MariaDB/**'
+      - '.github/workflows/build-and-publish-mariadb.yml'
 
 jobs:
   build:
@@ -25,18 +25,25 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/n85uk/aws-eum
+          images: ghcr.io/n85uk/aws-eum-mariadb
           tags: |
             type=raw,value=latest,enable=true
-            type=raw,value=2.0,enable=true
-            type=raw,value=2.0.0,enable=true
+            type=raw,value=enterprise,enable=true
+            type=raw,value=mariadb,enable=true
+            type=raw,value=1.0,enable=true
+            type=raw,value=1.0.0,enable=true
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./Apps/AWS_EUM
+          context: ./Apps/AWS_EUM_MariaDB
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILDKIT_INLINE_CACHE=1
+
+      - name: Update template configuration
+        run: |
+          echo "✅ AWS EUM MariaDB Enterprise edition Docker image built and published successfully"
+          echo "📦 Tags: ${{ steps.meta.outputs.tags }}"

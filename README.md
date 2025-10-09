@@ -48,12 +48,66 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 - 📊 Service lifecycle management
 - 🛡️ Security and permission inheritance
 
-### 📧 **AWS End User Messaging**
-**SMS messaging via AWS Pinpoint**
+### 📧 **AWS End User Messaging (Multi-Version Suite)**
+**Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features**
 
-- **Location**: [`AWS_EUM/`](AWS_EUM/)
+#### **Version 2.0** (Current Stable)
+- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
 - **Status**: ✅ Production Ready
-- **Installation**: `https://github.com/N85UK/UnRiaid_Apps/raw/main/AWS_EUM/template.cfg`
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
+
+**Features:**
+- ✅ Reliable SMS delivery via AWS Pinpoint
+- ✅ Simple, clean interface
+- ✅ Message history and tracking
+- ✅ Cost estimation
+- ✅ Multiple originator support
+
+#### **Version 3.0** (Enhanced UI Edition) 🎨
+- **Location**: [`Apps/AWS_EUM_v3/`](Apps/AWS_EUM_v3/)
+- **Status**: ✅ Ready for Testing
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_v3/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest`
+
+**Enhanced Features:**
+- 🌙 **Dark Mode Toggle** with persistent storage
+- 📊 **Real-time Analytics Charts** with Chart.js integration
+- 🎨 **Modern Material Design** with smooth animations
+- 📱 **Fully Responsive** mobile-first design
+- ⚡ **Enhanced JavaScript** with modular ES6+ architecture
+- 🎯 **Advanced Message Preview** with live cost estimation
+- 🔄 **WebSocket Support** for real-time updates
+
+#### **MariaDB Enterprise Edition** 🏢
+- **Location**: [`Apps/AWS_EUM_MariaDB/`](Apps/AWS_EUM_MariaDB/)
+- **Status**: ✅ Enterprise Ready
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
+
+**Enterprise Features:**
+- 🗄️ **External Database Integration** (MariaDB/MySQL)
+- 👥 **Multi-User Authentication** with role-based access control
+- 🔐 **JWT Authentication** with bcrypt password hashing
+- 📊 **Advanced Analytics Dashboard** with historical data
+- ⚡ **Connection Pooling** and optimized database operations
+- 🔧 **Automated Migrations** and database seeding
+- 📈 **Comprehensive Audit Trails** and reporting
+- 🛡️ **Enterprise Security** with session management
+- 👤 **User Roles**: Admin, User, ReadOnly access levels
+- 📋 **API Key Management** for programmatic access
+
+**Role Capabilities:**
+- **Admin**: Full system access, user management, all features
+- **User**: Send messages, view own history, basic analytics
+- **ReadOnly**: View messages and analytics, no sending
+
+**Database Schema:**
+- Advanced 7-table structure with foreign keys and indexing
+- User management with secure password storage
+- Message tracking with status and analytics
+- Settings management with environment variables
+- Session handling for web authentication
 
 ## 📦 **Installation Methods**
 
@@ -97,7 +151,9 @@ UNRAID_Apps/
 │   ├── web/pages/              # Vue.js WebGUI
 │   └── README.md               # Integration guide
 ├── Apps/
-│   ├── AWS_EUM/               # Docker application for AWS messaging
+│   ├── AWS_EUM/               # v2.0 - Stable SMS messaging
+│   ├── AWS_EUM_v3/            # v3.0 - Enhanced UI with dark mode & charts
+│   ├── AWS_EUM_MariaDB/       # Enterprise - Multi-user with database
 │   └── ca-submission/         # Community Applications submission tools
 └── Documentation/              # Project documentation
     ├── README.md               # This file
@@ -117,6 +173,24 @@ UNRAID_Apps/
 | **Interface** | Multi-pane native UI | Vue.js component |
 | **Installation** | One-click install | API team integration |
 | **Performance** | No Docker overhead | Framework overhead |
+
+### AWS EUM Version Comparison
+
+| Feature | v2.0 (Stable) | v3.0 (Enhanced UI) | MariaDB (Enterprise) |
+|---------|---------------|-------------------|---------------------|
+| **SMS Delivery** | ✅ AWS Pinpoint | ✅ AWS Pinpoint | ✅ AWS Pinpoint |
+| **Interface** | Clean & Simple | Modern Material Design | Enterprise Dashboard |
+| **Dark Mode** | ❌ | ✅ Persistent Toggle | ✅ User Preferences |
+| **Real-time Charts** | ❌ | ✅ Chart.js Integration | ✅ Advanced Analytics |
+| **Multi-User** | ❌ Single User | ❌ Single User | ✅ Role-Based Access |
+| **Database** | File Storage | File Storage | MariaDB/MySQL |
+| **Authentication** | None | None | JWT + bcrypt |
+| **User Roles** | N/A | N/A | Admin/User/ReadOnly |
+| **API Keys** | ❌ | ❌ | ✅ Management |
+| **Audit Trails** | Basic Logs | Enhanced Logs | Comprehensive |
+| **WebSocket** | ❌ | ✅ Real-time Updates | ✅ Live Dashboard |
+| **Mobile Design** | Basic Responsive | Fully Responsive | Enterprise Mobile |
+| **Best For** | Simple Setup | Modern UI Needs | Enterprise/Teams |
 
 ## 📋 **System Requirements**
 
@@ -152,8 +226,16 @@ UNRAID_Apps/
 ### Current Active Projects
 - ✅ **ExplorerX Plugin v0.1.1**: Production ready with advanced file management
 - ✅ **Bounty Submission**: Complete, ready for UNRAID API integration
-- ✅ **AWS EUM**: Stable, minimal maintenance
+- ✅ **AWS EUM v2.0**: Stable production version, minimal maintenance
+- ✅ **AWS EUM v3.0**: Enhanced UI with dark mode, charts, and modern design
+- ✅ **AWS EUM MariaDB**: Enterprise edition with multi-user and database integration
 - ✅ **CA Submission Tools**: Community Applications integration
+
+### Deployment Status
+- 🚀 **All AWS EUM versions**: Auto-deployed via GitHub Actions
+- 📦 **Docker Images**: Available on GitHub Container Registry
+- 🔄 **CI/CD**: Automated builds for all versions
+- 📊 **Monitoring**: Build status and health checks active
 
 ## 🤝 **Contributing**
 
