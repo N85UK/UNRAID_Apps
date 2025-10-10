@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.10.05.00">
-<!ENTITY md5       "10b3a9bd128a91c9a000f260e0848e14">
+<!ENTITY version   "2025.10.10.06.00">
+<!ENTITY md5       "127a2cb6b362f8cdfc5e2242c71418f3">
 <!ENTITY launch    "explorerx">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,6 +16,14 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.10.06.00 (2025-10-10)
+- MENU FIX: Changed Menu from "OtherSettings" to "Tools" for standard UNRAID navigation
+- CLEAN PACKAGE: Completely removed all macOS metadata files (._* files) from package
+- 404 RESOLUTION: Plugin should now be accessible via Tools → ExplorerX in UNRAID webGUI
+- Package now contains only necessary plugin files without system metadata
+- Standard UNRAID menu integration for better discoverability
+- Updated to version 2025.10.10.06.00
+
 ###v2025.10.10.05.00 (2025-10-10)
 - EXTRACTION FIX: Fixed extraction script using literal version instead of XML entity
 - Corrected tar extraction command that was failing due to &version; not expanding in CDATA
@@ -259,10 +267,10 @@ echo ""
 <INLINE>
 <![CDATA[
 echo "🔍 PACKAGE VERIFICATION:"
-echo "Expected: explorerx-2025.10.10.05.00.txz"
+echo "Expected: explorerx-2025.10.10.06.00.txz"
 echo "Checking downloaded package..."
 
-EXPECTED_FILE="/boot/config/plugins/explorerx/explorerx-2025.10.10.05.00.txz"
+EXPECTED_FILE="/boot/config/plugins/explorerx/explorerx-2025.10.10.06.00.txz"
 PLUGIN_DIR="/boot/config/plugins/explorerx"
 
 # Check what was actually downloaded
@@ -272,11 +280,11 @@ if [ -d "$PLUGIN_DIR" ]; then
   
   # Check if correct version was downloaded
   if [ -f "$EXPECTED_FILE" ]; then
-    echo "✅ Correct package found: explorerx-2025.10.10.05.00.txz"
+    echo "✅ Correct package found: explorerx-2025.10.10.06.00.txz"
     
     # Verify MD5 of correct package
     ACTUAL_MD5=$(md5sum "$EXPECTED_FILE" | cut -d' ' -f1)
-    EXPECTED_MD5="10b3a9bd128a91c9a000f260e0848e14"
+    EXPECTED_MD5="127a2cb6b362f8cdfc5e2242c71418f3"
     echo "Package MD5: $ACTUAL_MD5"
     echo "Expected MD5: $EXPECTED_MD5"
     
@@ -287,7 +295,7 @@ if [ -d "$PLUGIN_DIR" ]; then
       echo "⚠️ Proceeding anyway as package was downloaded successfully"
     fi
   else
-    echo "❌ Expected package not found: explorerx-2025.10.10.05.00.txz"
+    echo "❌ Expected package not found: explorerx-2025.10.10.06.00.txz"
     
     # Find any explorerx package files
     OLD_FILES=$(find "$PLUGIN_DIR" -name "explorerx-*.txz" -type f)
@@ -329,7 +337,7 @@ echo "Confirming plugin extraction location is safe..."
 cd /
 echo ""
 echo "📦 SAFE PLUGIN EXTRACTION:"
-if ! tar -xf /boot/config/plugins/explorerx/explorerx-2025.10.10.05.00.txz; then
+if ! tar -xf /boot/config/plugins/explorerx/explorerx-2025.10.10.06.00.txz; then
   echo "❌ ERROR: Failed to extract plugin package"
   echo "This is a package extraction issue, not a system problem"
   exit 1
