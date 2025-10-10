@@ -52,8 +52,8 @@ jobs:
           if [ -n "${{ github.event.inputs.custom_version }}" ]; then
             NEW_VERSION="${{ github.event.inputs.custom_version }}"
             # Validate custom version format
-            if [[ ! $NEW_VERSION =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}$ ]]; then
-              echo "ERROR: Invalid custom version format. Use YYYY.MM.DD.XX.XX"
+            if [[ ! $NEW_VERSION =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{4}$ ]]; then
+              echo "ERROR: Invalid custom version format. Use YYYY.MM.DD.####"
               exit 1
             fi
           else
