@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const APP_VERSION = '3.0.4';
+const APP_VERSION = '3.0.5';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 
@@ -709,7 +709,15 @@ app.post('/send-sms', async (req, res) => {
     }
 });
 
-// API alias for send-sms (for client compatibility)
+// GET handler for send-sms to provide helpful error message
+app.get('/api/send-sms', (req, res) => {
+    res.status(405).json({
+        error: 'Method Not Allowed',
+        message: 'This endpoint only accepts POST requests. Use POST with message data in the body.',
+        allowedMethods: ['POST']
+    });
+});
+
 app.post('/api/send-sms', async (req, res) => {
     try {
         // Rate limiting
@@ -783,8 +791,21 @@ app.get('/history', (req, res) => {
 
 // API alias for history (for client compatibility)
 app.get('/api/history', (req, res) => {
-    const history = getMessageHistory();
-    res.json(history);
+    try {
+        const history = getMessageHistory();
+        res.json({
+            success: true,
+            count: history.length,
+            history: history
+        });
+    } catch (error) {
+        console.error('Error fetching history:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch message history',
+            history: []
+        });
+    }
 });
 
 app.post('/api/refresh-originators', async (req, res) => {
@@ -811,7 +832,9 @@ function getMessageHistory() {
         const historyFile = path.join(dataDir, 'history.json');
         if (fs.existsSync(historyFile)) {
             const data = fs.readFileSync(historyFile, 'utf8');
-            return JSON.parse(data);
+            const parsed = JSON.parse(data);
+            // Ensure it's an array
+            return Array.isArray(parsed) ? parsed : [];
         }
     } catch (error) {
         console.error('Error reading history:', error);
@@ -835,6 +858,11 @@ function saveMessage(message) {
         console.error('Error saving message:', error);
     }
 }
+
+// Favicon route to prevent 404 errors
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // No content
+});
 
 // Health check endpoint
 app.get('/health', (req, res) => {

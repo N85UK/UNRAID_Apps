@@ -327,11 +327,19 @@ const HistoryManager = {
     async refresh() {
         try {
             const response = await fetch('/api/history');
-            const history = await response.json();
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const result = await response.json();
+            // Handle both old format (array) and new format (object with history property)
+            const history = Array.isArray(result) ? result : (result.history || []);
             this.render(history);
         } catch (error) {
             console.error('Error refreshing history:', error);
             Utils.showNotification('Failed to refresh history', 'error');
+            // Render empty state on error
+            this.render([]);
         }
     },
 
@@ -445,10 +453,16 @@ const RealTimeManager = {
             // Fetch real message statistics from the API
             const response = await fetch('/api/stats');
             if (response.ok) {
-                const stats = await response.json();
-                this.updateChartsWithRealData(stats);
+                const text = await response.text();
+                try {
+                    const stats = JSON.parse(text);
+                    this.updateChartsWithRealData(stats);
+                } catch (parseError) {
+                    console.error('Error parsing stats JSON:', parseError, 'Response:', text);
+                    this.updateChartsWithFallbackData();
+                }
             } else {
-                console.warn('Failed to fetch real stats, using fallback data');
+                console.warn(`Failed to fetch real stats (${response.status}):`, response.statusText);
                 this.updateChartsWithFallbackData();
             }
         } catch (error) {
