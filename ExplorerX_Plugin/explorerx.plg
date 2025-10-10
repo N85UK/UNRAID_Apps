@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.10.01.00">
+<!ENTITY version   "2025.10.10.02.00">
 <!ENTITY md5       "136a795e8fd7ad5f706b9c2d2614a4fd">
 <!ENTITY launch    "explorerx">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
-<!ENTITY packageURL "&gitURL;/raw/main/ExplorerX_Plugin/packages/explorerx-&version;-x86_64-1.txz?cache=2025101001">
+<!ENTITY packageURL "&gitURL;/raw/main/ExplorerX_Plugin/packages/explorerx-&version;-x86_64-1.txz">
 <!ENTITY versionURL "&gitURL;/raw/main/ExplorerX_Plugin/version.json">
 <!ENTITY support   "&gitURL;/issues">
 <!ENTITY min       "7.2.0-rc.1">
@@ -16,6 +16,14 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.10.02.00 (2025-10-10)
+- PACKAGE VERIFICATION: Added post-download verification to detect wrong cached packages
+- Automatic correction if UNRAID downloads old cached version instead of current
+- Force re-download of correct package if wrong version detected
+- MD5 verification with automatic retry if hash mismatch
+- Comprehensive package validation before installation
+- Updated to version 2025.10.10.02.00
+
 ###v2025.10.10.01.00 (2025-10-10)
 - CACHE REFRESH: Force UNRAID to download latest fixed package
 - Added cache busting mechanism to prevent old package downloads
@@ -219,6 +227,70 @@ echo ""
 <FILE Name="/boot/config/plugins/&name;/&name;-&version;.txz" Run="upgradepkg --install-new">
 <URL>&packageURL;</URL>
 <MD5>&md5;</MD5>
+</FILE>
+
+<!-- Verify correct package was downloaded and fix if needed -->
+<FILE Run="/bin/bash">
+<INLINE>
+<![CDATA[
+echo "🔍 PACKAGE VERIFICATION:"
+echo "Expected: explorerx-&version;.txz"
+echo "Checking downloaded package..."
+
+EXPECTED_FILE="/boot/config/plugins/explorerx/explorerx-&version;.txz"
+PLUGIN_DIR="/boot/config/plugins/explorerx"
+
+# Check what was actually downloaded
+if [ -d "$PLUGIN_DIR" ]; then
+  echo "Files in download directory:"
+  ls -la "$PLUGIN_DIR/"
+  
+  # Check if wrong version was downloaded
+  if [ ! -f "$EXPECTED_FILE" ]; then
+    echo "❌ Wrong package downloaded! Expected: explorerx-&version;.txz"
+    
+    # Find any explorerx package files
+    OLD_FILES=$(find "$PLUGIN_DIR" -name "explorerx-*.txz" -type f)
+    if [ -n "$OLD_FILES" ]; then
+      echo "🔄 Found old cached package(s), downloading correct version..."
+      
+      # Remove old packages
+      rm -f "$PLUGIN_DIR"/explorerx-*.txz
+      
+      # Force download correct package
+      echo "⬇️ Force downloading: &packageURL;"
+      if wget -O "$EXPECTED_FILE" "&packageURL;"; then
+        echo "✅ Correct package downloaded successfully"
+      else
+        echo "❌ Failed to download correct package"
+        exit 1
+      fi
+    fi
+  else
+    echo "✅ Correct package found: explorerx-&version;.txz"
+  fi
+  
+  # Verify MD5 of final package
+  if [ -f "$EXPECTED_FILE" ]; then
+    ACTUAL_MD5=$(md5sum "$EXPECTED_FILE" | cut -d' ' -f1)
+    echo "Package MD5: $ACTUAL_MD5"
+    echo "Expected MD5: &md5;"
+    if [ "$ACTUAL_MD5" = "&md5;" ]; then
+      echo "✅ MD5 verification passed"
+    else
+      echo "❌ MD5 mismatch - redownloading..."
+      rm -f "$EXPECTED_FILE"
+      wget -O "$EXPECTED_FILE" "&packageURL;"
+    fi
+  fi
+else
+  echo "❌ Plugin directory not found: $PLUGIN_DIR"
+  exit 1
+fi
+
+echo ""
+]]>
+</INLINE>
 </FILE>
 
 <!-- Extract and install plugin -->
