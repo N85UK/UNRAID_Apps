@@ -278,11 +278,35 @@ services:
     restart: unless-stopped
 ```
 
-## 🔧 **Post-Installation Configuration**
+## 🔧 **Post-Installation Setup**
 
-### AWS Pinpoint Setup
+### 1. Fix Common Permission Issues
+**IMPORTANT**: Most AWS EUM installations require permission fixes
 
-#### 1. Create AWS Account Resources
+```bash
+# SSH into UNRAID and run these commands:
+# Check container user ID
+docker exec AWS-EUM-v3 id
+
+# Fix permissions (use UID from above, typically 100)
+chown -R 100:users /mnt/user/appdata/aws-eum-v3
+chmod -R 755 /mnt/user/appdata/aws-eum-v3
+
+# Restart container
+docker restart AWS-EUM-v3
+```
+
+### 2. Enable Enhanced Features (v3.0 Only)
+If Chart.js or enhanced UI features aren't loading:
+
+1. **Add CSP Environment Variable**:
+   - Edit container in UNRAID Docker tab
+   - Add: `DISABLE_CSP=true`
+   - Restart container
+
+### 3. AWS Pinpoint Setup
+
+#### Create AWS Account Resources
 1. **Enable Pinpoint SMS**: In AWS Console, enable Pinpoint SMS service
 2. **Configure Originator**: Set up sender ID or phone number
 3. **Set Spending Limits**: Configure SMS spending limits for cost control
@@ -320,6 +344,60 @@ ORIGINATORS=\"Marketing:arn:aws:sms:region:account:originator/marketing,Support:
 3. **AWS Credentials**: Verify AWS credentials are valid and have Pinpoint permissions
 4. **Port Conflicts**: Ensure chosen port is not in use
 5. **Database Connection**: For MariaDB edition, verify database connectivity
+
+#### Issue: Permission Denied Errors (CRITICAL)
+**Symptoms**: `EACCES: permission denied, open '/app/data/update-info.json'`
+**Root Cause**: User ID mismatch between container (UID 100) and host directory
+**Solution**:
+```bash
+# Fix ownership to match container user
+chown -R 100:users /mnt/user/appdata/aws-eum-v3
+chmod -R 755 /mnt/user/appdata/aws-eum-v3
+
+# Restart container after fixing permissions
+```
+
+#### Issue: Enhanced UI Features Not Loading (v3.0 Specific)
+**Symptoms**: 
+- "Network error - please try again" messages
+- Chart.js analytics not displaying
+- Font icons missing
+- Browser console errors about blocked resources
+
+**Root Cause**: Content Security Policy blocking external resources on custom bridge networks
+
+**Solution 1: Add Multiple CSP Environment Variables (Recommended)**:
+```bash
+# Add these environment variables to your container:
+DISABLE_CSP=true
+CSP_DISABLED=true
+NODE_TLS_REJECT_UNAUTHORIZED=0
+CSP_ALLOW_UNSAFE_INLINE=true
+CSP_ALLOW_UNSAFE_EVAL=true
+```
+
+**Solution 2: Custom CSP Header Configuration**:
+```bash
+# For advanced users - configure specific CSP policy
+CSP_POLICY="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;"
+```
+
+**Solution 3: Network Configuration Fix**:
+1. **Change Network Type** from `Custom: br0.X` to `Bridge`
+2. **Restart Container**
+3. **Alternative**: Add DNS configuration to custom network:
+   ```bash
+   # In UNRAID network settings for custom bridge
+   DNS: 8.8.8.8,8.8.4.4
+   ```
+
+**Solution 4: Container DNS Fix for Custom Networks**:
+```bash
+# Add these to container environment variables for custom networks
+NODE_OPTIONS="--dns-result-order=ipv4first"
+DNS_SERVERS="8.8.8.8,8.8.4.4"
+RESOLV_CONF_OVERRIDE=true
+```
 
 #### Issue: AWS Connection Fails
 **Symptoms**: \"AWS credentials error\" or \"Cannot connect to Pinpoint\"

@@ -35,9 +35,15 @@ Welcome to the comprehensive documentation for the UNRAID Apps Repository! This 
 - **[Multi-User Setup](Multi-User-Setup)** - Enterprise MariaDB configuration
 
 ### 🔧 **Troubleshooting**
-- **[Common Issues](Common-Issues)** - Frequently asked questions and solutions
-- **[Debug Information](Debug-Information)** - Debug procedures and logging
+- **[Common Issues](Common-Issues)** - Quick solutions for frequent problems
+- **[Troubleshooting Guide](Troubleshooting)** - Comprehensive problem-solving procedures  
 - **[Support Contacts](Support-Contacts)** - Getting help and reporting issues
+
+**🚨 Most Common Issues:**
+- **Permission Denied**: AWS EUM needs `chown -R 100:users /mnt/user/appdata/aws-eum-v3`
+- **Enhanced UI Not Working**: Add environment variable `DISABLE_CSP=true`
+- **ExplorerX Debug Mode**: v2025.10.10.0002 shows debug info (expected behavior)
+- **Plugin Not Visible**: Refresh browser (Ctrl+F5) or restart nginx
 
 ### 👨‍💻 **Development**
 - **[Contributing Guidelines](Contributing)** - How to contribute to the project

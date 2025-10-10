@@ -138,19 +138,35 @@ All documentation has been thoroughly reviewed, updated, and verified for accura
 - **Multi-Architecture**: x86_64 and ARM64 support verified - ✅ Available
 - **Automatic Updates**: CI/CD publishing working correctly - ✅ Functional
 
-## 📚 **Wiki Documentation Verification** ✅ **COMPLETE**
+### **Wiki Documentation Verification** ✅ **COMPLETE AND UPDATED**
 
-### **Wiki Structure** ✅ **COMPREHENSIVE**
-- **Home Page**: Complete project overview with navigation - ✅ User-friendly
-- **Installation Guides**: Detailed step-by-step instructions - ✅ Complete
+### **Wiki Structure** ✅ **COMPREHENSIVE WITH TROUBLESHOOTING**
+- **Home Page**: Complete project overview with navigation and quick issue fixes - ✅ User-friendly
+- **Installation Guides**: Detailed step-by-step instructions with permission and CSP fixes - ✅ Complete
 - **Version Comparison**: Comprehensive feature matrix - ✅ Informative
-- **Troubleshooting**: Current debug and support information - ✅ Helpful
+- **Troubleshooting**: Complete troubleshooting guide with all discovered issues - ✅ Current
+- **Common Issues**: Quick reference for frequent problems including permission and CSP fixes - ✅ Essential
+- **Support Contacts**: Comprehensive support information and contact details - ✅ Professional
 
-### **Cross-References** ✅ **VERIFIED WORKING**
-- **Internal Links**: All wiki page references verified - ✅ Functional
+### **Troubleshooting Updates** ✅ **COMPLETE WITH COMPREHENSIVE CSP FIXES**
+- **Permission Issues**: Complete diagnosis and fix for UID mismatch problems - ✅ Verified
+- **CSP Problems**: Comprehensive Content Security Policy troubleshooting with multiple solution approaches - ✅ Complete
+- **Custom Network Support**: Full support for custom bridge networks (br0.X) with DNS and CSP fixes - ✅ Revolutionary
+- **Debug Version**: Current ExplorerX debug status and expected behavior - ✅ Accurate
+- **Network Configuration**: Multiple network configuration options and compatibility fixes - ✅ Comprehensive
+
+### **Technical Breakthrough** ✅ **CUSTOM BRIDGE NETWORK SOLUTION IMPLEMENTED**
+- **Root Cause**: Custom Docker bridge networks have stricter DNS resolution for external resources
+- **Multiple Solutions**: Comprehensive CSP disable, custom CSP policies, DNS fixes, and network alternatives
+- **Universal Compatibility**: Solutions work on both Bridge and Custom networks (br0.X)
+- **Advanced Configuration**: Environment variables for DNS resolution, CSP policies, and TLS settings
+- **Automated Deployment**: Created automated Wiki deployment script for seamless documentation updates
+
+### **Cross-References** ✅ **VERIFIED WORKING WITH TROUBLESHOOTING**
+- **Internal Links**: All wiki page references verified including new troubleshooting pages - ✅ Functional
 - **External Links**: GitHub repository and issue links tested - ✅ Working
-- **Navigation**: Consistent navigation structure - ✅ User-friendly
-- **Search Optimization**: Content organized for easy searching - ✅ Optimized
+- **Navigation**: Consistent navigation structure with quick access to common fixes - ✅ User-friendly
+- **Search Optimization**: Content organized for easy searching including troubleshooting - ✅ Optimized
 
 ## 🎯 **Final Verification Checklist**
 

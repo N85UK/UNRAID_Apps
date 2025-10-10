@@ -163,9 +163,20 @@ The debug version displays:
 #### What to Report
 If experiencing issues with the debug version:
 1. **Screenshot**: Capture the debug interface
-2. **Browser Console**: Copy any error messages from developer tools
+2. **Browser Console**: Copy any error messages from developer tools (F12)
 3. **System Info**: Note UNRAID version and browser details
 4. **Steps**: Describe what you were trying to do when issues occurred
+
+#### Expected Behavior vs Issues
+- **✅ Expected**: Debug information displayed instead of file browser
+- **✅ Expected**: Enhanced logging and system status information
+- **❌ Issue**: Plugin not accessible via Tools → ExplorerX
+- **❌ Issue**: Installation fails or errors during setup
+
+#### Performance During Debug
+- **Memory Usage**: Debug version may use slightly more memory for enhanced logging
+- **Response Time**: May be slower due to comprehensive error reporting
+- **Stability**: Should remain stable despite debug features
 
 ## 📞 **Getting Support**
 
