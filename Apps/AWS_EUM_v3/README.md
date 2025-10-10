@@ -1,12 +1,13 @@
-# AWS End User Messaging v3.0 - Enhanced UI Edition
+# AWS End User Messaging v3.0.1 - Enhanced UI Edition
 
-🎨 **Beautiful, modern interface with dark mode, real-time analytics, and Chart.js integration**
+🎨 **Beautiful interface with dark mode, Chart.js analytics, and configurable CSP for all network types**
 
 ## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
 
-✅ **Status**: Production ready with automated Docker builds  
-📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest`  
+✅ **Status**: Production ready with CSP fixes for custom bridge networks  
+📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:3.0.1`  
 🔄 **CI/CD**: Automated builds with Alpine Linux optimization
+🌐 **Network Support**: Default bridge, br0.2, br0.100, and all custom networks
 
 ## ✨ Enhanced Features in v3.0
 
@@ -162,15 +163,20 @@ docker run -d \
 For **custom bridge networks** (e.g., br0.2) where external CDNs are blocked:
 
 ```bash
-# Simple solution - disable CSP completely
+# Recommended: Simple solution - disable CSP completely
 DISABLE_CSP=true
 
-# Network-specific solution - whitelist your network
+# Alternative: Network-specific solution - whitelist your network
 NETWORK_HOST=http://192.168.2.1
 
-# Advanced solution - custom permissive CSP policy
+# Advanced: Custom permissive CSP policy (JSON format)
 CSP_POLICY={"defaultSrc":["'self'","'unsafe-inline'","'unsafe-eval'","data:","http:","https:"],"styleSrc":["'self'","'unsafe-inline'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"],"scriptSrc":["'self'","'unsafe-inline'","'unsafe-eval'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"]}
 ```
+
+**Quick Fix for br0.2 Networks:**
+1. Add environment variable: `DISABLE_CSP=true`
+2. Restart container
+3. All features (charts, dark mode, icons) will work perfectly
 
 ### AWS Permissions
 

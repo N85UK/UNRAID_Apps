@@ -1,87 +1,37 @@
 # Content Security Policy (CSP) Troubleshooting Guide
 
 ## 🛡️ Overview
+AWS EUM v3.0.1 uses Content Security Policy for security, but it can block external resources on custom bridge networks.
 
-AWS EUM v3.0 uses Content Security Policy (CSP) headers for security. However, CSP can block external resources like Chart.js, Font Awesome, and other CDN assets when running on custom bridge networks.
+## 🚨 Common Issues
+- Charts not loading (Chart.js blocked)
+- Dark mode not working
+- Missing icons (Font Awesome blocked)
+- Console CSP violation errors
 
-## 🚨 Common CSP Issues
+## 🔧 Quick Solutions
 
-### Symptoms
-- Dark mode toggle not working
-- Missing charts and graphs
-- Console errors about blocked resources
-- Missing icons or styling
-- Browser developer console shows CSP violations
-
-### Typical Error Messages
-```
-Refused to load the script 'https://cdn.jsdelivr.net/npm/chart.js' because it violates the following Content Security Policy directive
-Refused to load the stylesheet 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
-```
-
-## 🔧 Solutions
-
-### Solution 1: Disable CSP (Simplest)
-
-**Best for**: Quick fixes, custom bridge networks, development
+### Solution 1: Disable CSP (Recommended)
+**Best for**: Custom bridge networks, quick fixes
 
 ```bash
-# In docker-compose.yml or UNRAID template
-environment:
-  - DISABLE_CSP=true
+DISABLE_CSP=true
 ```
-
-**Pros**: 
-- ✅ Allows all external resources
-- ✅ Fixes all CSP-related issues
-- ✅ Simple to implement
-
-**Cons**: 
-- ⚠️ Reduces security
-- ⚠️ May not be suitable for production
 
 ### Solution 2: Network-Specific CSP
-
-**Best for**: Custom bridge networks with known IP ranges
-
-```bash
-# For br0.2 network with gateway 192.168.2.1
-environment:
-  - NETWORK_HOST=http://192.168.2.1
-  
-# For br0.100 network
-environment:
-  - NETWORK_HOST=http://192.168.100.1
-```
-
-**Pros**: 
-- ✅ Maintains some security
-- ✅ Allows your network traffic
-- ✅ Blocks unauthorized external access
-
-**Cons**: 
-- ⚠️ May still block some external CDNs
-- ⚠️ Requires network configuration knowledge
-
-### Solution 3: Custom Permissive CSP Policy
-
-**Best for**: Advanced users who want fine-grained control
+**Best for**: Known network configurations
 
 ```bash
-# Permissive policy allowing major CDNs
-environment:
-  - CSP_POLICY={"defaultSrc":["'self'","'unsafe-inline'","'unsafe-eval'","data:","http:","https:"],"styleSrc":["'self'","'unsafe-inline'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"],"scriptSrc":["'self'","'unsafe-inline'","'unsafe-eval'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"],"imgSrc":["'self'","data:","http:","https:"],"connectSrc":["'self'","http:","https:"],"fontSrc":["'self'","data:","http:","https:","cdnjs.cloudflare.com"]}
+# For br0.2 network
+NETWORK_HOST=http://192.168.2.1
 ```
 
-**Pros**: 
-- ✅ Granular control over allowed resources
-- ✅ Allows specific CDNs while blocking others
-- ✅ Maintains reasonable security
+### Solution 3: Custom CSP Policy
+**Best for**: Advanced users needing fine control
 
-**Cons**: 
-- ⚠️ Complex to configure
-- ⚠️ Requires JSON knowledge
-- ⚠️ Hard to troubleshoot
+```bash
+CSP_POLICY={"defaultSrc":["'self'","'unsafe-inline'","data:","http:","https:"],"styleSrc":["'self'","'unsafe-inline'","https:","cdnjs.cloudflare.com"],"scriptSrc":["'self'","'unsafe-inline'","https:","cdn.jsdelivr.net"]}
+```
 
 ## 🌐 Network-Specific Configurations
 

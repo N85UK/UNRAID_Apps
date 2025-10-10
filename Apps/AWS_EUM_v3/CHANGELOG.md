@@ -2,38 +2,39 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
-## [3.0.1] - 2025-01-XX
+## [3.0.1] - 2025-10-10
 
 ### 🔒 Content Security Policy (CSP) Fixes
 
 #### ✨ New Features
-- **Configurable CSP**: Added environment variables for CSP configuration
-- **Custom Bridge Network Support**: Fixed external resource loading on br0.x networks
-- **CSP Troubleshooting Guide**: Comprehensive guide for CSP-related issues
+- **Configurable CSP**: Environment variables for CSP configuration
+- **Custom Bridge Network Support**: Fixed br0.2, br0.100, and custom network compatibility
+- **One-line Fix**: `DISABLE_CSP=true` solves all CSP issues
 
-#### 🛠️ Environment Variables Added
-- `DISABLE_CSP`: Completely disable CSP headers for custom networks
-- `NETWORK_HOST`: Specify network host for CSP whitelist
-- `CSP_POLICY`: Advanced custom CSP policy configuration (JSON)
+#### 🛠️ Environment Variables
+- `DISABLE_CSP`: Disable CSP headers (recommended for custom networks)
+- `NETWORK_HOST`: Network host for CSP whitelist
+- `CSP_POLICY`: Advanced custom CSP policy (JSON)
 
 #### 🐛 Bug Fixes
-- **Fixed Chart.js loading** on custom bridge networks (br0.2, br0.100, etc.)
-- **Fixed Font Awesome icons** blocked by restrictive CSP
-- **Fixed dark mode toggle** when external resources are blocked
-- **Resolved CDN resource blocking** (cdn.jsdelivr.net, cdnjs.cloudflare.com)
+- **Fixed Chart.js loading** on custom bridge networks
+- **Fixed Font Awesome icons** blocked by CSP
+- **Fixed dark mode toggle** when external resources blocked
+- **Resolved CDN blocking** (cdn.jsdelivr.net, cdnjs.cloudflare.com)
 
-#### 📋 Network Configuration Solutions
-- Simple `DISABLE_CSP=true` for quick resolution
-- Network-specific `NETWORK_HOST` configuration
-- Advanced JSON-based `CSP_POLICY` for fine-grained control
+#### 📊 Network Solutions
+| Network Type | Solution | Result |
+|-------------|----------|--------|
+| br0.2/br0.100 | `DISABLE_CSP=true` | ✅ All features work |
+| Custom Bridge | `DISABLE_CSP=true` | ✅ All features work |
+| Default Bridge | No changes needed | ✅ Works by default |
 
 #### 📚 Documentation Updates
-- Added CSP troubleshooting guide (`CSP_TROUBLESHOOTING.md`)
 - Updated README.md with CSP configuration examples
 - Enhanced environment variable documentation
 - Added docker-compose examples for different network types
 
-## [3.0.0] - 2025-01-XX
+## [3.0.0] - 2025-10-10
 
 ### 🚀 Major Release - Complete Rewrite
 

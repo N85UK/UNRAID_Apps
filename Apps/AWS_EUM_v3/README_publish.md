@@ -1,23 +1,41 @@
-# Publishing to GitHub Container Registry (GHCR) - ✅ COMPLETE
+# Publishing AWS EUM v3.0.1 to GitHub Container Registry
 
-## Status: Successfully Published
+## 📦 Current Release: v3.0.1
 
-The AWS EUM Docker image has been successfully built and published to GitHub Container Registry.
-
-### 📦 Published Image
+### Image Information
 - **Registry**: GitHub Container Registry (GHCR)
-- **Image**: `ghcr.io/n85uk/aws-eum:latest`
-- **Status**: ✅ Available and ready for use
-- **Last Build**: 2025-09-23 (successful)
+- **Image**: `ghcr.io/n85uk/aws-eum-v3:3.0.1`
+- **Latest**: `ghcr.io/n85uk/aws-eum-v3:latest`
+- **Status**: ✅ Ready for publishing
+- **Features**: Enhanced UI + CSP fixes for custom bridge networks
 
-### 🔄 Build Process
+### 🔄 Build & Publish Process
 
-The GitHub Actions workflow automatically handles building and publishing:
+**Build the Image:**
+```bash
+# Build with version tags
+docker build -t ghcr.io/n85uk/aws-eum-v3:3.0.1 -t ghcr.io/n85uk/aws-eum-v3:latest .
 
-1. **Trigger**: Push to `main` branch or release creation
-2. **Build**: Node.js dependencies installed, Docker image built
-3. **Publish**: Image pushed to GHCR with authentication
-4. **Verification**: Image available for pulling
+# Or use the build script
+./build.sh
+```
+
+**Publish to GHCR:**
+```bash
+# Login to GitHub Container Registry
+echo $GITHUB_TOKEN | docker login ghcr.io -u N85UK --password-stdin
+
+# Push both tags
+docker push ghcr.io/n85uk/aws-eum-v3:3.0.1
+docker push ghcr.io/n85uk/aws-eum-v3:latest
+```
+
+### 🆕 v3.0.1 Key Features
+- **CSP Configuration**: Environment variables for Content Security Policy
+- **Network Compatibility**: Fixes for br0.2, br0.100, custom bridge networks
+- **One-line Fix**: `DISABLE_CSP=true` resolves all CSP issues
+- **Enhanced UI**: Chart.js analytics, dark mode, modern interface
+- **AWS Integration**: Automatic phone number discovery
 
 ### 📋 Build Configuration
 

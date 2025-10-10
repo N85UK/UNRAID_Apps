@@ -1,15 +1,21 @@
-%name: AWS End User Messaging v3.0 (Enhanced UI)
+%name: AWS End User Messaging v3.0.1 (Enhanced UI + CSP Fixes)
 %slug: AWS_EUM_v3
-%version: 3.0.0
+%version: 3.0.1
 %author: N85UK
 %category: Utilities
-%description: Enhanced AWS SMS web application with Chart.js analytics, dark mode, and modern UI design for sending SMS via AWS Pinpoint SMS/Voice v2.
+%description: Enhanced AWS SMS web application with Chart.js analytics, dark mode, modern UI, and configurable CSP for custom bridge networks.
 
-# AWS End User Messaging v3.0 - Enhanced UI Edition
+# AWS End User Messaging v3.0.1 - Enhanced UI Edition with CSP Fixes
 
-This template deploys the AWS EUM v3.0 Enhanced UI edition with modern interface design, Chart.js integration, and advanced features. The application provides a sophisticated web interface for sending SMS messages using AWS Pinpoint SMS/Voice v2.
+This template deploys the AWS EUM v3.0.1 Enhanced UI edition with modern interface design, Chart.js integration, configurable Content Security Policy, and advanced features. The application provides a sophisticated web interface for sending SMS messages using AWS Pinpoint SMS/Voice v2.
 
 ## ✨ Enhanced Features
+
+### v3.0.1 CSP Fixes
+- **Configurable CSP**: Environment variable control over Content Security Policy
+- **Custom Bridge Network Support**: Fixes for br0.2, br0.100, and other custom networks
+- **External Resource Loading**: Proper loading of Chart.js, Font Awesome, and CDN resources
+- **Network Compatibility**: Works seamlessly across different Docker network configurations
 
 ### UI/UX Enhancements
 - **Modern Design**: Clean, responsive interface with enhanced styling
@@ -40,6 +46,23 @@ This template deploys the AWS EUM v3.0 Enhanced UI edition with modern interface
 - `AUTO_UPDATE_CHECK` (default: true) - Enable automatic update checking
 - `UPDATE_CHECK_INTERVAL` (default: 24) - Update check interval in hours
 - `HISTORY_RETENTION` (default: 100) - Number of messages to retain in history
+
+### Content Security Policy (CSP) Configuration
+- `DISABLE_CSP` (default: false) - Set to 'true' to disable CSP for custom bridge networks
+- `NETWORK_HOST` (default: http://10.0.2.11) - Network host for CSP whitelist
+- `CSP_POLICY` - Advanced: Custom CSP policy as JSON string
+
+### CSP Configuration Examples
+```bash
+# For custom bridge networks (br0.2, br0.100, etc.)
+DISABLE_CSP=true
+
+# For specific network configuration
+NETWORK_HOST=http://192.168.2.1
+
+# Advanced custom policy
+CSP_POLICY={"defaultSrc":["'self'","'unsafe-inline'","'unsafe-eval'","data:","http:","https:"]}
+```
 
 ## 🐳 Docker Deployment
 

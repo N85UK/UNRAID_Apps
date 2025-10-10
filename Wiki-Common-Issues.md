@@ -1,44 +1,52 @@
 # Common Issues & Solutions
 
-**Quick reference guide for frequently encountered problems**
+**Quick reference for AWS EUM v3.0.1 issues**
 
-## 🚨 **Most Common Issues**
+## 🚨 **Top Issues & Fixes**
 
-### 1. AWS EUM Permission Denied Error
-**Problem**: `EACCES: permission denied, open '/app/data/update-info.json'`
-**Frequency**: 90% of AWS EUM installations
-**Quick Fix**:
+### 1. Charts/Dark Mode Not Working (br0.x Networks)
+**Problem**: Charts missing, dark mode broken, icons not showing
+**Cause**: Content Security Policy blocking external resources
+**✅ Solution**: Add environment variable `DISABLE_CSP=true`
+
+**Steps:**
+1. Edit AWS EUM v3 container
+2. Add: `DISABLE_CSP=true`
+3. Apply and restart
+
+### 2. Permission Denied Errors
+**Problem**: `EACCES: permission denied, open '/app/data/...'`
+**✅ Solution**: Fix file permissions
 ```bash
 chown -R 100:users /mnt/user/appdata/aws-eum-v3
 chmod -R 755 /mnt/user/appdata/aws-eum-v3
-docker restart AWS-EUM-v3
+docker restart aws-eum-v3
 ```
 
-### 2. AWS EUM Enhanced UI Not Working
-**Problem**: Network errors, missing charts, broken enhanced features
-**Cause**: Content Security Policy blocking external resources on custom networks
-**Quick Fix Options**:
+### 3. AWS Connection Failed
+**Problem**: No phone numbers showing, AWS errors
+**✅ Solutions**:
+- Verify AWS credentials are correct
+- Check AWS region matches your phone numbers
+- Ensure IAM permissions include SMS operations
 
-**Option A - Comprehensive CSP Disable (Recommended)**:
-```bash
-# Add ALL these environment variables:
-DISABLE_CSP=true
-CSP_DISABLED=true
-NODE_TLS_REJECT_UNAUTHORIZED=0
-CSP_ALLOW_UNSAFE_INLINE=true
-CSP_ALLOW_UNSAFE_EVAL=true
-```
+### 4. Network Compatibility Issues
+**Problem**: App doesn't work on custom bridge networks
+**✅ Solution**: Network configuration
 
-**Option B - Network Change**:
-Change from `Custom: br0.X` to `Bridge` network
+| Network Type | Fix Required |
+|-------------|-------------|
+| Default Bridge | None - works automatically |
+| br0.2/br0.100 | `DISABLE_CSP=true` |
+| Custom Bridge | `DISABLE_CSP=true` |
 
-**Option C - DNS Fix for Custom Networks**:
-```bash
-# Add these for custom bridge networks:
-NODE_OPTIONS="--dns-result-order=ipv4first"
-DNS_SERVERS="8.8.8.8,8.8.4.4"
-RESOLV_CONF_OVERRIDE=true
-```
+### 5. Container Won't Start
+**Problem**: Container fails to start or crashes
+**✅ Troubleshooting**:
+1. Check container logs
+2. Verify sufficient disk space
+3. Ensure port 8280 is available
+4. Restart Docker service if needed
 
 ### 3. ExplorerX Shows Debug Info
 **Problem**: Debug panel instead of file browser

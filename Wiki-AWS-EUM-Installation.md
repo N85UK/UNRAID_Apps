@@ -1,34 +1,73 @@
-# AWS EUM Suite Installation Guide
+# AWS EUM v3.0.1 Installation Guide
 
-**Complete installation guide for AWS End User Messaging applications**
+**Quick installation guide for AWS End User Messaging v3.0.1**
 
-## 🎯 **Choose Your Edition**
+## 🚀 **Quick Install (UNRAID)**
 
-The AWS EUM Suite offers three distinct editions, each designed for different use cases and requirements:
+### 1. Install from Community Applications
+1. Open UNRAID web interface → **Apps** tab
+2. Search for "**AWS EUM v3**"
+3. Click **Install**
 
-| Edition | Best For | Key Features | Complexity |
-|---------|----------|--------------|------------|
-| **v2.0 Stable** | New users, simple setups | Reliable SMS, basic features | ⭐ Simple |
-| **v3.0 Enhanced** | Modern UI needs | Chart.js, dark mode, analytics | ⭐⭐ Moderate |
-| **MariaDB Enterprise** | Teams, compliance | Multi-user, roles, database | ⭐⭐⭐ Advanced |
+### 2. Configure Settings
+**Required:**
+- **AWS Access Key ID**: Your AWS access key
+- **AWS Secret Access Key**: Your AWS secret key  
+- **AWS Region**: Select your region (e.g., eu-west-2)
 
-## 📦 **AWS EUM v2.0 - Stable Edition**
+**Important for Custom Networks:**
+- **Disable CSP Headers**: Set to **"Yes"** if using br0.2, br0.100, or custom bridge networks
+- This fixes charts, dark mode, and icons not loading
 
-### Overview
-The stable, production-ready version with core SMS functionality and proven reliability.
+### 3. Start Container
+1. Click **Apply**
+2. Access at `http://[unraid-ip]:8280`
 
-### Prerequisites
-- **Docker**: Docker and Docker Compose installed on your system
-- **AWS Account**: Active AWS account with Pinpoint SMS permissions
-- **UNRAID**: UNRAID 6.8+ with Docker support
-- **Network**: Internet connectivity for AWS API access
+## 🔧 **Network Compatibility**
 
-### Installation Steps
+| Network Type | CSP Setting | Charts/Dark Mode |
+|-------------|-------------|------------------|
+| Default Bridge | Enabled | ✅ Works |
+| br0.2/br0.100 | **Disabled** | ✅ Fixed |
+| Custom Bridge | **Disabled** | ✅ Fixed |
 
-#### 1. Download Template
+## 🛠️ **Troubleshooting**
+
+**Charts not loading?** → Enable "Disable CSP Headers"  
+**Dark mode broken?** → Enable "Disable CSP Headers"  
+**Icons missing?** → Enable "Disable CSP Headers"
+
+## � **Alternative Installation**
+
+### Docker Compose
+```yaml
+version: '3.8'
+services:
+  aws-eum:
+    image: ghcr.io/n85uk/aws-eum-v3:3.0.1
+    ports:
+      - "8280:80"
+    environment:
+      - AWS_ACCESS_KEY_ID=your_key
+      - AWS_SECRET_ACCESS_KEY=your_secret
+      - AWS_REGION=eu-west-2
+      - DISABLE_CSP=true  # For custom networks
+```
+
+### Docker Run
 ```bash
-# Method 1: Direct template download
-wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg
+docker run -d \\
+  --name aws-eum-v3 \\
+  -p 8280:80 \\
+  -e AWS_ACCESS_KEY_ID=your_key \\
+  -e AWS_SECRET_ACCESS_KEY=your_secret \\
+  -e AWS_REGION=eu-west-2 \\
+  -e DISABLE_CSP=true \\
+  ghcr.io/n85uk/aws-eum-v3:3.0.1
+```
+
+---
+**Need help?** See [Troubleshooting Guide](Wiki-Troubleshooting.md) or [Common Issues](Wiki-Common-Issues.md)
 
 # Method 2: Via Community Applications
 # Search for \"AWS End User Messaging v2.0\" in Apps tab

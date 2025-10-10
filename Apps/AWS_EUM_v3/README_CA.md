@@ -1,28 +1,39 @@
-# AWS End User Messaging - Community Applications
+# AWS End User Messaging v3.0.1 - Community Applications
 
-This package bundles the AWS SMS App as a Community Applications (CA) template for UNRAID.
+Enhanced SMS application with modern UI and configurable CSP for all network types.
 
 ## ✅ Status: Ready for CA Submission
 
-The Docker image has been built and published to GitHub Container Registry:
-- **Image**: `ghcr.io/n85uk/aws-eum:latest`
-- **Build Status**: ✅ Successful
-- **CA Template**: ✅ Configured
+### 📦 Package Information
+- **Version**: 3.0.1
+- **Image**: `ghcr.io/n85uk/aws-eum-v3:3.0.1`
+- **Category**: Utilities
+- **Network Support**: Default bridge, br0.2, br0.100, all custom networks
 
-## 📦 Package Contents
+### 🆕 v3.0.1 Enhancements
+- **CSP Fixes**: Configurable Content Security Policy for custom bridge networks
+- **Network Compatibility**: One-line fix for br0.x networks (`DISABLE_CSP=true`)
+- **Enhanced UI**: Chart.js analytics, dark/light mode toggle
+- **AWS Integration**: Automatic phone number discovery from AWS Pinpoint
+- **Modern Interface**: Material design with smooth animations
 
-- **Docker Image**: Pre-built and published to GHCR
-- **CA Template**: `template.cfg` with proper configuration
-- **Documentation**: `doc.md` with CA metadata headers
-- **Environment Example**: `.env.example` (no secrets included)
-- **Docker Compose**: For manual testing and deployment
-
-## 🔒 Privacy & Security
-
+### 🔒 Security & Privacy
 - ✅ **No AWS credentials** included in repository or image
-- ✅ **Environment variables** properly exposed for user configuration
-- ✅ **Follows CA policies** for secret management
-- ✅ **User provides own AWS credentials** via template
+- ✅ **User-provided credentials** via UNRAID template
+- ✅ **Environment variables** properly configured
+- ✅ **Rate limiting** and input validation included
+- ✅ **Configurable CSP** for security and compatibility
+
+### 🛠️ Installation Configuration
+**Required Environment Variables:**
+- `AWS_ACCESS_KEY_ID` - User's AWS access key
+- `AWS_SECRET_ACCESS_KEY` - User's AWS secret key
+- `AWS_REGION` - AWS region (default: eu-west-2)
+
+**CSP Configuration (for custom networks):**
+- `DISABLE_CSP` - Set to 'true' for br0.2, br0.100, custom bridge networks
+- `NETWORK_HOST` - Network-specific host for CSP whitelist
+- `CSP_POLICY` - Advanced custom CSP policy (JSON)
 
 ## 🚀 Installation (After CA Approval)
 

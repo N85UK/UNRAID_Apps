@@ -1,33 +1,51 @@
 # Troubleshooting Guide
 
-**Common issues and solutions for UNRAID Apps Repository projects**
+**Complete troubleshooting guide for N85UK UNRAID Apps**
 
-## 🚨 **ExplorerX Plugin Issues**
+## � **AWS EUM v3.0.1 Issues**
 
-### Debug Version v2025.10.10.0002 (Current)
-**Status**: Debug version investigating interface rendering issues
+### Charts/Icons/Dark Mode Not Working
+**Most Common Issue**: External resources blocked on custom networks
 
-#### Issue: Shows Debug Information Instead of File Browser
-**Symptoms**: Debug panel displays instead of normal file management interface
-**Status**: **Expected behavior** for current debug version
-**Solution**: This is intentional while investigating interface problems
-- Debug version provides enhanced logging and error information
-- Normal file browser interface will be restored in future updates
-- Use debug information to report issues and help improve the plugin
+**✅ Quick Fix**: Add environment variable `DISABLE_CSP=true`
 
-#### Issue: Plugin Not Visible in Tools Menu
-**Symptoms**: Installation completes but ExplorerX doesn't appear
-**Solutions**:
-1. **Refresh UNRAID WebGUI**: Press Ctrl+F5 to force refresh
-2. **Wait and Check**: Wait 30 seconds, then check Tools menu again
-3. **Restart Web Services**: `ssh` into UNRAID and run:
-   ```bash
-   /etc/rc.d/rc.nginx restart
-   ```
-4. **Verify Installation**: Check if plugin directory exists:
-   ```bash
-   ls -la /usr/local/emhttp/plugins/explorerx
-   ```
+**Detailed Steps**:
+1. Edit AWS EUM v3 container in UNRAID
+2. Go to environment variables section
+3. Add new variable:
+   - **Variable**: `DISABLE_CSP`
+   - **Value**: `true`
+4. Apply changes and restart container
+
+**Alternative Solutions**:
+- Change from custom bridge network to default bridge
+- Set `NETWORK_HOST=http://[your-gateway-ip]` for network-specific fix
+
+### AWS Connection Problems
+**Symptoms**: No phone numbers, connection errors, credential issues
+
+**✅ Solutions**:
+1. **Verify AWS Credentials**: Ensure access key and secret are correct
+2. **Check Region**: AWS region must match where phone numbers are registered
+3. **IAM Permissions**: User needs SMS/Pinpoint permissions
+4. **Test AWS Access**: Use container health check endpoint
+
+### Container Permission Issues
+**Symptoms**: `EACCES: permission denied` errors
+
+**✅ Fix File Permissions**:
+```bash
+chown -R 100:users /mnt/user/appdata/aws-eum-v3
+chmod -R 755 /mnt/user/appdata/aws-eum-v3
+docker restart aws-eum-v3
+```
+
+### Network Compatibility Guide
+| Network Type | CSP Setting | Status |
+|-------------|-------------|--------|
+| Default Bridge | Keep enabled | ✅ Works |
+| br0.2/br0.100 | `DISABLE_CSP=true` | ✅ Fixed |
+| Custom Bridge | `DISABLE_CSP=true` | ✅ Fixed |
 
 #### Issue: Installation Fails
 **Symptoms**: Error during plugin download or installation
