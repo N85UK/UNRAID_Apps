@@ -7,10 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2025.10.10.02.00] - 2025-10-10
+
+### Added
+- ExplorerX Plugin v2025.10.10.02.00
+- Automated release process via GitHub Actions
+- Enhanced plugin documentation
+
+### Changed
+- Updated plugin manifest and packaging
+- Improved installation reliability
+
+### Fixed
+- Package download URL issues
+- MD5 hash validation
+
+## [Unreleased]
+
 ## [2025.10.09.01.00] - 2025-10-09
 
 ### Added
-- ExplorerX Plugin v2025.10.09.01.00
+- ExplorerX Plugin v2025.10.10.02.00
 - Automated release process via GitHub Actions
 - Enhanced plugin documentation
 
@@ -62,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.06.02.00] - 2025-10-06
 
 ### Added
-- ExplorerX Plugin v2025.10.09.01.00 - **SAFE VERSION**
+- ExplorerX Plugin v2025.10.10.02.00 - **SAFE VERSION**
 - Completely safe installation scripts that only touch ExplorerX files
 - Standalone tab interface (not in Tools menu)
 - Simple file browser with directory navigation
