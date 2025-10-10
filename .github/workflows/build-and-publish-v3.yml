@@ -1,4 +1,4 @@
-name: Build and publish AWS EUM v3.0
+name: Build and publish AWS EUM v3.0.3
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable=true
             type=raw,value=3.0,enable=true
-            type=raw,value=3.0.0,enable=true
+            type=raw,value=3.0.3,enable=true
             type=raw,value=v3,enable=true
 
       - name: Build and push Docker image
