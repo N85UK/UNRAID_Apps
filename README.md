@@ -26,8 +26,8 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 3. Browse your files with simple, safe interface
 
 **Latest Features (v2025.10.10.03.00):**
-- � VERIFICATION FIX: Fixed package verification script that was causing installation failures
-- �🔍 PACKAGE VERIFICATION: Detects and validates downloaded packages correctly
+- 🔧 VERIFICATION FIX: Fixed package verification script that was causing installation failures
+- 🔍 PACKAGE VERIFICATION: Detects and validates downloaded packages correctly
 - 🔄 CACHE REFRESH: Forces UNRAID to download latest fixed package (prevents old cached versions)
 - 🚨 CRITICAL FIX: Resolved installation extraction failure that prevented plugin from working
 - ✅ Fixed tar extraction directory (plugins/ → root/) for proper UNRAID path handling
