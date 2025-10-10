@@ -2,6 +2,16 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+## [3.0.3] - 2025-10-10
+
+### 🔧 Logging Improvements
+
+#### Reduced Log Verbosity
+- **Fixed excessive CSP logging** - Removed repetitive "CSP headers disabled" messages
+- **Cleaner console output** - CSP status only logged during startup
+- **Improved debugging experience** - Focused on essential information only
+- **Better production logging** - Reduced noise in container logs
+
 ## [3.0.2] - 2025-10-10
 
 ### 🐛 Critical Bug Fixes

@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const CURRENT_VERSION = '3.0.2';
+const CURRENT_VERSION = '3.0.3';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 
@@ -134,7 +134,6 @@ app.use((req, res, next) => {
                     })
                     .join('; ');
                 res.setHeader('Content-Security-Policy', cspString);
-                console.log(`🔧 Applied custom CSP: ${cspString.substring(0, 100)}...`);
             } catch (error) {
                 console.warn('⚠️  Failed to parse custom CSP, using permissive policy');
                 res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: http: https: cdnjs.cloudflare.com cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' http: https: cdnjs.cloudflare.com cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: cdnjs.cloudflare.com cdn.jsdelivr.net;");
@@ -144,8 +143,7 @@ app.use((req, res, next) => {
             res.setHeader('Content-Security-Policy', `default-src 'self' ${NETWORK_HOST}; style-src 'self' 'unsafe-inline' ${NETWORK_HOST}; script-src 'self' 'unsafe-inline' ${NETWORK_HOST};`);
         }
     } else {
-        console.log('🔓 CSP headers disabled via environment variable');
-        // Remove any CSP headers if disabled
+        // Remove any CSP headers if disabled (only log once on startup)
         res.removeHeader('Content-Security-Policy');
     }
     
