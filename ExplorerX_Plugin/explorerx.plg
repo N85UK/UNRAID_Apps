@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.10.03.00">
-<!ENTITY md5       "136a795e8fd7ad5f706b9c2d2614a4fd">
+<!ENTITY version   "2025.10.10.04.00">
+<!ENTITY md5       "788d6b371e969786a31cec7c6f710a5a">
 <!ENTITY launch    "explorerx">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,6 +16,15 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.10.04.00 (2025-10-10)
+- 404 FIX: Fixed UNRAID webGUI navigation and page routing issues
+- Changed Menu location from "61" to "OtherSettings" for proper UNRAID integration
+- Updated icon reference to use icon-explorerx.png for better display
+- Removed macOS metadata files (._* files) from package that were causing issues
+- Cleaned package structure for better UNRAID compatibility
+- Plugin should now be accessible via UNRAID webGUI Settings menu
+- Updated to version 2025.10.10.04.00
+
 ###v2025.10.10.03.00 (2025-10-10)
 - VERIFICATION FIX: Fixed package verification script using literal values instead of XML entities
 - Corrected verification logic to properly detect and validate downloaded packages
@@ -242,10 +251,10 @@ echo ""
 <INLINE>
 <![CDATA[
 echo "🔍 PACKAGE VERIFICATION:"
-echo "Expected: explorerx-2025.10.10.03.00.txz"
+echo "Expected: explorerx-2025.10.10.04.00.txz"
 echo "Checking downloaded package..."
 
-EXPECTED_FILE="/boot/config/plugins/explorerx/explorerx-2025.10.10.03.00.txz"
+EXPECTED_FILE="/boot/config/plugins/explorerx/explorerx-2025.10.10.04.00.txz"
 PLUGIN_DIR="/boot/config/plugins/explorerx"
 
 # Check what was actually downloaded
@@ -255,11 +264,11 @@ if [ -d "$PLUGIN_DIR" ]; then
   
   # Check if correct version was downloaded
   if [ -f "$EXPECTED_FILE" ]; then
-    echo "✅ Correct package found: explorerx-2025.10.10.03.00.txz"
+    echo "✅ Correct package found: explorerx-2025.10.10.04.00.txz"
     
     # Verify MD5 of correct package
     ACTUAL_MD5=$(md5sum "$EXPECTED_FILE" | cut -d' ' -f1)
-    EXPECTED_MD5="136a795e8fd7ad5f706b9c2d2614a4fd"
+    EXPECTED_MD5="788d6b371e969786a31cec7c6f710a5a"
     echo "Package MD5: $ACTUAL_MD5"
     echo "Expected MD5: $EXPECTED_MD5"
     
@@ -270,7 +279,7 @@ if [ -d "$PLUGIN_DIR" ]; then
       echo "⚠️ Proceeding anyway as package was downloaded successfully"
     fi
   else
-    echo "❌ Expected package not found: explorerx-2025.10.10.03.00.txz"
+    echo "❌ Expected package not found: explorerx-2025.10.10.04.00.txz"
     
     # Find any explorerx package files
     OLD_FILES=$(find "$PLUGIN_DIR" -name "explorerx-*.txz" -type f)

@@ -1,9 +1,21 @@
 {
-  "version": "2025.10.10.03.00",
+  "version": "2025.10.10.04.00",
   "date": "2025-10-10",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.03.00-x86_64-1.txz",
-  "md5": "136a795e8fd7ad5f706b9c2d2614a4fd",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.04.00-x86_64-1.txz",
+  "md5": "788d6b371e969786a31cec7c6f710a5a",
   "changelog": [
+    {
+      "version": "2025.10.10.04.00",
+      "date": "2025-10-10", 
+      "changes": [
+        "404 FIX: Fixed UNRAID webGUI navigation and page routing issues",
+        "Changed Menu location from '61' to 'OtherSettings' for proper UNRAID integration",
+        "Updated icon reference to use icon-explorerx.png for better display",
+        "Removed macOS metadata files causing installation issues",
+        "Cleaned package structure for better UNRAID compatibility",
+        "Plugin should now be accessible via Settings menu"
+      ]
+    },
     {
       "version": "2025.10.10.03.00",
       "date": "2025-10-10", 
