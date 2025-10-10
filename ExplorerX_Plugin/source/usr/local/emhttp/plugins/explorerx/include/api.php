@@ -1,9 +1,9 @@
 <?php
 /*
- * ExplorerX API - Simple File Browser (Emergency Recovery Version)
+ * ExplorerX API - Simple File Browser with Enhanced Debugging
  */
 
-// Basic error handling
+// Enhanced error handling for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -15,22 +15,35 @@ ob_start();
 try {
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-cache, must-revalidate');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type');
 } catch (Exception $e) {
     // Headers already sent, continue anyway
 }
 
-// Simple error response function
-function safeError($message) {
+// Enhanced error response function
+function safeError($message, $details = null) {
     ob_clean();
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $message, 'recovery' => true]);
+    http_response_code(200); // Return 200 to prevent browser error handling
+    $response = [
+        'success' => false, 
+        'error' => $message, 
+        'debug' => $details,
+        'timestamp' => date('Y-m-d H:i:s'),
+        'api_version' => '2025.10.10.0002'
+    ];
+    echo json_encode($response, JSON_PRETTY_PRINT);
     exit;
 }
 
-// Basic request handling
+// Enhanced request handling with debugging
 try {
     $action = $_GET['action'] ?? 'list';
     $path = $_GET['path'] ?? '/mnt';
+    
+    // Debug logging
+    error_log("ExplorerX API: action=$action, path=$path");
     
     // Very basic path safety
     if (!$path || $path === '') {
@@ -41,13 +54,13 @@ try {
     if ($action === 'list') {
         listDirectory($path);
     } else {
-        safeError('Only directory listing is available in recovery mode');
+        safeError('Only directory listing is available', ['action' => $action]);
     }
     
 } catch (Exception $e) {
-    safeError('Request processing error: ' . $e->getMessage());
+    safeError('Request processing error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
 } catch (Error $e) {
-    safeError('System error: ' . $e->getMessage());
+    safeError('System error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
 }
 
 function listDirectory($path) {

@@ -1,9 +1,21 @@
 {
-  "version": "2025.10.10.0001",
+  "version": "2025.10.10.0002",
   "date": "2025-10-10",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.0001-x86_64-1.txz",
-  "md5": "d359e500c01daa8d913011e78e3cd6ca",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.0002-x86_64-1.txz",
+  "md5": "e0ec007033d295b3ac135bcd3bff4ed5",
   "changelog": [
+    {
+      "version": "2025.10.10.0002",
+      "date": "2025-10-10", 
+      "changes": [
+        "API DEBUG: Enhanced API error handling and debugging for interface rendering issues",
+        "CACHE FORCE: Force refresh to eliminate any cached metadata files",
+        "ENHANCED LOGGING: Better PHP error reporting and JSON response debugging",
+        "IMPROVED HEADERS: Added CORS headers and better content-type handling",
+        "ERROR DETAILS: API now returns detailed error information for troubleshooting",
+        "This version should help identify why the file browser shows HTML instead of files"
+      ]
+    },
     {
       "version": "2025.10.10.0001",
       "date": "2025-10-10", 
