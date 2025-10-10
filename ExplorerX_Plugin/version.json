@@ -1,9 +1,20 @@
 {
-  "version": "2025.10.10.04.00",
+  "version": "2025.10.10.05.00",
   "date": "2025-10-10",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.04.00-x86_64-1.txz",
-  "md5": "788d6b371e969786a31cec7c6f710a5a",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.05.00-x86_64-1.txz",
+  "md5": "10b3a9bd128a91c9a000f260e0848e14",
   "changelog": [
+    {
+      "version": "2025.10.10.05.00",
+      "date": "2025-10-10", 
+      "changes": [
+        "EXTRACTION FIX: Fixed extraction script using literal version instead of XML entity",
+        "Corrected tar extraction command that was failing due to &version; not expanding",
+        "Fixed 'Plugin directory not found after extraction' error during installation",
+        "Package extraction now works correctly with proper file path resolution",
+        "Installation should now complete successfully without extraction failures"
+      ]
+    },
     {
       "version": "2025.10.10.04.00",
       "date": "2025-10-10", 

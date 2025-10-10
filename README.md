@@ -8,7 +8,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 **Simple, native file manager for UNRAID with clean interface and safe installation**
 
 - **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
-- **Status**: ✅ **Safe & Ready - v2025.10.10.04.00**
+- **Status**: ✅ **Safe & Ready - v2025.10.10.05.00**
 - **Installation**: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
 
 **Key Features:**
@@ -25,17 +25,17 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 2. Navigate to ExplorerX tab (standalone)
 3. Browse your files with simple, safe interface
 
-**Latest Features (v2025.10.10.04.00):**
-- � 404 FIX: Fixed UNRAID webGUI navigation and page routing issues
+**Latest Features (v2025.10.10.05.00):**
+- 📦 EXTRACTION FIX: Fixed extraction script that was causing "Plugin directory not found" errors
+- 🚫 404 FIX: Fixed UNRAID webGUI navigation and page routing issues
 - ⚙️ MENU INTEGRATION: Changed to "OtherSettings" for proper UNRAID integration
 - 🇿 CLEAN PACKAGE: Removed macOS metadata files causing installation issues
-- �🔧 VERIFICATION FIX: Fixed package verification script that was causing installation failures
+- 🔧 VERIFICATION FIX: Fixed package verification script that was causing installation failures
 - 🔍 PACKAGE VERIFICATION: Detects and validates downloaded packages correctly
 - 🔄 CACHE REFRESH: Forces UNRAID to download latest fixed package (prevents old cached versions)
 - 🚨 CRITICAL FIX: Resolved installation extraction failure that prevented plugin from working
 - ✅ Fixed tar extraction directory (plugins/ → root/) for proper UNRAID path handling
-- ✅ Plugin should now be accessible via UNRAID Settings menu
-- ✅ Completely safe installation (won't break plugin system)
+- ✅ Installation should now complete successfully without any errors
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**
