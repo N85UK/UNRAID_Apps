@@ -2,7 +2,7 @@
 
 **A simple, safe file manager plugin for UNRAID 7.2.0+ with clean interface and secure installation.**
 
-## 🔧 **Latest Update (v2025.10.10.02.00)**
+## 🔧 **Latest Update (v2025.10.10.03.00)**
 
 ✅ **CRITICAL FIX**: Resolved blank page issue when navigating to `/ExplorerX`
 
@@ -113,7 +113,7 @@ ExplorerX was completely rewritten to be 100% safe after previous versions cause
 
 ## 📜 Version History
 
-### v2025.10.10.02.00 (Current - Safe Version)
+### v2025.10.10.03.00 (Current - Safe Version)
 
 - ✅ **Completely safe installation** - won't break plugin system
 - ✅ Simple file browser with directory navigation
@@ -127,4 +127,4 @@ ExplorerX was completely rewritten to be 100% safe after previous versions cause
 
 **⚠️ Safety Note**: This version was completely rewritten to be 100% safe after previous versions caused plugin system issues. The new version only touches ExplorerX files and will never interfere with other plugins or the overall UNRAID system.
 
-**✅ Safe to Install**: ExplorerX v2025.10.10.02.00 is guaranteed safe and will not break your plugin system.
+**✅ Safe to Install**: ExplorerX v2025.10.10.03.00 is guaranteed safe and will not break your plugin system.
