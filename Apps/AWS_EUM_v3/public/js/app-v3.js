@@ -16,7 +16,12 @@ const AppState = {
 
 // Utility functions
 const Utils = {
-    formatCurrency: (amount) => `$${amount.toFixed(4)}`,
+    formatCurrency: (amount) => {
+        if (amount === undefined || amount === null || isNaN(amount)) {
+            return '$0.0000';
+        }
+        return `$${Number(amount).toFixed(4)}`;
+    },
     formatNumber: (num) => num.toLocaleString(),
     debounce: (func, delay) => {
         let timeoutId;

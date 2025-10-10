@@ -2,6 +2,32 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+## [3.0.2] - 2025-10-10
+
+### 🐛 Critical Bug Fixes
+
+#### API Route Issues Fixed
+- **Fixed 404 errors** for `/api/history` and `/api/send-sms` endpoints
+- **Added API aliases** for client-side compatibility
+- **Resolved JavaScript errors** in message cost calculation
+- **Fixed currency formatting** to handle undefined values gracefully
+
+#### HTTP Headers Issues Fixed
+- **Disabled problematic HTTP headers** for HTTP-only deployments
+- **Removed Cross-Origin-Opener-Policy** warnings
+- **Disabled Origin-Agent-Cluster** header conflicts
+- **Improved helmet configuration** for local network deployment
+
+#### JavaScript Fixes
+- **Fixed formatCurrency function** to handle undefined amounts
+- **Enhanced error handling** in client-side API calls
+- **Improved message info calculation** fallback logic
+
+#### Network Compatibility
+- **Better HTTP support** for local deployments
+- **Reduced browser console warnings** for 10.0.2.11 origins
+- **Optimized for UNRAID custom networks**
+
 ## [3.0.1] - 2025-10-10
 
 ### 🔒 Content Security Policy (CSP) Fixes

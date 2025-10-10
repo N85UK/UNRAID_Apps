@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const CURRENT_VERSION = '3.0.1';
+const CURRENT_VERSION = '3.0.2';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 
@@ -103,7 +103,10 @@ if (DISABLE_CSP) {
 app.use(helmet({
     contentSecurityPolicy: cspConfig,
     hsts: false, // Disable HTTPS strict transport security
-    forceHTTPSRedirect: false
+    forceHTTPSRedirect: false,
+    crossOriginOpenerPolicy: false, // Disable COOP header for HTTP
+    crossOriginResourcePolicy: false, // Disable CORP header
+    originAgentCluster: false, // Disable Origin-Agent-Cluster header
 }));
 
 // Force HTTP headers (disable any HTTPS redirects)
@@ -708,7 +711,80 @@ app.post('/send-sms', async (req, res) => {
     }
 });
 
+// API alias for send-sms (for client compatibility)
+app.post('/api/send-sms', async (req, res) => {
+    try {
+        // Rate limiting
+        await rateLimiter.consume(req.ip);
+
+        const { originator, phoneNumber, message } = req.body;
+
+        if (!originator || !phoneNumber || !message) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        if (!smsClient) {
+            return res.status(500).json({ error: 'AWS not configured. Please check your AWS credentials.' });
+        }
+
+        const originators = await getOriginators();
+        const originationIdentity = originators[originator];
+
+        if (!originationIdentity) {
+            return res.status(400).json({ error: 'Invalid originator selected' });
+        }
+
+        // Calculate message info
+        const messageInfo = calculateMessageInfo(message);
+
+        const command = new SendTextMessageCommand({
+            DestinationPhoneNumber: phoneNumber,
+            OriginationIdentity: originationIdentity,
+            MessageBody: message,
+            MessageType: 'TRANSACTIONAL'
+        });
+
+        const result = await smsClient.send(command);
+
+        // Save to history
+        saveMessage({
+            timestamp: new Date().toISOString(),
+            originator,
+            phoneNumber,
+            message,
+            messageId: result.MessageId,
+            messageInfo: messageInfo
+        });
+
+        res.json({
+            success: true,
+            messageId: result.MessageId,
+            messageInfo: messageInfo
+        });
+
+    } catch (error) {
+        if (error.remainingHits !== undefined) {
+            // Rate limit error
+            return res.status(429).json({
+                error: 'Rate limit exceeded. Please try again later.',
+                retryAfter: Math.round(error.msBeforeNext / 1000)
+            });
+        }
+
+        console.error('Error sending SMS:', error);
+        res.status(500).json({
+            error: error.message || 'Failed to send SMS'
+        });
+    }
+});
+
 app.get('/history', (req, res) => {
+    const history = getMessageHistory();
+    res.json(history);
+});
+
+// API alias for history (for client compatibility)
+app.get('/api/history', (req, res) => {
     const history = getMessageHistory();
     res.json(history);
 });
