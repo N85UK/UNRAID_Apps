@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.09.02.00">
+<!ENTITY version   "2025.10.10.01.00">
 <!ENTITY md5       "136a795e8fd7ad5f706b9c2d2614a4fd">
 <!ENTITY launch    "explorerx">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
-<!ENTITY packageURL "&gitURL;/raw/main/ExplorerX_Plugin/packages/explorerx-&version;-x86_64-1.txz">
+<!ENTITY packageURL "&gitURL;/raw/main/ExplorerX_Plugin/packages/explorerx-&version;-x86_64-1.txz?cache=2025101001">
 <!ENTITY versionURL "&gitURL;/raw/main/ExplorerX_Plugin/version.json">
 <!ENTITY support   "&gitURL;/issues">
 <!ENTITY min       "7.2.0-rc.1">
@@ -16,6 +16,13 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.10.01.00 (2025-10-10)
+- CACHE REFRESH: Force UNRAID to download latest fixed package
+- Added cache busting mechanism to prevent old package downloads
+- Same fixes as v2025.10.09.02.00 but with forced cache refresh
+- Ensures installation extraction fix is properly applied
+- Updated to version 2025.10.10.01.00
+
 ###v2025.10.09.02.00 (2025-10-09)
 - CRITICAL FIX: Fixed package extraction failure during installation
 - Corrected tar extraction directory from plugins/ to root (/) for proper path handling
@@ -163,6 +170,20 @@ fi
 # SAFE cleanup - ONLY remove our own files
 echo ""
 echo "🛡️ SAFE CLEANUP (ExplorerX only):"
+
+# FORCE REMOVE ALL cached ExplorerX packages to prevent version conflicts
+echo "🧹 FORCE CACHE CLEANUP: Removing all cached ExplorerX packages..."
+if [ -d /boot/config/plugins/explorerx ]; then
+  echo "Cleaning ExplorerX downloads directory..."
+  rm -rf /boot/config/plugins/explorerx/*.txz 2>/dev/null || true
+  rm -rf /boot/config/plugins/explorerx/explorerx-*.txz 2>/dev/null || true
+  find /boot/config/plugins/explorerx -name "*.txz*" -delete 2>/dev/null || true
+  echo "✅ All cached packages removed - will force fresh download"
+fi
+
+# Also clean any temporary cache locations
+rm -rf /tmp/explorerx-*.txz 2>/dev/null || true
+rm -rf /var/cache/*explorerx* 2>/dev/null || true
 
 # Remove ONLY macOS metadata files related to ExplorerX
 if [ -f /usr/local/emhttp/plugins/._explorerx ]; then
