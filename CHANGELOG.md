@@ -3,15 +3,36 @@
 All notable changes to the UNRAID Apps project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to the new YYYY.MM.DD.#### version format.
 
 ## [Unreleased]
+
+### In Progress
+- GitHub Wiki creation and population with comprehensive documentation
+- Complete documentation audit and modernization across all projects
+
+## [2025.10.10.0002] - 2025-10-10
+
+### Added
+- ExplorerX Plugin v2025.10.10.0002 DEBUG version with enhanced API debugging
+- Comprehensive debug logging to identify interface rendering issues
+- Enhanced error reporting and API response logging
+- Browser console debugging information for troubleshooting
+
+### Changed
+- Deployed debug version to resolve HTML code display instead of file browser interface
+- Enhanced API endpoints with detailed error reporting
+- Improved debugging capabilities for interface issues
+
+### Fixed
+- Investigating root cause of interface rendering problems
+- Enhanced debugging to identify why file browser shows HTML instead of interface
 
 ## [2025.10.10.0001] - 2025-10-10
 
 ### Added
 - ExplorerX Plugin v2025.10.10.0001 with new YYYY.MM.DD.#### version format
-- SUCCESS CONFIRMATION: Plugin now working correctly via Tools → ExplorerX
+- SUCCESS CONFIRMATION: Plugin working correctly via Tools → ExplorerX
 - Working file browser interface with directory navigation
 - Functional API endpoints for file operations
 
@@ -21,143 +42,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated all version references to new format
 
 ### Fixed
-- HTML rendering issue (plugin now renders interface instead of showing code)
+- HTML rendering issue resolved (plugin renders interface correctly)
 - Tools menu integration working correctly
 - All installation, extraction, and verification issues resolved
-
-## [2025.10.10.06.00] - 2025-10-10
-
-### Added
-- ExplorerX Plugin v2025.10.10.06.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
-
-### Fixed
-- Package download URL issues
-- MD5 hash validation
-
-## [Unreleased]
-
-## [2025.10.10.05.00] - 2025-10-10
-
-### Added
-- ExplorerX Plugin v2025.10.10.06.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
-
-### Fixed
-- Package download URL issues
-- MD5 hash validation
-
-## [Unreleased]
-
-## [2025.10.10.0001] - 2025-10-10
-
-### Added
-- ExplorerX Plugin v2025.10.10.0001 (new YYYY.MM.DD.#### version format)
-- SUCCESS CONFIRMATION: Plugin now working correctly via Tools → ExplorerX
-- File manager interface fully functional with directory navigation
-- API endpoints responding correctly for file operations
-
-### Changed
-- VERSION FORMAT: Changed from YYYY.MM.DD.XX.XX to YYYY.MM.DD.#### format
-- Updated all documentation to reflect new version format
-- Confirmed working status and access method
-
-### Fixed
-- All previous installation, extraction, verification, and menu issues resolved
-- Plugin now accessible through standard UNRAID Tools menu
-- File manager interface loading and functional
-
-## [2025.10.10.04.00] - 2025-10-10
-
-### Added
-- ExplorerX Plugin v2025.10.10.06.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
-
-### Fixed
-- Package download URL issues
-- MD5 hash validation
-
-## [Unreleased]
-
-## [2025.10.10.03.00] - 2025-10-10
-
-### Added
-- ExplorerX Plugin v2025.10.10.06.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
-
-### Fixed
-- Package download URL issues
-- MD5 hash validation
-
-## [Unreleased]
-
-## [2025.10.10.02.00] - 2025-10-10
-
-### Added
-- ExplorerX Plugin v2025.10.10.06.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
-
-### Fixed
-- Package download URL issues
-- MD5 hash validation
-
-## [Unreleased]
-
-## [2025.10.09.01.00] - 2025-10-09
-
-### Added
-- ExplorerX Plugin v2025.10.10.06.00
-- Automated release process via GitHub Actions
-- Enhanced plugin documentation
-
-### Changed
-- Updated plugin manifest and packaging
-- Improved installation reliability
-
-### Fixed
-- Package download URL issues
-- MD5 hash validation
-
-## [Unreleased]
-
-### Fixed
-- **ExplorerX Plugin v2025.10.10.06.00**: VERIFICATION FIX - Fixed package verification script XML entity issue
-- **ExplorerX Plugin**: Corrected verification logic that was causing "Failed to download correct package" errors
-- **ExplorerX Plugin**: Removed problematic wget re-download attempts in verification script
-- **ExplorerX Plugin**: Simplified verification to check package exists and validate MD5 hash
-- **ExplorerX Plugin**: CRITICAL FIX - Resolved blank page issue when navigating to /ExplorerX
-- **ExplorerX Plugin**: Fixed launch URL mismatch between "ExplorerX" and "explorerx.page" filename  
-- **ExplorerX Plugin**: Fixed invalid page header formatting preventing UNRAID recognition
-- **ExplorerX Plugin**: Fixed package compression format (xz instead of gzip for .txz files)
-- **AWS EUM Docker Builds**: Fixed GitHub Actions workflow failures
-- Resolved npm ci dependency conflicts after node_modules cleanup
-- Updated test workflows to use npm install instead of npm ci
-- Fixed Alpine Linux package manager compatibility in Dockerfiles
 
 ## [2025.10.09] - 2025-10-09
 
@@ -187,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2025.10.06.02.00] - 2025-10-06
 
 ### Added
-- ExplorerX Plugin v2025.10.10.06.00 - **SAFE VERSION**
+- ExplorerX Plugin v2025.10.06.02.00 - **SAFE VERSION**
 - Completely safe installation scripts that only touch ExplorerX files
 - Standalone tab interface (not in Tools menu)
 - Simple file browser with directory navigation
@@ -234,12 +121,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release Notes
 
-### Latest Improvements (2025.10.09)
-- ✅ **All GitHub Actions workflows now building successfully**
-- ✅ **Docker images publishing to GitHub Container Registry**
-- ✅ **Clean dependency management with npm install**
-- ✅ **Alpine Linux compatibility in all Dockerfiles**
-- ✅ **Optimized build contexts with .dockerignore files**
+### Latest Improvements (2025.10.10.0002)
+- 🔧 **Debug Version Active**: ExplorerX v2025.10.10.0002 deployed with enhanced debugging
+- 🔍 **Interface Investigation**: Debugging HTML code display instead of file browser
+- 📊 **Enhanced Logging**: Comprehensive API and error logging for troubleshooting
+- ✅ **GitHub Actions**: All AWS EUM workflows building successfully
+- 🐳 **Docker Images**: All versions publishing to GitHub Container Registry
+- 🧹 **Clean Dependencies**: Optimized dependency management across all projects
 
 ### Docker Images Available
 - **AWS EUM v2.0**: `ghcr.io/n85uk/aws-eum:latest`
@@ -249,6 +137,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Installation Requirements
 - **ExplorerX Plugin**: UNRAID 7.2.0-rc.1+ (native, no Docker)
 - **AWS EUM Applications**: Docker support required
+
+### Current Status (October 2025)
+- **ExplorerX Plugin**: Debug version v2025.10.10.0002 investigating interface issues
+- **AWS EUM Suite**: All versions production ready with automated CI/CD
+- **UNRAID API Bounty**: Complete implementation ready for integration
+- **Documentation**: Comprehensive modernization in progress
 
 ### Support
 For issues, feature requests, or contributions:

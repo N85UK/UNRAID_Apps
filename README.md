@@ -4,11 +4,11 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 
 ## 🚀 **Available Projects**
 
-### 📁 **ExplorerX Plugin** (Safe & Stable)
+### 📁 **ExplorerX Plugin** (Debug Version Active)
 **Simple, native file manager for UNRAID with clean interface and safe installation**
 
 - **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
-- **Status**: ✅ **Safe & Ready - v2025.10.10.0002 (DEBUG)**
+- **Status**: 🔧 **Debug v2025.10.10.0002** - Investigating interface rendering issues
 - **Installation**: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
 
 **Key Features:**
@@ -18,25 +18,20 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 - 🔒 Safe installation that won't break other plugins
 - 📂 Access to all UNRAID shares and drives
 - 🛡️ **Enhanced Security**: Safe permission handling, no global modifications
-- 🎯 **Standalone Tab**: Clean interface not buried in Tools menu
+- 🎯 **Tools Menu Access**: Available via Tools → ExplorerX
+
+**Current Debug Status (v2025.10.10.0002):**
+- 🔧 **Debug Version Active**: Enhanced logging to resolve interface issues
+- � **Investigation**: Resolving HTML code display instead of file browser
+- � **Enhanced Debugging**: Comprehensive API and error logging
+- ✅ **Safe Installation**: Plugin installs correctly and is accessible
+- 📝 **Debug Information**: Provides detailed troubleshooting data
+- �️ **Access Method**: Via Tools → ExplorerX (may show debug info)
 
 **Quick Setup:**
 1. Install plugin via URL above
-2. Navigate to ExplorerX tab (standalone)
-3. Browse your files with simple, safe interface
-
-**Latest Features (v2025.10.10.0001):**
-- ✅ SUCCESS CONFIRMED: Plugin now working correctly via Tools → ExplorerX
-- 📅 VERSION FORMAT: Changed to YYYY.MM.DD.#### format for better organization
-- 📋 File manager interface loading and fully functional
-- 🔄 Directory navigation, refresh, and parent/home controls working
-- 🔌 API endpoints responding correctly for file operations
-- 📝 MENU FIX: Located in Tools menu for standard UNRAID navigation
-- 🧤 CLEAN PACKAGE: Completely removed all macOS metadata files from package
--  EXTRACTION FIX: Fixed extraction script that was causing installation errors
-- 🔧 VERIFICATION FIX: Fixed package verification for reliable installation
-- ✅ Installation completes successfully without any errors
-- ✅ Plugin accessible through standard UNRAID Tools menu
+2. Navigate to Tools → ExplorerX
+3. Debug information will help identify interface issues
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**
