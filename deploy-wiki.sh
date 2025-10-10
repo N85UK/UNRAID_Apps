@@ -10,7 +10,7 @@ echo "🚀 GitHub Wiki Automation Starting..."
 # Configuration
 REPO_OWNER="N85UK"
 REPO_NAME="UNRAID_Apps"
-WIKI_REPO="git@github.com:${REPO_OWNER}/${REPO_NAME}.wiki.git"
+WIKI_REPO="https://github.com/${REPO_OWNER}/${REPO_NAME}.wiki.git"
 WIKI_DIR="/tmp/unraid-apps-wiki"
 CONTENT_DIR="/Users/paul.mccann/UNRAID_Apps"
 
@@ -78,11 +78,38 @@ setup_wiki_repo() {
     if [[ -d "$WIKI_DIR" ]]; then
         log "Wiki directory exists, updating..."
         cd "$WIKI_DIR"
-        git pull origin master
+        git pull origin master 2>/dev/null || git pull origin main 2>/dev/null || true
     else
-        log "Cloning Wiki repository..."
-        git clone "$WIKI_REPO" "$WIKI_DIR"
-        cd "$WIKI_DIR"
+        log "Attempting to clone Wiki repository..."
+        if git clone "$WIKI_REPO" "$WIKI_DIR" 2>/dev/null; then
+            cd "$WIKI_DIR"
+            success "Wiki repository cloned"
+        else
+            warning "Wiki repository doesn't exist yet, creating new one..."
+            mkdir -p "$WIKI_DIR"
+            cd "$WIKI_DIR"
+            git init
+            git remote add origin "$WIKI_REPO"
+            
+            # Create initial commit
+            echo "# UNRAID Apps Wiki" > Home.md
+            echo "" >> Home.md
+            echo "This Wiki is being initialized..." >> Home.md
+            git add Home.md
+            git config user.name "Wiki Automation" 2>/dev/null || true
+            git config user.email "automation@git.n85.uk" 2>/dev/null || true
+            git commit -m "Initial Wiki setup"
+            
+            # Try to push - this will create the Wiki
+            if git push -u origin master 2>/dev/null || git push -u origin main 2>/dev/null; then
+                success "Wiki repository created"
+            else
+                error "Failed to create Wiki repository. Please create the Wiki manually first by going to:"
+                echo "  https://github.com/${REPO_OWNER}/${REPO_NAME}/wiki"
+                echo "  and creating the first page, then run this script again."
+                exit 1
+            fi
+        fi
     fi
     
     success "Wiki repository ready"

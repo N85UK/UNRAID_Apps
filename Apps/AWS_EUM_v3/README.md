@@ -152,6 +152,25 @@ docker run -d \
 | `HISTORY_RETENTION` | `100` | Number of messages to keep |
 | `ORIGINATORS` | - | Manual originators (optional) |
 | `ENABLE_DEBUG` | `false` | Enable debug logging |
+| **CSP Configuration** | | **Content Security Policy Settings** |
+| `DISABLE_CSP` | `false` | Disable CSP headers (allows external resources) |
+| `NETWORK_HOST` | `http://10.0.2.11` | Network host for CSP whitelist |
+| `CSP_POLICY` | - | Custom CSP policy as JSON (advanced) |
+
+#### CSP Configuration Examples
+
+For **custom bridge networks** (e.g., br0.2) where external CDNs are blocked:
+
+```bash
+# Simple solution - disable CSP completely
+DISABLE_CSP=true
+
+# Network-specific solution - whitelist your network
+NETWORK_HOST=http://192.168.2.1
+
+# Advanced solution - custom permissive CSP policy
+CSP_POLICY={"defaultSrc":["'self'","'unsafe-inline'","'unsafe-eval'","data:","http:","https:"],"styleSrc":["'self'","'unsafe-inline'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"],"scriptSrc":["'self'","'unsafe-inline'","'unsafe-eval'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"]}
+```
 
 ### AWS Permissions
 

@@ -21,6 +21,12 @@ services:
       - HISTORY_RETENTION=${HISTORY_RETENTION:-100}
       - ENABLE_DEBUG=${ENABLE_DEBUG:-false}
       
+      # Content Security Policy (CSP) Configuration
+      # Set DISABLE_CSP=true for custom bridge networks (e.g., br0.2) to allow external resources
+      - DISABLE_CSP=${DISABLE_CSP:-false}
+      - NETWORK_HOST=${NETWORK_HOST:-http://10.0.2.11}
+      - CSP_POLICY=${CSP_POLICY:-}
+      
       # Optional Manual Originators
       - ORIGINATORS=${ORIGINATORS:-}
     

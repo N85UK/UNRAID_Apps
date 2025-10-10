@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const CURRENT_VERSION = '3.0.0';
+const CURRENT_VERSION = '3.0.1';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 
@@ -49,18 +49,59 @@ let cacheExpiry = 0;
 // Rate limiting
 const HISTORY_RETENTION = parseInt(process.env.HISTORY_RETENTION) || 100;
 
-// Security middleware
-app.use(helmet({
-    contentSecurityPolicy: {
+// CSP Configuration with environment variable support
+const DISABLE_CSP = process.env.DISABLE_CSP === 'true';
+const CSP_POLICY = process.env.CSP_POLICY;
+const NETWORK_HOST = process.env.NETWORK_HOST || 'http://10.0.2.11';
+
+console.log(`🔒 CSP Configuration:`);
+console.log(`   - DISABLE_CSP: ${DISABLE_CSP}`);
+console.log(`   - CSP_POLICY: ${CSP_POLICY || 'default'}`);
+console.log(`   - NETWORK_HOST: ${NETWORK_HOST}`);
+
+// Build CSP directives based on environment
+let cspConfig;
+if (DISABLE_CSP) {
+    console.log('🔓 CSP completely disabled via environment variable');
+    cspConfig = false;
+} else if (CSP_POLICY) {
+    console.log('🔧 Using custom CSP policy from environment variable');
+    // Parse custom CSP policy from environment
+    try {
+        cspConfig = {
+            directives: JSON.parse(CSP_POLICY)
+        };
+    } catch (error) {
+        console.warn('⚠️  Invalid CSP_POLICY JSON, falling back to permissive policy');
+        cspConfig = {
+            directives: {
+                defaultSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "data:", "http:", "https:"],
+                styleSrc: ["'self'", "'unsafe-inline'", "http:", "https:", "cdnjs.cloudflare.com", "cdn.jsdelivr.net"],
+                scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "http:", "https:", "cdnjs.cloudflare.com", "cdn.jsdelivr.net"],
+                imgSrc: ["'self'", "data:", "http:", "https:"],
+                connectSrc: ["'self'", "http:", "https:"],
+                fontSrc: ["'self'", "data:", "http:", "https:", "cdnjs.cloudflare.com"],
+                upgradeInsecureRequests: null
+            }
+        };
+    }
+} else {
+    console.log('🔒 Using network-specific CSP policy');
+    cspConfig = {
         directives: {
-            defaultSrc: ["'self'", "http://10.0.2.11"],
-            styleSrc: ["'self'", "'unsafe-inline'", "http://10.0.2.11"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "http://10.0.2.11"],
+            defaultSrc: ["'self'", NETWORK_HOST],
+            styleSrc: ["'self'", "'unsafe-inline'", NETWORK_HOST],
+            scriptSrc: ["'self'", "'unsafe-inline'", NETWORK_HOST],
             imgSrc: ["'self'", "data:", "http:", "https:"],
-            connectSrc: ["'self'", "http://10.0.2.11"],
+            connectSrc: ["'self'", NETWORK_HOST],
             upgradeInsecureRequests: null, // Disable HTTPS upgrade
         },
-    },
+    };
+}
+
+// Security middleware with configurable CSP
+app.use(helmet({
+    contentSecurityPolicy: cspConfig,
     hsts: false, // Disable HTTPS strict transport security
     forceHTTPSRedirect: false
 }));
@@ -76,8 +117,35 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'false');
-    // Prevent HTTPS upgrades with proper CSP
-    res.setHeader('Content-Security-Policy', "default-src 'self' http://10.0.2.11; style-src 'self' 'unsafe-inline' http://10.0.2.11; script-src 'self' 'unsafe-inline' http://10.0.2.11;");
+    
+    // Apply CSP header based on environment configuration
+    if (!DISABLE_CSP) {
+        if (CSP_POLICY) {
+            // Use custom CSP from environment if available
+            try {
+                const customDirectives = JSON.parse(CSP_POLICY);
+                const cspString = Object.entries(customDirectives)
+                    .map(([key, values]) => {
+                        const directive = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+                        return `${directive} ${Array.isArray(values) ? values.join(' ') : values}`;
+                    })
+                    .join('; ');
+                res.setHeader('Content-Security-Policy', cspString);
+                console.log(`🔧 Applied custom CSP: ${cspString.substring(0, 100)}...`);
+            } catch (error) {
+                console.warn('⚠️  Failed to parse custom CSP, using permissive policy');
+                res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: http: https: cdnjs.cloudflare.com cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' http: https: cdnjs.cloudflare.com cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: cdnjs.cloudflare.com cdn.jsdelivr.net;");
+            }
+        } else {
+            // Use network-specific CSP
+            res.setHeader('Content-Security-Policy', `default-src 'self' ${NETWORK_HOST}; style-src 'self' 'unsafe-inline' ${NETWORK_HOST}; script-src 'self' 'unsafe-inline' ${NETWORK_HOST};`);
+        }
+    } else {
+        console.log('🔓 CSP headers disabled via environment variable');
+        // Remove any CSP headers if disabled
+        res.removeHeader('Content-Security-Policy');
+    }
+    
     next();
 });
 

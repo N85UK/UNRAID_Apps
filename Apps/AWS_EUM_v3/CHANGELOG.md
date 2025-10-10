@@ -2,7 +2,38 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
-## [2.0.0] - 2025-10-08
+## [3.0.1] - 2025-01-XX
+
+### 🔒 Content Security Policy (CSP) Fixes
+
+#### ✨ New Features
+- **Configurable CSP**: Added environment variables for CSP configuration
+- **Custom Bridge Network Support**: Fixed external resource loading on br0.x networks
+- **CSP Troubleshooting Guide**: Comprehensive guide for CSP-related issues
+
+#### 🛠️ Environment Variables Added
+- `DISABLE_CSP`: Completely disable CSP headers for custom networks
+- `NETWORK_HOST`: Specify network host for CSP whitelist
+- `CSP_POLICY`: Advanced custom CSP policy configuration (JSON)
+
+#### 🐛 Bug Fixes
+- **Fixed Chart.js loading** on custom bridge networks (br0.2, br0.100, etc.)
+- **Fixed Font Awesome icons** blocked by restrictive CSP
+- **Fixed dark mode toggle** when external resources are blocked
+- **Resolved CDN resource blocking** (cdn.jsdelivr.net, cdnjs.cloudflare.com)
+
+#### 📋 Network Configuration Solutions
+- Simple `DISABLE_CSP=true` for quick resolution
+- Network-specific `NETWORK_HOST` configuration
+- Advanced JSON-based `CSP_POLICY` for fine-grained control
+
+#### 📚 Documentation Updates
+- Added CSP troubleshooting guide (`CSP_TROUBLESHOOTING.md`)
+- Updated README.md with CSP configuration examples
+- Enhanced environment variable documentation
+- Added docker-compose examples for different network types
+
+## [3.0.0] - 2025-01-XX
 
 ### 🚀 Major Release - Complete Rewrite
 
