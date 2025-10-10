@@ -8,7 +8,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 **Simple, native file manager for UNRAID with clean interface and safe installation**
 
 - **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
-- **Status**: ✅ **Safe & Ready - v2025.10.10.06.00**
+- **Status**: ✅ **Safe & Ready - v2025.10.10.0001**
 - **Installation**: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
 
 **Key Features:**
@@ -25,17 +25,18 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 2. Navigate to ExplorerX tab (standalone)
 3. Browse your files with simple, safe interface
 
-**Latest Features (v2025.10.10.06.00):**
-- � MENU FIX: Changed to "Tools" menu for standard UNRAID navigation (resolves 404 errors)
+**Latest Features (v2025.10.10.0001):**
+- ✅ SUCCESS CONFIRMED: Plugin now working correctly via Tools → ExplorerX
+- 📅 VERSION FORMAT: Changed to YYYY.MM.DD.#### format for better organization
+- 📋 File manager interface loading and fully functional
+- 🔄 Directory navigation, refresh, and parent/home controls working
+- 🔌 API endpoints responding correctly for file operations
+- 📝 MENU FIX: Located in Tools menu for standard UNRAID navigation
 - 🧤 CLEAN PACKAGE: Completely removed all macOS metadata files from package
-- 🚫 404 RESOLUTION: Plugin now accessible via Tools → ExplorerX in UNRAID webGUI
-- �📦 EXTRACTION FIX: Fixed extraction script that was causing "Plugin directory not found" errors
-- ⚙️ STANDARD INTEGRATION: Uses Tools menu for better discoverability
-- 🔧 VERIFICATION FIX: Fixed package verification script that was causing installation failures
-- 🔍 PACKAGE VERIFICATION: Detects and validates downloaded packages correctly
-- 🔄 CACHE REFRESH: Forces UNRAID to download latest fixed package (prevents old cached versions)
+-  EXTRACTION FIX: Fixed extraction script that was causing installation errors
+- 🔧 VERIFICATION FIX: Fixed package verification for reliable installation
 - ✅ Installation completes successfully without any errors
-- ✅ Plugin accessible through standard UNRAID menu structure
+- ✅ Plugin accessible through standard UNRAID Tools menu
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**

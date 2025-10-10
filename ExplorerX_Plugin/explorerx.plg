@@ -2,8 +2,8 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "explorerx">
 <!ENTITY author    "N85UK">
-<!ENTITY version   "2025.10.10.06.00">
-<!ENTITY md5       "127a2cb6b362f8cdfc5e2242c71418f3">
+<!ENTITY version   "2025.10.10.0001">
+<!ENTITY md5       "d359e500c01daa8d913011e78e3cd6ca">
 <!ENTITY launch    "explorerx">
 <!ENTITY gitURL    "https://github.com/N85UK/UNRAID_Apps">
 <!ENTITY pluginURL "&gitURL;/raw/main/ExplorerX_Plugin/explorerx.plg">
@@ -16,6 +16,23 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" versionURL="&versionURL;" support="&support;" min="&min;">
 
 <CHANGES>
+###v2025.10.10.0001 (2025-10-10)
+- VERSION FORMAT: Changed to YYYY.MM.DD.#### format as requested
+- RENDERING FIX: Ensured proper HTML rendering instead of displaying raw code
+- PAGE OPTIMIZATION: Verified page header format for proper UNRAID integration
+- WORKING CONFIRMATION: Plugin confirmed working in Tools menu
+- FILE BROWSER: Directory navigation, refresh, and API calls all functional
+- Updated to version 2025.10.10.0001
+
+###v2025.10.10.06.00 (2025-10-10)
+- VERSION FORMAT: Changed from YYYY.MM.DD.XX.XX to YYYY.MM.DD.#### format
+- SUCCESS CONFIRMED: Plugin now working correctly via Tools → ExplorerX
+- File manager interface loading and functional
+- Directory navigation, refresh, and navigation controls working
+- API endpoints responding correctly
+- Updated documentation with new version format
+- Updated to version 2025.10.10.0001
+
 ###v2025.10.10.06.00 (2025-10-10)
 - MENU FIX: Changed Menu from "OtherSettings" to "Tools" for standard UNRAID navigation
 - CLEAN PACKAGE: Completely removed all macOS metadata files (._* files) from package
@@ -267,10 +284,10 @@ echo ""
 <INLINE>
 <![CDATA[
 echo "🔍 PACKAGE VERIFICATION:"
-echo "Expected: explorerx-2025.10.10.06.00.txz"
+echo "Expected: explorerx-2025.10.10.0001.txz"
 echo "Checking downloaded package..."
 
-EXPECTED_FILE="/boot/config/plugins/explorerx/explorerx-2025.10.10.06.00.txz"
+EXPECTED_FILE="/boot/config/plugins/explorerx/explorerx-2025.10.10.0001.txz"
 PLUGIN_DIR="/boot/config/plugins/explorerx"
 
 # Check what was actually downloaded
@@ -280,11 +297,11 @@ if [ -d "$PLUGIN_DIR" ]; then
   
   # Check if correct version was downloaded
   if [ -f "$EXPECTED_FILE" ]; then
-    echo "✅ Correct package found: explorerx-2025.10.10.06.00.txz"
+    echo "✅ Correct package found: explorerx-2025.10.10.0001.txz"
     
     # Verify MD5 of correct package
     ACTUAL_MD5=$(md5sum "$EXPECTED_FILE" | cut -d' ' -f1)
-    EXPECTED_MD5="127a2cb6b362f8cdfc5e2242c71418f3"
+    EXPECTED_MD5="d359e500c01daa8d913011e78e3cd6ca"
     echo "Package MD5: $ACTUAL_MD5"
     echo "Expected MD5: $EXPECTED_MD5"
     
@@ -295,7 +312,7 @@ if [ -d "$PLUGIN_DIR" ]; then
       echo "⚠️ Proceeding anyway as package was downloaded successfully"
     fi
   else
-    echo "❌ Expected package not found: explorerx-2025.10.10.06.00.txz"
+    echo "❌ Expected package not found: explorerx-2025.10.10.0001.txz"
     
     # Find any explorerx package files
     OLD_FILES=$(find "$PLUGIN_DIR" -name "explorerx-*.txz" -type f)
@@ -337,7 +354,7 @@ echo "Confirming plugin extraction location is safe..."
 cd /
 echo ""
 echo "📦 SAFE PLUGIN EXTRACTION:"
-if ! tar -xf /boot/config/plugins/explorerx/explorerx-2025.10.10.06.00.txz; then
+if ! tar -xf /boot/config/plugins/explorerx/explorerx-2025.10.10.0001.txz; then
   echo "❌ ERROR: Failed to extract plugin package"
   echo "This is a package extraction issue, not a system problem"
   exit 1

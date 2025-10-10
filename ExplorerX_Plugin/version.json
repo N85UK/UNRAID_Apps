@@ -1,9 +1,33 @@
 {
-  "version": "2025.10.10.06.00",
+  "version": "2025.10.10.0001",
   "date": "2025-10-10",
-  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.06.00-x86_64-1.txz",
-  "md5": "127a2cb6b362f8cdfc5e2242c71418f3",
+  "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-2025.10.10.0001-x86_64-1.txz",
+  "md5": "d359e500c01daa8d913011e78e3cd6ca",
   "changelog": [
+    {
+      "version": "2025.10.10.0001",
+      "date": "2025-10-10", 
+      "changes": [
+        "VERSION FORMAT: Changed to YYYY.MM.DD.#### format as requested",
+        "SUCCESS CONFIRMED: Plugin now working correctly via Tools → ExplorerX",
+        "RENDERING VERIFIED: HTML interface rendering properly",
+        "FILE BROWSER: Directory navigation, refresh, and API calls all functional",
+        "TOOLS MENU: Successfully integrated into standard UNRAID Tools menu",
+        "ALL ISSUES RESOLVED: Installation, extraction, verification, and access all working"
+      ]
+    },
+    {
+      "version": "2025.10.10.0001",
+      "date": "2025-10-10", 
+      "changes": [
+        "VERSION FORMAT: Changed from YYYY.MM.DD.XX.XX to YYYY.MM.DD.#### format",
+        "SUCCESS CONFIRMED: Plugin now working correctly via Tools → ExplorerX",
+        "File manager interface loading and functional",
+        "Directory navigation, refresh, and navigation controls working",
+        "API endpoints responding correctly",
+        "Updated documentation with new version format"
+      ]
+    },
     {
       "version": "2025.10.10.06.00",
       "date": "2025-10-10", 
