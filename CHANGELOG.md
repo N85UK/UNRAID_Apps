@@ -59,6 +59,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **ExplorerX Plugin v2025.10.10.03.00**: VERIFICATION FIX - Fixed package verification script XML entity issue
+- **ExplorerX Plugin**: Corrected verification logic that was causing "Failed to download correct package" errors
+- **ExplorerX Plugin**: Removed problematic wget re-download attempts in verification script
+- **ExplorerX Plugin**: Simplified verification to check package exists and validate MD5 hash
 - **ExplorerX Plugin**: CRITICAL FIX - Resolved blank page issue when navigating to /ExplorerX
 - **ExplorerX Plugin**: Fixed launch URL mismatch between "ExplorerX" and "explorerx.page" filename  
 - **ExplorerX Plugin**: Fixed invalid page header formatting preventing UNRAID recognition
