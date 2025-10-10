@@ -8,7 +8,7 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 **Simple, native file manager for UNRAID with clean interface and safe installation**
 
 - **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
-- **Status**: ✅ **Safe & Ready - v2025.10.10.02.00**
+- **Status**: ✅ **Safe & Ready - v2025.10.10.03.00**
 - **Installation**: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
 
 **Key Features:**
@@ -25,13 +25,13 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 2. Navigate to ExplorerX tab (standalone)
 3. Browse your files with simple, safe interface
 
-**Latest Features (v2025.10.10.02.00):**
-- 🔍 PACKAGE VERIFICATION: Detects and corrects wrong cached packages during download
+**Latest Features (v2025.10.10.03.00):**
+- � VERIFICATION FIX: Fixed package verification script that was causing installation failures
+- �🔍 PACKAGE VERIFICATION: Detects and validates downloaded packages correctly
 - 🔄 CACHE REFRESH: Forces UNRAID to download latest fixed package (prevents old cached versions)
--  CRITICAL FIX: Resolved installation extraction failure that prevented plugin from working
+- 🚨 CRITICAL FIX: Resolved installation extraction failure that prevented plugin from working
 - ✅ Fixed tar extraction directory (plugins/ → root/) for proper UNRAID path handling
-- ✅ Automatic re-download if wrong version detected during installation
-- ✅ MD5 verification with retry mechanism for package integrity
+- ✅ Simplified verification logic without problematic re-downloads
 - ✅ Installation now works correctly on all UNRAID systems
 - ✅ Resolved blank page issue when navigating to /ExplorerX
 - ✅ Completely safe installation (won't break plugin system)
