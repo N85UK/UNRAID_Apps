@@ -2,6 +2,44 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+## [3.0.5] - 2025-10-10
+
+### 🐛 Major Fixes & Code Cleanup
+
+#### Critical Infrastructure Fixes
+- **Fixed hardcoded IP addresses** in EJS template - now uses relative paths
+- **Removed duplicate API endpoints** - consolidated to /api/ prefix only
+- **Fixed chart expansion issues** - stable Chart.js with real-time data
+- **Enhanced API error handling** - better JSON parsing and fallback data
+- **Added favicon route** - prevents 404 errors in browser console
+
+#### Route Optimization
+- **Removed redundant /send-sms** - uses /api/send-sms only
+- **Removed redundant /history** - uses /api/history only  
+- **Cleaned up static file serving** - removed conflicting CSS/JS routes
+- **Fixed file path references** - properly targets style-v3.css and app-v3.js
+
+#### Documentation Cleanup
+- **Removed 15+ unnecessary docs** - kept only essential files
+- **Version consistency** - all files now reference 3.0.5
+- **Regenerated package-lock.json** - fixed version mismatch
+
+#### Chart & Frontend Fixes
+- **Real-time stats API** - /api/stats provides meaningful data
+- **Chart animation controls** - prevents expansion with stable updates
+- **Memory leak fixes** - proper chart cleanup on page unload
+- **Better error handling** - graceful degradation for API failures
+
+## [3.0.4] - 2025-10-10
+
+### 🔧 Chart Expansion Fixes
+
+#### Fixed Chart Issues
+- **Chart expansion resolved** - replaced random data with real API stats
+- **Enhanced error handling** - better JSON parsing with fallback data
+- **Real-time improvements** - fetch from /api/stats every 60 seconds
+- **Animation controls** - proper chart update methods with 'none' mode
+
 ## [3.0.3] - 2025-10-10
 
 ### 🔧 Logging Improvements

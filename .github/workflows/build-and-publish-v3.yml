@@ -31,7 +31,7 @@ jobs:
           images: ghcr.io/n85uk/aws-eum-v3
           tags: |
             type=raw,value=latest,enable=true
-            type=raw,value=3.0.4,enable=true
+            type=raw,value=3.0.5,enable=true
             type=raw,value=v3,enable=true
             type=raw,value=v3,enable=true
 

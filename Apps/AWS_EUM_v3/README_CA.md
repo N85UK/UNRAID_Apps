@@ -1,16 +1,18 @@
-# AWS End User Messaging v3.0.1 - Community Applications
+# AWS End User Messaging v3.0.5 - Community Applications
 
 Enhanced SMS application with modern UI and configurable CSP for all network types.
 
 ## ✅ Status: Ready for CA Submission
 
 ### 📦 Package Information
-- **Version**: 3.0.1
-- **Image**: `ghcr.io/n85uk/aws-eum-v3:3.0.1`
+- **Version**: 3.0.5
+- **Image**: `ghcr.io/n85uk/aws-eum-v3:3.0.5`
 - **Category**: Utilities
 - **Network Support**: Default bridge, br0.2, br0.100, all custom networks
 
-### 🆕 v3.0.1 Enhancements
+### 🆕 v3.0.5 Enhancements
+- **Chart Fixes**: Resolved chart expansion and API routing issues
+- **API Improvements**: Fixed JSON parsing errors and route conflicts
 - **CSP Fixes**: Configurable Content Security Policy for custom bridge networks
 - **Network Compatibility**: One-line fix for br0.x networks (`DISABLE_CSP=true`)
 - **Enhanced UI**: Chart.js analytics, dark/light mode toggle

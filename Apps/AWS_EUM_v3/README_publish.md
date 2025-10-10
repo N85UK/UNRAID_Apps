@@ -1,4 +1,4 @@
-# Publishing AWS EUM v3.0.1 to GitHub Container Registry
+# AWS EUM v3.0.5 - Publishing Information
 
 ## 📦 Current Release: v3.0.1
 

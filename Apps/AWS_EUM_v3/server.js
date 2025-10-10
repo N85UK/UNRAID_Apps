@@ -179,49 +179,7 @@ app.use('/js', express.static(path.join(__dirname, 'public', 'js'), {
     }
 }));
 
-// Method 2: Explicit routes for critical files
-app.get('/css/style.css', (req, res) => {
-    const cssPath = path.join(__dirname, 'public', 'css', 'style.css');
-    console.log(`🎨 CSS requested: ${req.url} from ${req.ip}`);
-    console.log(`📄 CSS path: ${cssPath}`);
-    console.log(`📋 User-Agent: ${req.get('User-Agent')}`);
-    
-    if (fs.existsSync(cssPath)) {
-        try {
-            const cssContent = fs.readFileSync(cssPath, 'utf8');
-            console.log(`✅ CSS loaded: ${cssContent.length} characters`);
-            
-            // Set all possible CSS headers
-            res.setHeader('Content-Type', 'text/css; charset=utf-8');
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-            res.setHeader('Pragma', 'no-cache');
-            res.setHeader('Expires', '0');
-            res.setHeader('X-Content-Type-Options', 'nosniff');
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            
-            res.send(cssContent);
-        } catch (error) {
-            console.error('❌ Error reading CSS file:', error);
-            res.status(500).send('Error reading CSS file');
-        }
-    } else {
-        console.error(`❌ CSS file not found: ${cssPath}`);
-        res.status(404).send('CSS file not found');
-    }
-});
-
-app.get('/js/app.js', (req, res) => {
-    const jsPath = path.join(__dirname, 'public', 'js', 'app.js');
-    if (fs.existsSync(jsPath)) {
-        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-        res.setHeader('Cache-Control', 'public, max-age=3600');
-        res.sendFile(jsPath);
-    } else {
-        res.status(404).send('JS file not found');
-    }
-});
-
-// Method 3: General static file serving as fallback
+// General static file serving as fallback
 app.use(express.static(path.join(__dirname, 'public'), {
     setHeaders: (res, filePath) => {
         if (filePath.endsWith('.css')) {
@@ -643,72 +601,6 @@ app.post('/api/message-info', (req, res) => {
     res.json(info);
 });
 
-app.post('/send-sms', async (req, res) => {
-    try {
-        // Rate limiting
-        await rateLimiter.consume(req.ip);
-
-        const { originator, phoneNumber, message } = req.body;
-
-        if (!originator || !phoneNumber || !message) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
-
-        if (!smsClient) {
-            return res.status(500).json({ error: 'AWS not configured. Please check your AWS credentials.' });
-        }
-
-        const originators = await getOriginators();
-        const originationIdentity = originators[originator];
-
-        if (!originationIdentity) {
-            return res.status(400).json({ error: 'Invalid originator selected' });
-        }
-
-        // Calculate message info
-        const messageInfo = calculateMessageInfo(message);
-
-        const command = new SendTextMessageCommand({
-            DestinationPhoneNumber: phoneNumber,
-            OriginationIdentity: originationIdentity,
-            MessageBody: message,
-            MessageType: 'TRANSACTIONAL'
-        });
-
-        const result = await smsClient.send(command);
-
-        // Save to history
-        saveMessage({
-            timestamp: new Date().toISOString(),
-            originator,
-            phoneNumber,
-            message,
-            messageId: result.MessageId,
-            messageInfo: messageInfo
-        });
-
-        res.json({
-            success: true,
-            messageId: result.MessageId,
-            messageInfo: messageInfo
-        });
-
-    } catch (error) {
-        if (error.remainingHits !== undefined) {
-            // Rate limit error
-            return res.status(429).json({
-                error: 'Rate limit exceeded. Please try again later.',
-                retryAfter: Math.round(error.msBeforeNext / 1000)
-            });
-        }
-
-        console.error('Error sending SMS:', error);
-        res.status(500).json({
-            error: error.message || 'Failed to send SMS'
-        });
-    }
-});
-
 // GET handler for send-sms to provide helpful error message
 app.get('/api/send-sms', (req, res) => {
     res.status(405).json({
@@ -784,12 +676,7 @@ app.post('/api/send-sms', async (req, res) => {
     }
 });
 
-app.get('/history', (req, res) => {
-    const history = getMessageHistory();
-    res.json(history);
-});
-
-// API alias for history (for client compatibility)
+// API endpoint for history
 app.get('/api/history', (req, res) => {
     try {
         const history = getMessageHistory();

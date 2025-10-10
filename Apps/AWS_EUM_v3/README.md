@@ -1,6 +1,6 @@
-# AWS End User Messaging v3.0.1 - Enhanced UI Edition
+# AWS End User Messaging (EUM) v3.0.5
 
-🎨 **Beautiful interface with dark mode, Chart.js analytics, and configurable CSP for all network types**
+Enhanced AWS SMS application with modern UI, Chart.js analytics, configurable CSP, and comprehensive network compatibility.
 
 ## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
 
