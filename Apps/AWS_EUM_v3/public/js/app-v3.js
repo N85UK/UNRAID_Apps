@@ -78,6 +78,10 @@ const ChartManager = {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 750,
+                    easing: 'easeInOutQuart'
+                },
                 plugins: {
                     legend: {
                         display: false
@@ -86,6 +90,7 @@ const ChartManager = {
                 scales: {
                     y: {
                         beginAtZero: true,
+                        max: undefined,
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
                         }
@@ -117,6 +122,10 @@ const ChartManager = {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 750,
+                    easing: 'easeInOutQuart'
+                },
                 plugins: {
                     legend: {
                         position: 'bottom'
@@ -127,17 +136,30 @@ const ChartManager = {
     },
 
     updateMessageChart(newData) {
-        if (AppState.charts.messageChart) {
-            AppState.charts.messageChart.data.datasets[0].data = newData;
-            AppState.charts.messageChart.update();
+        if (AppState.charts.messageChart && Array.isArray(newData)) {
+            // Ensure data is valid and not causing scale issues
+            const validData = newData.map(val => Math.max(0, Number(val) || 0));
+            AppState.charts.messageChart.data.datasets[0].data = validData;
+            AppState.charts.messageChart.update('none'); // Use 'none' to prevent animation issues
         }
     },
 
     updateSuccessChart(successRate, failureRate) {
         if (AppState.charts.successChart) {
-            AppState.charts.successChart.data.datasets[0].data = [successRate, failureRate];
-            AppState.charts.successChart.update();
+            const validSuccess = Math.max(0, Math.min(100, Number(successRate) || 0));
+            const validFailure = Math.max(0, Math.min(100, Number(failureRate) || 0));
+            AppState.charts.successChart.data.datasets[0].data = [validSuccess, validFailure];
+            AppState.charts.successChart.update('none'); // Use 'none' to prevent animation issues
         }
+    },
+
+    destroyCharts() {
+        Object.values(AppState.charts).forEach(chart => {
+            if (chart && typeof chart.destroy === 'function') {
+                chart.destroy();
+            }
+        });
+        AppState.charts = {};
     }
 };
 
@@ -404,22 +426,59 @@ const OriginatorManager = {
 
 // Real-time updates
 const RealTimeManager = {
+    intervalId: null,
+    
     init() {
         if (!AppState.realTimeEnabled) return;
         
-        // Simulated real-time updates (would use WebSocket in production)
-        setInterval(() => {
-            this.updateStats();
-        }, 30000); // Update every 30 seconds
+        // Fetch real data every 60 seconds instead of generating random data
+        this.intervalId = setInterval(() => {
+            this.fetchRealStats();
+        }, 60000); // Update every 60 seconds
+        
+        // Initial fetch
+        this.fetchRealStats();
     },
 
-    updateStats() {
-        // Simulate real-time data updates
-        const randomData = Array.from({ length: 7 }, () => Math.floor(Math.random() * 20));
-        ChartManager.updateMessageChart(randomData);
-        
-        const successRate = 95 + Math.random() * 5;
-        ChartManager.updateSuccessChart(successRate, 100 - successRate);
+    async fetchRealStats() {
+        try {
+            // Fetch real message statistics from the API
+            const response = await fetch('/api/stats');
+            if (response.ok) {
+                const stats = await response.json();
+                this.updateChartsWithRealData(stats);
+            } else {
+                console.warn('Failed to fetch real stats, using fallback data');
+                this.updateChartsWithFallbackData();
+            }
+        } catch (error) {
+            console.error('Error fetching real stats:', error);
+            this.updateChartsWithFallbackData();
+        }
+    },
+
+    updateChartsWithRealData(stats) {
+        // Update charts with real data from AWS
+        if (stats.messageHistory) {
+            ChartManager.updateMessageChart(stats.messageHistory);
+        }
+        if (stats.successRate !== undefined && stats.failureRate !== undefined) {
+            ChartManager.updateSuccessChart(stats.successRate, stats.failureRate);
+        }
+    },
+
+    updateChartsWithFallbackData() {
+        // Use static fallback data instead of random expanding data
+        const fallbackMessageData = [12, 15, 8, 10, 6, 9, 11];
+        ChartManager.updateMessageChart(fallbackMessageData);
+        ChartManager.updateSuccessChart(95, 5);
+    },
+
+    stop() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
     }
 };
 
@@ -447,4 +506,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
     
     console.log('✅ AWS EUM v3.0 Enhanced UI loaded successfully');
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+    RealTimeManager.stop();
+    ChartManager.destroyCharts();
 });

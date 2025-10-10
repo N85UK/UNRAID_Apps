@@ -1,6 +1,6 @@
 {
   "name": "aws-eum-v3",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "AWS End User Messaging v3.0 - Enhanced UI with dark mode, charts, and real-time features",
   "main": "server.js",
   "scripts": {
