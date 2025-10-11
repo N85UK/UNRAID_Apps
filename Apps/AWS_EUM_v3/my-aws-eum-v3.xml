@@ -45,6 +45,7 @@ Auto-Updates:
   <Config Name="Web UI Port" Target="80" Default="8280" Mode="tcp" Description="Host port for the web UI mapped to container port 80" Type="Port" Display="always" Required="true" Mask="false"/>
 
   <!-- Environment variables -->
+  <Config Name="TZ" Target="TZ" Default="Europe/London" Mode="" Description="Container timezone for logs and scheduling" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="AWS_ACCESS_KEY_ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="IAM access key" Type="Variable" Display="always" Required="true" Mask="true"/>
   <Config Name="AWS_SECRET_ACCESS_KEY" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="IAM secret key" Type="Variable" Display="always" Required="true" Mask="true"/>
   <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region" Type="Variable" Display="always" Required="true" Mask="false"/>
@@ -56,6 +57,9 @@ Auto-Updates:
   <Config Name="HISTORY_RETENTION" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="AUTO_UPDATE_CHECK" Target="AUTO_UPDATE_CHECK" Default="true" Mode="" Description="Enable automatic update checking" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="UPDATE_CHECK_INTERVAL" Target="UPDATE_CHECK_INTERVAL" Default="24" Mode="" Description="Hours between update checks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="AUTO_UPDATE_APPLY" Target="AUTO_UPDATE_APPLY" Default="false" Mode="" Description="Automatically apply updates when found (requires Watchtower)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="ORIGINATORS" Target="ORIGINATORS" Default="" Mode="" Description="Manual originators (format: Label1:arn1,Label2:arn2) - optional, app auto-fetches from AWS" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="DATA_DIR" Target="DATA_DIR" Default="/data" Mode="" Description="Data directory path inside container" Type="Variable" Display="advanced" Required="false" Mask="false"/>
 
   <!-- Watchtower auto-update labels -->
   <Config Name="com.centurylinklabs.watchtower.enable" Target="com.centurylinklabs.watchtower.enable" Default="true" Mode="" Description="Enable Watchtower auto-updates for this container" Type="Label" Display="advanced" Required="false" Mask="false"/>
