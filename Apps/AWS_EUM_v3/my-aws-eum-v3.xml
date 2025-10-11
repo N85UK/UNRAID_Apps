@@ -51,7 +51,7 @@ Auto-Updates:
   <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region" Type="Variable" Display="always" Required="true" Mask="false"/>
 
   <!-- Optional tuning -->
-  <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="false" Mode="" Description="Set true to relax CSP on custom bridge or macvlan networks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="true" Mode="" Description="Set true to relax CSP on custom bridge or macvlan networks (recommended for br0.x networks)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="RATE_LIMIT_MESSAGES" Target="RATE_LIMIT_MESSAGES" Default="10" Mode="" Description="SMS messages per minute limit" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="MAX_MESSAGE_LENGTH" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum message length in characters" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="HISTORY_RETENTION" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
