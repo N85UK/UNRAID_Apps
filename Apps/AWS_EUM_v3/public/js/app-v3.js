@@ -266,10 +266,14 @@ const FormHandler = {
     },
 
     async handleSubmit(event) {
+        console.log('🔥 handleSubmit called!', event);
         event.preventDefault();
+        console.log('✅ preventDefault() executed');
         
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData);
+        
+        console.log('📤 Sending data:', data);
         
         this.setLoading(true);
         
