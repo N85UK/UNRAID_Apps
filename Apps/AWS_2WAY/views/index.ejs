@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Two-Way SMS v<%= version %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>📱 AWS Two-Way SMS</h1>
+                <span class="version">v<%= version %></span>
+            </div>
+            <div class="header-right">
+                <div class="connection-status" id="wsStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+                <button class="btn btn-secondary" id="keywordsBtn">⚙️ Keywords</button>
+                <button class="btn btn-secondary" id="themeToggle">🌙</button>
+            </div>
+        </header>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value"><%= stats.totalMessages %></div>
+                <div class="stat-label">Total Messages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><%= stats.totalConversations %></div>
+                <div class="stat-label">Conversations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="unreadCount"><%= stats.unreadMessages %></div>
+                <div class="stat-label">Unread</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value"><%= stats.todayMessages %></div>
+                <div class="stat-label">Today</div>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Conversations Sidebar -->
+            <div class="conversations-sidebar">
+                <div class="sidebar-header">
+                    <h2>Conversations</h2>
+                    <button class="btn btn-primary btn-sm" id="newConversationBtn">+ New</button>
+                </div>
+                <div class="conversations-list" id="conversationsList">
+                    <!-- Dynamically loaded conversations -->
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="messages-area">
+                <div class="messages-header" id="messagesHeader">
+                    <div class="placeholder">Select a conversation to view messages</div>
+                </div>
+                <div class="messages-container" id="messagesContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">💬</div>
+                        <h3>No conversation selected</h3>
+                        <p>Choose a conversation from the sidebar or start a new one</p>
+                    </div>
+                </div>
+                <div class="message-input-area" id="messageInputArea" style="display: none;">
+                    <form id="sendMessageForm">
+                        <select id="fromNumber" required>
+                            <option value="">Select sender...</option>
+                            <% phoneNumbers.forEach(phone => { %>
+                                <option value="<%= phone.phone_number %>"><%= phone.label %> (<%= phone.phone_number %>)</option>
+                            <% }); %>
+                        </select>
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Type your message..." 
+                            required
+                            rows="2"
+                        ></textarea>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keywords Modal -->
+    <div class="modal" id="keywordsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🤖 Auto-Reply Keywords</h2>
+                <button class="modal-close" id="closeKeywordsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="keyword-form">
+                    <h3>Add New Keyword</h3>
+                    <form id="addKeywordForm">
+                        <input 
+                            type="text" 
+                            id="keywordTrigger" 
+                            placeholder="Trigger word (e.g., HELP, INFO)" 
+                            required
+                        />
+                        <textarea 
+                            id="keywordResponse" 
+                            placeholder="Auto-reply message..." 
+                            required
+                            rows="3"
+                        ></textarea>
+                        <button type="submit" class="btn btn-primary">Add Keyword</button>
+                    </form>
+                </div>
+                <div class="keywords-list" id="keywordsList">
+                    <!-- Dynamically loaded keywords -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Conversation Modal -->
+    <div class="modal" id="newConversationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💬 New Conversation</h2>
+                <button class="modal-close" id="closeNewConversationModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newConversationForm">
+                    <label>Phone Number:</label>
+                    <input 
+                        type="tel" 
+                        id="newConversationPhone" 
+                        placeholder="+44XXXXXXXXXX" 
+                        required
+                    />
+                    <label>From:</label>
+                    <select id="newConversationFrom" required>
+                        <option value="">Select sender...</option>
+                        <% phoneNumbers.forEach(phone => { %>
+                            <option value="<%= phone.phone_number %>"><%= phone.label %> (<%= phone.phone_number %>)</option>
+                        <% }); %>
+                    </select>
+                    <label>Message:</label>
+                    <textarea 
+                        id="newConversationMessage" 
+                        placeholder="Type your message..." 
+                        required
+                        rows="4"
+                    ></textarea>
+                    <button type="submit" class="btn btn-primary">Send & Start Conversation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
