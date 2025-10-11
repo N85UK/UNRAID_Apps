@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>AWS_EUM_v3</Name>
+  <Repository>ghcr.io/n85uk/aws-eum-v3:3.0.5</Repository>
+  <Registry>https://ghcr.io/n85uk/aws-eum-v3</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
+  <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_v3</Project>
+  <Overview>AWS End User Messaging (EUM) v3.0.5 features automatic AWS phone number discovery, Chart.js analytics with fixed expansion issues and stable real-time updates, dark/light mode toggle, intelligent message segmentation (up to 1600 characters), and configurable Content Security Policy for seamless operation on custom bridge networks.&#xD;&#xA;&#xD;&#xA;Key Features:&#xD;&#xA;• Modern UI with dark mode and stable Chart.js analytics&#xD;&#xA;• Fixed chart expansion and API routing issues in v3.0.5&#xD;&#xA;• Configurable CSP - fixes br0.2, br0.100, custom networks&#xD;&#xA;• Automatic AWS phone number detection&#xD;&#xA;• Long message support with auto-segmentation&#xD;&#xA;• Real-time cost estimation and history tracking&#xD;&#xA;• Rate limiting and security features&#xD;&#xA;• Full UNRAID Community Applications integration&#xD;&#xA;&#xD;&#xA;Perfect for notifications, alerts, and personal messaging. Just add AWS credentials and optionally set DISABLE_CSP=true for custom networks.&#xD;&#xA;&#xD;&#xA;Requires: AWS account with SMS permissions and phone numbers in AWS Pinpoint SMS.</Overview>
+  <Category>Utilities:</Category>
+  <WebUI>http://[IP]:[PORT:80]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_v3/my-aws-eum-v3.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_v3/images/aws-eum-icon.png</Icon>
+  <ExtraParams>--restart=unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires>Valid AWS account with SMS/Pinpoint access, AWS Access Key with SMS permissions, At least one phone number or sender ID configured in AWS Pinpoint</Requires>
+  <Config Name="Web Interface Port" Target="80" Default="8280" Mode="" Description="Web interface for sending SMS messages" Type="Port" Display="always" Required="true" Mask="false">8280</Config>
+  <Config Name="Application Data" Target="/app/data" Default="/mnt/user/appdata/aws-eum" Mode="rw" Description="Stores message history and application data" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/aws-eum</Config>
+  <Config Name="AWS Access Key ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="Your AWS access key ID (required for AWS services)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="AWS Secret Access Key" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="Your AWS secret access key (keep secure!)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="AWS Region" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region where your SMS resources are located (us-east-1, us-west-2, eu-west-1, eu-west-2, eu-central-1, ap-southeast-1, ap-southeast-2, ap-northeast-1, ca-central-1)" Type="Variable" Display="always" Required="false" Mask="false">eu-west-2</Config>
+  <Config Name="Application Port" Target="PORT" Default="80" Mode="" Description="Internal container port (default 80)" Type="Variable" Display="advanced" Required="false" Mask="false">80</Config>
+  <Config Name="Disable CSP Headers" Target="DISABLE_CSP" Default="false" Mode="" Description="Disable CSP completely to allow external resources (recommended for br0.x networks)" Type="Variable" Display="always" Required="false" Mask="false">false</Config>
+  <Config Name="Network Host" Target="NETWORK_HOST" Default="" Mode="" Description="Specify your network host/IP for CSP whitelist (e.g., http://192.168.2.1 for br0.2)" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Rate Limit (Messages/Minute)" Target="RATE_LIMIT_MESSAGES" Default="10" Mode="" Description="Maximum SMS messages per minute per IP (prevents abuse)" Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
+  <Config Name="Maximum Message Length" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum characters allowed in a single message (SMS will auto-segment)" Type="Variable" Display="advanced" Required="false" Mask="false">1600</Config>
+  <Config Name="Message History Retention" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false">100</Config>
+  <Config Name="Enable Debug Mode" Target="ENABLE_DEBUG" Default="false" Mode="" Description="Enable debug logging for troubleshooting" Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="Enable Update Checking" Target="AUTO_UPDATE_CHECK" Default="true" Mode="" Description="Check for new versions automatically" Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Update Check Interval (hours)" Target="UPDATE_CHECK_INTERVAL" Default="24" Mode="" Description="How often to check for updates (in hours)" Type="Variable" Display="advanced" Required="false" Mask="false">24</Config>
+  <Config Name="Version" Target="VERSION" Default="3.0.5" Mode="" Description="Version for display purposes" Type="Variable" Display="always" Required="false" Mask="false">3.0.5</Config>
+</Container>
