@@ -77,7 +77,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable=true
             type=raw,value=3.0,enable=true
-            type=raw,value=3.0.5,enable=true
+            type=raw,value=3.0.6,enable=true
             type=raw,value=v3,enable=true
 
       - name: Build and push Docker image
