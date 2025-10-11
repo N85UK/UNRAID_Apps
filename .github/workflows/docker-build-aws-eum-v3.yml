@@ -63,11 +63,7 @@ jobs:
           tags: |
             # Tag with version from package.json
             type=raw,value=${{ steps.package-version.outputs.version }}
-            # Tag with major.minor version (e.g., 3.0)
-            type=raw,value={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            # Tag with major version (e.g., v3)
-            type=raw,value=v{{major}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            # Tag with git tag if present
+            # Tag with git tag if present (e.g., v3.0.8)
             type=ref,event=tag
             # Tag with branch name
             type=ref,event=branch
