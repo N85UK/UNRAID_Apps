@@ -102,8 +102,8 @@
                         </label>
                         <select class="form-control" id="originator" name="originator" required>
                             <option value="" disabled selected>Select a phone number or originator...</option>
-                            <% Object.entries(originators).forEach(([label, info]) => { %>
-                                <option value="<%= info.value %>"><%= label %></option>
+                            <% Object.entries(originators).forEach(([label, value]) => { %>
+                                <option value="<%= label %>"><%= label %></option>
                             <% }); %>
                         </select>
                     </div>
