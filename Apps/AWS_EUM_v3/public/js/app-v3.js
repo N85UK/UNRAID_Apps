@@ -77,7 +77,7 @@ const ChartManager = {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 animation: {
                     duration: 750,
                     easing: 'easeInOutQuart'
@@ -121,7 +121,7 @@ const ChartManager = {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
                 animation: {
                     duration: 750,
                     easing: 'easeInOutQuart'
