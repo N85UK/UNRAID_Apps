@@ -17,13 +17,20 @@ Features:
 • Intelligent message segmentation up to 1600 characters
 • Fixed container startup and environment variable issues
 • Auto-updates to latest version for security and features
+• Watchtower integration for seamless container updates
 • Optional CSP relaxation for custom bridge or macvlan networks
 
 Usage:
 • Uses :latest tag for automatic updates
+• Watchtower labels included for auto-update compatibility
 • Expose the web UI on your chosen host port, mapping to container port 80
 • Provide AWS credentials with Pinpoint or SNS SMS permissions
 • For custom networks (br0.x): Set DISABLE_CSP=true
+
+Auto-Updates:
+• Container automatically updates with Watchtower
+• Always runs latest security patches and features
+• Zero-downtime updates on schedule
   </Overview>
   <Category>Network:Management;Tools:</Category>
   <WebUI>http://[IP]:[PORT:80]/</WebUI>
@@ -49,4 +56,8 @@ Usage:
   <Config Name="HISTORY_RETENTION" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="AUTO_UPDATE_CHECK" Target="AUTO_UPDATE_CHECK" Default="true" Mode="" Description="Enable automatic update checking" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="UPDATE_CHECK_INTERVAL" Target="UPDATE_CHECK_INTERVAL" Default="24" Mode="" Description="Hours between update checks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- Watchtower auto-update labels -->
+  <Config Name="com.centurylinklabs.watchtower.enable" Target="com.centurylinklabs.watchtower.enable" Default="true" Mode="" Description="Enable Watchtower auto-updates for this container" Type="Label" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="com.centurylinklabs.watchtower.monitor-only" Target="com.centurylinklabs.watchtower.monitor-only" Default="false" Mode="" Description="Monitor only (don't auto-update)" Type="Label" Display="advanced" Required="false" Mask="false"/>
 </Container>
