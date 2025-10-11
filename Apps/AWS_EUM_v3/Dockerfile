@@ -38,5 +38,5 @@ CMD ["node", "server.js"]
 
 # Metadata labels
 LABEL maintainer="N85UK <hello@git.n85.uk>" \
-      version="3.0.8" \
-      description="AWS End User Messaging v3.0.8 - Fixed form fields, chart expansion, and CSP defaults"
+      version="3.0.9" \
+      description="AWS End User Messaging v3.0.9 - Fixed form method and added debug logging"

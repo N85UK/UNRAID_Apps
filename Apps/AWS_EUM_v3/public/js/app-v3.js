@@ -243,11 +243,15 @@ const MessageHandler = {
 // Form handling
 const FormHandler = {
     init() {
+        console.log('📝 FormHandler.init() called');
         const form = document.getElementById('smsForm');
         const messageTextarea = document.getElementById('message');
         
         if (form) {
+            console.log('✅ Form found, attaching submit listener');
             form.addEventListener('submit', this.handleSubmit.bind(this));
+        } else {
+            console.error('❌ Form element not found!');
         }
         
         if (messageTextarea) {
