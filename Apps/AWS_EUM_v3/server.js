@@ -23,7 +23,9 @@ const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24;
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
 const APP_VERSION = '3.0.5';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
-const UPDATE_FILE = '/app/data/update-info.json';
+// Configuration
+const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
+const UPDATE_FILE = path.join(dataDir, 'update-info.json');
 
 // UI Enhancement flags
 const UI_FEATURES = {
@@ -194,7 +196,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 }));
 
 // Ensure data directory exists
-const dataDir = path.join(__dirname, 'data');
+// Create data directory if it doesn't exist
 if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }

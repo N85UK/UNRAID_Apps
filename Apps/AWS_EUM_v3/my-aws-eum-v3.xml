@@ -4,7 +4,6 @@
   <Repository>ghcr.io/n85uk/aws-eum-v3:3.0.5</Repository>
   <Registry>https://ghcr.io/n85uk/aws-eum-v3</Registry>
   <Network>bridge</Network>
-  <MyIP/>
   <Privileged>false</Privileged>
   <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
   <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_v3</Project>
@@ -13,37 +12,35 @@ AWS End User Messaging (EUM) v3.0.5
 
 Features:
 • Automatic AWS phone number discovery
-• Chart.js analytics (stable sizing) with real-time updates
-• Light/Dark mode toggle
-• Intelligent message segmentation (up to 1600 chars)
-• Configurable Content Security Policy for custom bridge/macvlan networks
-• Fixed chart expansion and API routing issues
+• Chart.js analytics with real-time updates
+• Light and Dark mode
+• Intelligent message segmentation up to 1600 characters
+• Optional CSP relaxation for custom bridge or macvlan networks
 
 Usage:
-• Expose the web UI on your chosen host port (default 8280)
-• Add AWS credentials (IAM user with Pinpoint/SNS SMS permissions)
-• For custom networks (br0.x): Set DISABLE_CSP=true
+• Expose the web UI on your chosen host port, mapping to container port 80
+• Provide AWS credentials with Pinpoint or SNS SMS permissions
   </Overview>
   <Category>Network:Management;Tools:</Category>
   <WebUI>http://[IP]:[PORT:80]/</WebUI>
   <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_v3/images/aws-eum-icon.png</Icon>
   <ExtraParams>--restart unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
-  <DonateText/>
-  <DonateLink/>
-  <Description>AWS EUM v3.0.5 - Enhanced SMS messaging with modern UI and network compatibility.</Description>
+  <Description>AWS EUM v3 container.</Description>
 
-  <Config Name="AppData" Target="/app/data" Default="/mnt/user/appdata/aws-eum" Mode="rw" Description="Container state and message history" Type="Path" Display="advanced-hide" Required="true" Mask="false"/>
-  <Config Name="Web UI Port" Target="80" Default="8280" Mode="tcp" Description="Host port for the web UI → container port 80" Type="Port" Display="always" Required="true" Mask="false"/>
+  <!-- Paths -->
+  <Config Name="AppData" Target="/data" Default="/mnt/user/appdata/aws-eum" Mode="rw" Description="Container state and config" Type="Path" Display="advanced-hide" Required="true" Mask="false"/>
 
-  <!-- AWS credentials (recommended to set via Unraid 'Hidden' so they do not show in UI logs) -->
-  <Config Name="AWS_ACCESS_KEY_ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="IAM access key with required SMS/Pinpoint permissions" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <!-- Ports -->
+  <Config Name="Web UI Port" Target="80" Default="8280" Mode="tcp" Description="Host port for the web UI mapped to container port 80" Type="Port" Display="always" Required="true" Mask="false"/>
+
+  <!-- Environment variables -->
+  <Config Name="AWS_ACCESS_KEY_ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="IAM access key" Type="Variable" Display="always" Required="true" Mask="true"/>
   <Config Name="AWS_SECRET_ACCESS_KEY" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="IAM secret key" Type="Variable" Display="always" Required="true" Mask="true"/>
-  <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region (us-east-1, us-west-2, eu-west-1, eu-west-2, etc.)" Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region" Type="Variable" Display="always" Required="true" Mask="false"/>
 
   <!-- Optional tuning -->
-  <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="false" Mode="" Description="Set to true if you use custom bridge/macvlan networks and need relaxed CSP" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="RATE_LIMIT_MESSAGES" Target="RATE_LIMIT_MESSAGES" Default="10" Mode="" Description="SMS messages per minute limit (prevents abuse)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="MAX_MESSAGE_LENGTH" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum message length (characters)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="HISTORY_RETENTION" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-
+  <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="false" Mode="" Description="Set true to relax CSP on custom bridge or macvlan networks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RATE_LIMIT_RPM" Target="RATE_LIMIT_RPM" Default="100" Mode="" Description="Requests per minute cap" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="MAX_MESSAGE_LENGTH" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum message length in characters" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RETENTION_DAYS" Target="RETENTION_DAYS" Default="24" Mode="" Description="Retention period for message history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
 </Container>
