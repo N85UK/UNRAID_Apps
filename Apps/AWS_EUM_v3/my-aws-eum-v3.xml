@@ -1,31 +1,35 @@
 <?xml version="1.0"?>
 <Container>
   <Name>AWS_EUM_v3</Name>
-  <Repository>ghcr.io/n85uk/aws-eum-v3:3.0.5</Repository>
+  <Repository>ghcr.io/n85uk/aws-eum-v3:latest</Repository>
   <Registry>https://ghcr.io/n85uk/aws-eum-v3</Registry>
   <Network>bridge</Network>
   <Privileged>false</Privileged>
   <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
   <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_v3</Project>
   <Overview>
-AWS End User Messaging (EUM) v3.0.5
+AWS End User Messaging (EUM) v3.0.6
 
 Features:
 • Automatic AWS phone number discovery
 • Chart.js analytics with real-time updates
 • Light and Dark mode
 • Intelligent message segmentation up to 1600 characters
+• Fixed container startup and environment variable issues
+• Auto-updates to latest version for security and features
 • Optional CSP relaxation for custom bridge or macvlan networks
 
 Usage:
+• Uses :latest tag for automatic updates
 • Expose the web UI on your chosen host port, mapping to container port 80
 • Provide AWS credentials with Pinpoint or SNS SMS permissions
+• For custom networks (br0.x): Set DISABLE_CSP=true
   </Overview>
   <Category>Network:Management;Tools:</Category>
   <WebUI>http://[IP]:[PORT:80]/</WebUI>
   <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_v3/images/aws-eum-icon.png</Icon>
   <ExtraParams>--restart unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
-  <Description>AWS EUM v3 container.</Description>
+  <Description>AWS EUM v3.0.6+ - Enhanced SMS messaging with auto-updates and network compatibility.</Description>
 
   <!-- Paths -->
   <Config Name="AppData" Target="/data" Default="/mnt/user/appdata/aws-eum" Mode="rw" Description="Container state and config" Type="Path" Display="advanced-hide" Required="true" Mask="false"/>
@@ -43,4 +47,6 @@ Usage:
   <Config Name="RATE_LIMIT_MESSAGES" Target="RATE_LIMIT_MESSAGES" Default="10" Mode="" Description="SMS messages per minute limit" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="MAX_MESSAGE_LENGTH" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum message length in characters" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="HISTORY_RETENTION" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="AUTO_UPDATE_CHECK" Target="AUTO_UPDATE_CHECK" Default="true" Mode="" Description="Enable automatic update checking" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="UPDATE_CHECK_INTERVAL" Target="UPDATE_CHECK_INTERVAL" Default="24" Mode="" Description="Hours between update checks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
 </Container>

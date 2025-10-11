@@ -1,11 +1,11 @@
-# AWS End User Messaging (EUM) v3.0.5
+# AWS End User Messaging (EUM) v3.0.6
 
-Enhanced AWS SMS application with modern UI, Chart.js analytics, configurable CSP, and comprehensive network compatibility.
+Enhanced AWS SMS application with modern UI, Chart.js analytics, configurable CSP, auto-updates, and comprehensive network compatibility.
 
 ## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
 
 ✅ **Status**: Production ready with CSP fixes for custom bridge networks  
-📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:3.0.5`  
+📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest` (auto-updates)  
 🔄 **CI/CD**: Automated builds with Alpine Linux optimization
 🌐 **Network Support**: Default bridge, br0.2, br0.100, and all custom networks
 
@@ -110,7 +110,7 @@ docker run -d \
   -e AWS_SECRET_ACCESS_KEY=your_secret_key \
   -e AWS_REGION=eu-west-2 \
   -v /path/to/data:/app/data \
-  ghcr.io/n85uk/aws-eum-v3:3.0.5
+  ghcr.io/n85uk/aws-eum-v3:latest
 ```
 
 ## 📖 Usage

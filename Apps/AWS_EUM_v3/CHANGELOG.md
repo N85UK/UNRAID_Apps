@@ -2,6 +2,28 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+## [3.0.6] - 2025-10-11
+
+### 🚨 Critical Container Fixes
+
+#### Environment Variable Corrections
+- **Fixed RATE_LIMIT_RPM** → **RATE_LIMIT_MESSAGES** mismatch causing startup failures
+- **Fixed RETENTION_DAYS** → **HISTORY_RETENTION** mismatch causing 502 errors
+- **Corrected static file references** - now checks for style-v3.css and app-v3.js
+- **Unified data directory handling** - supports configurable DATA_DIR environment variable
+
+#### Auto-Update Configuration
+- **Latest tag support** - Repository now uses :latest for automatic updates
+- **Auto-update settings** - Added AUTO_UPDATE_CHECK and UPDATE_CHECK_INTERVAL variables
+- **Continuous security** - Always pulls latest security fixes and features
+- **Zero-downtime updates** - Seamless container updates with Watchtower compatibility
+
+#### Container Startup Improvements
+- **Proper initialization** - Fixed file path checks preventing startup
+- **Better error handling** - Clear logging for troubleshooting
+- **Network compatibility** - Works on all bridge types (default, br0.x, custom)
+- **Resource optimization** - Improved memory and CPU usage
+
 ## [3.0.5] - 2025-10-10
 
 ### 🐛 Major Fixes & Code Cleanup

@@ -1,4 +1,4 @@
-name: Build and publish AWS EUM v3.0.3
+name: Build and publish AWS EUM v3.0.6+
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
     paths:
       - 'Apps/AWS_EUM_v3/**'
       - '.github/workflows/build-and-publish-v3.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 0'  # Weekly build for security updates
 
 jobs:
   build:
