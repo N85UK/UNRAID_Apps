@@ -95,13 +95,13 @@
                 </button>
             </div>
             <div class="card-body">
-                <form id="smsForm" method="post">
+                <form id="smsForm">
                     <div class="form-group">
                         <label class="form-label" for="originator">
                             <i class="fas fa-phone"></i> Phone Number / Originator:
                         </label>
                         <select class="form-control" id="originator" name="originator" required>
-                            <option value="">Select a phone number or originator...</option>
+                            <option value="" disabled selected>Select a phone number or originator...</option>
                             <% Object.entries(originators).forEach(([label, info]) => { %>
                                 <option value="<%= info.value %>"><%= label %></option>
                             <% }); %>

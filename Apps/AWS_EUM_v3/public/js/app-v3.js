@@ -268,12 +268,20 @@ const FormHandler = {
     async handleSubmit(event) {
         console.log('🔥 handleSubmit called!', event);
         event.preventDefault();
-        console.log('✅ preventDefault() executed');
+        event.stopPropagation();
+        console.log('✅ preventDefault() and stopPropagation() executed');
         
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData);
         
         console.log('📤 Sending data:', data);
+        
+        // Validate required fields
+        if (!data.originator || !data.phoneNumber || !data.message) {
+            console.error('❌ Missing required fields:', data);
+            Utils.showNotification('Please fill in all required fields', 'error');
+            return;
+        }
         
         this.setLoading(true);
         
