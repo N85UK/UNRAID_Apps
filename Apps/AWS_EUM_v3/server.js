@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const APP_VERSION = '3.0.5';
+const APP_VERSION = '3.0.6';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 // Configuration
 const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
@@ -1035,8 +1035,8 @@ app.listen(PORT, '0.0.0.0', () => {
     
     // Verify static file structure
     const publicDir = path.join(__dirname, 'public');
-    const cssFile = path.join(publicDir, 'css', 'style.css');
-    const jsFile = path.join(publicDir, 'js', 'app.js');
+    const cssFile = path.join(publicDir, 'css', 'style-v3.css');
+    const jsFile = path.join(publicDir, 'js', 'app-v3.js');
     
     console.log(`📁 Public directory: ${publicDir}`);
     console.log(`📄 CSS file exists: ${fs.existsSync(cssFile)} (${cssFile})`);

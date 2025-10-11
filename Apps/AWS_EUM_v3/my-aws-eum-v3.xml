@@ -40,7 +40,7 @@ Usage:
 
   <!-- Optional tuning -->
   <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="false" Mode="" Description="Set true to relax CSP on custom bridge or macvlan networks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="RATE_LIMIT_RPM" Target="RATE_LIMIT_RPM" Default="100" Mode="" Description="Requests per minute cap" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RATE_LIMIT_MESSAGES" Target="RATE_LIMIT_MESSAGES" Default="10" Mode="" Description="SMS messages per minute limit" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="MAX_MESSAGE_LENGTH" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum message length in characters" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="RETENTION_DAYS" Target="RETENTION_DAYS" Default="24" Mode="" Description="Retention period for message history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="HISTORY_RETENTION" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
 </Container>
