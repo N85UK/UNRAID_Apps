@@ -1,0 +1,129 @@
+name: Build and Push AWS EUM v3 Docker Image
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'Apps/AWS_EUM_v3/**'
+      - '.github/workflows/docker-build-aws-eum-v3.yml'
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'Apps/AWS_EUM_v3/**'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Custom tag to build'
+        required: false
+        default: 'manual'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: n85uk/aws-eum-v3
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from package.json
+        id: package-version
+        run: |
+          VERSION=$(cat Apps/AWS_EUM_v3/package.json | grep '"version"' | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Detected version: $VERSION"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # Tag with version from package.json
+            type=raw,value=${{ steps.package-version.outputs.version }}
+            # Tag with major.minor version (e.g., 3.0)
+            type=raw,value={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            # Tag with major version (e.g., v3)
+            type=raw,value=v{{major}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            # Tag with git tag if present
+            type=ref,event=tag
+            # Tag with branch name
+            type=ref,event=branch
+            # Tag as latest for main branch
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            # Tag as develop for develop branch
+            type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
+            # Tag with PR number for pull requests
+            type=ref,event=pr
+            # Manual workflow dispatch tag
+            type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
+          labels: |
+            org.opencontainers.image.title=AWS End User Messaging v3
+            org.opencontainers.image.description=Enhanced SMS messaging interface with dark mode, charts, and real-time features
+            org.opencontainers.image.vendor=N85UK
+            org.opencontainers.image.version=${{ steps.package-version.outputs.version }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Apps/AWS_EUM_v3
+          file: ./Apps/AWS_EUM_v3/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ steps.package-version.outputs.version }}
+
+      - name: Generate image summary
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "### 🐳 Docker Image Built Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.package-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tags:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Pull command:**" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.package-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Test image
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "🧪 Testing Docker image..."
+          docker run --rm \
+            -e AWS_ACCESS_KEY_ID=test \
+            -e AWS_SECRET_ACCESS_KEY=test \
+            -e AWS_REGION=eu-west-2 \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.package-version.outputs.version }} \
+            node -c server.js
+          echo "✅ Syntax check passed!"

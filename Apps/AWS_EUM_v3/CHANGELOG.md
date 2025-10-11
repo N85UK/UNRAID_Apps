@@ -2,6 +2,26 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [3.0.7] - 2024-10-11
+
+### Fixed
+- **CRITICAL:** Fixed syntax error with corrupted string literal at line 248 that prevented server startup
+- **CRITICAL:** Fixed undefined `CURRENT_VERSION` variable (replaced with `APP_VERSION`) in 7 locations
+- Fixed missing EJS views directory configuration
+
+### Changed
+- Updated all version references to use consistent `APP_VERSION` constant
+- Added explicit views directory path for EJS template engine
+
+### Documentation
+- Added comprehensive `BUGFIX_v3.0.7.md` detailing all critical fixes
+- Documented server startup verification steps
+- Added Git Flow automation with GitHub Actions workflows
+- Created comprehensive workflow documentation
+
 ## [3.0.6] - 2025-10-11
 
 ### 🚨 Critical Container Fixes

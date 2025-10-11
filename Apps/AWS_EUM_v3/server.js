@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const APP_VERSION = '3.0.6';
+const APP_VERSION = '3.0.7';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 // Configuration
 const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
@@ -164,6 +164,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Static files with multiple approaches to ensure they work
 // Method 1: Standard express.static
@@ -245,9 +246,9 @@ function initializeAWSClient() {
 // Initialize AWS client
 initializeAWSClient();
 
-// Initialize AWS client\ninitializeAWSClient();\n\n// Cache for AWS data (using variables declared above)\nconst CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+// Cache for AWS data (using variables declared above)
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// Fetch originators from AWS
 // Function to fetch originators from AWS
 async function fetchOriginatorsFromAWS() {
   try {
@@ -377,12 +378,12 @@ async function checkForUpdates() {
           try {
             const release = JSON.parse(data);
             const latestVersion = release.tag_name?.replace(/^v/, '') || release.name;
-            const isNewer = latestVersion && latestVersion !== CURRENT_VERSION;
+            const isNewer = latestVersion && latestVersion !== APP_VERSION;
             
             const updateResult = {
               available: isNewer,
               version: latestVersion,
-              currentVersion: CURRENT_VERSION,
+              currentVersion: APP_VERSION,
               url: release.html_url,
               publishedAt: release.published_at,
               description: release.body,
@@ -393,7 +394,7 @@ async function checkForUpdates() {
             saveUpdateInfo(updateResult);
             
             if (isNewer) {
-              console.log(`🆕 Update available: v${latestVersion} (current: v${CURRENT_VERSION})`);
+              console.log(`🆕 Update available: v${latestVersion} (current: v${APP_VERSION})`);
             } else {
               console.log('✅ Application is up to date');
             }
@@ -539,7 +540,7 @@ app.get('/', async (req, res) => {
             aws_originators: Object.keys(originators).filter(k => !k.includes('Manual')).length,
             aws_phone_numbers: Object.keys(originators).filter(k => k.includes('Phone Number')).length,
             aws_sender_ids: Object.keys(originators).filter(k => k.includes('Sender ID')).length,
-            version: CURRENT_VERSION,
+            version: APP_VERSION,
             build_timestamp: new Date().toISOString(),
             has_latest_features: true
         };
@@ -553,7 +554,7 @@ app.get('/', async (req, res) => {
             config: { 
                 aws_configured: false, 
                 error: error.message,
-                version: CURRENT_VERSION,
+                version: APP_VERSION,
                 build_timestamp: new Date().toISOString(),
                 has_latest_features: true
             }
@@ -758,7 +759,7 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        version: CURRENT_VERSION,
+        version: APP_VERSION,
         aws_configured: !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY),
         originators_cached: !!cachedOriginators,
         updateAvailable: updateInfo.available
@@ -1015,7 +1016,7 @@ app.get('/api/debug/test-css', (req, res) => {
 // Simple version check endpoint
 app.get('/api/version', (req, res) => {
     res.json({
-        version: CURRENT_VERSION,
+        version: APP_VERSION,
         timestamp: new Date().toISOString(),
         hasLatestUpdates: true,
         endpoints: [
@@ -1029,7 +1030,7 @@ app.get('/api/version', (req, res) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
+    console.log(`🚀 AWS EUM v${APP_VERSION} server running on port ${PORT}`);
     console.log(`🌐 HTTP Server: http://0.0.0.0:${PORT}`);
     console.log(`🌍 AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
     
