@@ -5,9 +5,9 @@ FROM node:20-alpine
 ARG VERSION=1.0.0
 ENV APP_VERSION=${VERSION}
 
-# Create app user
-RUN addgroup -g 1000 appuser && \
-    adduser -D -u 1000 -G appuser appuser
+# Create app user and group
+RUN addgroup -S appuser && \
+    adduser -S -u 1000 -G appuser appuser
 
 # Set working directory
 WORKDIR /app
