@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # Set version
-ARG VERSION=1.0.0
+ARG VERSION=1.0.1
 ENV APP_VERSION=${VERSION}
 
 # Install build dependencies for native modules (better-sqlite3)

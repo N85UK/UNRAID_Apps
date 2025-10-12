@@ -1,6 +1,6 @@
 {
   "name": "aws-2way-sms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AWS Two-Way SMS Messaging - Real-time conversations with WebSocket support and auto-replies",
   "main": "server.js",
   "scripts": {

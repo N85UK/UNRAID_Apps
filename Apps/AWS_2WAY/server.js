@@ -11,8 +11,16 @@ const { PinpointSMSVoiceV2Client, SendTextMessageCommand } = require('@aws-sdk/c
 const { SNSClient } = require('@aws-sdk/client-sns');
 const MessageDatabase = require('./database');
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 const PORT = process.env.PORT || 3000;
+const DATA_DIR = process.env.DATA_DIR || '/data';
+
+// Ensure data directory exists
+const fs = require('fs');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  console.log(`📁 Created data directory: ${DATA_DIR}`);
+}
 
 // Initialize AWS clients
 const smsClient = new PinpointSMSVoiceV2Client({ 
@@ -20,7 +28,9 @@ const smsClient = new PinpointSMSVoiceV2Client({
 });
 
 // Initialize database
-const db = new MessageDatabase('./data/messages.db');
+const dbPath = path.join(DATA_DIR, 'messages.db');
+console.log(`💾 Database path: ${dbPath}`);
+const db = new MessageDatabase(dbPath);
 
 // Initialize Express
 const app = express();
@@ -367,7 +377,7 @@ app.get('/health', (req, res) => {
 });
 
 // Start server
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`
 ╔═══════════════════════════════════════════════╗
 ║   AWS Two-Way SMS v${APP_VERSION}                 ║
@@ -377,15 +387,33 @@ server.listen(PORT, () => {
 🚀 Server running on port ${PORT}
 🔌 WebSocket server active
 📱 Phone numbers: ${CONFIGURED_NUMBERS.map(n => n.phone).join(', ')}
-💾 Database: ${path.resolve('./data/messages.db')}
+💾 Database: ${dbPath}
 🌐 Environment: ${process.env.NODE_ENV || 'development'}
 
 📍 Endpoints:
-   - Web UI: http://localhost:${PORT}
-   - SNS Webhook: http://localhost:${PORT}/webhook/sms
-   - Health: http://localhost:${PORT}/health
-   - WebSocket: ws://localhost:${PORT}
+   - Web UI: http://0.0.0.0:${PORT}
+   - SNS Webhook: http://0.0.0.0:${PORT}/webhook/sms
+   - Health: http://0.0.0.0:${PORT}/health
+   - WebSocket: ws://0.0.0.0:${PORT}
 `);
+});
+
+// Error handling for server
+server.on('error', (error) => {
+  console.error('❌ Server error:', error);
+  process.exit(1);
+});
+
+// Uncaught exception handler
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
+});
+
+// Unhandled rejection handler
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });
 
 // Graceful shutdown
