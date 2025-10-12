@@ -8,9 +8,9 @@ ENV APP_VERSION=${VERSION}
 # Install build dependencies for native modules (better-sqlite3)
 RUN apk add --no-cache python3 make g++ curl
 
-# Create app user and group
+# Create app user and group (let Alpine assign UID automatically)
 RUN addgroup -S appuser && \
-    adduser -S -u 1000 -G appuser appuser
+    adduser -S -G appuser appuser
 
 # Set working directory
 WORKDIR /app
