@@ -51,118 +51,6 @@ const Utils = {
     }
 };
 
-// Chart management
-const ChartManager = {
-    init() {
-        this.initMessageChart();
-        this.initSuccessChart();
-    },
-
-    initMessageChart() {
-        const ctx = document.getElementById('messageChart');
-        if (!ctx) return;
-
-        AppState.charts.messageChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['6h ago', '5h ago', '4h ago', '3h ago', '2h ago', '1h ago', 'Now'],
-                datasets: [{
-                    label: 'Messages Sent',
-                    data: [12, 19, 3, 5, 2, 3, 8],
-                    borderColor: '#ff9900',
-                    backgroundColor: 'rgba(255, 153, 0, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                animation: {
-                    duration: 750,
-                    easing: 'easeInOutQuart'
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: undefined,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    }
-                }
-            }
-        });
-    },
-
-    initSuccessChart() {
-        const ctx = document.getElementById('successChart');
-        if (!ctx) return;
-
-        AppState.charts.successChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Successful', 'Failed'],
-                datasets: [{
-                    data: [95, 5],
-                    backgroundColor: ['#28a745', '#dc3545'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                animation: {
-                    duration: 750,
-                    easing: 'easeInOutQuart'
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    },
-
-    updateMessageChart(newData) {
-        if (AppState.charts.messageChart && Array.isArray(newData)) {
-            // Ensure data is valid and not causing scale issues
-            const validData = newData.map(val => Math.max(0, Number(val) || 0));
-            AppState.charts.messageChart.data.datasets[0].data = validData;
-            AppState.charts.messageChart.update('none'); // Use 'none' to prevent animation issues
-        }
-    },
-
-    updateSuccessChart(successRate, failureRate) {
-        if (AppState.charts.successChart) {
-            const validSuccess = Math.max(0, Math.min(100, Number(successRate) || 0));
-            const validFailure = Math.max(0, Math.min(100, Number(failureRate) || 0));
-            AppState.charts.successChart.data.datasets[0].data = [validSuccess, validFailure];
-            AppState.charts.successChart.update('none'); // Use 'none' to prevent animation issues
-        }
-    },
-
-    destroyCharts() {
-        Object.values(AppState.charts).forEach(chart => {
-            if (chart && typeof chart.destroy === 'function') {
-                chart.destroy();
-            }
-        });
-        AppState.charts = {};
-    }
-};
-
 // Message handling
 const MessageHandler = {
     async calculateMessageInfo(message) {
@@ -527,7 +415,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize all modules
     FormHandler.init();
-    ChartManager.init();
     RealTimeManager.init();
     
     // Initial data load
@@ -541,5 +428,4 @@ document.addEventListener('DOMContentLoaded', function() {
 // Cleanup on page unload
 window.addEventListener('beforeunload', function() {
     RealTimeManager.stop();
-    ChartManager.destroyCharts();
 });

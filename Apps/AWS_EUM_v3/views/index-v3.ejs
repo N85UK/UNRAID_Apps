@@ -6,8 +6,6 @@
     <title>AWS End User Messaging v3.0</title>
     <link rel="stylesheet" href="/css/style-v3.css?v=<%= Date.now() %>" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <style>
         /* Inline critical CSS for immediate styling */
         body { 
@@ -70,20 +68,6 @@
                     <p>Set these as environment variables in your container configuration.</p>
                 </div>
             </div>
-        <% } %>
-
-        <!-- Analytics Charts Section -->
-        <% if (config.aws_configured) { %>
-        <div class="charts-container">
-            <div class="chart-card">
-                <h3 class="chart-title"><i class="fas fa-chart-line"></i> Message Statistics</h3>
-                <canvas id="messageChart" width="400" height="200"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3 class="chart-title"><i class="fas fa-chart-doughnut"></i> Success Rate</h3>
-                <canvas id="successChart" width="400" height="200"></canvas>
-            </div>
-        </div>
         <% } %>
 
         <!-- Send SMS Form -->
@@ -206,7 +190,7 @@
                                 </div>
                                 <div class="phone-number">
                                     <i class="fas fa-phone"></i>
-                                    <%= msg.destination %>
+                                    <%= msg.phoneNumber %>
                                 </div>
                                 <div class="message-body"><%= msg.message %></div>
                                 <div class="message-meta">

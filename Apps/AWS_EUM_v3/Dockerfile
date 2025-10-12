@@ -38,5 +38,5 @@ CMD ["node", "server.js"]
 
 # Metadata labels
 LABEL maintainer="N85UK <hello@git.n85.uk>" \
-      version="3.0.12" \
-      description="AWS End User Messaging v3.0.12 - Fixed originator dropdown to send label instead of value"
+      version="3.0.9" \
+      description="AWS End User Messaging v3.0.9 - Removed charts, fixed message history display"

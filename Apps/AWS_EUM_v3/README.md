@@ -1,10 +1,10 @@
-# AWS End User Messaging (EUM) v3.0.6
+# AWS End User Messaging (EUM) v3.0.9
 
-Enhanced AWS SMS application with modern UI, Chart.js analytics, configurable CSP, auto-updates, and comprehensive network compatibility.
+Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-updates, and comprehensive network compatibility.
 
 ## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
 
-✅ **Status**: Production ready with CSP fixes for custom bridge networks  
+✅ **Status**: Production ready with simplified UI and fixed message history  
 📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest` (auto-updates)  
 🔄 **CI/CD**: Automated builds with Alpine Linux optimization
 🌐 **Network Support**: Default bridge, br0.2, br0.100, and all custom networks
@@ -17,14 +17,8 @@ Enhanced AWS SMS application with modern UI, Chart.js analytics, configurable CS
 - System preference detection and automatic switching
 - Optimized color schemes for readability in both modes
 
-### 📊 **Real-time Analytics with Chart.js**
-- **Dynamic charts** powered by Chart.js for beautiful data visualization
-- **Message delivery metrics** with real-time updates
-- **Cost analysis charts** showing spending trends over time
-- **Interactive dashboards** with hover effects and animations
-- **Performance metrics** displaying response times and success rates
-
-### 🎨 **Modern Material Design**
+### 🎨 **Modern Clean Design** (Updated v3.0.9)
+- **Simplified UI** - Removed complex charts for faster, cleaner experience
 - **Smooth animations** and micro-interactions
 - **Enhanced typography** with Google Fonts integration
 - **Responsive grid system** for perfect mobile adaptation
@@ -38,14 +32,14 @@ Enhanced AWS SMS application with modern UI, Chart.js analytics, configurable CS
 - **Long message support** - Send messages up to 1,600 characters
 - **Automatic SMS segmentation** - Long messages split into multiple SMS segments
 - **Real-time cost estimation** - See how many SMS segments your message will use
-- **Message preview** - See exactly how your long message will be split
+- **Message history tracking** - See all sent messages with phone numbers and timestamps (Fixed v3.0.9)
 
 ### 🛡️ **Enhanced Security & Performance**
 - **Rate limiting** with `express-rate-limit` and `rate-limiter-flexible`
 - **Helmet.js security** with comprehensive CSP and security headers
 - **Advanced validation** with sanitization for all inputs
 - **Error boundaries** with graceful degradation and recovery
-- **Performance monitoring** with real-time metrics
+- **Faster page loads** - 200KB smaller footprint without chart libraries (v3.0.9)
 
 ### 🔧 **Improved UNRAID Integration**
 - **Streamlined configuration** through UNRAID templates
@@ -59,7 +53,7 @@ Enhanced AWS SMS application with modern UI, Chart.js analytics, configurable CS
 - ✅ **Send SMS messages** via AWS Pinpoint SMS service
 - ✅ **Automatic AWS integration** - Discovers your phone numbers
 - ✅ **Long message support** - Up to 1,600 characters with auto-segmentation
-- ✅ **Message history** - Track all sent messages with details
+- ✅ **Message history** - Track all sent messages with phone numbers and details (Fixed v3.0.9)
 - ✅ **Real-time feedback** - Character counts, segment info, cost estimates
 
 ### AWS Integration

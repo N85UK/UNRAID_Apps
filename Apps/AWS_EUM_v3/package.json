@@ -1,6 +1,6 @@
 {
   "name": "aws-eum-v3",
-  "version": "3.0.12",
+    "version": "3.0.9",
   "description": "AWS End User Messaging v3 - Enhanced SMS messaging interface with dark mode and real-time features",
   "main": "server.js",
   "scripts": {

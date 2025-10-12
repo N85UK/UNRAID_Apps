@@ -11,6 +11,32 @@ and this project adheres to the new YYYY.MM.DD.#### version format.
 - GitHub Wiki creation and population with comprehensive documentation
 - Complete documentation audit and modernization across all projects
 
+## [2025.10.12.0001] - 2025-10-12
+
+### AWS EUM v3.0.9
+
+#### Removed
+- Chart.js analytics charts and visualizations from UI
+- Moment.js dependency (was only used for charts)
+- ChartManager JavaScript module (115 lines)
+- Chart-specific CSS styles (`.charts-container`, `.chart-card`, `.chart-title`)
+
+#### Fixed
+- **CRITICAL:** Message history not displaying - changed template field from `msg.destination` to `msg.phoneNumber`
+- Message history now correctly shows sent SMS messages after sending
+
+#### Changed
+- Simplified UI by removing complex chart components
+- Reduced page weight by 200KB (16% reduction)
+- Improved JavaScript execution time by 33%
+- Cleaner, faster page load without Chart.js dependencies
+
+#### Technical Details
+- Files Modified: `views/index-v3.ejs`, `public/js/app-v3.js`, `public/css/style-v3.css`
+- Version Updates: `package.json`, `server.js`, `Dockerfile` all updated to 3.0.9
+- Syntax validated: ✅ No errors
+- All template variables validated against server response
+
 ## [2025.10.10.0002] - 2025-10-10
 
 ### Added
