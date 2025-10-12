@@ -5,6 +5,9 @@ FROM node:20-alpine
 ARG VERSION=1.0.0
 ENV APP_VERSION=${VERSION}
 
+# Install build dependencies for native modules (better-sqlite3)
+RUN apk add --no-cache python3 make g++ curl
+
 # Create app user and group
 RUN addgroup -S appuser && \
     adduser -S -u 1000 -G appuser appuser
@@ -16,7 +19,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production && \
+RUN npm install --omit=dev --no-audit --no-fund && \
     npm cache clean --force
 
 # Copy application files
