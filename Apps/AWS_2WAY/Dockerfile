@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # Set version
-ARG VERSION=1.0.1
+ARG VERSION=1.0.2
 ENV APP_VERSION=${VERSION}
 
 # Install build dependencies for native modules (better-sqlite3)
@@ -33,11 +33,11 @@ RUN mkdir -p /data && \
 USER appuser
 
 # Expose port
-EXPOSE 3000
+EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"
+    CMD node -e "require('http').get('http://localhost:80/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"
 
 # Start application
 CMD ["node", "server.js"]

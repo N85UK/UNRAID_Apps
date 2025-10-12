@@ -30,7 +30,7 @@ Two-Way Messaging Setup:
 
 
 Usage:
-• Access web UI on your chosen host port (default: 3000)
+• Access web UI on port 80 (designed for dedicated IP on br0 network)
 • Configure AWS credentials with Pinpoint SMS permissions
 • Set up SNS Topic subscription to your webhook endpoint
 • For custom networks (br0.x): Set DISABLE_CSP=true (enabled by default)
@@ -49,10 +49,10 @@ WebSocket Support:
 • Automatic reconnection handling
   </Overview>
   <Category>Network:Messaging;Tools:</Category>
-  <WebUI>http://[IP]:[PORT:3000]/</WebUI>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
   <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_2WAY/images/aws-2way-icon.png</Icon>
   <ExtraParams>--restart unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
-  <Description>AWS Two-Way SMS v1.0.0 - Real-time SMS conversations with WebSocket support, SQLite storage, and auto-replies.</Description>
+  <Description>AWS Two-Way SMS v1.0.2 - Real-time SMS on port 80 with WebSocket support, SQLite storage, and auto-replies.</Description>
 
   <!-- Paths -->
   <Config Name="AppData" Target="/data" Default="/mnt/user/appdata/aws-2way-sms" Mode="rw" Description="SQLite database and persistent storage (stores sms-messages.db)" Type="Path" Display="always" Required="true" Mask="false"/>
@@ -67,7 +67,7 @@ WebSocket Support:
   <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region where Pinpoint is configured (e.g., eu-west-2, us-east-1)" Type="Variable" Display="always" Required="true" Mask="false"/>
 
   <!-- Application configuration -->
-  <Config Name="PORT" Target="PORT" Default="3000" Mode="" Description="Internal application port (should match exposed port)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="PORT" Target="PORT" Default="80" Mode="" Description="Internal application port (should match exposed port)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="NODE_ENV" Target="NODE_ENV" Default="production" Mode="" Description="Node.js environment (production or development)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="true" Mode="" Description="Disable Content Security Policy for UNRAID compatibility (recommended: true)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
 
