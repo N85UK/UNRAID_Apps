@@ -7,6 +7,8 @@ on:
     paths:
       - 'Apps/AWS_EUM_v3/**'
       - '.github/workflows/docker-build-aws-eum-v3.yml'
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
 
 env:
