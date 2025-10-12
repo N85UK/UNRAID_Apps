@@ -28,9 +28,6 @@ Two-Way Messaging Setup:
 • SNS Topic required for incoming message webhooks
 • Webhook endpoint must be publicly accessible for AWS SNS
 
-Default Configured Phone Numbers:
-• +447418367358 (Primary)
-• +447418373704 (Secondary)
 
 Usage:
 • Access web UI on your chosen host port (default: 3000)
@@ -61,7 +58,7 @@ WebSocket Support:
   <Config Name="AppData" Target="/data" Default="/mnt/user/appdata/aws-2way-sms" Mode="rw" Description="SQLite database and persistent storage (stores sms-messages.db)" Type="Path" Display="always" Required="true" Mask="false"/>
 
   <!-- Ports -->
-  <Config Name="Web UI Port" Target="3000" Default="3000" Mode="tcp" Description="Host port for web UI and WebSocket connections" Type="Port" Display="always" Required="true" Mask="false"/>
+  <Config Name="Web UI Port" Target="80" Default="80" Mode="tcp" Description="Host port for web UI and WebSocket connections" Type="Port" Display="always" Required="true" Mask="false"/>
 
   <!-- Environment variables -->
   <Config Name="TZ" Target="TZ" Default="Europe/London" Mode="" Description="Container timezone for logs and message timestamps" Type="Variable" Display="advanced" Required="false" Mask="false"/>
