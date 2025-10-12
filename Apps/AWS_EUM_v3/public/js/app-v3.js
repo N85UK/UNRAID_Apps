@@ -220,9 +220,6 @@ const FormHandler = {
         AppState.messageStats.sent++;
         AppState.messageStats.segments += result.segments || 1;
         AppState.messageStats.cost += result.cost || 0;
-        
-        // Update charts with new data
-        ChartManager.updateMessageChart([12, 19, 3, 5, 2, 3, AppState.messageStats.sent]);
     }
 };
 
@@ -275,7 +272,7 @@ const HistoryManager = {
                 </div>
                 <div class="phone-number">
                     <i class="fas fa-phone"></i>
-                    ${msg.destination}
+                    ${msg.phoneNumber}
                 </div>
                 <div class="message-body">${msg.message}</div>
                 <div class="message-meta">
@@ -376,20 +373,13 @@ const RealTimeManager = {
     },
 
     updateChartsWithRealData(stats) {
-        // Update charts with real data from AWS
-        if (stats.messageHistory) {
-            ChartManager.updateMessageChart(stats.messageHistory);
-        }
-        if (stats.successRate !== undefined && stats.failureRate !== undefined) {
-            ChartManager.updateSuccessChart(stats.successRate, stats.failureRate);
-        }
+        // Charts removed in v3.0.9 - this method is deprecated
+        // Kept for compatibility but no longer performs any operations
     },
 
     updateChartsWithFallbackData() {
-        // Use static fallback data instead of random expanding data
-        const fallbackMessageData = [12, 15, 8, 10, 6, 9, 11];
-        ChartManager.updateMessageChart(fallbackMessageData);
-        ChartManager.updateSuccessChart(95, 5);
+        // Charts removed in v3.0.9 - this method is deprecated
+        // Kept for compatibility but no longer performs any operations
     },
 
     stop() {

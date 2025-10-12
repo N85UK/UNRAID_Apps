@@ -1,7 +1,7 @@
 {
   "name": "aws-eum-v3",
-    "version": "3.0.9",
-  "description": "AWS End User Messaging v3 - Enhanced SMS messaging interface with dark mode and real-time features",
+  "version": "3.0.10",
+  "description": "AWS End User Messaging v3 - Simplified SMS interface with AWS Pinpoint",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
