@@ -100,7 +100,7 @@ and this project adheres to the new YYYY.MM.DD.#### version format.
 ## [2025.10.06.02.00] - 2025-10-06
 
 ### Added
-- ExplorerX Plugin v2025.10.06.02.00 - **SAFE VERSION**
+- ExplorerX Plugin v2025.10.10.0002 - **SAFE VERSION**
 - Completely safe installation scripts that only touch ExplorerX files
 - Standalone tab interface (not in Tools menu)
 - Simple file browser with directory navigation

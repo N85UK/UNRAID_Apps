@@ -33,7 +33,7 @@ This audit reviewed all 40+ markdown files across the UNRAID Apps repository to 
    - Proper categorization as Development Tools with correct descriptions
 
 5. **ExplorerX_Plugin/README.md**: ✅ **FIXED** - Version conflicts and merge markers
-   - Resolved conflicting version references (v2025.10.10.0001 vs v2025.10.10.06.00)
+   - Resolved conflicting version references (v2025.10.10.0001 vs v2025.10.10.0002)
    - Updated to current debug version v2025.10.10.0002 status
    - Removed merge conflict markers and inconsistent information
    - Added proper debug status and troubleshooting information
@@ -85,7 +85,7 @@ This audit reviewed all 40+ markdown files across the UNRAID Apps repository to 
 ### **Version Accuracy Analysis**
 
 #### **Before Audit** ❌ **MAJOR ISSUES**
-- ExplorerX: Conflicting v2025.10.10.0001 vs v2025.10.10.06.00 vs actual v2025.10.10.0002
+- ExplorerX: Conflicting v2025.10.10.0001 vs v2025.10.10.0002 vs actual v2025.10.10.0002
 - AWS EUM: All showing v1.0.0 instead of actual v2.0, v3.0, and enterprise versions
 - CHANGELOG: 10+ duplicate entries with same version numbers
 - Doc files: Generic templates instead of project-specific content
