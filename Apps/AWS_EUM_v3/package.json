@@ -1,6 +1,6 @@
 {
   "name": "aws-eum-v3",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "AWS End User Messaging v3 - Simplified SMS interface with AWS Pinpoint",
   "main": "server.js",
   "scripts": {

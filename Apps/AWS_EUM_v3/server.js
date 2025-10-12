@@ -22,7 +22,7 @@ const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
 // Application version
-const APP_VERSION = '3.0.10';
+const APP_VERSION = '3.0.11';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 // Configuration
 const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
@@ -197,11 +197,35 @@ app.use(express.static(path.join(__dirname, 'public'), {
     }
 }));
 
-// Ensure data directory exists
-// Create data directory if it doesn't exist
-if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+// Ensure data directory exists with proper error handling
+function ensureDataDirectory() {
+    try {
+        if (!fs.existsSync(dataDir)) {
+            console.log(`📁 Creating data directory: ${dataDir}`);
+            fs.mkdirSync(dataDir, { recursive: true, mode: 0o755 });
+        }
+        
+        // Test write permissions
+        const testFile = path.join(dataDir, '.write-test');
+        try {
+            fs.writeFileSync(testFile, 'test', { mode: 0o644 });
+            fs.unlinkSync(testFile);
+            console.log(`✅ Data directory writable: ${dataDir}`);
+        } catch (writeError) {
+            console.error(`❌ Data directory is NOT writable: ${dataDir}`);
+            console.error(`   Error: ${writeError.message}`);
+            console.error(`   This will prevent message history and update info from being saved.`);
+            console.error(`   Please ensure the mounted volume has correct permissions.`);
+            console.error(`   Run: docker run -v /your/path:/app/data (not /data)`);
+        }
+    } catch (error) {
+        console.error(`❌ Failed to create data directory: ${dataDir}`);
+        console.error(`   Error: ${error.message}`);
+        console.error(`   Message history and updates will not be saved.`);
+    }
 }
+
+ensureDataDirectory();
 
 // AWS Pinpoint SMS client (using the declaration from above)
 
@@ -428,13 +452,16 @@ async function checkForUpdates() {
 
 function saveUpdateInfo(info) {
   try {
-    const dataDir = path.dirname(UPDATE_FILE);
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    const updateDir = path.dirname(UPDATE_FILE);
+    if (!fs.existsSync(updateDir)) {
+      fs.mkdirSync(updateDir, { recursive: true, mode: 0o755 });
     }
-    fs.writeFileSync(UPDATE_FILE, JSON.stringify(info, null, 2));
+    fs.writeFileSync(UPDATE_FILE, JSON.stringify(info, null, 2), { mode: 0o644 });
   } catch (error) {
     console.error('Error saving update info:', error.message);
+    console.error(`   Update file: ${UPDATE_FILE}`);
+    console.error(`   Data directory: ${dataDir}`);
+    console.error(`   Please check volume mount and permissions`);
   }
 }
 
@@ -744,9 +771,13 @@ function saveMessage(message) {
         }
 
         const historyFile = path.join(dataDir, 'history.json');
-        fs.writeFileSync(historyFile, JSON.stringify(history, null, 2));
+        fs.writeFileSync(historyFile, JSON.stringify(history, null, 2), { mode: 0o644 });
+        console.log(`✅ Message saved to history (total: ${history.length} messages)`);
     } catch (error) {
         console.error('Error saving message:', error);
+        console.error(`   Data directory: ${dataDir}`);
+        console.error(`   Please check volume mount and permissions`);
+        console.error(`   Recommended: -v /mnt/user/appdata/aws-eum-v3:/app/data`);
     }
 }
 

@@ -38,5 +38,5 @@ CMD ["node", "server.js"]
 
 # Metadata labels
 LABEL maintainer="N85UK <hello@git.n85.uk>" \
-      version="3.0.10" \
-      description="AWS End User Messaging v3.0.10 - Fixed ChartManager errors and message history display"
+      version="3.0.11" \
+      description="AWS End User Messaging v3.0.11 - Improved data directory permissions and error messages"

@@ -5,6 +5,43 @@ All notable changes to AWS EUM will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.11] - 2025-10-12
+
+### 🐛 Fixed - Data Directory Permissions
+
+#### Volume Permission Issues
+- **Enhanced data directory initialization** with proper error detection
+  - Added write permission test on startup
+  - Clear error messages when directory is not writable
+  - Explicit guidance on correct volume mount paths
+- **Improved error logging** for file operations
+  - `saveMessage()` now logs success/failure with helpful context
+  - `saveUpdateInfo()` provides detailed path information on errors
+  - Both functions set explicit file permissions (0o644) on creation
+- **Better user feedback** 
+  - Startup logs confirm data directory is writable
+  - Error messages include recommended docker run commands
+  - Clear distinction between permission vs. path issues
+
+#### User Impact
+- **Resolves:** `EACCES: permission denied, open '/data/history.json'` errors
+- **Resolves:** Message history not saving despite successful SMS sends
+- **Resolves:** Update info not being persisted to disk
+- **Provides:** Clear documentation on volume mount configuration
+
+### Documentation
+- **Added VOLUME_FIX.md** - Comprehensive guide for fixing permission errors
+  - Three solution options (recommended, permissions fix, root user)
+  - UNRAID-specific instructions
+  - Verification steps and troubleshooting
+- **Improved error messages** - All file operation errors now include actionable guidance
+
+### Technical Details
+- Data directory check now tests actual write permissions, not just existence
+- File operations use explicit mode flags for predictable permissions
+- Replaced generic error catch with detailed diagnostic logging
+- Recommended volume mount: `-v /path/on/host:/app/data` (not `/data`)
+
 ## [3.0.10] - 2025-10-12
 
 ### 🐛 Critical Bug Fixes
