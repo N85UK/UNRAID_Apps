@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # Set version
-ARG VERSION=1.0.2
+ARG VERSION=1.0.3
 ENV APP_VERSION=${VERSION}
 
 # Install build dependencies for native modules (better-sqlite3)
@@ -25,9 +25,9 @@ RUN npm install --omit=dev --no-audit --no-fund && \
 # Copy application files
 COPY --chown=appuser:appuser . .
 
-# Create data directory
-RUN mkdir -p /data && \
-    chown -R appuser:appuser /data
+# Create data directory with proper permissions
+RUN mkdir -p /app/data && \
+    chown -R appuser:appuser /app/data
 
 # Switch to non-root user
 USER appuser

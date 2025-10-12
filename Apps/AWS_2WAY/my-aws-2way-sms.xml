@@ -37,7 +37,7 @@ Usage:
 • Database stored in mounted volume for persistence
 
 Database:
-• SQLite database file: /data/sms-messages.db
+• SQLite database file: /app/data/messages.db
 • Automatic schema initialization on first run
 • Conversation threads and message history preserved
 • Auto-reply keywords and responses configurable
@@ -52,10 +52,10 @@ WebSocket Support:
   <WebUI>http://[IP]:[PORT:80]/</WebUI>
   <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_2WAY/images/aws-2way-icon.png</Icon>
   <ExtraParams>--restart unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
-  <Description>AWS Two-Way SMS v1.0.2 - Real-time SMS on port 80 with WebSocket support, SQLite storage, and auto-replies.</Description>
+  <Description>AWS Two-Way SMS v1.0.3 - Fixed volume permissions, runs on port 80 with WebSocket support and auto-replies.</Description>
 
   <!-- Paths -->
-  <Config Name="AppData" Target="/data" Default="/mnt/user/appdata/aws-2way-sms" Mode="rw" Description="SQLite database and persistent storage (stores sms-messages.db)" Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="AppData" Target="/app/data" Default="/mnt/user/appdata/aws-2way-sms" Mode="rw" Description="SQLite database and persistent storage (stores messages.db in /app/data)" Type="Path" Display="always" Required="true" Mask="false"/>
 
   <!-- Ports -->
   <Config Name="Web UI Port" Target="80" Default="80" Mode="tcp" Description="Host port for web UI and WebSocket connections" Type="Port" Display="always" Required="true" Mask="false"/>

@@ -11,9 +11,9 @@ const { PinpointSMSVoiceV2Client, SendTextMessageCommand } = require('@aws-sdk/c
 const { SNSClient } = require('@aws-sdk/client-sns');
 const MessageDatabase = require('./database');
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 const PORT = process.env.PORT || 80;
-const DATA_DIR = process.env.DATA_DIR || '/data';
+const DATA_DIR = process.env.DATA_DIR || '/app/data';
 
 // Ensure data directory exists
 const fs = require('fs');
