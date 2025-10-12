@@ -1,4 +1,4 @@
-// AWS EUM v2.0 Enhanced Frontend JavaScript
+// AWS EUM v2.1.2 MariaDB Enterprise Edition - Frontend JavaScript
 
 // Global variables
 let segmentCount = 1;
@@ -8,7 +8,7 @@ let isRefreshing = false;
 let updateCheckInterval = null;
 let lastUpdateCheck = 0;
 
-console.log('🚀 AWS EUM v2.0 JavaScript loading...');
+console.log('🚀 AWS EUM v2.1.2 MariaDB Enterprise JavaScript loading...');
 
 document.addEventListener('DOMContentLoaded', function() {
     const smsForm = document.getElementById('smsForm');
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(checkForUpdates, 2000);
     setInterval(checkForUpdates, 4 * 60 * 60 * 1000);
     
-    console.log('✅ AWS EUM v2.0 Frontend initialization complete');
+    console.log('✅ AWS EUM v2.1.2 MariaDB Enterprise - Frontend initialization complete');
 });
 
 // Simple notification function
