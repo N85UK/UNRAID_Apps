@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS End User Messaging v2.0</title>
-    <link rel="stylesheet" href="http://10.0.2.11/css/style.css?v=<%= Date.now() %>" type="text/css">
+    <title>AWS End User Messaging v2.1 - MariaDB Enterprise Edition</title>
+    <link rel="stylesheet" href="/css/style.css?v=<%= Date.now() %>" type="text/css">
     <script>
-        console.log('🎨 CSS Link URL:', 'http://10.0.2.11/css/style.css?v=<%= Date.now() %>');
+        console.log('🎨 CSS Link URL:', '/css/style.css?v=<%= Date.now() %>');
         // Check if CSS loaded
         document.addEventListener('DOMContentLoaded', function() {
             console.log('📄 DOM loaded, checking CSS...');
@@ -28,8 +28,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>AWS End User Messaging v2.0</h1>
-            <p>Enhanced SMS messaging with AWS integration</p>
+            <h1>AWS End User Messaging v2.1 - MariaDB Enterprise</h1>
+            <p>Enhanced SMS messaging with database persistence and multi-user support</p>
             <div class="status-bar">
                 <div class="status-item">
                     <span class="status-label">AWS:</span>
@@ -180,13 +180,13 @@
 
         <footer>
             <div class="footer-info">
-                <p>AWS End User Messaging v<%= config.version || '2.0' %> | Enhanced with UNRAID integration</p>
+                <p>AWS End User Messaging v<%= config.version || '2.1' %> - MariaDB Enterprise Edition | Database persistence enabled</p>
                 <% if (config.has_latest_features) { %>
                     <p><small>✅ Latest features enabled | Build: <%= config.build_timestamp || 'Unknown' %></small></p>
                 <% } else { %>
                     <p><small>⚠️  Running older version - update container for latest features</small></p>
                 <% } %>
-                <p>Longer messages are automatically split into SMS segments</p>
+                <p>Multi-user support with JWT authentication | Messages stored in external MariaDB</p>
             </div>
         </footer>
     </div>

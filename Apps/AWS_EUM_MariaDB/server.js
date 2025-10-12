@@ -34,7 +34,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const CURRENT_VERSION = '2.1.1';
+const CURRENT_VERSION = '2.1.2';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 
@@ -74,11 +74,11 @@ const HISTORY_RETENTION = parseInt(process.env.HISTORY_RETENTION) || 100;
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
-            defaultSrc: ["'self'", "http://10.0.2.11"],
-            styleSrc: ["'self'", "'unsafe-inline'", "http://10.0.2.11"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "http://10.0.2.11"],
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
             imgSrc: ["'self'", "data:", "http:", "https:"],
-            connectSrc: ["'self'", "http://10.0.2.11"],
+            connectSrc: ["'self'"],
             upgradeInsecureRequests: null, // Disable HTTPS upgrade
         },
     },
@@ -97,8 +97,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'false');
-    // Prevent HTTPS upgrades with proper CSP
-    res.setHeader('Content-Security-Policy', "default-src 'self' http://10.0.2.11; style-src 'self' 'unsafe-inline' http://10.0.2.11; script-src 'self' 'unsafe-inline' http://10.0.2.11;");
+    // Prevent HTTPS upgrades with proper CSP (no hardcoded IPs)
+    res.setHeader('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: http: https:; connect-src 'self';");
     next();
 });
 

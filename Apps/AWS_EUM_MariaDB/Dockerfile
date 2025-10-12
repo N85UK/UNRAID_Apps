@@ -37,6 +37,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 CMD ["node", "server.js"]
 
 # Metadata labels
-LABEL maintainer="N85UK <hello@git.n85.uk>" \
-      version="2.1.1" \
-      description="AWS End User Messaging - MariaDB Enterprise Edition with external database support"
+LABEL maintainer="n85uk" \
+      description="AWS End User Messaging with MariaDB - Enterprise Edition" \
+      version="2.1.2"

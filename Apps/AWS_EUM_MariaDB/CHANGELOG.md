@@ -2,6 +2,27 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+## [2.1.2] - 2025-10-12
+
+### 🐛 Bug Fixes
+- **Critical**: Fixed CSS not loading due to hardcoded IP addresses
+  - Removed hardcoded `http://10.0.2.11` from views/index.ejs CSS link
+  - Changed to relative path `/css/style.css` to work on any IP/hostname
+  - Removed hardcoded IPs from CSP headers in server.js
+  - Application now works correctly on any network configuration
+
+### 🎨 UI Improvements
+- Updated page title from "v2.0" to "v2.1 - MariaDB Enterprise Edition"
+- Updated header subtitle to highlight database persistence and multi-user support
+- Updated footer to show MariaDB Enterprise branding
+- Improved version display to show correct v2.1.2
+
+### 📝 Technical Details
+- **Files Changed**: views/index.ejs, server.js
+- **Root Cause**: Hardcoded IP prevented CSS loading when deployed at different IPs
+- **Solution**: Use relative paths compatible with any deployment
+- **Impact**: CSS now loads correctly showing modern gradient UI with proper styling
+
 ## [2.1.1] - 2025-10-12
 
 ### 🐛 Bug Fixes
