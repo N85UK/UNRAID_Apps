@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<Container>
+  <Name>AWS_EUM_MariaDB</Name>
+  <Repository>ghcr.io/n85uk/aws-eum-mariadb:latest</Repository>
+  <Registry>https://ghcr.io/n85uk/aws-eum-mariadb</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
+  <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_MariaDB</Project>
+  <Overview>
+AWS End User Messaging (EUM) MariaDB Enterprise Edition v2.1.1
+
+Enterprise-grade SMS messaging platform with external database integration, multi-user support, and advanced analytics.
+
+🏢 Enterprise Features:
+• External MariaDB/MySQL database integration for data persistence
+• Multi-user authentication with role-based access control (Admin/User/ReadOnly)
+• JWT authentication with bcrypt password hashing
+• Advanced analytics dashboard with historical data and trend analysis
+• User management with registration and admin approval workflows
+• Session management with database storage
+• Complete audit trails and message history
+• API keys for external system integration
+• Connection pooling for high performance
+
+📊 Analytics &amp; Reporting:
+• Real-time metrics and performance monitoring
+• Historical data with complete message history
+• Success rate tracking and delivery analysis
+• Cost analytics with detailed reporting
+• Custom date ranges and data export capabilities
+
+🔐 Security:
+• Secure JWT token-based authentication
+• bcrypt password hashing with configurable salt rounds
+• Database session storage
+• Permission-based API access
+• Advanced rate limiting
+• Complete user action audit trails
+
+Recent Updates (v2.1.1):
+• Fixed critical originator dropdown bug (was sending ARN instead of phone number)
+• SMS sending now works correctly
+• Version numbers updated consistently
+• Documentation fully updated
+
+Usage:
+• Requires external MariaDB 10.5+ or MySQL 8.0+ database server
+• Uses :latest tag for automatic updates
+• Watchtower labels included for auto-update compatibility
+• Web UI on port 80 (map to your chosen host port)
+• Database migrations run automatically on first start
+• Default admin user created: admin/admin123 (CHANGE IMMEDIATELY!)
+
+Database Setup Required:
+1. Create database: CREATE DATABASE aws_eum CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+2. Create user: CREATE USER 'aws_eum'@'%' IDENTIFIED BY 'secure_password';
+3. Grant permissions: GRANT ALL PRIVILEGES ON aws_eum.* TO 'aws_eum'@'%';
+4. Flush: FLUSH PRIVILEGES;
+
+Security Note:
+• Change default admin password immediately after first login
+• Use strong passwords for database and JWT secrets
+• Store credentials securely in UNRAID environment variables
+• Enable HTTPS for production deployments
+  </Overview>
+  <Category>Network:Management;Tools:</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_v3/images/aws-eum-icon.png</Icon>
+  <ExtraParams>--restart unless-stopped --memory=1024m --cpu-shares=1024</ExtraParams>
+  <Description>AWS EUM MariaDB v2.1.1 - Enterprise SMS platform with external database, multi-user auth, and advanced analytics.</Description>
+
+  <!-- Ports -->
+  <Config Name="Web UI Port" Target="80" Default="80" Mode="tcp" Description="Host port for the web UI mapped to container port 80" Type="Port" Display="always" Required="true" Mask="false"/>
+
+  <!-- Required Database Configuration -->
+  <Config Name="DB_HOST" Target="DB_HOST" Default="" Mode="" Description="MariaDB/MySQL database server hostname or IP address" Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="DB_USER" Target="DB_USER" Default="aws_eum" Mode="" Description="Database username with full permissions on aws_eum database" Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="DB_PASSWORD" Target="DB_PASSWORD" Default="" Mode="" Description="Database user password" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="DB_NAME" Target="DB_NAME" Default="aws_eum" Mode="" Description="Database name (must exist and be accessible)" Type="Variable" Display="always" Required="true" Mask="false"/>
+
+  <!-- Required AWS Configuration -->
+  <Config Name="AWS_ACCESS_KEY_ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="AWS IAM access key with Pinpoint SMS permissions" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS_SECRET_ACCESS_KEY" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="AWS IAM secret access key" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region where Pinpoint is configured" Type="Variable" Display="always" Required="true" Mask="false"/>
+
+  <!-- Required Security Configuration -->
+  <Config Name="JWT_SECRET" Target="JWT_SECRET" Default="" Mode="" Description="JWT signing secret (min 32 random characters) - GENERATE A STRONG RANDOM STRING" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="SESSION_SECRET" Target="SESSION_SECRET" Default="" Mode="" Description="Session encryption secret (min 32 random characters) - GENERATE A STRONG RANDOM STRING" Type="Variable" Display="always" Required="true" Mask="true"/>
+
+  <!-- Initial Admin Account -->
+  <Config Name="ADMIN_USERNAME" Target="ADMIN_USERNAME" Default="admin" Mode="" Description="Initial admin username (change after first login)" Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="ADMIN_PASSWORD" Target="ADMIN_PASSWORD" Default="admin123" Mode="" Description="Initial admin password - CHANGE IMMEDIATELY AFTER FIRST LOGIN!" Type="Variable" Display="always" Required="false" Mask="true"/>
+
+  <!-- Optional Database Configuration -->
+  <Config Name="DB_PORT" Target="DB_PORT" Default="3306" Mode="" Description="Database server port (default MySQL/MariaDB port)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="DB_CONNECTION_LIMIT" Target="DB_CONNECTION_LIMIT" Default="10" Mode="" Description="Maximum number of concurrent database connections" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="DB_TIMEOUT" Target="DB_TIMEOUT" Default="60000" Mode="" Description="Database connection timeout in milliseconds" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- Optional Security Configuration -->
+  <Config Name="SESSION_TIMEOUT" Target="SESSION_TIMEOUT" Default="3600" Mode="" Description="User session timeout in seconds (default 1 hour)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="BCRYPT_ROUNDS" Target="BCRYPT_ROUNDS" Default="12" Mode="" Description="Password hashing rounds (higher = more secure but slower)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- Optional Application Configuration -->
+  <Config Name="TZ" Target="TZ" Default="Europe/London" Mode="" Description="Container timezone for logs and scheduling" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="true" Mode="" Description="Disable Content Security Policy for custom networks (recommended for br0.x)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RATE_LIMIT_MESSAGES" Target="RATE_LIMIT_MESSAGES" Default="10" Mode="" Description="Maximum SMS messages per minute per user" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="MAX_MESSAGE_LENGTH" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum message length in characters" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="AUTO_UPDATE_CHECK" Target="AUTO_UPDATE_CHECK" Default="true" Mode="" Description="Enable automatic update checking" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="UPDATE_CHECK_INTERVAL" Target="UPDATE_CHECK_INTERVAL" Default="24" Mode="" Description="Hours between update checks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- Watchtower auto-update labels -->
+  <Config Name="com.centurylinklabs.watchtower.enable" Target="com.centurylinklabs.watchtower.enable" Default="true" Mode="" Description="Enable Watchtower auto-updates for this container" Type="Label" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="com.centurylinklabs.watchtower.monitor-only" Target="com.centurylinklabs.watchtower.monitor-only" Default="false" Mode="" Description="Monitor only (don't auto-update)" Type="Label" Display="advanced" Required="false" Mask="false"/>
+</Container>
