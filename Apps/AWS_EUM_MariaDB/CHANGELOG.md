@@ -2,6 +2,25 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+## [2.1.1] - 2025-10-12
+
+### 🐛 Bug Fixes
+- **Critical**: Fixed originator dropdown sending ARN instead of label
+  - Users were unable to send SMS messages due to incorrect dropdown value
+  - Changed `<option value="<%= originators[label] %>">` to `<option value="<%= label %>">`
+  - This fix matches the correction applied to v3.0.10
+  - Issue identified in BACKPORT_FIXES.md
+
+### 📝 Documentation
+- Updated CHANGELOG.md with v2.1.1 release notes
+- Confirmed MariaDB version does not use Chart.js (no aspect ratio issues)
+- Validated all files for consistency
+
+### ✅ Validation
+- Verified form field names match server endpoints
+- Confirmed CSP configuration appropriate for MariaDB version
+- Checked version constants across all files (server.js, package.json, Dockerfile)
+
 ## [2.0.0] - 2025-10-08
 
 ### 🚀 Major Release - Complete Rewrite

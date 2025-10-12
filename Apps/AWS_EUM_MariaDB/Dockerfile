@@ -38,5 +38,5 @@ CMD ["node", "server.js"]
 
 # Metadata labels
 LABEL maintainer="N85UK <hello@git.n85.uk>" \
-      version="MariaDB" \
+      version="2.1.1" \
       description="AWS End User Messaging - MariaDB Enterprise Edition with external database support"

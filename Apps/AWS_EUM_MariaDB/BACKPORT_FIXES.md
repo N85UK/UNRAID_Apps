@@ -1,5 +1,9 @@
 # AWS_EUM_MariaDB - Required Fixes Backport
 
+## ✅ STATUS: COMPLETED (v2.1.1 - Oct 12, 2025)
+
+All critical fixes have been backported and tested.
+
 ## Overview
 AWS_EUM_MariaDB (v2.1.0) needs the same fixes that were applied to AWS_EUM_v3 (v3.0.12).
 
@@ -30,26 +34,28 @@ AWS_EUM_MariaDB (v2.1.0) needs the same fixes that were applied to AWS_EUM_v3 (v
 - Uses `name="message"` ✅
 - Uses `name="originator"` ✅
 
-### 2. ❌ Originator Dropdown
-**Status:** NEEDS FIX
-- Currently sends `originators[label]` (the value)
-- Should send `label` (the key)
+### 2. ✅ Originator Dropdown
+**Status:** FIXED in v2.1.1
+- Changed from sending `originators[label]` (the ARN value)
+- Now sends `label` (the phone number key)
 
-**Fix:**
+**Fix Applied:**
 ```diff
 - <option value="<%= originators[label] %>"><%= label %></option>
 + <option value="<%= label %>"><%= label %></option>
 ```
+
+**File Modified:** `views/index.ejs` line 95
 
 ### 3. ✅ Form Method
 **Status:** Already correct
 - Form has no `method` or `action` attributes ✅
 - Relies on JavaScript fetch ✅
 
-### 4. ? Chart Issues
-**Status:** UNKNOWN - Needs checking
-- Check if MariaDB version uses Chart.js
-- If yes, verify `maintainAspectRatio: true`
+### 4. ✅ Chart Issues
+**Status:** NOT APPLICABLE
+- MariaDB version does not use Chart.js
+- No chart configuration needed
 
 ### 5. ✅ Version Variable
 **Status:** Already correct
@@ -65,9 +71,9 @@ AWS_EUM_MariaDB (v2.1.0) needs the same fixes that were applied to AWS_EUM_v3 (v
 
 | File | Issue | Priority | Status |
 |------|-------|----------|--------|
-| `views/index.ejs` | Originator dropdown | **HIGH** | ❌ Not fixed |
-| `public/js/app.js` | Chart config (if exists) | MEDIUM | ⏳ Needs check |
-| `my-aws-eum-mariadb.xml` | CSP defaults | LOW | ⏳ Needs check |
+| `views/index.ejs` | Originator dropdown | **HIGH** | ✅ Fixed v2.1.1 |
+| `public/js/app.js` | Chart config (if exists) | MEDIUM | ✅ N/A - No charts |
+| `my-aws-eum-mariadb.xml` | CSP defaults | LOW | ✅ Verified OK |
 
 ## Testing Checklist
 

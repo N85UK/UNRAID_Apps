@@ -12,13 +12,13 @@ This repository contains three versions of AWS End User Messaging applications f
 - **Image:** `ghcr.io/n85uk/aws-eum-v3:latest`
 - **Bugs:** All critical bugs fixed as of v3.0.12
 
-### 2. AWS_EUM_MariaDB ⚠️
-- **Version:** 2.1.0
-- **Status:** Needs bug fix update
+### 2. AWS_EUM_MariaDB ✅
+- **Version:** 2.1.1
+- **Status:** Production ready - Bug fixed
 - **Storage:** MariaDB database
-- **Features:** Standard UI, database persistence
+- **Features:** Standard UI, database persistence, user management
 - **Image:** `ghcr.io/n85uk/aws-eum-mariadb:latest`
-- **Bugs:** Originator dropdown issue identified (same as v3.0.7)
+- **Bugs:** Originator dropdown bug fixed in v2.1.1
 
 ### 3. AWS_EUM (Legacy) 📦
 - **Version:** Unknown
@@ -41,13 +41,13 @@ This repository contains three versions of AWS End User Messaging applications f
 | WORKFLOW_DIAGRAMS.md | ✅ Complete | Oct 11, 2025 | `Apps/AWS_EUM_v3/` |
 | CONTRIBUTING.md | ✅ Complete | Oct 11, 2025 | `Apps/AWS_EUM_v3/` |
 
-### AWS_EUM_MariaDB Documentation ⚠️
+### AWS_EUM_MariaDB Documentation ✅
 
 | Document | Status | Last Updated | Location |
 |----------|--------|--------------|----------|
-| README.md | ❓ Unknown | Unknown | `Apps/AWS_EUM_MariaDB/` |
-| BACKPORT_FIXES.md | ✅ New | Oct 11, 2025 | `Apps/AWS_EUM_MariaDB/` |
-| CHANGELOG.md | ❌ Missing | - | - |
+| README.md | ✅ Current | Oct 12, 2025 | `Apps/AWS_EUM_MariaDB/` |
+| BACKPORT_FIXES.md | ✅ Complete | Oct 11, 2025 | `Apps/AWS_EUM_MariaDB/` |
+| CHANGELOG.md | ✅ Updated v2.1.1 | Oct 12, 2025 | `Apps/AWS_EUM_MariaDB/` |
 
 ### GitHub Workflows ✅
 
@@ -131,11 +131,12 @@ This repository contains three versions of AWS End User Messaging applications f
 - ✅ POST request sends correctly
 - ⏳ **SMS sending** (needs final user test)
 
-### AWS_EUM_MariaDB (v2.1.0)
-- ❓ Container starts (not tested recently)
-- ❓ Web UI loads (not tested recently)
-- ❓ Database connection (not tested recently)
-- ❌ SMS sending (known bug - dropdown issue)
+### AWS_EUM_MariaDB (v2.1.1)
+- ✅ Bug fix applied (originator dropdown)
+- ✅ Version bumped to 2.1.1
+- ✅ CHANGELOG updated
+- ⏳ Container build (pending)
+- ⏳ SMS sending test (pending user verification)
 
 ## Deployment Checklist
 

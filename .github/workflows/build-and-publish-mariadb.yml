@@ -33,8 +33,9 @@ jobs:
             type=raw,value=latest,enable=true
             type=raw,value=enterprise,enable=true
             type=raw,value=mariadb,enable=true
-            type=raw,value=1.0,enable=true
-            type=raw,value=1.0.0,enable=true
+            type=raw,value=2.1.1,enable=true
+            type=raw,value=2.1,enable=true
+            type=raw,value=2,enable=true
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5

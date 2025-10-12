@@ -34,7 +34,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const CURRENT_VERSION = '2.1.0';
+const CURRENT_VERSION = '2.1.1';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 

@@ -93,7 +93,7 @@
                                 <% } else { %>
                                     <option value="">Select a phone number...</option>
                                     <% Object.keys(originators).forEach(label => { %>
-                                        <option value="<%= originators[label] %>"><%= label %></option>
+                                        <option value="<%= label %>"><%= label %></option>
                                     <% }); %>
                                 <% } %>
                             </select>
