@@ -6,20 +6,36 @@ const rateLimit = require('express-rate-limit');
 const { WebSocketServer } = require('ws');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
 const crypto = require('crypto');
 const { PinpointSMSVoiceV2Client, SendTextMessageCommand } = require('@aws-sdk/client-pinpoint-sms-voice-v2');
 const { SNSClient } = require('@aws-sdk/client-sns');
 const MessageDatabase = require('./database');
 
-const APP_VERSION = '1.0.3';
+const APP_VERSION = '1.0.4';
 const PORT = process.env.PORT || 80;
 const DATA_DIR = process.env.DATA_DIR || '/app/data';
 
 // Ensure data directory exists
-const fs = require('fs');
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-  console.log(`📁 Created data directory: ${DATA_DIR}`);
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    console.log(`📁 Created data directory: ${DATA_DIR}`);
+  } else {
+    console.log(`📁 Data directory exists: ${DATA_DIR}`);
+  }
+  
+  // Test write permissions
+  const testFile = path.join(DATA_DIR, '.write-test');
+  fs.writeFileSync(testFile, 'test');
+  fs.unlinkSync(testFile);
+  console.log(`✅ Data directory is writable: ${DATA_DIR}`);
+} catch (error) {
+  console.error(`❌ ERROR: Cannot create/write to data directory: ${DATA_DIR}`);
+  console.error(`   Error: ${error.message}`);
+  console.error(`   User: ${process.getuid ? process.getuid() : 'unknown'}`);
+  console.error(`   This is likely a volume mount permission issue.`);
+  process.exit(1);
 }
 
 // Initialize AWS clients
