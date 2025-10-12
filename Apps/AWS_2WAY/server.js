@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { WebSocketServer } = require('ws');
 const http = require('http');
+const https = require('https');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -12,7 +13,7 @@ const { PinpointSMSVoiceV2Client, SendTextMessageCommand } = require('@aws-sdk/c
 const { SNSClient } = require('@aws-sdk/client-sns');
 const MessageDatabase = require('./database');
 
-const APP_VERSION = '1.0.4';
+const APP_VERSION = '1.0.5';
 const PORT = process.env.PORT || 80;
 const DATA_DIR = process.env.DATA_DIR || '/app/data';
 
@@ -71,6 +72,8 @@ app.use(helmet({
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+// SNS sends messages with text/plain content-type
+app.use(bodyParser.text({ type: 'text/plain', limit: '10mb' }));
 app.use(express.static('public'));
 
 // Rate limiting
@@ -238,23 +241,76 @@ app.post('/api/send', async (req, res) => {
 // SNS webhook endpoint for incoming SMS
 app.post('/webhook/sms', async (req, res) => {
   try {
-    console.log('📥 Received SNS webhook:', JSON.stringify(req.body, null, 2));
+    console.log('📥 SNS webhook headers:', {
+      'content-type': req.headers['content-type'],
+      'x-amz-sns-message-type': req.headers['x-amz-sns-message-type'],
+      'x-amz-sns-topic-arn': req.headers['x-amz-sns-topic-arn']
+    });
+    console.log('📥 SNS webhook body type:', typeof req.body);
+    
+    // Parse SNS message (can come as text/plain or application/json)
+    let snsMessage;
+    if (typeof req.body === 'string') {
+      try {
+        snsMessage = JSON.parse(req.body);
+      } catch (e) {
+        console.error('❌ Failed to parse SNS message:', req.body);
+        return res.status(400).json({ success: false, error: 'Invalid JSON' });
+      }
+    } else {
+      snsMessage = req.body;
+    }
+
+    console.log('📥 Received SNS webhook:', JSON.stringify(snsMessage, null, 2));
 
     // Handle SNS subscription confirmation
-    if (req.headers['x-amz-sns-message-type'] === 'SubscriptionConfirmation') {
-      console.log('📝 SNS Subscription Confirmation URL:', req.body.SubscribeURL);
-      // In production, you'd auto-confirm or provide UI for manual confirmation
-      return res.status(200).json({ 
-        success: true, 
-        message: 'Please confirm subscription via SubscribeURL' 
-      });
+    if (req.headers['x-amz-sns-message-type'] === 'SubscriptionConfirmation' || snsMessage.Type === 'SubscriptionConfirmation') {
+      const subscribeUrl = snsMessage.SubscribeURL;
+      console.log('📝 SNS Subscription Confirmation URL:', subscribeUrl);
+      
+      if (subscribeUrl) {
+        try {
+          // Auto-confirm subscription by visiting the SubscribeURL
+          const response = await new Promise((resolve, reject) => {
+            https.get(subscribeUrl, (res) => {
+              let data = '';
+              res.on('data', chunk => data += chunk);
+              res.on('end', () => resolve({ statusCode: res.statusCode, body: data }));
+            }).on('error', reject);
+          });
+          
+          console.log('✅ SNS Subscription confirmed automatically:', response.statusCode);
+          return res.status(200).json({ 
+            success: true, 
+            message: 'Subscription confirmed',
+            statusCode: response.statusCode
+          });
+        } catch (error) {
+          console.error('❌ Failed to confirm subscription:', error.message);
+          return res.status(200).json({ 
+            success: false, 
+            message: 'Failed to confirm subscription. Please visit: ' + subscribeUrl,
+            error: error.message 
+          });
+        }
+      } else {
+        console.error('❌ SubscribeURL not found in message');
+        return res.status(200).json({ 
+          success: false, 
+          message: 'SubscribeURL not found',
+          receivedMessage: snsMessage
+        });
+      }
     }
 
     // Handle actual SMS notification
-    if (req.headers['x-amz-sns-message-type'] === 'Notification') {
-      const message = typeof req.body.Message === 'string' 
-        ? JSON.parse(req.body.Message) 
-        : req.body.Message;
+    if (req.headers['x-amz-sns-message-type'] === 'Notification' || snsMessage.Type === 'Notification') {
+      // The Message field contains the actual SMS data as a JSON string
+      const message = typeof snsMessage.Message === 'string' 
+        ? JSON.parse(snsMessage.Message) 
+        : snsMessage.Message;
+
+      console.log('📨 Parsed SMS message:', JSON.stringify(message, null, 2));
 
       const inboundMessage = {
         message_id: message.messageId || `inbound_${Date.now()}`,
@@ -307,9 +363,20 @@ app.post('/webhook/sms', async (req, res) => {
       });
 
       res.status(200).json({ success: true, messageId });
-    } else {
-      res.status(200).json({ success: true, message: 'Unknown message type' });
+      return;
     }
+    
+    // Unknown message type
+    console.log('⚠️ Unknown SNS message type:', {
+      header: req.headers['x-amz-sns-message-type'],
+      type: snsMessage.Type,
+      message: snsMessage
+    });
+    res.status(200).json({ 
+      success: true, 
+      message: 'Received but not processed',
+      type: snsMessage.Type || 'unknown'
+    });
 
   } catch (error) {
     console.error('❌ Error processing SNS webhook:', error);
