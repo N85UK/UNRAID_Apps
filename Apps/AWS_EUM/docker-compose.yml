@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   aws-eum:
-    build: .
-    # For production, use: image: ghcr.io/n85uk/aws-eum:2.0
-    container_name: aws-eum-v2
+    # build: .
+    image: ghcr.io/n85uk/aws-eum-v3:latest
+    container_name: aws-eum-v3
     restart: unless-stopped
     ports:
       - "8280:80"
@@ -20,6 +20,12 @@ services:
       - MAX_MESSAGE_LENGTH=${MAX_MESSAGE_LENGTH:-1600}
       - HISTORY_RETENTION=${HISTORY_RETENTION:-100}
       - ENABLE_DEBUG=${ENABLE_DEBUG:-false}
+      
+      # Content Security Policy (CSP) Configuration
+      # Set DISABLE_CSP=true for custom bridge networks (e.g., br0.2) to allow external resources
+      - DISABLE_CSP=${DISABLE_CSP:-false}
+      - NETWORK_HOST=${NETWORK_HOST:-http://10.0.2.11}
+      - CSP_POLICY=${CSP_POLICY:-}
       
       # Optional Manual Originators
       - ORIGINATORS=${ORIGINATORS:-}

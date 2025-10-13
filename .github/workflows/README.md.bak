@@ -6,7 +6,7 @@ This directory contains automated workflows for building and publishing applicat
 
 ### AWS EUM v3
 - **`docker-build-aws-eum-v3.yml`** - Builds and pushes AWS EUM v3 Docker images
-  - Triggers: Push to `main` branch when `Apps/AWS_EUM/**` changes
+  - Triggers: Push to `main` branch when `Apps/AWS_EUM_v3/**` changes
   - Manual trigger: Workflow dispatch available
   - Output: `ghcr.io/n85uk/aws-eum-v3:latest` and `ghcr.io/n85uk/aws-eum-v3:X.X.X`
   - Platforms: linux/amd64, linux/arm64
@@ -46,7 +46,7 @@ This directory contains automated workflows for building and publishing applicat
 
 ### Build Fails
 - Check GitHub Actions logs for specific errors
-- Verify Docker image builds locally: `docker build -t test Apps/AWS_EUM/`
+- Verify Docker image builds locally: `docker build -t test Apps/AWS_EUM_v3/`
 - Check package.json has valid version number
 
 ### Image Not Updating

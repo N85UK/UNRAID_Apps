@@ -1,11 +1,11 @@
-name: Build and Push AWS EUM v3 Docker Image
+name: Build and Push AWS EUM Docker Image
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'Apps/AWS_EUM_v3/**'
+      - 'Apps/AWS_EUM/**'
       - '.github/workflows/docker-build-aws-eum-v3.yml'
     tags:
       - 'v*.*.*'
@@ -13,7 +13,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: n85uk/aws-eum-v3
+  IMAGE_NAME: n85uk/aws-eum
 
 jobs:
   build-and-push:
@@ -29,7 +29,7 @@ jobs:
       - name: Extract version from package.json
         id: package-version
         run: |
-          VERSION=$(cat Apps/AWS_EUM_v3/package.json | grep '"version"' | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+          VERSION=$(cat Apps/AWS_EUM/package.json | grep '"version"' | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "📦 Detected version: $VERSION"
 
@@ -46,14 +46,14 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./Apps/AWS_EUM_v3
-          file: ./Apps/AWS_EUM_v3/Dockerfile
+          context: ./Apps/AWS_EUM
+          file: ./Apps/AWS_EUM/Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.package-version.outputs.version }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: |
-            org.opencontainers.image.title=AWS End User Messaging v3
+            org.opencontainers.image.title=AWS End User Messaging
             org.opencontainers.image.description=Enhanced SMS messaging interface with dark mode, charts, and real-time features
             org.opencontainers.image.vendor=N85UK
             org.opencontainers.image.version=${{ steps.package-version.outputs.version }}

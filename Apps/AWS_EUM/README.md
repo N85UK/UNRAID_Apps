@@ -1,10 +1,29 @@
-# AWS End User Messaging (EUM) v2.0
+# AWS End User Messaging (EUM) v3.0.9
 
-**Enhanced SMS application with full UNRAID integration, AWS auto-discovery, and long message support**
+Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-updates, and comprehensive network compatibility.
 
-## 🚀 New in Version 2.0
+## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
 
-### ✨ **AWS Auto-Discovery**
+✅ **Status**: Production ready with simplified UI and fixed message history  
+📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest` (auto-updates)  
+🔄 **CI/CD**: Automated builds with Alpine Linux optimization
+🌐 **Network Support**: Default bridge, br0.2, br0.100, and all custom networks
+
+## ✨ Enhanced Features in v3.0
+
+### 🌙 **Advanced Dark Mode**
+- Beautiful toggle between light and dark themes
+- Automatic theme persistence across sessions
+- System preference detection and automatic switching
+- Optimized color schemes for readability in both modes
+
+### 🎨 **Modern Clean Design** (Updated v3.0.9)
+- **Simplified UI** - Removed complex charts for faster, cleaner experience
+- **Smooth animations** and micro-interactions
+- **Enhanced typography** with Google Fonts integration
+- **Responsive grid system** for perfect mobile adaptation
+- **Material Design components** with elevation and shadows
+- **Progressive enhancement** for all devices
 - **Automatic phone number detection** - Pulls all available phone numbers from your AWS account
 - **Real-time originator refresh** - Click refresh to update available numbers
 - **Smart caching** - Reduces AWS API calls while keeping data fresh
@@ -13,19 +32,20 @@
 - **Long message support** - Send messages up to 1,600 characters
 - **Automatic SMS segmentation** - Long messages split into multiple SMS segments
 - **Real-time cost estimation** - See how many SMS segments your message will use
-- **Message preview** - See exactly how your long message will be split
+- **Message history tracking** - See all sent messages with phone numbers and timestamps (Fixed v3.0.9)
 
-### 🛡️ **Security & Rate Limiting**
-- **Rate limiting** - Prevents SMS abuse with configurable limits
-- **Enhanced security** - Helmet.js security headers and CSP
-- **Input validation** - Comprehensive validation for all inputs
-- **Error handling** - Better error messages and recovery
+### 🛡️ **Enhanced Security & Performance**
+- **Rate limiting** with `express-rate-limit` and `rate-limiter-flexible`
+- **Helmet.js security** with comprehensive CSP and security headers
+- **Advanced validation** with sanitization for all inputs
+- **Error boundaries** with graceful degradation and recovery
+- **Faster page loads** - 200KB smaller footprint without chart libraries (v3.0.9)
 
-### 🔧 **UNRAID Integration**
-- **Full configuration interface** - Configure everything through UNRAID
-- **Dropdown region selection** - Easy AWS region selection
-- **Secure credential storage** - AWS credentials stored securely
-- **Health monitoring** - Built-in health checks and status monitoring
+### 🔧 **Improved UNRAID Integration**
+- **Streamlined configuration** through UNRAID templates
+- **Better health monitoring** with detailed status reporting
+- **Enhanced logging** with structured output for debugging
+- **Resource optimization** with Alpine Linux base image
 
 ## 📋 Features
 
@@ -33,7 +53,7 @@
 - ✅ **Send SMS messages** via AWS Pinpoint SMS service
 - ✅ **Automatic AWS integration** - Discovers your phone numbers
 - ✅ **Long message support** - Up to 1,600 characters with auto-segmentation
-- ✅ **Message history** - Track all sent messages with details
+- ✅ **Message history** - Track all sent messages with phone numbers and details (Fixed v3.0.9)
 - ✅ **Real-time feedback** - Character counts, segment info, cost estimates
 
 ### AWS Integration
@@ -84,7 +104,7 @@ docker run -d \
   -e AWS_SECRET_ACCESS_KEY=your_secret_key \
   -e AWS_REGION=eu-west-2 \
   -v /path/to/data:/app/data \
-  ghcr.io/n85uk/aws-eum:2.0
+  ghcr.io/n85uk/aws-eum-v3:latest
 ```
 
 ## 📖 Usage
@@ -127,6 +147,30 @@ docker run -d \
 | `HISTORY_RETENTION` | `100` | Number of messages to keep |
 | `ORIGINATORS` | - | Manual originators (optional) |
 | `ENABLE_DEBUG` | `false` | Enable debug logging |
+| **CSP Configuration** | | **Content Security Policy Settings** |
+| `DISABLE_CSP` | `false` | Disable CSP headers (allows external resources) |
+| `NETWORK_HOST` | `http://10.0.2.11` | Network host for CSP whitelist |
+| `CSP_POLICY` | - | Custom CSP policy as JSON (advanced) |
+
+#### CSP Configuration Examples
+
+For **custom bridge networks** (e.g., br0.2) where external CDNs are blocked:
+
+```bash
+# Recommended: Simple solution - disable CSP completely
+DISABLE_CSP=true
+
+# Alternative: Network-specific solution - whitelist your network
+NETWORK_HOST=http://192.168.2.1
+
+# Advanced: Custom permissive CSP policy (JSON format)
+CSP_POLICY={"defaultSrc":["'self'","'unsafe-inline'","'unsafe-eval'","data:","http:","https:"],"styleSrc":["'self'","'unsafe-inline'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"],"scriptSrc":["'self'","'unsafe-inline'","'unsafe-eval'","http:","https:","cdnjs.cloudflare.com","cdn.jsdelivr.net"]}
+```
+
+**Quick Fix for br0.2 Networks:**
+1. Add environment variable: `DISABLE_CSP=true`
+2. Restart container
+3. All features (charts, dark mode, icons) will work perfectly
 
 ### AWS Permissions
 

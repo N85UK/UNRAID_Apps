@@ -40,24 +40,24 @@ A curated collection of UNRAID applications and plugins that extend UNRAID's fun
 
 🚀 **All versions now building successfully with GitHub Actions CI/CD!**
 
-#### Version 2.0 (Current Stable)
+#### Version 3.0 (Enhanced UI Edition) 🎨
 - **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
 - **Status**: ✅ Production Ready - Auto-deployed
 - **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 
-**Features:**
-- ✅ Reliable SMS delivery via AWS Pinpoint
-- ✅ Simple, clean interface
-- ✅ Message history and tracking
-- ✅ Cost estimation
-- ✅ Multiple originator support
+**Enhanced Features:**
+- 🌙 Modern dark mode with automatic theme switching
+- 🎨 Clean, responsive design with Google Fonts
+- 📊 Chart.js analytics and message statistics
+- 🛡️ Enhanced security with CSP and rate limiting
+- 🔄 Auto-updates with configurable intervals
 
 #### Version 3.0 (Enhanced UI Edition) 🎨
-- **Location**: [`Apps/AWS_EUM_v3/`](Apps/AWS_EUM_v3/)
+- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
 - **Status**: ✅ Production Ready - Auto-deployed
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_v3/template.cfg`
-- **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest`
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 
 **Enhanced Features:**
 - 🌙 Modern dark mode with automatic theme switching
@@ -202,24 +202,24 @@ This repository and included projects are licensed under the MIT License. See [`
 
 🚀 **All versions now building successfully with GitHub Actions CI/CD!**
 
-#### **Version 2.0** (Current Stable)
+#### **Version 3.0** (Enhanced UI Edition) 🎨
 - **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
 - **Status**: ✅ Production Ready - Auto-deployed
 - **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 
-**Features:**
-- ✅ Reliable SMS delivery via AWS Pinpoint
-- ✅ Simple, clean interface
-- ✅ Message history and tracking
-- ✅ Cost estimation
-- ✅ Multiple originator support
+**Enhanced Features:**
+- 🌙 Modern dark mode with automatic theme switching
+- 🎨 Clean, responsive design with Google Fonts
+- 📊 Chart.js analytics and message statistics
+- 🛡️ Enhanced security with CSP and rate limiting
+- 🔄 Auto-updates with configurable intervals
 
 #### **Version 3.0** (Enhanced UI Edition) 🎨
-- **Location**: [`Apps/AWS_EUM_v3/`](Apps/AWS_EUM_v3/)
+- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
 - **Status**: ✅ Production Ready - Auto-deployed
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_v3/template.cfg`
-- **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest`
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 
 **Enhanced Features:**
 # UNRAID Apps
@@ -234,7 +234,7 @@ Keywords: UNRAID plugin, UNRAID app, file manager, SMS messaging, Docker templat
 
 - ExplorerX Plugin (native UNRAID plugin): `ExplorerX_Plugin/`
 - UNRAID API Integration (bounty submission): `Bounty_Submission/`
-- AWS End User Messaging (EUM) suite: `Apps/AWS_EUM`, `Apps/AWS_EUM_v3`, `Apps/AWS_EUM_MariaDB`
+- AWS End User Messaging (EUM) suite: `Apps/AWS_EUM`, `Apps/AWS_EUM`, `Apps/AWS_EUM_MariaDB`
 - CONTRIBUTING.md: `./CONTRIBUTING.md`
 - SECURITY.md: `./SECURITY.md`
 - CHANGELOG.md: `./CHANGELOG.md`
@@ -294,7 +294,7 @@ High-level integration checklist for UNRAID maintainers
 Professional SMS messaging applications using AWS Pinpoint. Select the edition that fits your needs:
 
 - Stable v2 (simple): `Apps/AWS_EUM/` (file-based storage)
-- Enhanced UI v3: `Apps/AWS_EUM_v3/` (modern UI, charts, dark mode)
+- Enhanced UI v3: `Apps/AWS_EUM/` (modern UI, charts, dark mode)
 - MariaDB Enterprise: `Apps/AWS_EUM_MariaDB/` (multi-user, database persistence)
 
 General notes

@@ -17,8 +17,8 @@ on:
         required: true
         type: choice
         options:
-          - AWS_EUM_v3
-        default: 'AWS_EUM_v3'
+          - AWS_EUM
+        default: 'AWS_EUM'
 
 jobs:
   bump-version:

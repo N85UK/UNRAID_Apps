@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<Container>
+  <Name>AWS_EUM</Name>
+  <Repository>ghcr.io/n85uk/aws-eum-v3:latest</Repository>
+  <Registry>https://ghcr.io/n85uk/aws-eum-v3</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
+  <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM</Project>
+  <Overview>
+AWS End User Messaging (EUM) v3.0.11
+
+A simplified, lightweight SMS messaging interface for AWS Pinpoint without chart dependencies.
+
+Features:
+• Automatic AWS phone number and sender ID discovery
+• Clean, modern UI with light and dark mode support
+• Intelligent message segmentation up to 1600 characters
+• Real-time message history display
+• Fixed volume permission issues for reliable message storage
+• Auto-updates to latest version for security and features
+• Watchtower integration for seamless container updates
+• CSP configuration for custom bridge or macvlan networks
+
+Recent Updates (v3.0.11):
+• Fixed data directory permission errors
+• Improved error messages with troubleshooting guidance
+• Enhanced file operation logging
+• Better volume mount documentation
+
+Recent Updates (v3.0.10):
+• Removed ChartManager reference errors
+• Fixed message history phone number display
+• Resolved "Network error" notifications
+
+Recent Updates (v3.0.9):
+• Removed Chart.js and Moment.js dependencies (~200KB lighter)
+• Simplified UI - removed chart visualizations
+• 33% faster JavaScript performance
+
+Usage:
+• Uses :latest tag for automatic updates
+• Watchtower labels included for auto-update compatibility
+• Expose the web UI on your chosen host port, mapping to container port 80
+• Provide AWS credentials with Pinpoint SMS permissions
+• For custom networks (br0.x): Set DISABLE_CSP=true
+• IMPORTANT: Mount volume to /app/data (not /data) for proper permissions
+
+Volume Setup:
+• Container Path: /app/data (REQUIRED - do not use /data)
+• Host Path: /mnt/user/appdata/aws-eum-v3
+• Do NOT set DATA_DIR environment variable (uses /app/data by default)
+
+Auto-Updates:
+• Container automatically updates with Watchtower
+• Always runs latest security patches and features
+• Zero-downtime updates on schedule
+  </Overview>
+  <Category>Network:Management;Tools:</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/images/aws-eum-icon.png</Icon>
+  <ExtraParams>--restart unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
+  <Description>AWS EUM v3.0.11 - Simplified SMS messaging with fixed volume permissions and improved error handling.</Description>
+
+  <!-- Paths -->
+  <Config Name="AppData" Target="/app/data" Default="/mnt/user/appdata/aws-eum-v3" Mode="rw" Description="Container data directory - MUST use /app/data (not /data) for proper permissions" Type="Path" Display="always" Required="true" Mask="false"/>
+
+  <!-- Ports -->
+  <Config Name="Web UI Port" Target="80" Default="80" Mode="tcp" Description="Host port for the web UI mapped to container port 80" Type="Port" Display="always" Required="true" Mask="false"/>
+
+  <!-- Environment variables -->
+  <Config Name="TZ" Target="TZ" Default="Europe/London" Mode="" Description="Container timezone for logs and scheduling" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="AWS_ACCESS_KEY_ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="IAM access key" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS_SECRET_ACCESS_KEY" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="IAM secret key" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region" Type="Variable" Display="always" Required="true" Mask="false"/>
+
+  <!-- Optional tuning -->
+  <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="true" Mode="" Description="Set true to relax CSP on custom bridge or macvlan networks (recommended for br0.x networks)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RATE_LIMIT_MESSAGES" Target="RATE_LIMIT_MESSAGES" Default="10" Mode="" Description="SMS messages per minute limit" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="MAX_MESSAGE_LENGTH" Target="MAX_MESSAGE_LENGTH" Default="1600" Mode="" Description="Maximum message length in characters" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="HISTORY_RETENTION" Target="HISTORY_RETENTION" Default="100" Mode="" Description="Number of messages to keep in history" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="AUTO_UPDATE_CHECK" Target="AUTO_UPDATE_CHECK" Default="true" Mode="" Description="Enable automatic update checking" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="UPDATE_CHECK_INTERVAL" Target="UPDATE_CHECK_INTERVAL" Default="24" Mode="" Description="Hours between update checks" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="AUTO_UPDATE_APPLY" Target="AUTO_UPDATE_APPLY" Default="false" Mode="" Description="Automatically apply updates when found (requires Watchtower)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="ORIGINATORS" Target="ORIGINATORS" Default="" Mode="" Description="Manual originators (format: Label1:arn1,Label2:arn2) - optional, app auto-fetches from AWS" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- Watchtower auto-update labels -->
+  <Config Name="com.centurylinklabs.watchtower.enable" Target="com.centurylinklabs.watchtower.enable" Default="true" Mode="" Description="Enable Watchtower auto-updates for this container" Type="Label" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="com.centurylinklabs.watchtower.monitor-only" Target="com.centurylinklabs.watchtower.monitor-only" Default="false" Mode="" Description="Monitor only (don't auto-update)" Type="Label" Display="advanced" Required="false" Mask="false"/>
+</Container>

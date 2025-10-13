@@ -23,23 +23,23 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd Apps/AWS_EUM
+          cd Apps/AWS_EUM_v3
           npm ci
 
       - name: Syntax check
         run: |
-          cd Apps/AWS_EUM
+          cd Apps/AWS_EUM_v3
           node -c server.js
           echo "✅ Syntax check passed"
 
       - name: Validate package.json
         run: |
-          cd Apps/AWS_EUM
+          cd Apps/AWS_EUM_v3
           npm run test || echo "No tests defined"
 
       - name: Check version consistency
         run: |
-          cd Apps/AWS_EUM
+          cd Apps/AWS_EUM_v3
           
           PKG_VERSION=$(cat package.json | grep '"version"' | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
           SERVER_VERSION=$(grep "const APP_VERSION" server.js | awk -F"'" '{print $2}')
@@ -63,7 +63,7 @@ jobs:
 
       - name: Verify required files
         run: |
-          cd Apps/AWS_EUM
+          cd Apps/AWS_EUM_v3
           
           FILES=(
             "server.js"
@@ -85,7 +85,7 @@ jobs:
 
       - name: Docker build test
         run: |
-          cd Apps/AWS_EUM
+          cd Apps/AWS_EUM_v3
           docker build -t aws-eum-v3:test .
           echo "✅ Docker build successful"
 

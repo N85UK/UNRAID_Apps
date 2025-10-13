@@ -1,4 +1,4 @@
-# AWS EUM Docker ignore file
+# AWS EUM v3 Docker ignore file
 # Exclude development and documentation files from the Docker build
 
 # Node modules (will be installed in container)
@@ -15,16 +15,13 @@ lerna-debug.log*
 # Development files
 .env
 .env.*
-env.example
+.env.example
 docker-compose.yml
 docker-compose.*.yml
 
 # Documentation
 README.md
-README_CA.md
-README_publish.md
 doc.md
-CA_POLICY.md
 
 # Build and test files
 .dockerignore
