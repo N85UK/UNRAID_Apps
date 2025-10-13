@@ -73,137 +73,210 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 - **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest`
 
 **Enhanced Features:**
-- 🌙 **Dark Mode Toggle** with persistent storage
-- 📊 **Real-time Analytics Charts** with Chart.js integration
-- 🎨 **Modern Material Design** with smooth animations
-- 📱 **Fully Responsive** mobile-first design
-- ⚡ **Enhanced JavaScript** with modular ES6+ architecture
-- 🎯 **Advanced Message Preview** with live cost estimation
-- 🔄 **WebSocket Support** for real-time updates
+# UNRAID Apps
 
-#### **MariaDB Enterprise Edition** 🏢
-- **Location**: [`Apps/AWS_EUM_MariaDB/`](Apps/AWS_EUM_MariaDB/)
-- **Status**: ✅ Production Ready - Auto-deployed
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/template.cfg`
-- **Docker Image**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
+A curated collection of UNRAID applications and plugins that extend UNRAID's functionality and improve user experience.
 
-**Enterprise Features:**
-- 🗄️ **External Database Integration** (MariaDB/MySQL)
-- 👥 **Multi-User Authentication** with role-based access control
-- 🔐 **JWT Authentication** with bcrypt password hashing
-- 📊 **Advanced Analytics Dashboard** with historical data
-- ⚡ **Connection Pooling** and optimized database operations
-- 🔧 **Automated Migrations** and database seeding
-- 📈 **Comprehensive Audit Trails** and reporting
-- 🛡️ **Enterprise Security** with session management
-- 👤 **User Roles**: Admin, User, ReadOnly access levels
-- 📋 **API Key Management** for programmatic access
+Keywords: UNRAID plugin, UNRAID app, file manager, SMS messaging, Docker template, MariaDB, API integration
 
-**Role Capabilities:**
-- **Admin**: Full system access, user management, all features
-- **User**: Send messages, view own history, basic analytics
-- **ReadOnly**: View messages and analytics, no sending
+---
 
-**Database Schema:**
-- Advanced 7-table structure with foreign keys and indexing
-- User management with secure password storage
-- Message tracking with status and analytics
-- Settings management with environment variables
-- Session handling for web authentication
+## Quick links
 
-## 📦 **Installation Methods**
+- ExplorerX Plugin (native UNRAID plugin): `ExplorerX_Plugin/`
+- UNRAID API Integration (bounty submission): `Bounty_Submission/`
+- AWS End User Messaging (EUM) suite: `Apps/AWS_EUM`, `Apps/AWS_EUM_v3`, `Apps/AWS_EUM_MariaDB`
+- CONTRIBUTING.md: `./CONTRIBUTING.md`
+- SECURITY.md: `./SECURITY.md`
+- CHANGELOG.md: `./CHANGELOG.md`
+- Issues (all projects): https://github.com/N85UK/UNRAID_Apps/issues
 
-### For ExplorerX Plugin
+---
 
-**Option 1: Direct Installation (Recommended)**
-```
-1. Go to Plugins → Install Plugin
-2. Enter: https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
-3. Click Install
-4. Navigate to ExplorerX tab to start using
-```
+## Projects included
 
-**Option 2: Community Applications**
-```
-1. Install Community Applications if needed
-2. Search for "ExplorerX" in Apps tab
-3. Click Install
-```
+### ExplorerX Plugin (native UNRAID plugin)
 
-### For UNRAID API Integration
+A lightweight, native UNRAID plugin that provides a safe, responsive file manager interface for browsing shares and performing file operations.
 
-The bounty submission requires integration by the UNRAID team:
-```typescript
-// Add to UNRAID API codebase
-import { FileManagerModule } from './modules/filemanager/filemanager.module';
-```
+- Location: `ExplorerX_Plugin/`
+- Status: Debug (see `ExplorerX_Plugin/README.md` and release notes)
+- Install (plugin manifest): `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
+- Report issues: https://github.com/N85UK/UNRAID_Apps/issues
 
-## 🛠️ **Development & Architecture**
+Key features
 
-### Repository Structure
-```
-UNRAID_Apps/
-├── ExplorerX_Plugin/           # Advanced native file manager (current focus)
-│   ├── explorerx.plg          # Plugin manifest with enhanced features
-│   ├── source/                # Source code for multi-pane interface
-│   ├── packages/              # Built plugin packages
-│   └── README.md              # Installation and usage guide
-├── Bounty_Submission/          # UNRAID API integration (complete)
-│   ├── api/src/unraid-api/modules/filemanager/  # NestJS module
-│   ├── web/pages/              # Vue.js WebGUI
-│   └── README.md               # Integration guide
-├── Apps/
-│   ├── AWS_EUM/               # v2.0 - Stable SMS messaging
-│   ├── AWS_EUM_v3/            # v3.0 - Enhanced UI with dark mode & charts
-│   ├── AWS_EUM_MariaDB/       # Enterprise - Multi-user with database
-│   └── ca-submission/         # Community Applications submission tools
-└── Documentation/              # Project documentation
-    ├── README.md               # This file
-    ├── CHANGELOG.md            # Version history
-    ├── CONTRIBUTING.md         # Development guidelines
-    ├── SECURITY.md             # Security policy
-    └── MIGRATION.md            # Migration guides
+- Native UNRAID integration (Tools → ExplorerX)
+- Responsive UI for desktop and mobile
+- Safe permission handling and no global system changes
+- File operations: view, edit, move, copy, delete, streaming downloads
+
+Notes & known issues
+
+- Debug builds may display diagnostic output instead of the normal browser UI when active. Toggle debug mode off for normal behavior.
+- If you encounter rendering or permission issues, open an issue with console logs and a screenshot.
+
+---
+
+### UNRAID API Integration (Bounty Submission)
+
+NestJS-based implementation intended for integration with the official UNRAID API. This is a developer-focused project and requires UNRAID team coordination to include in the upstream API.
+
+- Location: `Bounty_Submission/`
+- Status: Ready for upstream integration (see `Bounty_Submission/README.md`)
+- UNRAID API reference: https://github.com/unraid/api
+
+What this contains
+
+- NestJS module implementing a file-manager API
+- Vue.js WebGUI sample pages
+- Session proxy approach for UNRAID authentication
+
+High-level integration checklist for UNRAID maintainers
+
+1. Review `Bounty_Submission/api/` modules and confirm route compatibility.
+2. Validate session proxy approach and security model with UNRAID maintainers.
+3. Upstream the module via a PR in the UNRAID API repository and follow the maintainers' guidance.
+
+---
+
+### AWS End User Messaging (EUM) Suite
+
+Professional SMS messaging applications using AWS Pinpoint. Select the edition that fits your needs:
+
+- Stable v2 (simple): `Apps/AWS_EUM/` (file-based storage)
+- Enhanced UI v3: `Apps/AWS_EUM_v3/` (modern UI, charts, dark mode)
+- MariaDB Enterprise: `Apps/AWS_EUM_MariaDB/` (multi-user, database persistence)
+
+General notes
+
+- Docker images are built via GitHub Actions and published to GitHub Container Registry (ghcr.io/n85uk)
+- Templates for Community Applications are provided in each app folder
+- All EUM apps require AWS credentials with Pinpoint SMS permissions
+
+Docker image pull commands
+
+```bash
+docker pull ghcr.io/n85uk/aws-eum:latest
+docker pull ghcr.io/n85uk/aws-eum-v3:latest
+docker pull ghcr.io/n85uk/aws-eum-mariadb:latest
 ```
 
-### Key Differences
+Environment variables (common)
 
-| Aspect | ExplorerX Plugin | API Integration |
-|--------|------------------|------------------|
-| **Use Case** | Install now on any UNRAID | Future API integration |
-| **Architecture** | Native UNRAID plugin | NestJS module |
-| **Authentication** | UNRAID session integration | UNRAID API proxy |
-| **Interface** | Multi-pane native UI | Vue.js component |
-| **Installation** | One-click install | API team integration |
-| **Performance** | No Docker overhead | Framework overhead |
+- AWS_ACCESS_KEY_ID — AWS access key (required)
+- AWS_SECRET_ACCESS_KEY — AWS secret key (required)
+- AWS_REGION — AWS region (default: eu-west-2)
+- DISABLE_CSP — Set to `true` on bridged networks (default: `false`)
+- PORT — Port to run server on (default: `80`)
 
-### AWS EUM Version Comparison
+See each application's `template.cfg` or `.env.example` for full lists and defaults.
 
-| Feature | v2.0 (Stable) | v3.0 (Enhanced UI) | MariaDB (Enterprise) |
-|---------|---------------|-------------------|---------------------|
-| **SMS Delivery** | ✅ AWS Pinpoint | ✅ AWS Pinpoint | ✅ AWS Pinpoint |
-| **Interface** | Clean & Simple | Modern Material Design | Enterprise Dashboard |
-| **Dark Mode** | ❌ | ✅ Persistent Toggle | ✅ User Preferences |
-| **Real-time Charts** | ❌ | ✅ Chart.js Integration | ✅ Advanced Analytics |
-| **Multi-User** | ❌ Single User | ❌ Single User | ✅ Role-Based Access |
-| **Database** | File Storage | File Storage | MariaDB/MySQL |
-| **Authentication** | None | None | JWT + bcrypt |
-| **User Roles** | N/A | N/A | Admin/User/ReadOnly |
-| **API Keys** | ❌ | ❌ | ✅ Management |
-| **Audit Trails** | Basic Logs | Enhanced Logs | Comprehensive |
-| **WebSocket** | ❌ | ✅ Real-time Updates | ✅ Live Dashboard |
-| **Mobile Design** | Basic Responsive | Fully Responsive | Enterprise Mobile |
-| **Best For** | Simple Setup | Modern UI Needs | Enterprise/Teams |
+Security considerations (MariaDB edition)
 
-## 📋 **System Requirements**
+- Change default admin passwords after first boot
+- Use strong secrets for `DB_PASSWORD` and JWT keys
+- Restrict database access to trusted hosts/networks and enable TLS for DB connections
 
-### For ExplorerX Plugin
-- **UNRAID**: 7.2.0-rc.1+ (optimized for latest versions)
-- **Architecture**: x86_64
-- **Memory**: 20MB RAM (native implementation)
-- **Storage**: 10MB disk space
-- **Dependencies**: PHP 8.x (included in UNRAID)
-- **Network**: Not required for core functionality
+---
 
+## Installation
+
+Pick the installation method per project below.
+
+ExplorerX Plugin (recommended)
+
+1. Go to UNRAID Web UI → Plugins → Install Plugin
+2. Paste: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
+3. Click Install and go to Tools → ExplorerX
+
+Docker-based apps (EUM)
+
+1. Pull the desired image from GHCR or use the provided `template.cfg` in the app folder
+2. Configure environment variables and mount `/app/data` for persistence
+3. Start container and check logs for startup messages
+
+Example (docker run minimal):
+```bash
+docker run -d \
+    -e AWS_ACCESS_KEY_ID=AKIA... \
+    -e AWS_SECRET_ACCESS_KEY=... \
+    -e AWS_REGION=eu-west-2 \
+    -p 8080:80 \
+    --name aws-eum-v3 \
+    ghcr.io/n85uk/aws-eum-v3:latest
+```
+
+---
+
+## Development & Contributing
+
+See `CONTRIBUTING.md` for full contribution guidelines. Quick tips:
+
+- Fork the repo and open small focused PRs
+- Run `npm install` inside `Apps/*` Node projects before development
+- Include tests for non-trivial changes and update `CHANGELOG.md` for releases
+- Follow consistent commit message style (semver-inspired prefixes)
+
+Code style & linters
+
+- Use recommended linters per project (ESLint/Prettier where applicable)
+
+---
+
+## CI / CD
+
+- GitHub Actions for build and publish are defined in `.github/workflows/`.
+- Docker image builds run on push to `main`, `develop` or tags like `v*.*.*`.
+- Tags are used to release versioned Docker images to GHCR.
+
+---
+
+## Support & Documentation
+
+- Central issues tracker: https://github.com/N85UK/UNRAID_Apps/issues
+- Security disclosures: follow `SECURITY.md` and email `security@git.n85.uk`
+- For ExplorerX debug mode, include console logs, a screenshot, and steps to reproduce
+
+Suggested improvements (manual steps)
+
+1. Create a DISCUSSIONS or dedicated Support repository for community help and FAQs
+2. Add issue templates for bug reports, feature requests, and security disclosures
+
+---
+
+## System Requirements
+
+- Minimum UNRAID recommended: 7.2.0 (test on latest stable release)
+- Node.js: 18+ for Node-based apps
+- Typical resource usage: small web apps — 50-200 MB RAM idle; depends on traffic and features
+
+---
+
+## Contributing
+
+- Link to `CONTRIBUTING.md` and follow PR/issue process
+
+---
+
+## License
+
+This repository and included projects are licensed under the MIT License. See `LICENSE` for details.
+
+---
+
+## Manual actions required
+
+The following actions require repository owner or maintainers to perform:
+
+1. Create a GitHub Discussions page (or Support repo) for user-facing support and FAQs
+2. Add issue templates for bugs, feature requests, and security reports
+3. Optionally add a SECURITY contact email in GitHub settings if not already set
+4. Verify Community Applications listing for ExplorerX and update `my-aws-eum-v3.xml` if needed
+
+---
+
+Thank you for using and contributing to the UNRAID Apps collection — maintained with care for the UNRAID community.
 ### For API Integration
 - **UNRAID API**: Development environment
 - **Node.js**: 18+
