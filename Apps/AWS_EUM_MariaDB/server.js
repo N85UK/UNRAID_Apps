@@ -35,7 +35,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const CURRENT_VERSION = '2.1.3';
+const CURRENT_VERSION = '2.1.4';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 
@@ -626,9 +626,11 @@ app.post('/send-sms', async (req, res) => {
         // Rate limiting
         await rateLimiter.consume(req.ip);
 
+        console.log('📨 Send SMS request body:', JSON.stringify(req.body, null, 2));
         const { originator, phoneNumber, message } = req.body;
 
         if (!originator || !phoneNumber || !message) {
+            console.error('❌ Missing fields - originator:', !!originator, 'phoneNumber:', !!phoneNumber, 'message:', !!message);
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
