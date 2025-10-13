@@ -30,6 +30,8 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 80;
+// Require authentication for MariaDB edition by default (set to 'false' to disable)
+const REQUIRE_AUTH = process.env.REQUIRE_AUTH !== 'false';
 
 // Auto-update configuration
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
@@ -140,6 +142,13 @@ app.use(session({
     }
 }));
 app.set('view engine', 'ejs');
+
+// Helper middleware which delegates to AuthManager.requireSession when available
+function requireSessionMiddleware(req, res, next) {
+    if (!REQUIRE_AUTH) return next();
+    if (!authManager) return next();
+    return authManager.requireSession(req, res, next);
+}
 
 // Static files with multiple approaches to ensure they work
 // Method 1: Standard express.static
@@ -545,7 +554,7 @@ function calculateMessageInfo(message) {
 }
 
 // Routes
-app.get('/', async (req, res) => {
+app.get('/', requireSessionMiddleware, async (req, res) => {
     console.log('🌐 Main page requested from:', req.ip);
     try {
         const originators = await getOriginators();
@@ -562,7 +571,7 @@ app.get('/', async (req, res) => {
             has_latest_features: true
         };
         console.log('📊 Rendering page with config:', JSON.stringify(config, null, 2));
-        res.render('index', { originators, history, config });
+    res.render('index', { originators, history, config, user: req.user });
     } catch (error) {
         console.error('Error loading page:', error);
         res.render('index', { 
@@ -574,9 +583,38 @@ app.get('/', async (req, res) => {
                 version: CURRENT_VERSION,
                 build_timestamp: new Date().toISOString(),
                 has_latest_features: true
-            }
+            },
+            user: null
         });
     }
+});
+
+// Authentication endpoints (simple session-based login using AuthManager)
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { username, password } = req.body || {};
+        if (!username || !password) return res.status(400).json({ error: 'Username and password are required' });
+
+        if (!authManager) return res.status(500).json({ error: 'AuthManager not initialized' });
+
+        const result = await authManager.authenticateUser(username, password);
+        if (!result.success) return res.status(401).json({ error: result.message });
+
+        // Save in session
+        req.session.userId = result.user.id;
+        req.session.token = result.token;
+
+        res.json({ success: true, user: result.user, token: result.token });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Login failed' });
+    }
+});
+
+app.post('/api/auth/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.json({ success: true, message: 'Logged out' });
+    });
 });
 
 app.get('/api/originators', async (req, res) => {
@@ -988,6 +1026,17 @@ async function startServer() {
             console.log(`✅ Database '${DB_CONFIG.database}' already initialized`);
             console.log(`📊 Found ${dbStatus.tables.length} tables`);
             console.log('');
+        }
+
+        // Initialize Database helper and AuthManager
+        try {
+            database = new Database(DB_CONFIG);
+            await database.connect();
+            authManager = new AuthManager(database);
+            console.log('🔐 AuthManager initialized');
+        } catch (err) {
+            console.error('❌ Failed to initialize database/auth manager:', err.message);
+            // Continue - app may still run in AWS-only mode
         }
         
         // Start the HTTP server
