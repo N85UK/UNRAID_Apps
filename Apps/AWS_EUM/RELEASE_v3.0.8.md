@@ -42,7 +42,7 @@ October 11, 2024
 **Fix:** Changed XML template default to `DISABLE_CSP=true` for better compatibility with custom networks
 
 **Files Changed:**
-- `my-aws-eum-v3.xml` - Default changed from `false` to `true`
+- `my-aws-eum.xml` - Default changed from `false` to `true`
 
 **Impact:** New installations work immediately on br0.x networks ✅
 
@@ -71,7 +71,7 @@ chown -R 1000:1000 /mnt/user/appdata/aws-eum
 
 1. **views/index-v3.ejs** - Fixed form field name (`destination` → `phoneNumber`)
 2. **public/js/app-v3.js** - Fixed chart aspect ratio settings (2 locations)
-3. **my-aws-eum-v3.xml** - Changed DISABLE_CSP default to `true`
+3. **my-aws-eum.xml** - Changed DISABLE_CSP default to `true`
 4. **package.json** - Version bump to 3.0.8
 5. **server.js** - Version bump to 3.0.8
 6. **Dockerfile** - Version bump to 3.0.8
@@ -107,7 +107,7 @@ Should show:
 
 1. **Pull new image:**
    ```bash
-   docker pull ghcr.io/n85uk/aws-eum-v3:latest
+   docker pull ghcr.io/n85uk/aws-eum:latest
    ```
 
 2. **Update container via UNRAID UI:**
@@ -162,7 +162,7 @@ None. All critical issues resolved.
 The automated Git Flow will build this new version automatically:
 1. Tag v3.0.8 created and pushed ✅
 2. GitHub Actions building Docker image (5-10 minutes)
-3. Image available at `ghcr.io/n85uk/aws-eum-v3:3.0.8` and `:latest`
+3. Image available at `ghcr.io/n85uk/aws-eum:3.0.8` and `:latest`
 4. Watchtower will auto-update containers using `:latest`
 
 ---

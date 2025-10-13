@@ -71,7 +71,7 @@ docker run -d \
   --restart unless-stopped \
   --memory=512m \
   --cpu-shares=1024 \
-  ghcr.io/n85uk/aws-eum-v3:latest
+  ghcr.io/n85uk/aws-eum:latest
 ```
 
 ## Expected Results After Fix
@@ -111,7 +111,7 @@ The UNRAID template has `DISABLE_CSP` defaulting to `false` because:
 
 Update the template default for br0.2 users:
 
-1. Edit `my-aws-eum-v3.xml`
+1. Edit `my-aws-eum.xml`
 2. Change line:
    ```xml
    <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="true" ...

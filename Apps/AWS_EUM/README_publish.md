@@ -4,8 +4,8 @@
 
 ### Image Information
 - **Registry**: GitHub Container Registry (GHCR)
-- **Image**: `ghcr.io/n85uk/aws-eum-v3:3.0.1`
-- **Latest**: `ghcr.io/n85uk/aws-eum-v3:latest`
+- **Image**: `ghcr.io/n85uk/aws-eum:3.0.1`
+- **Latest**: `ghcr.io/n85uk/aws-eum:latest`
 - **Status**: ✅ Ready for publishing
 - **Features**: Enhanced UI + CSP fixes for custom bridge networks
 
@@ -14,7 +14,7 @@
 **Build the Image:**
 ```bash
 # Build with version tags
-docker build -t ghcr.io/n85uk/aws-eum-v3:3.0.1 -t ghcr.io/n85uk/aws-eum-v3:latest .
+docker build -t ghcr.io/n85uk/aws-eum:3.0.1 -t ghcr.io/n85uk/aws-eum:latest .
 
 # Or use the build script
 ./build.sh
@@ -26,8 +26,8 @@ docker build -t ghcr.io/n85uk/aws-eum-v3:3.0.1 -t ghcr.io/n85uk/aws-eum-v3:lates
 echo $GITHUB_TOKEN | docker login ghcr.io -u N85UK --password-stdin
 
 # Push both tags
-docker push ghcr.io/n85uk/aws-eum-v3:3.0.1
-docker push ghcr.io/n85uk/aws-eum-v3:latest
+docker push ghcr.io/n85uk/aws-eum:3.0.1
+docker push ghcr.io/n85uk/aws-eum:latest
 ```
 
 ### 🆕 v3.0.1 Key Features

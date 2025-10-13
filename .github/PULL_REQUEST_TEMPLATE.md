@@ -11,7 +11,7 @@
 - [ ] Version bump
 
 ## Application
-- [ ] AWS_EUM_v3
+- [ ] AWS_EUM
 - [ ] Other (specify): ___________
 
 ## Checklist

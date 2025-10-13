@@ -98,8 +98,8 @@ docker run -d \
     -e AWS_SECRET_ACCESS_KEY=... \
     -e AWS_REGION=eu-west-2 \
     -p 8080:80 \
-    --name aws-eum-v3 \
-    ghcr.io/n85uk/aws-eum-v3:latest
+    --name aws-eum \
+    ghcr.io/n85uk/aws-eum:latest
 ```
 
 ## � Development & Contributing
@@ -123,7 +123,7 @@ See `CONTRIBUTING.md` for full contribution guidelines. Quick tips:
 
 **Docker Images Available:**
 - `ghcr.io/n85uk/aws-eum:latest` (v2.0)
-- `ghcr.io/n85uk/aws-eum-v3:latest` (v3.0)
+- `ghcr.io/n85uk/aws-eum:latest` (v3.0)
 - `ghcr.io/n85uk/aws-eum-mariadb:latest` (Enterprise)
 
 ## 🤝 Contributing
@@ -307,7 +307,7 @@ Docker image pull commands
 
 ```bash
 docker pull ghcr.io/n85uk/aws-eum:latest
-docker pull ghcr.io/n85uk/aws-eum-v3:latest
+docker pull ghcr.io/n85uk/aws-eum:latest
 docker pull ghcr.io/n85uk/aws-eum-mariadb:latest
 ```
 
@@ -352,8 +352,8 @@ docker run -d \
     -e AWS_SECRET_ACCESS_KEY=... \
     -e AWS_REGION=eu-west-2 \
     -p 8080:80 \
-    --name aws-eum-v3 \
-    ghcr.io/n85uk/aws-eum-v3:latest
+    --name aws-eum \
+    ghcr.io/n85uk/aws-eum:latest
 ```
 
 ---
@@ -421,7 +421,7 @@ The following actions require repository owner or maintainers to perform:
 1. Create a GitHub Discussions page (or Support repo) for user-facing support and FAQs
 2. Add issue templates for bugs, feature requests, and security reports
 3. Optionally add a SECURITY contact email in GitHub settings if not already set
-4. Verify Community Applications listing for ExplorerX and update `my-aws-eum-v3.xml` if needed
+4. Verify Community Applications listing for ExplorerX and update `my-aws-eum.xml` if needed
 
 ---
 

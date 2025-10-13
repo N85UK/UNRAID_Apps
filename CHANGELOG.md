@@ -157,7 +157,7 @@ and this project adheres to the new YYYY.MM.DD.#### version format.
 
 ### Docker Images Available
 - **AWS EUM v2.0**: `ghcr.io/n85uk/aws-eum:latest`
-- **AWS EUM v3.0**: `ghcr.io/n85uk/aws-eum-v3:latest`  
+- **AWS EUM v3.0**: `ghcr.io/n85uk/aws-eum:latest`  
 - **AWS EUM MariaDB**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
 
 ### Installation Requirements

@@ -14,7 +14,7 @@ This repository now has **fully automated Git Flow** with GitHub Actions for AWS
 - **Release management** with one-click version bumps
 
 ### ✅ Docker Registry
-- Images published to: `ghcr.io/n85uk/aws-eum-v3`
+- Images published to: `ghcr.io/n85uk/aws-eum`
 - Tags: `latest`, `develop`, version numbers (e.g., `3.0.7`)
 - Automatic cleanup and optimization
 
@@ -54,13 +54,13 @@ git push origin feature/my-feature
 
 ```bash
 # Stable release
-docker pull ghcr.io/n85uk/aws-eum-v3:latest
+docker pull ghcr.io/n85uk/aws-eum:latest
 
 # Development version
-docker pull ghcr.io/n85uk/aws-eum-v3:develop
+docker pull ghcr.io/n85uk/aws-eum:develop
 
 # Specific version
-docker pull ghcr.io/n85uk/aws-eum-v3:3.0.7
+docker pull ghcr.io/n85uk/aws-eum:3.0.7
 ```
 
 ## 📚 Documentation
@@ -75,7 +75,7 @@ docker pull ghcr.io/n85uk/aws-eum-v3:3.0.7
 ## 🔄 Workflows
 
 ### 1. Docker Build & Push
-- **File:** `.github/workflows/docker-build-aws-eum-v3.yml`
+- **File:** `.github/workflows/docker-build-aws-eum.yml`
 - **Triggers:** Push to `main`/`develop`, tags, PRs
 - **Actions:** Build, test, push to registry
 
@@ -118,7 +118,7 @@ Repository settings → Actions → General:
 
 ## 📦 Docker Images
 
-All images available at: https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum-v3
+All images available at: https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum
 
 | Tag | Description | Auto-updated |
 |-----|-------------|--------------|
@@ -143,7 +143,7 @@ See: `.github-workflows-guide.md`
 ### Rollback Release
 ```bash
 # Pull previous version
-docker pull ghcr.io/n85uk/aws-eum-v3:3.0.6
+docker pull ghcr.io/n85uk/aws-eum:3.0.6
 
 # Update container to use specific tag
 ```
@@ -180,7 +180,7 @@ Edit files in `.github/workflows/`
 Update `pr-check.yml`
 
 ### Modify Build Process
-Update `docker-build-aws-eum-v3.yml`
+Update `docker-build-aws-eum.yml`
 
 ## 📞 Support
 

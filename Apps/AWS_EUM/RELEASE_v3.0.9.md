@@ -144,12 +144,12 @@ Before deployment, test these scenarios:
 
 2. **Pull new image:**
    ```bash
-   docker pull ghcr.io/n85uk/aws-eum-v3:latest
+   docker pull ghcr.io/n85uk/aws-eum:latest
    ```
 
 3. **Verify version:**
    ```bash
-   docker pull ghcr.io/n85uk/aws-eum-v3:latest 2>&1 | grep "3.0.9"
+   docker pull ghcr.io/n85uk/aws-eum:latest 2>&1 | grep "3.0.9"
    ```
 
 4. **Update container via UNRAID UI:**
@@ -300,7 +300,7 @@ If issues occur after upgrade:
 
 4. **Rollback if needed:**
    ```bash
-   docker pull ghcr.io/n85uk/aws-eum-v3:3.0.8
+   docker pull ghcr.io/n85uk/aws-eum:3.0.8
    # Then force update in UNRAID UI
    ```
 

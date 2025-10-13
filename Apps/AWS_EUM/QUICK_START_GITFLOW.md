@@ -71,13 +71,13 @@ git push origin hotfix/critical-fix
 
 ```bash
 # Latest stable
-docker pull ghcr.io/n85uk/aws-eum-v3:latest
+docker pull ghcr.io/n85uk/aws-eum:latest
 
 # Development
-docker pull ghcr.io/n85uk/aws-eum-v3:develop
+docker pull ghcr.io/n85uk/aws-eum:develop
 
 # Specific version
-docker pull ghcr.io/n85uk/aws-eum-v3:3.0.7
+docker pull ghcr.io/n85uk/aws-eum:3.0.7
 ```
 
 ## Automated Workflows
@@ -257,7 +257,7 @@ git branch -d feature/old-feature
 
 ```bash
 # Pull previous version
-docker pull ghcr.io/n85uk/aws-eum-v3:3.0.6
+docker pull ghcr.io/n85uk/aws-eum:3.0.6
 
 # Update UNRAID template to use :3.0.6
 # Or update docker-compose.yml
@@ -313,7 +313,7 @@ grep version Dockerfile      # version="3.0.7"
 
 1. Check workflow completed successfully
 2. Wait 2-3 minutes for registry
-3. Pull with `--no-cache`: `docker pull --no-cache ghcr.io/n85uk/aws-eum-v3:latest`
+3. Pull with `--no-cache`: `docker pull --no-cache ghcr.io/n85uk/aws-eum:latest`
 4. Verify image is public in GitHub Packages
 
 ## Getting Help

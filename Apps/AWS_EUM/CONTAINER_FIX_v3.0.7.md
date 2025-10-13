@@ -13,7 +13,7 @@ Your Docker container is running an **old image** that has the `CURRENT_VERSION`
 1. ✅ Git tag `v3.0.7` pushed to GitHub
 2. 🔄 GitHub Actions workflow triggered automatically
 3. 🔄 Building multi-architecture Docker image (amd64, arm64)
-4. ⏳ Will push to: `ghcr.io/n85uk/aws-eum-v3:3.0.7` and `:latest`
+4. ⏳ Will push to: `ghcr.io/n85uk/aws-eum:3.0.7` and `:latest`
 
 **Build time:** ~5-10 minutes
 
@@ -45,7 +45,7 @@ docker stop AWS_EUM
 docker rm AWS_EUM
 
 # Pull new image with fixes
-docker pull ghcr.io/n85uk/aws-eum-v3:latest
+docker pull ghcr.io/n85uk/aws-eum:latest
 
 # Recreate container via UNRAID UI or docker-compose
 ```
@@ -53,7 +53,7 @@ docker pull ghcr.io/n85uk/aws-eum-v3:latest
 ### Option 3: Specific Version Tag
 
 ```bash
-docker pull ghcr.io/n85uk/aws-eum-v3:3.0.7
+docker pull ghcr.io/n85uk/aws-eum:3.0.7
 # Update your UNRAID template to use :3.0.7 instead of :latest
 ```
 
@@ -90,7 +90,7 @@ ReferenceError: CURRENT_VERSION is not defined
 ## Timeline
 
 - **Now:** Build triggered via git tag
-- **~10 mins:** New Docker image available at `ghcr.io/n85uk/aws-eum-v3:latest`
+- **~10 mins:** New Docker image available at `ghcr.io/n85uk/aws-eum:latest`
 - **After pull:** Container will start successfully
 - **Result:** Web UI accessible at http://10.0.2.11:80
 
@@ -102,10 +102,10 @@ If you can't wait for GitHub Actions:
 cd /Users/paul.mccann/UNRAID_Apps/Apps/AWS_EUM
 
 # Build locally
-docker build -t aws-eum-v3:3.0.7 .
+docker build -t aws-eum:3.0.7 .
 
 # Update UNRAID template to use local image
-# Repository: aws-eum-v3
+# Repository: aws-eum
 # Tag: 3.0.7
 ```
 
@@ -113,7 +113,7 @@ docker build -t aws-eum-v3:3.0.7 .
 
 Check build status:
 ```bash
-gh run list --workflow=docker-build-aws-eum-v3.yml --limit 1
+gh run list --workflow=docker-build-aws-eum.yml --limit 1
 ```
 
 View build logs:

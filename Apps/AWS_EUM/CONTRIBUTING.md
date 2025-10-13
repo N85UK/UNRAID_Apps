@@ -223,14 +223,14 @@ node -c server.js
 npm start
 
 # Build Docker image
-docker build -t aws-eum-v3:test .
+docker build -t aws-eum:test .
 
 # Test Docker image
 docker run -p 80:80 \
   -e AWS_ACCESS_KEY_ID=your_key \
   -e AWS_SECRET_ACCESS_KEY=your_secret \
   -e AWS_REGION=eu-west-2 \
-  aws-eum-v3:test
+  aws-eum:test
 ```
 
 ## Code Style Guidelines

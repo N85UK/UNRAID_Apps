@@ -12,7 +12,7 @@ This guide installs the AWS EUM v3 Unraid Docker template directly into the corr
 2. Download the XML template (use the RAW GitHub link):
    ```bash
    wget -O /boot/config/plugins/dockerMan/templates-user/my-AWS_EUM.xml \
-        https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/my-aws-eum-v3.xml
+        https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/my-aws-eum.xml
    chmod 644 /boot/config/plugins/dockerMan/templates-user/my-AWS_EUM.xml
    ```
 
@@ -47,5 +47,5 @@ This guide installs the AWS EUM v3 Unraid Docker template directly into the corr
 
 The template can also be downloaded directly:
 ```
-https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/my-aws-eum-v3.xml
+https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/my-aws-eum.xml
 ```

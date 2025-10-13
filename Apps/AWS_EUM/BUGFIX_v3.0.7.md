@@ -133,7 +133,7 @@ The container should now start properly. If you experienced the 502 Bad Gateway 
 
 2. **Pull the updated image:**
    ```bash
-   docker pull ghcr.io/n85uk/aws-eum-v3:3.0.7
+   docker pull ghcr.io/n85uk/aws-eum:3.0.7
    ```
 
 3. **Start the container** using your UNRAID template or docker-compose

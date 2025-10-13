@@ -5,7 +5,7 @@ Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-u
 ## 🚀 **Production Ready - Auto-deployed via GitHub Actions**
 
 ✅ **Status**: Production ready with simplified UI and fixed message history  
-📦 **Docker Image**: `ghcr.io/n85uk/aws-eum-v3:latest` (auto-updates)  
+📦 **Docker Image**: `ghcr.io/n85uk/aws-eum:latest` (auto-updates)  
 🔄 **CI/CD**: Automated builds with Alpine Linux optimization
 🌐 **Network Support**: Default bridge, br0.2, br0.100, and all custom networks
 
@@ -104,7 +104,7 @@ docker run -d \
   -e AWS_SECRET_ACCESS_KEY=your_secret_key \
   -e AWS_REGION=eu-west-2 \
   -v /path/to/data:/app/data \
-  ghcr.io/n85uk/aws-eum-v3:latest
+  ghcr.io/n85uk/aws-eum:latest
 ```
 
 ## 📖 Usage

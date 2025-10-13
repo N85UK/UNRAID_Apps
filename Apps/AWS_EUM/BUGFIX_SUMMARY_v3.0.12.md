@@ -36,7 +36,7 @@ October 11, 2025
 
 ### 3. Workflow Issues (v3.0.9)
 - ✅ Removed duplicate workflows
-- ✅ Simplified docker-build-aws-eum-v3.yml
+- ✅ Simplified docker-build-aws-eum.yml
 - ✅ Removed problematic metadata-action tag templates
 
 ## Version History
@@ -74,10 +74,10 @@ October 11, 2025
 3. `public/js/app-v3.js` - Fixed charts, added validation and debug logging
 4. `package.json` - Fixed syntax error
 5. `Dockerfile` - Updated version metadata
-6. `my-aws-eum-v3.xml` - Changed DISABLE_CSP default
+6. `my-aws-eum.xml` - Changed DISABLE_CSP default
 
 ### Workflow Files
-1. `.github/workflows/docker-build-aws-eum-v3.yml` - Simplified
+1. `.github/workflows/docker-build-aws-eum.yml` - Simplified
 2. Removed: build-and-publish-v3.yml, build-all-versions.yml, test-*.yml
 
 ## Testing Checklist
@@ -99,7 +99,7 @@ October 11, 2025
 
 1. **Pull latest image:**
    ```bash
-   docker pull ghcr.io/n85uk/aws-eum-v3:latest
+   docker pull ghcr.io/n85uk/aws-eum:latest
    ```
 
 2. **Update container via UNRAID:**

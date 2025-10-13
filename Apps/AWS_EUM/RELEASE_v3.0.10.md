@@ -61,25 +61,25 @@ When charts were removed in v3.0.9:
 
 1. **Pull the new image:**
    ```bash
-   docker pull ghcr.io/n85uk/aws-eum-v3:latest
+   docker pull ghcr.io/n85uk/aws-eum:latest
    # OR specific version:
-   docker pull ghcr.io/n85uk/aws-eum-v3:3.0.10
+   docker pull ghcr.io/n85uk/aws-eum:3.0.10
    ```
 
 2. **Force update your container** in UNRAID Docker UI or recreate with:
    ```bash
-   docker stop aws-eum-v3
-   docker rm aws-eum-v3
+   docker stop aws-eum
+   docker rm aws-eum
    docker run -d \
-     --name aws-eum-v3 \
+     --name aws-eum \
      --network br0 \
      --ip 10.0.2.11 \
      -e DISABLE_CSP=true \
      -e AWS_ACCESS_KEY_ID=your_key \
      -e AWS_SECRET_ACCESS_KEY=your_secret \
      -e AWS_REGION=eu-west-2 \
-     -v /mnt/user/appdata/aws-eum-v3:/app/data \
-     ghcr.io/n85uk/aws-eum-v3:latest
+     -v /mnt/user/appdata/aws-eum:/app/data \
+     ghcr.io/n85uk/aws-eum:latest
    ```
 
 3. **Test the application:**
@@ -166,7 +166,7 @@ This release fixes critical runtime bugs discovered immediately after v3.0.9 dep
 
 If you encounter any issues:
 1. Check browser console for JavaScript errors
-2. Verify container logs: `docker logs aws-eum-v3`
+2. Verify container logs: `docker logs aws-eum`
 3. Ensure environment variables are correctly set
 4. Report issues on GitHub: https://github.com/N85UK/UNRAID_Apps/issues
 

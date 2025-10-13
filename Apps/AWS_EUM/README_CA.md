@@ -6,7 +6,7 @@ Enhanced SMS application with modern UI and configurable CSP for all network typ
 
 ### 📦 Package Information
 - **Version**: 3.0.6+ (auto-updating)
-- **Image**: `ghcr.io/n85uk/aws-eum-v3:latest`
+- **Image**: `ghcr.io/n85uk/aws-eum:latest`
 - **Category**: Utilities
 - **Network Support**: Default bridge, br0.2, br0.100, all custom networks
 

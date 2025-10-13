@@ -18,26 +18,26 @@ The environment variable `DATA_DIR=/data` is set, but the container's non-root u
 **UNRAID Docker Template:**
 ```
 Container Path: /app/data
-Host Path: /mnt/user/appdata/aws-eum-v3
+Host Path: /mnt/user/appdata/aws-eum
 ```
 
 **Docker Run:**
 ```bash
 docker run -d \
-  --name aws-eum-v3 \
+  --name aws-eum \
   --network br0 \
   --ip 10.0.2.11 \
   -e DISABLE_CSP=true \
   -e AWS_ACCESS_KEY_ID=your_key \
   -e AWS_SECRET_ACCESS_KEY=your_secret \
   -e AWS_REGION=eu-west-2 \
-  -v /mnt/user/appdata/aws-eum-v3:/app/data \
-  ghcr.io/n85uk/aws-eum-v3:latest
+  -v /mnt/user/appdata/aws-eum:/app/data \
+  ghcr.io/n85uk/aws-eum:latest
 ```
 
 **Key Change:**
-- ❌ OLD: `-v /mnt/user/appdata/aws-eum-v3:/data` + `-e DATA_DIR=/data`
-- ✅ NEW: `-v /mnt/user/appdata/aws-eum-v3:/app/data` (no DATA_DIR var)
+- ❌ OLD: `-v /mnt/user/appdata/aws-eum:/data` + `-e DATA_DIR=/data`
+- ✅ NEW: `-v /mnt/user/appdata/aws-eum:/app/data` (no DATA_DIR var)
 
 ### Option 2: Fix Permissions on /data Mount
 If you MUST use `/data` path:
@@ -45,13 +45,13 @@ If you MUST use `/data` path:
 1. **Stop the container**
 2. **Fix host directory permissions:**
    ```bash
-   sudo chown -R 1000:1000 /mnt/user/appdata/aws-eum-v3
-   sudo chmod -R 755 /mnt/user/appdata/aws-eum-v3
+   sudo chown -R 1000:1000 /mnt/user/appdata/aws-eum
+   sudo chmod -R 755 /mnt/user/appdata/aws-eum
    ```
 3. **Start the container with:**
    ```bash
    docker run -d \
-     --name aws-eum-v3 \
+     --name aws-eum \
      --network br0 \
      --ip 10.0.2.11 \
      -e DISABLE_CSP=true \
@@ -59,8 +59,8 @@ If you MUST use `/data` path:
      -e AWS_ACCESS_KEY_ID=your_key \
      -e AWS_SECRET_ACCESS_KEY=your_secret \
      -e AWS_REGION=eu-west-2 \
-     -v /mnt/user/appdata/aws-eum-v3:/data \
-     ghcr.io/n85uk/aws-eum-v3:latest
+     -v /mnt/user/appdata/aws-eum:/data \
+     ghcr.io/n85uk/aws-eum:latest
    ```
 
 ### Option 3: Run as Root (NOT RECOMMENDED - Security Risk)
@@ -79,7 +79,7 @@ After applying the fix:
 
 1. **Check container logs:**
    ```bash
-   docker logs aws-eum-v3
+   docker logs aws-eum
    ```
 
 2. **Look for success messages:**
@@ -92,7 +92,7 @@ After applying the fix:
 
 4. **Check files were created:**
    ```bash
-   ls -la /mnt/user/appdata/aws-eum-v3/
+   ls -la /mnt/user/appdata/aws-eum/
    ```
    
    Should show:
@@ -112,7 +112,7 @@ The Dockerfile creates a non-root user `appuser` (UID 1000, GID 1000) for securi
 To verify permissions work:
 
 ```bash
-docker exec -it aws-eum-v3 sh -c 'touch /app/data/test.txt && ls -la /app/data/test.txt && rm /app/data/test.txt'
+docker exec -it aws-eum sh -c 'touch /app/data/test.txt && ls -la /app/data/test.txt && rm /app/data/test.txt'
 ```
 
 **Expected output:**
@@ -136,9 +136,9 @@ docker exec -it aws-eum-v3 sh -c 'touch /app/data/test.txt && ls -la /app/data/t
 ## Still Having Issues?
 
 Check:
-1. Host directory exists: `/mnt/user/appdata/aws-eum-v3`
+1. Host directory exists: `/mnt/user/appdata/aws-eum`
 2. Host directory permissions: `ls -la /mnt/user/appdata/`
-3. Container can access: `docker exec aws-eum-v3 ls -la /app/data`
-4. Environment variables: `docker exec aws-eum-v3 env | grep DATA`
+3. Container can access: `docker exec aws-eum ls -la /app/data`
+4. Environment variables: `docker exec aws-eum env | grep DATA`
 
 If `DATA_DIR` shows anything other than `/app/data` (or blank), that's your problem.

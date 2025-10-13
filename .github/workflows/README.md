@@ -5,10 +5,10 @@ This directory contains automated workflows for building and publishing applicat
 ## Active Workflows
 
 ### AWS EUM v3
-- **`docker-build-aws-eum-v3.yml`** - Builds and pushes AWS EUM v3 Docker images
+- **`docker-build-aws-eum.yml`** - Builds and pushes AWS EUM v3 Docker images
   - Triggers: Push to `main` branch when `Apps/AWS_EUM/**` changes
   - Manual trigger: Workflow dispatch available
-  - Output: `ghcr.io/n85uk/aws-eum-v3:latest` and `ghcr.io/n85uk/aws-eum-v3:X.X.X`
+  - Output: `ghcr.io/n85uk/aws-eum:latest` and `ghcr.io/n85uk/aws-eum:X.X.X`
   - Platforms: linux/amd64, linux/arm64
 
 ### ExplorerX Plugin
@@ -37,7 +37,7 @@ This directory contains automated workflows for building and publishing applicat
 ## Workflow Cleanup History
 
 **October 11, 2025** - Removed duplicate/obsolete workflows:
-- ❌ `build-and-publish-v3.yml` (duplicate of docker-build-aws-eum-v3.yml)
+- ❌ `build-and-publish-v3.yml` (duplicate of docker-build-aws-eum.yml)
 - ❌ `build-all-versions.yml` (legacy multi-version builder)
 - ❌ `test-build.yml` (test file)
 - ❌ `test-docker-build.yml` (test file)
@@ -51,8 +51,8 @@ This directory contains automated workflows for building and publishing applicat
 
 ### Image Not Updating
 - Verify workflow completed successfully (green checkmark)
-- Pull with `docker pull ghcr.io/n85uk/aws-eum-v3:latest`
-- Check image digest: `docker inspect ghcr.io/n85uk/aws-eum-v3:latest | grep Digest`
+- Pull with `docker pull ghcr.io/n85uk/aws-eum:latest`
+- Check image digest: `docker inspect ghcr.io/n85uk/aws-eum:latest | grep Digest`
 
 ### Permissions Issues
 - Ensure `packages: write` permission is set in workflow

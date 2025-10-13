@@ -47,7 +47,7 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │              GitHub Container Registry (ghcr.io)                 │
 │                                                                  │
-│  ghcr.io/n85uk/aws-eum-v3:                                      │
+│  ghcr.io/n85uk/aws-eum:                                      │
 │    ├── latest    (from main branch)                             │
 │    ├── develop   (from develop branch)                          │
 │    ├── 3.0.7     (from tag v3.0.7)                             │
@@ -226,7 +226,7 @@ Feature Development:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  New Docker image available in registry                     │
-│  ghcr.io/n85uk/aws-eum-v3:latest                           │
+│  ghcr.io/n85uk/aws-eum:latest                           │
 └────────────────────┬────────────────────────────────────────┘
                      │
          ┌───────────┴───────────────┐
@@ -307,7 +307,7 @@ Day 1:
 14:00  Team reviews and approves
 14:05  Merge to develop
 14:06  Docker build starts for :develop tag
-14:12  Image available: ghcr.io/n85uk/aws-eum-v3:develop
+14:12  Image available: ghcr.io/n85uk/aws-eum:develop
 
 Day 5:
 10:00  Multiple features merged to develop
@@ -316,7 +316,7 @@ Day 5:
 10:02  Workflow updates all versions, creates tag
 10:03  Pushes tag v3.1.0 to GitHub
 10:04  Docker build starts for :latest
-10:10  Image available: ghcr.io/n85uk/aws-eum-v3:latest
+10:10  Image available: ghcr.io/n85uk/aws-eum:latest
 10:15  Watchtower detects new image
 10:20  Production containers auto-update
 10:25  Version 3.1.0 live in production! 🎉
