@@ -626,12 +626,16 @@ app.post('/send-sms', async (req, res) => {
         // Rate limiting
         await rateLimiter.consume(req.ip);
 
-        console.log('📨 Send SMS request body:', JSON.stringify(req.body, null, 2));
-        const { originator, phoneNumber, message } = req.body;
+        // Debug: log request body when in debug mode
+        if (process.env.DEBUG_API === 'true') {
+            try { console.log('📨 /send-sms body:', JSON.stringify(req.body)); } catch (e) { console.log('📨 /send-sms body (non-json)'); }
+        }
+
+        const { originator, phoneNumber, message } = req.body || {};
 
         if (!originator || !phoneNumber || !message) {
-            console.error('❌ Missing fields - originator:', !!originator, 'phoneNumber:', !!phoneNumber, 'message:', !!message);
-            return res.status(400).json({ error: 'Missing required fields' });
+            console.error('❌ /send-sms missing fields - originator:', !!originator, 'phoneNumber:', !!phoneNumber, 'message:', !!message);
+            return res.status(400).json({ error: 'Missing required fields', details: { originator: !!originator, phoneNumber: !!phoneNumber, message: !!message } });
         }
 
         if (!smsClient) {
