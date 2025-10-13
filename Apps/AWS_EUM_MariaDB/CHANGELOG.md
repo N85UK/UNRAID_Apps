@@ -2,6 +2,42 @@
 
 All notable changes to AWS EUM will be documented in this file.
 
+## [2.1.3] - 2025-10-13
+
+### ✨ New Features
+- **Auto Database Initialization**: Database and all tables now created automatically on first start
+  - No manual SQL setup required anymore
+  - Creates database if it doesn't exist
+  - Creates all 7 required tables (users, messages, originators, settings, analytics, sessions, api_keys)
+  - Inserts default settings automatically
+  - Creates default admin user if no users exist
+
+### 🚀 Improvements
+- Enhanced server startup with clear status messages
+- Better error handling with helpful troubleshooting tips
+- Automatic database health check on startup
+- Beautiful formatted console output with clear sections
+- Default admin user: `admin` / `admin123` (change immediately!)
+
+### 🔧 Technical Details
+- **New Module**: `lib/db-init.js` - Automatic database initialization
+- **Enhanced**: `server.js` - Async startup with database check and creation
+- **Database**: Automatically creates `aws_eum` database with utf8mb4 charset
+- **Tables**: All 7 tables created with proper indexes and foreign keys
+- **Settings**: 10 default settings inserted automatically
+- **Admin**: Default admin user created on first run (if ADMIN_USERNAME/ADMIN_PASSWORD not set)
+
+### 📝 User Experience
+- **Zero Configuration**: Just provide DB credentials and the app handles the rest
+- **Instant Setup**: No need to run migrations or create database manually
+- **Clear Feedback**: Detailed console logs show exactly what's happening
+- **Error Guidance**: Helpful error messages with troubleshooting steps
+
+### ⚠️ Security
+- Default admin password `admin123` should be changed immediately
+- Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` environment variables for custom credentials
+- Application warns when default password is being used
+
 ## [2.1.2] - 2025-10-12
 
 ### 🐛 Bug Fixes

@@ -1,6 +1,6 @@
 {
   "name": "aws-eum-mariadb",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "AWS End User Messaging with MariaDB - Enterprise SMS application with database integration, user management, and advanced analytics",
   "main": "server.js",
   "scripts": {

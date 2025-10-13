@@ -24,6 +24,7 @@ const https = require('https');
 // Import custom modules
 const Database = require('./lib/database');
 const AuthManager = require('./lib/auth');
+const { initializeDatabase, checkDatabaseStatus } = require('./lib/db-init');
 
 require('dotenv').config();
 
@@ -34,7 +35,7 @@ const PORT = process.env.PORT || 80;
 const AUTO_UPDATE_CHECK = process.env.AUTO_UPDATE_CHECK !== 'false';
 const UPDATE_CHECK_INTERVAL = parseInt(process.env.UPDATE_CHECK_INTERVAL) || 24; // hours
 const AUTO_UPDATE_APPLY = process.env.AUTO_UPDATE_APPLY === 'true';
-const CURRENT_VERSION = '2.1.2';
+const CURRENT_VERSION = '2.1.3';
 const GITHUB_REPO = 'N85UK/UNRAID_Apps';
 const UPDATE_FILE = '/app/data/update-info.json';
 
@@ -959,48 +960,114 @@ app.get('/api/version', (req, res) => {
     });
 });
 
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
-    console.log(`🌐 HTTP Server: http://0.0.0.0:${PORT}`);
-    console.log(`🌍 AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
-    
-    // Verify static file structure
-    const publicDir = path.join(__dirname, 'public');
-    const cssFile = path.join(publicDir, 'css', 'style.css');
-    const jsFile = path.join(publicDir, 'js', 'app.js');
-    
-    console.log(`📁 Public directory: ${publicDir}`);
-    console.log(`📄 CSS file exists: ${fs.existsSync(cssFile)} (${cssFile})`);
-    console.log(`📄 JS file exists: ${fs.existsSync(jsFile)} (${jsFile})`);
-    
-    if (fs.existsSync(cssFile)) {
-        const cssSize = fs.statSync(cssFile).size;
-        console.log(`📊 CSS file size: ${cssSize} bytes`);
-    }
-    
-    const awsConfigured = !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY);
-    console.log(`🔐 AWS Configured: ${awsConfigured}`);
-    
-    if (awsConfigured) {
-        const accessKey = process.env.AWS_ACCESS_KEY_ID;
-        console.log(`🔑 AWS Access Key: ${accessKey.substring(0, 4)}****${accessKey.substring(accessKey.length - 4)}`);
-        console.log(`💡 Test AWS connection at: http://0.0.0.0:${PORT}/api/aws/test`);
-    } else {
-        console.log('⚠️  Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to enable AWS features');
-    }
-    
-    console.log(`🔄 Auto-update: ${AUTO_UPDATE_CHECK ? 'enabled' : 'disabled'}`);
-    console.log(`🧪 Debug static files: http://0.0.0.0:${PORT}/api/debug/static`);
-    console.log(`🎨 CSS direct access: http://0.0.0.0:${PORT}/css/style.css`);
-    
-    // Start update checker
-    startUpdateChecker();
-    
-    // Initial fetch of originators
-    if (smsClient) {
-        getOriginators().then(originators => {
-            console.log(`📞 Total originators available: ${Object.keys(originators).length}`);
+// Initialize database and start server
+async function startServer() {
+    try {
+        // Check database status
+        console.log('');
+        console.log('═══════════════════════════════════════════════════════════');
+        console.log('  AWS End User Messaging - MariaDB Enterprise Edition');
+        console.log(`  Version: ${CURRENT_VERSION}`);
+        console.log('═══════════════════════════════════════════════════════════');
+        console.log('');
+        
+        const dbStatus = await checkDatabaseStatus(DB_CONFIG);
+        
+        if (!dbStatus.exists || !dbStatus.complete) {
+            console.log('🔧 Database not initialized - running auto-setup...');
+            console.log('');
+            await initializeDatabase(DB_CONFIG);
+            console.log('');
+        } else {
+            console.log(`✅ Database '${DB_CONFIG.database}' already initialized`);
+            console.log(`📊 Found ${dbStatus.tables.length} tables`);
+            console.log('');
+        }
+        
+        // Start the HTTP server
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log('═══════════════════════════════════════════════════════════');
+            console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
+            console.log(`🌐 HTTP Server: http://0.0.0.0:${PORT}`);
+            console.log(`🌍 AWS Region: ${process.env.AWS_REGION || 'eu-west-2'}`);
+            console.log('═══════════════════════════════════════════════════════════');
+            console.log('');
+            
+            // Verify static file structure
+            const publicDir = path.join(__dirname, 'public');
+            const cssFile = path.join(publicDir, 'css', 'style.css');
+            const jsFile = path.join(publicDir, 'js', 'app.js');
+            
+            console.log('📁 Static Files:');
+            console.log(`   CSS: ${fs.existsSync(cssFile) ? '✅' : '❌'} (${cssFile})`);
+            console.log(`   JS:  ${fs.existsSync(jsFile) ? '✅' : '❌'} (${jsFile})`);
+            
+            if (fs.existsSync(cssFile)) {
+                const cssSize = fs.statSync(cssFile).size;
+                console.log(`   CSS Size: ${cssSize} bytes`);
+            }
+            console.log('');
+            
+            const awsConfigured = !!(process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY);
+            console.log('🔐 AWS Configuration:');
+            console.log(`   Status: ${awsConfigured ? '✅ Configured' : '⚠️  Not Configured'}`);
+            
+            if (awsConfigured) {
+                const accessKey = process.env.AWS_ACCESS_KEY_ID;
+                console.log(`   Access Key: ${accessKey.substring(0, 4)}****${accessKey.substring(accessKey.length - 4)}`);
+                console.log(`   Test URL: http://0.0.0.0:${PORT}/api/aws/test`);
+            } else {
+                console.log('   Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to enable AWS features');
+            }
+            console.log('');
+            
+            console.log('⚙️  Features:');
+            console.log(`   Auto-update: ${AUTO_UPDATE_CHECK ? '✅ Enabled' : '❌ Disabled'}`);
+            console.log(`   Debug: http://0.0.0.0:${PORT}/api/debug/static`);
+            console.log(`   CSS: http://0.0.0.0:${PORT}/css/style.css`);
+            console.log('');
+            
+            // Start update checker
+            startUpdateChecker();
+            
+            // Initial fetch of originators
+            if (smsClient) {
+                getOriginators().then(originators => {
+                    console.log(`📞 Total originators available: ${Object.keys(originators).length}`);
+                    console.log('');
+                    console.log('═══════════════════════════════════════════════════════════');
+                    console.log('  ✅ Server Ready - MariaDB Enterprise Edition');
+                    console.log('═══════════════════════════════════════════════════════════');
+                });
+            } else {
+                console.log('═══════════════════════════════════════════════════════════');
+                console.log('  ✅ Server Ready - Configure AWS to enable SMS features');
+                console.log('═══════════════════════════════════════════════════════════');
+            }
         });
+        
+    } catch (error) {
+        console.error('');
+        console.error('═══════════════════════════════════════════════════════════');
+        console.error('  ❌ FATAL ERROR: Failed to start server');
+        console.error('═══════════════════════════════════════════════════════════');
+        console.error('');
+        console.error('Error:', error.message);
+        console.error('');
+        console.error('Troubleshooting:');
+        console.error('1. Check database credentials (DB_HOST, DB_USER, DB_PASSWORD)');
+        console.error('2. Ensure MariaDB/MySQL server is running and accessible');
+        console.error('3. Verify database user has CREATE DATABASE privileges');
+        console.error('4. Check network connectivity to database server');
+        console.error('');
+        console.error('Database Configuration:');
+        console.error(`   Host: ${DB_CONFIG.host}:${DB_CONFIG.port}`);
+        console.error(`   Database: ${DB_CONFIG.database}`);
+        console.error(`   User: ${DB_CONFIG.user}`);
+        console.error('');
+        process.exit(1);
     }
-});
+}
+
+// Start the application
+startServer();

@@ -39,4 +39,4 @@ CMD ["node", "server.js"]
 # Metadata labels
 LABEL maintainer="n85uk" \
       description="AWS End User Messaging with MariaDB - Enterprise Edition" \
-      version="2.1.2"
+      version="2.1.3"
