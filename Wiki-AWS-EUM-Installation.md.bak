@@ -138,7 +138,7 @@ Modern interface with Chart.js analytics, dark mode, and advanced visual feature
 #### 1. Download Template
 ```bash
 # Method 1: Direct template download
-wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_v3/template.cfg
+wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg
 
 # Method 2: Via Community Applications
 # Search for \"AWS End User Messaging v3.0 Enhanced\" in Apps tab

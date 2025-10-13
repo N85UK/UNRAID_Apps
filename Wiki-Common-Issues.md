@@ -18,9 +18,9 @@
 **Problem**: `EACCES: permission denied, open '/app/data/...'`
 **✅ Solution**: Fix file permissions
 ```bash
-chown -R 100:users /mnt/user/appdata/aws-eum-v3
-chmod -R 755 /mnt/user/appdata/aws-eum-v3
-docker restart aws-eum-v3
+chown -R 100:users /mnt/user/appdata/aws-eum
+chmod -R 755 /mnt/user/appdata/aws-eum
+docker restart aws-eum
 ```
 
 ### 3. AWS Connection Failed
@@ -74,10 +74,10 @@ docker restart aws-eum-v3
 ```bash
 # Diagnosis
 docker exec AWS-EUM-v3 id  # Should show uid=100
-ls -la /mnt/user/appdata/aws-eum-v3  # Check ownership
+ls -la /mnt/user/appdata/aws-eum  # Check ownership
 
 # Fix
-chown -R 100:users /mnt/user/appdata/aws-eum-v3
+chown -R 100:users /mnt/user/appdata/aws-eum
 ```
 
 ### Chart.js and Enhanced Features

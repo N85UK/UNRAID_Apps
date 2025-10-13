@@ -35,9 +35,9 @@
 
 **✅ Fix File Permissions**:
 ```bash
-chown -R 100:users /mnt/user/appdata/aws-eum-v3
-chmod -R 755 /mnt/user/appdata/aws-eum-v3
-docker restart aws-eum-v3
+chown -R 100:users /mnt/user/appdata/aws-eum
+chmod -R 755 /mnt/user/appdata/aws-eum
+docker restart aws-eum
 ```
 
 ### Network Compatibility Guide
@@ -73,7 +73,7 @@ Error saving update info: EACCES: permission denied, open '/app/data/update-info
 **Diagnosis Steps**:
 ```bash
 # Check host directory permissions
-ls -la /mnt/user/appdata/aws-eum-v3
+ls -la /mnt/user/appdata/aws-eum
 
 # Check container user
 docker exec AWS-EUM-v3 whoami
@@ -86,8 +86,8 @@ docker exec AWS-EUM-v3 ls -la /app/data
 **Solution**:
 ```bash
 # Fix ownership to match container user (UID 100)
-chown -R 100:users /mnt/user/appdata/aws-eum-v3
-chmod -R 755 /mnt/user/appdata/aws-eum-v3
+chown -R 100:users /mnt/user/appdata/aws-eum
+chmod -R 755 /mnt/user/appdata/aws-eum
 
 # Restart container after fixing permissions
 ```
@@ -95,7 +95,7 @@ chmod -R 755 /mnt/user/appdata/aws-eum-v3
 **Alternative Solution** (if UID 100 doesn't work):
 ```bash
 # More permissive approach
-chmod -R 777 /mnt/user/appdata/aws-eum-v3
+chmod -R 777 /mnt/user/appdata/aws-eum
 ```
 
 ### Content Security Policy (CSP) Issues

@@ -51,7 +51,7 @@ Please check these resources first:
 4. **[Version Comparison](Version-Comparison)** - Feature and compatibility info
 
 ### Known Issues to Check
-- **AWS EUM Permission Errors**: Try `chown -R 100:users /mnt/user/appdata/aws-eum-v3`
+- **AWS EUM Permission Errors**: Try `chown -R 100:users /mnt/user/appdata/aws-eum`
 - **Enhanced UI Not Loading**: Add `DISABLE_CSP=true` environment variable
 - **ExplorerX Debug Mode**: v2025.10.10.0002 intentionally shows debug info
 - **Plugin Not Visible**: Refresh browser or check Tools menu
@@ -143,7 +143,7 @@ Refused to load script 'https://cdn.jsdelivr.net/npm/chart.js'
 **Configuration**:
 - Network Type: Custom br0.2
 - Environment Variables: AWS credentials set, no CSP settings
-- Volume: /mnt/user/appdata/aws-eum-v3 mounted to /app/data
+- Volume: /mnt/user/appdata/aws-eum mounted to /app/data
 
 **Attempted Solutions**:
 - Restarted container

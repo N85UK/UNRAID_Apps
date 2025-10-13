@@ -2,7 +2,7 @@ name: Make Package Public
 
 on:
   workflow_run:
-    workflows: ["Build and publish"]
+    workflows: ["Build and Push AWS EUM Docker Image"]
     types:
       - completed
 

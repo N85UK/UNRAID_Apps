@@ -44,7 +44,7 @@
 version: '3.8'
 services:
   aws-eum:
-    image: ghcr.io/n85uk/aws-eum-v3:3.0.1
+    image: ghcr.io/n85uk/aws-eum:3.0.1
     ports:
       - "8280:80"
     environment:
@@ -57,13 +57,13 @@ services:
 ### Docker Run
 ```bash
 docker run -d \\
-  --name aws-eum-v3 \\
+  --name aws-eum \\
   -p 8280:80 \\
   -e AWS_ACCESS_KEY_ID=your_key \\
   -e AWS_SECRET_ACCESS_KEY=your_secret \\
   -e AWS_REGION=eu-west-2 \\
   -e DISABLE_CSP=true \\
-  ghcr.io/n85uk/aws-eum-v3:3.0.1
+  ghcr.io/n85uk/aws-eum:3.0.1
 ```
 
 ---
@@ -161,7 +161,7 @@ wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg
 
 4. **Set Paths and Ports**
    - **Port**: `8081:80` (different from v2.0 if running both)
-   - **Path**: `/mnt/user/appdata/aws-eum-v3:/app/data`
+   - **Path**: `/mnt/user/appdata/aws-eum:/app/data`
 
 5. **Start Container** and verify startup
 
@@ -174,9 +174,9 @@ wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg
 ```yaml
 version: '3.8'
 services:
-  aws-eum-v3:
-    image: ghcr.io/n85uk/aws-eum-v3:latest
-    container_name: aws-eum-v3
+  aws-eum:
+    image: ghcr.io/n85uk/aws-eum:latest
+    container_name: aws-eum
     ports:
       - \"8081:80\"
     environment:
@@ -186,7 +186,7 @@ services:
       - AUTO_UPDATE_CHECK=true
       - HISTORY_RETENTION=100
     volumes:
-      - /mnt/user/appdata/aws-eum-v3:/app/data
+      - /mnt/user/appdata/aws-eum:/app/data
     restart: unless-stopped
 ```
 
@@ -328,8 +328,8 @@ services:
 docker exec AWS-EUM-v3 id
 
 # Fix permissions (use UID from above, typically 100)
-chown -R 100:users /mnt/user/appdata/aws-eum-v3
-chmod -R 755 /mnt/user/appdata/aws-eum-v3
+chown -R 100:users /mnt/user/appdata/aws-eum
+chmod -R 755 /mnt/user/appdata/aws-eum
 
 # Restart container
 docker restart AWS-EUM-v3
@@ -390,8 +390,8 @@ ORIGINATORS=\"Marketing:arn:aws:sms:region:account:originator/marketing,Support:
 **Solution**:
 ```bash
 # Fix ownership to match container user
-chown -R 100:users /mnt/user/appdata/aws-eum-v3
-chmod -R 755 /mnt/user/appdata/aws-eum-v3
+chown -R 100:users /mnt/user/appdata/aws-eum
+chmod -R 755 /mnt/user/appdata/aws-eum
 
 # Restart container after fixing permissions
 ```

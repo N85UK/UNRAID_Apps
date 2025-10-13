@@ -40,7 +40,7 @@ Welcome to the comprehensive documentation for the UNRAID Apps Repository! This 
 - **[Support Contacts](Support-Contacts)** - Getting help and reporting issues
 
 **🚨 Most Common Issues:**
-- **Permission Denied**: AWS EUM needs `chown -R 100:users /mnt/user/appdata/aws-eum-v3`
+- **Permission Denied**: AWS EUM needs `chown -R 100:users /mnt/user/appdata/aws-eum`
 - **Enhanced UI Not Working**: Add multiple CSP environment variables for custom networks
 - **ExplorerX Debug Mode**: v2025.10.10.0002 shows debug info (expected behavior)
 - **Plugin Not Visible**: Refresh browser (Ctrl+F5) or restart nginx

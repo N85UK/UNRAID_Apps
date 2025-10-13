@@ -118,7 +118,7 @@ jobs:
             
             ### Docker Image
             ```bash
-            docker pull ghcr.io/n85uk/aws-eum-v3:${{ steps.bump.outputs.version }}
+            docker pull ghcr.io/n85uk/aws-eum:${{ steps.bump.outputs.version }}
             ```
             
             ### Installation
