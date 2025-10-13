@@ -128,7 +128,7 @@ ExplorerX was completely rewritten to be 100% safe after previous versions cause
 - ✅ **TOOLS MENU**: Accessible via Tools → ExplorerX
 - 📋 **VERSION FORMAT**: YYYY.MM.DD.#### format maintained
 
-### v2025.10.10.0001 (Previous - Working Interface)
+### v2025.10.10.0002 (Previous - Working Interface)
 - ✅ **VERSION FORMAT**: Changed to YYYY.MM.DD.#### format
 - ✅ **SUCCESS CONFIRMED**: Plugin working correctly via Tools → ExplorerX
 - ✅ **FILE MANAGER FUNCTIONAL**: Directory navigation, refresh, and controls working
@@ -286,7 +286,7 @@ ExplorerX was completely rewritten to be 100% safe after previous versions cause
 - ✅ **TOOLS MENU**: Accessible via Tools → ExplorerX
 - 📋 **VERSION FORMAT**: YYYY.MM.DD.#### format maintained
 
-### v2025.10.10.0001 (Previous - Working Interface)
+### v2025.10.10.0002 (Previous - Working Interface)
 
 - ✅ **VERSION FORMAT**: Changed to YYYY.MM.DD.#### format
 - ✅ **SUCCESS CONFIRMED**: Plugin working correctly via Tools → ExplorerX

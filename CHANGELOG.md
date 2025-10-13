@@ -57,7 +57,7 @@ and this project adheres to the new YYYY.MM.DD.#### version format.
 ## [2025.10.10.0001] - 2025-10-10
 
 ### Added
-- ExplorerX Plugin v2025.10.10.0001 with new YYYY.MM.DD.#### version format
+- ExplorerX Plugin v2025.10.10.0002 with new YYYY.MM.DD.#### version format
 - SUCCESS CONFIRMATION: Plugin working correctly via Tools → ExplorerX
 - Working file browser interface with directory navigation
 - Functional API endpoints for file operations
