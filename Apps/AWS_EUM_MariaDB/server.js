@@ -589,6 +589,25 @@ app.get('/', requireSessionMiddleware, async (req, res) => {
     }
 });
 
+// Render login page (GET)
+app.get('/login', (req, res) => {
+    // If already authenticated, redirect to root
+    if (req.session && req.session.userId) return res.redirect('/');
+    res.render('login');
+});
+
+// Logout route (GET) to destroy session and redirect to login
+app.get('/logout', (req, res) => {
+    if (req.session) {
+        req.session.destroy((err) => {
+            try { res.clearCookie('aws_eum_session'); } catch (e) {}
+            return res.redirect('/login');
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
 // Authentication endpoints (simple session-based login using AuthManager)
 app.post('/api/auth/login', async (req, res) => {
     try {

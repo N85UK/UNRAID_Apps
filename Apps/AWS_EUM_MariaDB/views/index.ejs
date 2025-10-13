@@ -57,6 +57,15 @@
                     <% } %>
                 <% } %>
             </div>
+            <div class="user-actions" style="margin-top:12px;">
+                <% if (user) { %>
+                    <span>Signed in as <strong><%= user.username || user.email %></strong></span>
+                    &nbsp;|&nbsp;
+                    <a href="/logout">Logout</a>
+                <% } else { %>
+                    <a href="/login">Login</a>
+                <% } %>
+            </div>
         </header>
 
         <main>
