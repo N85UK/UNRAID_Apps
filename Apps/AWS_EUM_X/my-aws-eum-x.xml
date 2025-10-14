@@ -31,9 +31,9 @@
 
       <Variable>
         <Name>DATA_DIR</Name>
-        <Label>Data directory (host path)</Label>
-        <Value>/mnt/user/appdata/aws-eum-x</Value>
-        <Help>Persistent data directory for logs, cached originators and config.</Help>
+        <Label>Data directory (container path)</Label>
+        <Value>/app/data</Value>
+        <Help>Container data directory used by the app. Mount a host path into the container (example host: /mnt/user/appdata/aws-eum-x mounted to container: /app/data).</Help>
       </Variable>
 
       <Variable>
