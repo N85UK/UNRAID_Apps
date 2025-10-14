@@ -176,6 +176,160 @@ app.post('/api/test/dry-run', async (req, res) => {
   }
 });
 
+// ---------------------------
+// Message queue + rate limiting
+// ---------------------------
+const RATE_LIMIT_PARTS_PER_SECOND = parseFloat(process.env.RATE_LIMIT_PARTS_PER_SECOND) || 1.0; // message parts per second
+const RATE_LIMIT_MAX_QUEUE_SIZE = parseInt(process.env.RATE_LIMIT_MAX_QUEUE_SIZE, 10) || 200;
+const SENDS_ENABLED = process.env.SENDS_ENABLED === 'true'; // default false
+const SENDS_SIMULATE = process.env.SENDS_SIMULATE === 'true'; // default false: when true, simulated sends occur even when no AWS config
+const MAX_SEND_RETRIES = parseInt(process.env.MAX_SEND_RETRIES, 10) || 5;
+
+// Simple message parts estimator (approximate)
+function estimateMessageParts(message) {
+  if (!message) return 1;
+  // crude non-GSM detection: non-ascii characters treated as UCS-2
+  const nonGsm = /[^\x00-\x7F]/u.test(message);
+  if (nonGsm) {
+    if (message.length <= 70) return 1;
+    return Math.ceil(message.length / 67);
+  }
+  // GSM fallback
+  if (message.length <= 160) return 1;
+  return Math.ceil(message.length / 153);
+}
+
+// In-memory queue implementation
+const processedIdempotency = new Map();
+const lastSends = [];
+
+class MessageQueue {
+  constructor() {
+    this.queue = [];
+    this.capacity = RATE_LIMIT_PARTS_PER_SECOND; // tokens per second
+    this.tokens = this.capacity;
+    this.processing = false;
+    // Refill tokens every second
+    setInterval(() => { this.tokens = this.capacity; }, 1000);
+    // Periodic processor
+    setInterval(() => { this.process(); }, 200);
+  }
+
+  enqueue(item) {
+    const qid = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+    item.queueId = qid;
+    item.enqueuedAt = Date.now();
+    this.queue.push(item);
+    return qid;
+  }
+
+  async process() {
+    if (this.processing) return;
+    this.processing = true;
+    try {
+      while (this.queue.length > 0) {
+        const item = this.queue[0];
+        if (item.retryAt && item.retryAt > Date.now()) break; // not ready yet
+        if (item.parts > this.tokens) break; // wait for tokens
+        // consume tokens and pop
+        this.tokens -= item.parts;
+        this.queue.shift();
+        // Attempt send asynchronously (don't block loop)
+        this.attemptSend(item).catch(err => {
+          logger.warn({ err: err && err.message ? err.message : err }, 'attemptSend unhandled error');
+        });
+      }
+    } finally {
+      this.processing = false;
+    }
+  }
+
+  async attemptSend(item) {
+    // idempotency check
+    if (item.idempotencyKey && processedIdempotency.has(item.idempotencyKey)) {
+      const prev = processedIdempotency.get(item.idempotencyKey);
+      lastSends.unshift({ queueId: item.queueId, status: 'duplicate', result: prev, at: Date.now() });
+      return prev;
+    }
+
+    // Decide whether to actually call AWS or simulate
+    const willSimulate = item.simulate || SENDS_SIMULATE || !smsClient || !SENDS_ENABLED;
+
+    try {
+      if (willSimulate) {
+        const result = { MessageId: `sim-${Date.now()}`, simulated: true };
+        processedIdempotency.set(item.idempotencyKey || item.queueId, result);
+        lastSends.unshift({ queueId: item.queueId, status: 'sent', result, at: Date.now() });
+        // trim history
+        if (lastSends.length > 200) lastSends.pop();
+        logger.info({ queueId: item.queueId, to: item.DestinationPhoneNumber, simulated: true }, 'Simulated send');
+        return result;
+      }
+
+      // Real send via AWS
+      const params = {
+        DestinationPhoneNumber: item.DestinationPhoneNumber,
+        MessageBody: item.MessageBody,
+        OriginationIdentity: item.OriginationIdentity || undefined,
+        MessageType: item.MessageType || undefined,
+        MaxPrice: item.MaxPrice || undefined
+      };
+      const cmd = new SendTextMessageCommand(params);
+      const resp = await smsClient.send(cmd);
+      lastSends.unshift({ queueId: item.queueId, status: 'sent', result: resp, at: Date.now() });
+      if (item.idempotencyKey) processedIdempotency.set(item.idempotencyKey, resp);
+      if (lastSends.length > 200) lastSends.pop();
+      logger.info({ queueId: item.queueId, to: item.DestinationPhoneNumber, result: (resp && resp.MessageId) || 'ok' }, 'Message sent');
+      return resp;
+    } catch (err) {
+      // Determine if we should retry
+      const isThrottle = (err && (err.name === 'ThrottlingException' || err.Code === 'ThrottlingException' || err.statusCode === 429));
+      if ((isThrottle || err.retryable) && (item.retries || 0) < MAX_SEND_RETRIES) {
+        item.retries = (item.retries || 0) + 1;
+        const backoffMs = Math.min(30000, Math.pow(2, item.retries) * 1000);
+        item.retryAt = Date.now() + backoffMs;
+        this.queue.push(item);
+        logger.warn({ queueId: item.queueId, reason: err && err.message }, 'Send failed, scheduled retry');
+        return null;
+      }
+      // Permanent failure
+      lastSends.unshift({ queueId: item.queueId, status: 'failed', error: err && err.message, at: Date.now() });
+      if (lastSends.length > 200) lastSends.pop();
+      logger.error({ queueId: item.queueId, error: err && err.message }, 'Message failed permanently');
+      return null;
+    }
+  }
+
+  status() {
+    return { queueDepth: this.queue.length, tokens: this.tokens, capacity: this.capacity };
+  }
+}
+
+const messageQueue = new MessageQueue();
+
+// API: enqueue a message for sending
+app.post('/api/send-sms', async (req, res) => {
+  const { DestinationPhoneNumber, MessageBody, OriginationIdentity, MessageType, MaxPrice, idempotencyKey, simulate } = req.body || {};
+  if (!DestinationPhoneNumber || !MessageBody) return res.status(400).json({ error: 'Missing DestinationPhoneNumber or MessageBody' });
+  const e164 = /^\+[1-9]\d{6,14}$/;
+  if (!e164.test(DestinationPhoneNumber)) return res.status(400).json({ error: 'Invalid DestinationPhoneNumber (must be E.164)' });
+
+  if (messageQueue.queue.length >= RATE_LIMIT_MAX_QUEUE_SIZE) return res.status(429).json({ error: 'Queue is full' });
+
+  const parts = estimateMessageParts(MessageBody);
+  const queueItem = { DestinationPhoneNumber, MessageBody, OriginationIdentity, MessageType, MaxPrice, parts, idempotencyKey: idempotencyKey || null, simulate: !!simulate };
+  const qid = messageQueue.enqueue(queueItem);
+  return res.status(202).json({ accepted: true, queueId: qid, parts });
+});
+
+app.get('/api/queue/status', (req, res) => {
+  return res.json({ ok: true, ...messageQueue.status() });
+});
+
+app.get('/api/last-sends', (req, res) => {
+  return res.json({ ok: true, history: lastSends.slice(0, 50) });
+});
+
 // Config export/import (simple JSON store in data dir)
 app.get('/api/config/export', (req, res) => {
   const cfgFile = path.join(DATA_DIR, 'config.json');
