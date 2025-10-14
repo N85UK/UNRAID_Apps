@@ -21,22 +21,29 @@ const BUILD_TIMESTAMP = process.env.BUILD_TIMESTAMP || new Date().toISOString();
 const PORT = parseInt(process.env.PORT, 10) || 80;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 
-// Structured logger with minimal redaction rules
-const logger = pino({
-  level: process.env.LOG_LEVEL || 'info',
-  transport: process.env.NODE_ENV !== 'production' ? { target: 'pino-pretty' } : undefined
-});
-
-function redactKey(key) {
-  const v = process.env[key];
-  if (!v) return null;
-  if (v.length <= 8) return '****';
-  return `${v.slice(0,4)}****${v.slice(-4)}`;
+// Structured logger with optional pretty transport in dev
+let transport;
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    // Only enable pino-pretty if it's installed (dev environments)
+    require.resolve('pino-pretty');
+    transport = { target: 'pino-pretty' };
+  } catch (e) {
+    // pino-pretty not available, fall back to structured JSON logs
+    // Avoid printing stack here to prevent leaking environment info
+    console.warn('pino-pretty not found; using JSON logs');
+    transport = undefined;
+  }
 }
 
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  ...(transport ? { transport } : {})
+});
+
+// Do NOT print secrets in logs. Only surface whether AWS is configured and the region.
 logger.info({ version: APP_VERSION, build: BUILD_TIMESTAMP }, 'Starting AWS_EUM_X');
-const redactedAccessKey = redactKey('AWS_ACCESS_KEY_ID');
-logger.info({ aws_access_key: redactedAccessKey ? redactedAccessKey : '(not-configured)' }, 'AWS configuration');
+logger.info({ aws_configured: !!process.env.AWS_ACCESS_KEY_ID, aws_region: process.env.AWS_REGION || 'eu-west-2' }, 'AWS configuration');
 
 // Ensure data directory exists and is writable
 function ensureDataDirectory(dir) {
@@ -173,16 +180,30 @@ app.post('/api/test/dry-run', async (req, res) => {
 app.get('/api/config/export', (req, res) => {
   const cfgFile = path.join(DATA_DIR, 'config.json');
   if (!fs.existsSync(cfgFile)) return res.status(404).json({ error: 'No configuration found' });
-  const raw = fs.readFileSync(cfgFile, 'utf8');
-  res.setHeader('Content-Type', 'application/json');
-  return res.send(raw);
+  try {
+    const raw = fs.readFileSync(cfgFile, 'utf8');
+    const parsed = JSON.parse(raw || '{}');
+    // Remove sensitive keys before export
+    ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token']
+      .forEach(k => delete parsed[k]);
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(JSON.stringify(parsed, null, 2));
+  } catch (err) {
+    logger.warn({ err: err.message }, 'Failed to read or parse configuration for export');
+    return res.status(500).json({ error: 'Failed to export configuration' });
+  }
 });
 
 app.post('/api/config/import', (req, res) => {
   const cfgFile = path.join(DATA_DIR, 'config.json');
   try {
-    fs.writeFileSync(cfgFile, JSON.stringify(req.body || {}, null, 2), { mode: 0o600 });
-    return res.json({ ok: true, message: 'Configuration saved' });
+    const incoming = req.body || {};
+    // Never persist secrets by import. Remove common AWS secret keys.
+    const sanitized = { ...incoming };
+    ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token']
+      .forEach(k => { if (k in sanitized) delete sanitized[k]; });
+    fs.writeFileSync(cfgFile, JSON.stringify(sanitized, null, 2), { mode: 0o600 });
+    return res.json({ ok: true, message: 'Configuration saved (secrets removed for safety)' });
   } catch (err) {
     logger.error({ err: err.message }, 'Failed to save configuration');
     return res.status(500).json({ ok: false, error: 'Failed to save configuration' });
@@ -190,7 +211,7 @@ app.post('/api/config/import', (req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   logger.error({ err: err && err.stack ? err.stack : err }, 'Unhandled error');
   res.status(500).json({ error: 'Internal server error' });
 });
