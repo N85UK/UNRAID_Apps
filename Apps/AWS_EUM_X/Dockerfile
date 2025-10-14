@@ -10,8 +10,13 @@ RUN apk add --no-cache ca-certificates tzdata && update-ca-certificates || true
 # Copy only package files first for caching
 COPY package.json package-lock.json* ./
 
-# Install production dependencies (use npm install when no lockfile is present)
-RUN npm install --only=production --no-audit --no-fund
+# Install production dependencies: prefer npm ci when a lockfile is present
+COPY package*.json ./
+RUN if [ -f package-lock.json ]; then \
+      npm ci --only=production --no-audit --no-fund; \
+    else \
+      npm install --only=production --no-audit --no-fund; \
+    fi
 
 # Copy application files
 COPY . .
