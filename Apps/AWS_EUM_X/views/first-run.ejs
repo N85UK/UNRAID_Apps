@@ -34,6 +34,22 @@
 
       <p style="margin-top:24px">Tip: Use dry-run to test configuration without sending SMS. See the <a href="/docs/">documentation</a> for IAM policy examples.</p>
 
+      <hr />
+      <h2>Send Test Message (Dry-run)</h2>
+      <form id="test-message-form">
+        <label for="testDestination">Destination phone (E.164)</label>
+        <input id="testDestination" name="testDestination" placeholder="+441234567890" />
+
+        <label for="testMessage">Message</label>
+        <textarea id="testMessage" name="testMessage" rows="3" placeholder="Test message...">This is a test message (dry-run)</textarea>
+
+        <div style="margin-top:12px">
+          <button id="send-test-message" type="submit">Send test (Dry-run)</button>
+        </div>
+      </form>
+
+      <div id="test-message-status" role="status" aria-live="polite"></div>
+
     </div>
 
     <script src="/js/app.js"></script>
