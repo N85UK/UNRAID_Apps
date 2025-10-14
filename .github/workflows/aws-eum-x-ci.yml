@@ -1,0 +1,28 @@
+name: 'AWS_EUM_X CI'
+
+on:
+  push:
+    paths:
+      - 'Apps/AWS_EUM_X/**'
+  pull_request:
+    paths:
+      - 'Apps/AWS_EUM_X/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./Apps/AWS_EUM_X
+      - name: Run lint
+        run: npm run lint
+        working-directory: ./Apps/AWS_EUM_X
+      - name: Run tests
+        run: npm test
+        working-directory: ./Apps/AWS_EUM_X
