@@ -8,7 +8,7 @@
     "dev": "nodemon server.js",
     "test": "jest --runInBand",
     "lint": "eslint .",
-    "smoke": "node test/smoke.js"
+  "smoke": "jest --runInBand test/smoke.test.js"
   },
   "keywords": ["aws", "pinpoint", "sms", "unraid", "eum"],
   "author": "N85UK",

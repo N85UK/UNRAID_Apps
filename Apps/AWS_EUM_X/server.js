@@ -35,7 +35,8 @@ function redactKey(key) {
 }
 
 logger.info({ version: APP_VERSION, build: BUILD_TIMESTAMP }, 'Starting AWS_EUM_X');
-logger.info({ aws_access_key: redactKey('AWS_ACCESS_KEY_ID') ? redactKey('AWS_ACCESS_KEY_ID') : '(not-configured)' }, 'AWS configuration');
+const redactedAccessKey = redactKey('AWS_ACCESS_KEY_ID');
+logger.info({ aws_access_key: redactedAccessKey ? redactedAccessKey : '(not-configured)' }, 'AWS configuration');
 
 // Ensure data directory exists and is writable
 function ensureDataDirectory(dir) {
@@ -143,7 +144,8 @@ app.post('/api/test/dry-run', async (req, res) => {
   const { DestinationPhoneNumber, MessageBody, OriginationIdentity } = req.body || {};
   // Basic validation
   if (!DestinationPhoneNumber || !MessageBody) return res.status(400).json({ error: 'Missing DestinationPhoneNumber or MessageBody' });
-  const e164 = /^\+?[1-9][0-9]{1,14}$/;
+  // E.164: + followed by 7-15 digits, first digit non-zero
+  const e164 = /^\+[1-9]\d{6,14}$/;
   if (!e164.test(DestinationPhoneNumber)) return res.status(400).json({ error: 'Invalid DestinationPhoneNumber (must be E.164)' });
 
   // Use configured client if present, otherwise ask user to run credentials test
