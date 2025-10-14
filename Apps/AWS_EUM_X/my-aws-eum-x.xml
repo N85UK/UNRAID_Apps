@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<Container templateVersion="1.0">
+  <Name>AWS_EUM_X</Name>
+  <Repository>ghcr.io/n85uk/aws-eum-x</Repository>
+  <Registry>ghcr.io</Registry>
+  <ShortDescription>AWS End User Messaging (modernized)</ShortDescription>
+  <Description>Modernized AWS End User Messaging app with first-run wizard, structured logs, and safer defaults. For Unraid Community Applications.</Description>
+
+  <Config>
+    <Environment>
+      <Variable>
+        <Name>AWS_ACCESS_KEY_ID</Name>
+        <Label>AWS Access Key ID [AWS Access Key ID]</Label>
+        <Type>password</Type>
+        <Help>Short-lived credentials or IAM user access key. Use IAM role where possible. (Do not paste long-term keys on public systems.)</Help>
+      </Variable>
+
+      <Variable>
+        <Name>AWS_SECRET_ACCESS_KEY</Name>
+        <Label>AWS Secret Access Key [AWS Secret]</Label>
+        <Type>password</Type>
+        <Help>Secret for the AWS Access Key ID. Never store this in logs or screenshots.</Help>
+      </Variable>
+
+      <Variable>
+        <Name>AWS_REGION</Name>
+        <Label>Region [AWS Region]</Label>
+        <Value>eu-west-2</Value>
+        <Help>Your AWS region (example: eu-west-2). This controls where the Pinpoint resources are queried.</Help>
+      </Variable>
+
+      <Variable>
+        <Name>DATA_DIR</Name>
+        <Label>Data directory (container path)</Label>
+        <Value>/app/data</Value>
+        <Help>Container data directory used by the app. Mount a host path into the container (example host: /mnt/user/appdata/aws-eum-x mounted to container: /app/data).</Help>
+      </Variable>
+
+      <Variable>
+        <Name>DISABLE_CSP</Name>
+        <Label>Disable CSP (for custom bridge networks)</Label>
+        <Value>true</Value>
+        <Help>Set to true when using custom br0 networks that block external CDNs. Default true for Unraid community templates.</Help>
+      </Variable>
+
+      <Variable>
+        <Name>AUTO_UPDATE_CHECK</Name>
+        <Label>Auto-update check</Label>
+        <Value>true</Value>
+        <Help>If enabled, container will check GitHub releases for updates (no auto-apply unless configured).</Help>
+      </Variable>
+
+    </Environment>
+  </Config>
+
+  <Network>
+    <Port>80</Port>
+  </Network>
+
+  <Volumes>
+    <Volume>
+      <Container>/app/data</Container>
+      <Host>/mnt/user/appdata/aws-eum-x</Host>
+      <Mode>rw</Mode>
+    </Volume>
+  </Volumes>
+
+  <WebUI>http://[IP]:[PORT:80]</WebUI>
+
+</Container>
