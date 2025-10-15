@@ -1,0 +1,15 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "pinpoint-sms-voice-v2:SendTextMessage",
+        "pinpoint-sms-voice-v2:DescribePhoneNumbers",
+        "pinpoint-sms-voice-v2:DescribeSenderIds",
+        "pinpoint-sms-voice-v2:PutMessageFeedback"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
