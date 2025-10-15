@@ -23,13 +23,8 @@ describe('SNS webhook', () => {
     const res = await request(app).post('/webhook/sns').send(payload).set('Content-Type', 'application/json');
     expect(res.statusCode).toBe(200);
 
-    // check messages file
-    const messagesFile = path.join(TEST_DATA_DIR, 'messages.json');
-    const exists = fs.existsSync(messagesFile);
-    expect(exists).toBe(true);
-    const content = JSON.parse(fs.readFileSync(messagesFile, 'utf8') || '{}');
-    expect(Array.isArray(content.messages)).toBe(true);
-    const found = content.messages.find(m => m.body && m.body.includes('Hello from SNS'));
-    expect(found).toBeTruthy();
+  // check via persistence API
+  const found = app.persistence.findMessageByBody('Hello from SNS');
+  expect(found).toBeTruthy();
   });
 });

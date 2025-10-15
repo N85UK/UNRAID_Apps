@@ -30,11 +30,10 @@ describe('config import security', () => {
 
     const res = await request(app).post('/api/config/import').send(payload);
     expect(res.statusCode).toBe(200);
-    const cfgFile = path.join(TEST_DATA_DIR, 'config.json');
-    expect(fs.existsSync(cfgFile)).toBe(true);
-    const saved = JSON.parse(fs.readFileSync(cfgFile, 'utf8'));
-    expect(saved).not.toHaveProperty('aws_access_key_id');
-    expect(saved).not.toHaveProperty('aws_secret_access_key');
-    expect(saved).toHaveProperty('some_setting', 'value123');
+    // Check persistence-backed config instead of a file
+    const cfg = app.persistence.getConfig();
+    expect(cfg).not.toHaveProperty('aws_access_key_id');
+    expect(cfg).not.toHaveProperty('aws_secret_access_key');
+    expect(cfg).toHaveProperty('some_setting', 'value123');
   });
 });
