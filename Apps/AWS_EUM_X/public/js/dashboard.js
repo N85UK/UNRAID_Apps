@@ -53,7 +53,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const mpsRes = await fetch('/api/settings/mps');
       const jm = await mpsRes.json();
       const overrides = (jm && jm.mps_overrides) || {};
-      mpsList.innerHTML = Object.keys(overrides).length ? Object.entries(overrides).map(([k,v]) => `<div><strong>${k}</strong>: ${v}</div>`).join('') : '<div>No overrides set</div>';
+      if (!Object.keys(overrides).length) {
+        mpsList.innerHTML = '<div>No overrides set</div>';
+      } else {
+        mpsList.innerHTML = Object.entries(overrides).map(([k,v]) => `<div><strong>${k}</strong>: ${v} <button data-origin="${k}" class="mps-remove">Remove</button></div>`).join('');
+        mpsList.querySelectorAll('button.mps-remove').forEach(btn => btn.addEventListener('click', async (ev) => {
+          const origin = ev.currentTarget.getAttribute('data-origin');
+          try {
+            await fetch(`/api/settings/mps/${encodeURIComponent(origin)}`, { method: 'DELETE' });
+            await refreshProbeAndMps();
+          } catch (e) { /* ignore */ }
+        }));
+      }
     } catch (e) { mpsList.textContent = 'Error loading overrides'; }
   }
 

@@ -192,6 +192,15 @@ RateLimiter.prototype.setOriginMps = function (origin, mps) {
   logger.info({ origin, mps: state.mps, capacity: state.capacity }, 'Updated origin MPS');
 };
 
+// Remove any custom state for an origin (reverts to default behaviour)
+RateLimiter.prototype.clearOrigin = function (origin) {
+  if (!origin) origin = 'default';
+  if (this.origins.has(origin)) {
+    this.origins.delete(origin);
+    logger.info({ origin }, 'Cleared origin-specific rate limiter state');
+  }
+};
+
 // Migration runner
 async function runMigrations() {
   const migrationsDir = path.join(__dirname, 'migrations');
@@ -421,6 +430,20 @@ app.get('/api/settings/mps', (req, res) => {
   try {
     const cfg = persistence.getConfig() || {};
     return res.json({ ok: true, mps_overrides: cfg.mps_overrides || {} });
+  } catch (err) { return res.status(500).json({ ok: false, error: err.message }); }
+});
+
+app.delete('/api/settings/mps/:origin', (req, res) => {
+  try {
+    const origin = req.params.origin;
+    const cfg = persistence.getConfig() || {};
+    if (cfg.mps_overrides && Object.prototype.hasOwnProperty.call(cfg.mps_overrides, origin)) {
+      delete cfg.mps_overrides[origin];
+      persistence.setConfig(cfg);
+    }
+    // Clear runtime state in rate limiter
+    try { rateLimiter.clearOrigin(origin); } catch (e) {}
+    return res.json({ ok: true });
   } catch (err) { return res.status(500).json({ ok: false, error: err.message }); }
 });
 
