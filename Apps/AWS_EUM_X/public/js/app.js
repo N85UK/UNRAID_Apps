@@ -40,10 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Local fallback estimator (kept for offline usage). Prefer server-side
   // endpoint for authoritative estimation so the logic remains centralized.
   function localEstimate(text) {
-    const msg = typeof text === 'string' ? text : '';
-    const chars = msg.length;
-    const isUcs2 = /[^\x00-\x7F]/.test(msg);
-    const encoding = isUcs2 ? 'UCS-2' : 'GSM-7';
+  const msg = typeof text === 'string' ? text : '';
+  const chars = msg.length;
+  // eslint-disable-next-line no-control-regex
+  const isUcs2 = /[^\x00-\x7F]/.test(msg);
+  const encoding = isUcs2 ? 'UCS-2' : 'GSM-7';
     const singleLimit = isUcs2 ? 70 : 160;
     const perPart = isUcs2 ? 67 : 153;
     const parts = chars <= singleLimit ? 1 : Math.ceil(chars / perPart);
