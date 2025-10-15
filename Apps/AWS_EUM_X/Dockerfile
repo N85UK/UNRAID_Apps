@@ -10,12 +10,14 @@ RUN apk add --no-cache ca-certificates tzdata && update-ca-certificates || true
 # Copy only package files first for caching
 COPY package.json package-lock.json* ./
 
-# Install production dependencies: prefer npm ci when a lockfile is present
-RUN if [ -f package-lock.json ]; then \
+# Install production dependencies: include build deps to compile native modules (better-sqlite3) then remove them
+RUN apk add --no-cache --virtual .build-deps build-base python3 sqlite-dev && \
+    if [ -f package-lock.json ]; then \
       npm ci --only=production --no-audit --no-fund; \
     else \
       npm install --only=production --no-audit --no-fund; \
-    fi
+    fi && \
+    apk del .build-deps
 
 # Copy application files
 COPY . .
