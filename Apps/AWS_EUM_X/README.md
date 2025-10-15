@@ -32,3 +32,11 @@ See `CONTRIBUTING.md` for guidance.
 License
 -------
 MIT
+
+Screenshots
+-----------
+Please add screenshots of the running UI in `docs/screenshots/` to help users get started. Recommended captures:
+- Dashboard showing system tiles and queue
+- Queue view with a pending message and a resend action
+- Per-origin MPS override form populated with example overrides
+
