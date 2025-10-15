@@ -331,7 +331,7 @@ app.use('/js', express.static(path.join(__dirname, 'public', 'js')));
 app.use('/icons', express.static(path.join(__dirname, 'icons')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Persistence (file-backed)
+// Persistence (SQLite-backed)
 const { Persistence } = require('./persistence');
 const persistence = new Persistence(DATA_DIR);
 
@@ -355,6 +355,9 @@ app.get('/probe/aws', async (req, res) => { const r = await probeAWS(); if (r.ok
 
 // First-run UI
 app.get('/', (req, res) => res.render('first-run', { version: APP_VERSION }));
+
+// Dashboard UI for monitoring queue, AWS probe, and managing per-origin overrides
+app.get('/dashboard', (req, res) => res.render('dashboard', { version: APP_VERSION }));
 
 // API: Test AWS credentials
 app.post('/api/test/credentials', async (req, res) => {
@@ -413,13 +416,18 @@ app.post('/api/settings/mps', (req, res) => {
   return res.json({ ok: true });
 });
 
+// Provide current per-origin MPS overrides
+app.get('/api/settings/mps', (req, res) => {
+  try {
+    const cfg = persistence.getConfig() || {};
+    return res.json({ ok: true, mps_overrides: cfg.mps_overrides || {} });
+  } catch (err) { return res.status(500).json({ ok: false, error: err.message }); }
+});
+
 // Config export/import (simple JSON store in data dir)
 app.get('/api/config/export', (req, res) => {
-  const cfgFile = path.join(DATA_DIR, 'config.json');
-  if (!fs.existsSync(cfgFile)) return res.status(404).json({ error: 'No configuration found' });
   try {
-    const raw = fs.readFileSync(cfgFile, 'utf8');
-    const parsed = JSON.parse(raw || '{}');
+    const parsed = persistence.getConfig() || {};
     ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token'].forEach(k => delete parsed[k]);
     res.setHeader('Content-Type', 'application/json');
     return res.send(JSON.stringify(parsed, null, 2));
@@ -427,12 +435,11 @@ app.get('/api/config/export', (req, res) => {
 });
 
 app.post('/api/config/import', (req, res) => {
-  const cfgFile = path.join(DATA_DIR, 'config.json');
   try {
     const incoming = req.body || {};
     const sanitized = { ...incoming };
     ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token'].forEach(k => { if (k in sanitized) delete sanitized[k]; });
-    fs.writeFileSync(cfgFile, JSON.stringify(sanitized, null, 2), { mode: 0o600 });
+    persistence.setConfig(sanitized);
     return res.json({ ok: true, message: 'Configuration saved (secrets removed for safety)' });
   } catch (err) { logger.error({ err: err.message }, 'Failed to save configuration'); return res.status(500).json({ ok: false, error: 'Failed to save configuration' }); }
 });
