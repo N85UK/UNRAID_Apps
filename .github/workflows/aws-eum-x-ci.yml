@@ -22,10 +22,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential python3 pkg-config libsqlite3-dev
-      - name: Install dependencies (use npm ci when lockfile present)
+      - name: Install dependencies (prefer lockfile; fall back when lock missing dependency)
         run: |
           cd Apps/AWS_EUM_X
-          if [ -f package-lock.json ]; then
+          # If package-lock.json already includes better-sqlite3 then use npm ci for reproducible installs.
+          if [ -f package-lock.json ] && grep -q '"better-sqlite3"' package-lock.json; then
             npm ci
           else
             npm install
