@@ -21,7 +21,7 @@ require('dotenv').config();
 
 const APP_VERSION = require('./package.json').version || '0.0.0';
 const BUILD_TIMESTAMP = process.env.BUILD_TIMESTAMP || new Date().toISOString();
-const PORT = parseInt(process.env.PORT, 10) || 80;
+const PORT = parseInt(process.env.PORT, 10) || 8080;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 
 // runtime configuration for send throttling/backoff

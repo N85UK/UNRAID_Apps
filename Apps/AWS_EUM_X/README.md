@@ -10,7 +10,8 @@ Quick start
 1. Install via Community Apps (import the XML template `my-aws-eum-x.xml`) or
    run the container manually.
 2. On first run, open the Web UI and complete the first-run wizard (AWS
-   credentials, region, test credentials).
+   credentials, region, test credentials). The application listens on the
+   port specified by the PORT environment variable (default: 8080).
 3. Use dry-run to validate configuration before sending real messages.
 
 Features

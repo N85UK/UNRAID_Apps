@@ -28,7 +28,7 @@ RUN addgroup -S appuser && adduser -S appuser -G appuser && \
 
 USER appuser
 
-EXPOSE 80
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -qO- --timeout=5 http://127.0.0.1:80/health || exit 1
