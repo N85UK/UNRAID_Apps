@@ -11,5 +11,28 @@
   "rules": {
     "no-unused-vars": "warn",
     "no-console": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["public/js/*.js"],
+      "env": { "browser": true },
+      "rules": {
+        "no-undef": "off"
+      }
+    },
+    {
+      "files": ["test/*.js"],
+      "env": { "jest": true },
+      "rules": {
+        "no-undef": "off"
+      }
+    },
+    {
+      "files": ["server.js", "persistence.js", "test/*.js"],
+      "rules": {
+        "no-empty": "warn",
+        "no-control-regex": "warn"
+      }
+    }
+  ]
 }
