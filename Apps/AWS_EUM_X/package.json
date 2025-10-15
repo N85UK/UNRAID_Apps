@@ -19,7 +19,6 @@
     "eum"
   ],
   "author": "N85UK",
-    "@aws-sdk/client-pinpoint-sms-voice-v2": "^3.540.0",
   "dependencies": {
     "@aws-sdk/client-pinpoint-sms-voice-v2": "^3.540.0",
     "better-sqlite3": "^8.0.0",
