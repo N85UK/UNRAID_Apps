@@ -37,9 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const destInput = document.getElementById('destNumber');
   const dryStatus = document.getElementById('dryrun-status');
 
-  function estimateParts(text) {
-    const chars = text.length;
-    const isUcs2 = /[^\x00-\x7F]/.test(text);
+  // Local fallback estimator (kept for offline usage). Prefer server-side
+  // endpoint for authoritative estimation so the logic remains centralized.
+  function localEstimate(text) {
+    const msg = typeof text === 'string' ? text : '';
+    const chars = msg.length;
+    const isUcs2 = /[^\x00-\x7F]/.test(msg);
     const encoding = isUcs2 ? 'UCS-2' : 'GSM-7';
     const singleLimit = isUcs2 ? 70 : 160;
     const perPart = isUcs2 ? 67 : 153;
@@ -48,11 +51,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (messageBody) {
+    let debounceTimer = null;
     const update = () => {
-      const est = estimateParts(messageBody.value || '');
-      charCount.textContent = String(est.chars);
-      partCount.textContent = String(est.parts);
-      encodingEl.textContent = est.encoding;
+      const text = messageBody.value || '';
+      // Optimistically show local estimate while we fetch authoritative estimate.
+      const local = localEstimate(text);
+      charCount.textContent = String(local.chars);
+      partCount.textContent = String(local.parts);
+      encodingEl.textContent = local.encoding;
+
+      // Debounced server-side estimate
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch('/api/estimate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
+          });
+          if (res.ok) {
+            const json = await res.json();
+            const est = json.estimate || local;
+            charCount.textContent = String(est.chars);
+            partCount.textContent = String(est.parts);
+            encodingEl.textContent = est.encoding;
+          }
+        } catch (e) {
+          // Ignore network errors and keep local estimate
+        }
+      }, 250);
     };
     messageBody.addEventListener('input', update);
     update();

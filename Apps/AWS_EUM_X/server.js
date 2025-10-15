@@ -86,9 +86,12 @@ async function probeAWS() {
 
 // Message parts estimator (simple safe heuristic)
 function estimateMessageParts(message) {
-  const chars = typeof message === 'string' ? message.length : 0;
+  // Ensure we always operate on a string to avoid runtime errors when
+  // message is undefined, null, or a non-string value.
+  const msgStr = typeof message === 'string' ? message : '';
+  const chars = msgStr.length;
   // Treat as UCS-2 (unicode) when non-ascii present — conservative but safe
-  const isUcs2 = /[^\x00-\x7F]/.test(message);
+  const isUcs2 = /[^\x00-\x7F]/.test(msgStr);
   const encoding = isUcs2 ? 'UCS-2' : 'GSM-7';
   const singleLimit = isUcs2 ? 70 : 160;
   const perPart = isUcs2 ? 67 : 153;
@@ -193,6 +196,19 @@ app.get('/api/config/export', (req, res) => {
     // Remove sensitive keys before export
     ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token']
       .forEach(k => delete parsed[k]);
+
+// Centralized estimation endpoint to avoid duplicating logic between the
+// frontend and backend. Client can call this endpoint for live estimation.
+app.post('/api/estimate', (req, res) => {
+  const { message } = req.body || {};
+  try {
+    const estimate = estimateMessageParts(message);
+    return res.json({ ok: true, estimate });
+  } catch (err) {
+    logger.warn({ err: err.message }, 'Estimate failed');
+    return res.status(400).json({ ok: false, error: 'Estimate failed' });
+  }
+});
     res.setHeader('Content-Type', 'application/json');
     return res.send(JSON.stringify(parsed, null, 2));
   } catch (err) {
