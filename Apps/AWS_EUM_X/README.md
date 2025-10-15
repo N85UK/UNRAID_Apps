@@ -40,3 +40,9 @@ Please add screenshots of the running UI in `docs/screenshots/` to help users ge
 - Queue view with a pending message and a resend action
 - Per-origin MPS override form populated with example overrides
 
+Build notes
+-----------
+- The persistence layer uses better-sqlite3 (native module). When building locally or in Docker, ensure the system has the C toolchain and SQLite dev headers.
+- On Debian/Ubuntu runners (CI) install: build-essential, python3, pkg-config, libsqlite3-dev.
+- On Alpine (Dockerfile) the image installs: build-base, python3, sqlite-dev for the build step and then removes build deps.
+
