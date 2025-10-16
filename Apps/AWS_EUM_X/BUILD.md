@@ -3,6 +3,7 @@
 ## 🏗️ Building the Docker Image
 
 ### Prerequisites
+
 - Docker installed locally
 - GitHub account with repository access
 - GitHub Actions enabled on repository
@@ -12,6 +13,7 @@
 ## Local Build
 
 ### Build for Single Platform (fast)
+
 ```bash
 cd Apps/AWS_EUM_X
 
@@ -25,6 +27,7 @@ docker stop test && docker rm test
 ```
 
 ### Build Multi-Platform (amd64 + arm64)
+
 ```bash
 # Create buildx builder (one time)
 docker buildx create --name multiarch --use
@@ -74,7 +77,9 @@ The GitHub Actions workflow (`.github/workflows/build-aws-eum-x.yml`) automatica
 ## Manual Release Process
 
 ### 1. Update Version
+
 Edit `Apps/AWS_EUM_X/package.json`:
+
 ```json
 {
   "version": "1.0.1"
@@ -82,7 +87,9 @@ Edit `Apps/AWS_EUM_X/package.json`:
 ```
 
 ### 2. Update CHANGELOG
+
 Add entry to `Apps/AWS_EUM_X/CHANGELOG.md`:
+
 ```markdown
 ## [1.0.1] - 2025-10-16
 
@@ -94,6 +101,7 @@ Add entry to `Apps/AWS_EUM_X/CHANGELOG.md`:
 ```
 
 ### 3. Commit and Push
+
 ```bash
 git add Apps/AWS_EUM_X/package.json Apps/AWS_EUM_X/CHANGELOG.md
 git commit -m "Release v1.0.1"
@@ -101,13 +109,16 @@ git push origin main
 ```
 
 ### 4. Monitor Build
+
 1. Go to GitHub Actions tab
 2. Watch "Build and Push AWS_EUM_X Docker Image" workflow
 3. Verify build succeeds
 4. Check smoke tests pass
 
 ### 5. Create GitHub Release (Optional)
+
 Use workflow dispatch with version tag:
+
 1. Go to Actions → "Build and Push AWS_EUM_X Docker Image"
 2. Click "Run workflow"
 3. Enter version (e.g., `1.0.1`)
@@ -120,6 +131,7 @@ This creates a GitHub release with automated release notes.
 ## Verifying the Build
 
 ### Check Image was Published
+
 ```bash
 # List tags for the image
 docker pull ghcr.io/n85uk/aws-eum-x:latest
@@ -130,6 +142,7 @@ docker inspect ghcr.io/n85uk/aws-eum-x:latest
 ```
 
 ### Test the Published Image
+
 ```bash
 docker run -d \
   --name aws-eum-x-verify \
@@ -157,9 +170,11 @@ docker rm aws-eum-x-verify
 ## Unraid Template Testing
 
 ### 1. Update Template (if needed)
+
 Edit `Apps/AWS_EUM_X/my-aws-eum-x.xml` if configuration changed.
 
 ### 2. Commit Template Changes
+
 ```bash
 git add Apps/AWS_EUM_X/my-aws-eum-x.xml
 git commit -m "Update Unraid template for v1.0.1"
@@ -167,12 +182,15 @@ git push origin main
 ```
 
 ### 3. Verify Template URL
+
 The template will be accessible at:
-```
+
+```text
 https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_X/my-aws-eum-x.xml
 ```
 
 ### 4. Test Installation on Unraid
+
 1. Add template repository URL in Unraid Docker settings
 2. Select AWS_EUM_X template
 3. Verify all fields appear correctly
@@ -185,9 +203,11 @@ https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_X/my-aws-e
 ## GitHub Container Registry (GHCR)
 
 ### Authentication
+
 GitHub Actions automatically authenticates using `GITHUB_TOKEN`.
 
 For local publishing:
+
 ```bash
 # Create personal access token with write:packages scope
 echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
@@ -197,8 +217,10 @@ docker push ghcr.io/n85uk/aws-eum-x:latest
 ```
 
 ### Image Visibility
+
 Images are public by default. To verify:
-1. Go to https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum-x
+
+1. Go to <https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum-x>
 2. Check visibility settings
 3. Ensure "Public" is selected
 
@@ -207,12 +229,15 @@ Images are public by default. To verify:
 ## Build Artifacts
 
 ### Docker Image Tags
+
 - `ghcr.io/n85uk/aws-eum-x:latest` - Always points to latest main build
 - `ghcr.io/n85uk/aws-eum-x:1.0.0` - Specific version from package.json
 - `ghcr.io/n85uk/aws-eum-x:main-<sha>` - Commit-specific builds
 
 ### Labels
+
 Each image includes metadata labels:
+
 - `org.opencontainers.image.title=AWS EUM X`
 - `org.opencontainers.image.description=...`
 - `org.opencontainers.image.vendor=N85UK`
@@ -220,6 +245,7 @@ Each image includes metadata labels:
 - `org.opencontainers.image.version=1.0.0`
 
 ### Build Args
+
 - `BUILD_TIMESTAMP` - Set from commit timestamp
 - `APP_VERSION` - Set from package.json
 
@@ -228,6 +254,7 @@ Each image includes metadata labels:
 ## Troubleshooting Builds
 
 ### Build fails on GitHub Actions
+
 ```bash
 # Check logs in GitHub Actions
 # Look for specific error messages
@@ -239,6 +266,7 @@ Each image includes metadata labels:
 ```
 
 ### Multi-arch build issues
+
 ```bash
 # Recreate buildx builder
 docker buildx rm multiarch
@@ -247,6 +275,7 @@ docker buildx inspect --bootstrap
 ```
 
 ### Image too large
+
 ```bash
 # Check image size
 docker images ghcr.io/n85uk/aws-eum-x:latest
@@ -279,7 +308,9 @@ docker history ghcr.io/n85uk/aws-eum-x:latest
 ## Continuous Integration
 
 ### Smoke Tests in CI
+
 The workflow runs these tests on every build:
+
 1. Health endpoint returns 200
 2. Ready endpoint responds
 3. Probe endpoint responds
@@ -287,7 +318,9 @@ The workflow runs these tests on every build:
 5. Logs are clean (no startup errors)
 
 ### Adding More Tests
+
 Edit `.github/workflows/build-aws-eum-x.yml`:
+
 ```yaml
 - name: Run smoke tests
   run: |
@@ -302,7 +335,7 @@ Edit `.github/workflows/build-aws-eum-x.yml`:
 - **GitHub Actions Workflow**: `.github/workflows/build-aws-eum-x.yml`
 - **Dockerfile**: `Apps/AWS_EUM_X/Dockerfile`
 - **Template**: `Apps/AWS_EUM_X/my-aws-eum-x.xml`
-- **GHCR Package**: https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum-x
+- **GHCR Package**: <https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum-x>
 
 ---
 
