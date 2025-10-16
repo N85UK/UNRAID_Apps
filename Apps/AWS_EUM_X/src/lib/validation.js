@@ -154,6 +154,7 @@ function validate(schema, data, options = {}) {
 
 // Helper function to calculate SMS segments
 function calculateSMSSegments(message) {
+  // eslint-disable-next-line no-useless-escape
   const gsm7Chars = /^[@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !"#¤%&'()*+,\-./:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà\^{}\\\[~\]|€]*$/;
   
   const isGSM7 = gsm7Chars.test(message);

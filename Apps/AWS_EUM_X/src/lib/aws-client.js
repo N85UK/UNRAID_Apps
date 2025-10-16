@@ -4,7 +4,7 @@ const {
   DescribePoolsCommand,
   DescribePhoneNumbersCommand,
   DescribeConfigurationSetsCommand,
-  DescribeOptOutListsCommand,
+  // DescribeOptOutListsCommand, // Reserved for future use
   DescribeOptedOutNumbersCommand,
   DescribeAccountAttributesCommand,
   DescribeSpendLimitsCommand

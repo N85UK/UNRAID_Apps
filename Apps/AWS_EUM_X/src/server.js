@@ -487,7 +487,8 @@ app.use((req, res) => {
   });
 });
 
-app.use((err, req, res, next) => {
+// Error handler middleware
+app.use((err, req, res, _next) => {
   logger.error({ error: err.message, stack: err.stack }, 'Unhandled error');
   
   if (err.code === 'EBADCSRFTOKEN') {
