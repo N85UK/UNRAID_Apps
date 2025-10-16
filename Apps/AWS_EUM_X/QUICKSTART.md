@@ -283,7 +283,7 @@ If stuck:
 - Tests: 8-12 hours
 - Testing/QA: 4-6 hours
 
-**Total: 30-46 hours (4-6 days full-time)**
+Total: 30-46 hours (4-6 days full-time)
 
 ---
 
