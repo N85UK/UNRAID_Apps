@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AWS EUM X — Observability</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .log-viewer {
+      background: #010409;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #8b949e;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .log-entry {
+      margin-bottom: 4px;
+      padding: 4px;
+      border-left: 2px solid transparent;
+    }
+    .log-entry.error {
+      border-left-color: #f85149;
+      background: rgba(248, 81, 73, 0.05);
+    }
+    .log-entry.warn {
+      border-left-color: #d29922;
+      background: rgba(187, 128, 9, 0.05);
+    }
+    .log-entry.info {
+      border-left-color: #58a6ff;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .metric-label {
+      font-size: 12px;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .metric-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #e6eef8;
+    }
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .toggle-btn {
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      color: #e6eef8;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+    .toggle-btn:hover {
+      background: rgba(255,255,255,0.08);
+    }
+    .toggle-btn.active {
+      background: rgba(56, 139, 253, 0.15);
+      border-color: #388bfd;
+      color: #58a6ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="/icons/icon.svg" alt="AWS EUM X" width="48" height="48" onerror="this.style.display='none'">
+      <h1>Observability</h1>
+    </div>
+
+    <nav class="nav-bar" style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+      <a href="/dashboard" class="nav-link">Dashboard</a>
+      <a href="/settings" class="nav-link">Settings</a>
+      <a href="/actions" class="nav-link">Actions</a>
+      <a href="/observability" class="nav-link active">Observability</a>
+    </nav>
+
+    <h3 style="margin-bottom: 12px;">Real-Time Metrics</h3>
+    <div class="metrics-grid" id="metrics">
+      <!-- Metrics will be populated by JavaScript -->
+    </div>
+
+    <h3 style="margin-bottom: 12px;">Recent Activity</h3>
+    <div class="toggle-group">
+      <button class="toggle-btn active" onclick="setLogLevel('all')" id="btn-all">All Logs</button>
+      <button class="toggle-btn" onclick="setLogLevel('error')" id="btn-error">Errors Only</button>
+      <button class="toggle-btn" onclick="setLogLevel('warn')" id="btn-warn">Warnings</button>
+      <button class="toggle-btn" onclick="setLogLevel('info')" id="btn-info">Info</button>
+      <button class="toggle-btn" onclick="refreshLogs()" style="margin-left: auto;">🔄 Refresh</button>
+    </div>
+    <div class="log-viewer" id="log-viewer">
+      <div style="color: #8b949e;">Loading logs...</div>
+    </div>
+
+    <div style="margin-top: 24px; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+      <h3 style="margin-top: 0; font-size: 14px;">Health Endpoints</h3>
+      <div style="font-size: 13px; color: #8b949e; line-height: 1.8;">
+        <p style="margin: 4px 0;"><code>GET /health</code> - Liveness probe (version, uptime, build)</p>
+        <p style="margin: 4px 0;"><code>GET /ready</code> - Readiness probe (AWS connectivity, 200/503)</p>
+        <p style="margin: 4px 0;"><code>GET /probe/aws</code> - AWS connectivity test (phone numbers, permissions)</p>
+        <p style="margin: 4px 0;"><code>GET /api/queue/status</code> - Queue depth, token availability</p>
+        <p style="margin: 4px 0;"><code>GET /api/last-sends</code> - Last 50 send attempts</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+      <h3 style="margin-top: 0; font-size: 14px;">Log Levels</h3>
+      <p style="font-size: 13px; color: #8b949e; margin: 0;">
+        Current: <code><%= config.log_level || 'info' %></code>
+        <br>
+        Available levels: error → warn → info → debug → trace
+        <br>
+        Change via <code>LOG_LEVEL</code> environment variable. Secrets are always redacted regardless of level.
+      </p>
+    </div>
+
+    <div style="margin-top: 24px; font-size: 12px; color: #8b949e;">
+      <p>💡 <strong>Tip:</strong> Use debug or trace level for troubleshooting, then switch back to info for normal operation.</p>
+      <p>📊 <strong>Future:</strong> Prometheus metrics endpoint planned for v1.1 (<code>/metrics</code>)</p>
+    </div>
+  </div>
+
+  <script>
+    let currentLogLevel = 'all';
+
+    async function refreshMetrics() {
+      try {
+        const [health, queueStatus, lastSends] = await Promise.all([
+          fetch('/health').then(r => r.json()),
+          fetch('/api/queue/status').then(r => r.json()),
+          fetch('/api/last-sends').then(r => r.json())
+        ]);
+
+        const metricsHtml = `
+          <div class="metric-box">
+            <div class="metric-label">Version</div>
+            <div class="metric-value" style="font-size: 18px;">${health.version || 'unknown'}</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Uptime</div>
+            <div class="metric-value" style="font-size: 18px;">${formatUptime(health.uptime || 0)}</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Queue Depth</div>
+            <div class="metric-value">${queueStatus.queueDepth || 0}</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Token Availability</div>
+            <div class="metric-value" style="font-size: 18px;">${((queueStatus.tokens || 0) * 100).toFixed(0)}%</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Total Sends</div>
+            <div class="metric-value">${lastSends.history ? lastSends.history.length : 0}</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Failed Sends</div>
+            <div class="metric-value">${lastSends.history ? lastSends.history.filter(s => s.status === 'failed').length : 0}</div>
+          </div>
+        `;
+
+        document.getElementById('metrics').innerHTML = metricsHtml;
+      } catch (err) {
+        console.error('Failed to refresh metrics:', err);
+      }
+    }
+
+    async function refreshLogs() {
+      try {
+        const res = await fetch('/api/last-sends');
+        const json = await res.json();
+        const history = json.history || [];
+
+        let logsHtml = '';
+        history.slice(0, 20).forEach(send => {
+          const time = new Date(send.at).toLocaleTimeString();
+          const level = send.status === 'failed' ? 'error' : send.status === 'sent' ? 'info' : 'warn';
+          
+          if (currentLogLevel !== 'all' && level !== currentLogLevel) return;
+
+          const icon = send.status === 'sent' ? '✅' : send.status === 'failed' ? '❌' : '🔄';
+          const msg = send.status === 'sent' 
+            ? `Message sent successfully (queueId: ${send.queueId})`
+            : send.status === 'failed'
+            ? `Message failed: ${send.error || 'Unknown error'}`
+            : `Message simulated (queueId: ${send.queueId})`;
+
+          logsHtml += `<div class="log-entry ${level}">[${time}] ${icon} ${msg}</div>`;
+        });
+
+        if (logsHtml === '') {
+          logsHtml = '<div style="color: #8b949e;">No logs matching filter. Send a message to generate activity.</div>';
+        }
+
+        document.getElementById('log-viewer').innerHTML = logsHtml;
+      } catch (err) {
+        document.getElementById('log-viewer').innerHTML = `<div style="color: #f85149;">Error loading logs: ${err.message}</div>`;
+      }
+    }
+
+    function setLogLevel(level) {
+      currentLogLevel = level;
+      
+      // Update button styles
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.getElementById(`btn-${level}`).classList.add('active');
+
+      refreshLogs();
+    }
+
+    function formatUptime(seconds) {
+      const days = Math.floor(seconds / 86400);
+      const hours = Math.floor((seconds % 86400) / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+
+      if (days > 0) return `${days}d ${hours}h`;
+      if (hours > 0) return `${hours}h ${mins}m`;
+      return `${mins}m`;
+    }
+
+    // Initial load
+    refreshMetrics();
+    refreshLogs();
+
+    // Auto-refresh every 10 seconds
+    setInterval(() => {
+      refreshMetrics();
+      refreshLogs();
+    }, 10000);
+  </script>
+</body>
+</html>

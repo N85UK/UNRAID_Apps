@@ -126,8 +126,49 @@ app.get('/ready', async (req, res) => {
   res.json({ ready: result.ok, aws: result });
 });
 
-// First-run UI
+// UI Routes
 app.get('/', (req, res) => {
+  // Redirect to dashboard if AWS is configured, otherwise first-run
+  if (smsClient) {
+    res.redirect('/dashboard');
+  } else {
+    res.render('first-run', { version: APP_VERSION });
+  }
+});
+
+app.get('/dashboard', async (req, res) => {
+  res.render('dashboard', { version: APP_VERSION, build: BUILD_TIMESTAMP });
+});
+
+app.get('/settings', (req, res) => {
+  const config = {
+    aws_region: process.env.AWS_REGION || 'us-east-1',
+    rate_limit_parts_per_second: process.env.RATE_LIMIT_PARTS_PER_SECOND || '1.0',
+    max_queue_size: process.env.RATE_LIMIT_MAX_QUEUE_SIZE || '200',
+    max_retries: process.env.MAX_SEND_RETRIES || '5',
+    sends_enabled: process.env.SENDS_ENABLED === 'true',
+    simulate_sends: process.env.SENDS_SIMULATE !== 'false',
+    log_level: process.env.LOG_LEVEL || 'info',
+    log_format: process.env.LOG_FORMAT || 'json',
+    history_retention: process.env.HISTORY_RETENTION || '100',
+    disable_csp: process.env.DISABLE_CSP !== 'false',
+    cache_duration: process.env.CACHE_DURATION || '300000'
+  };
+  res.render('settings', { config });
+});
+
+app.get('/actions', (req, res) => {
+  res.render('actions', { version: APP_VERSION });
+});
+
+app.get('/observability', (req, res) => {
+  const config = {
+    log_level: process.env.LOG_LEVEL || 'info'
+  };
+  res.render('observability', { config });
+});
+
+app.get('/first-run', (req, res) => {
   res.render('first-run', { version: APP_VERSION });
 });
 

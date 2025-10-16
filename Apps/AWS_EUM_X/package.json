@@ -9,7 +9,9 @@
     "test": "jest --runInBand",
     "lint": "eslint .",
     "smoke": "node test/smoke-test.js",
-    "support-bundle": "node support/generate-bundle.js"
+    "support-bundle": "node support/generate-bundle.js",
+    "generate-png-icon": "node scripts/generate-png-icon.js",
+    "test-ui": "bash scripts/test-ui-pages.sh aws-eum-x 8080"
   },
   "keywords": [
     "aws",
