@@ -1,41 +1,186 @@
 # UNRAID Apps Repository
 
-A collection of applications and plugins for UNRAID systems, providing enhanced functionality and user experience.
+A curated collection of UNRAID applications and plugins that extend UNRAID's functionality and improve user experience.
 
-## 🚀 **Available Projects**
+## 🚀 Available Projects
 
-### 📁 **File Manager Plugin** (Ready to Install)
-**Modern web-based file management for UNRAID**
+### 📁 ExplorerX Plugin (Native UNRAID Plugin)
+**Simple, native file manager for UNRAID with clean interface and safe installation**
 
-- **Location**: [`File_Manager_Plugin/`](File_Manager_Plugin/)
-- **Status**: ✅ **Ready for Production Use - v2025.10.03.21**
-- **Installation**: `https://github.com/N85UK/UnRiaid_Apps/raw/main/File_Manager_Plugin/file-manager.plg`
+- **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
+- **Status**: 🔧 Debug v2025.10.10.0002 - Investigating interface rendering issues
+- **Installation**: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
 
 **Key Features:**
-- 🌐 Modern responsive web interface
-- 📱 Mobile-friendly design
-- 🔧 **Enhanced Installation**: Network checks, multiple download sources, comprehensive error handling
-- 🔒 Secure user authentication
+- 🌐 Simple directory navigation and file listing
+- 📱 Responsive design for mobile and desktop
+- 🔧 **Native Integration**: No Docker required, pure UNRAID plugin
+- 🔒 Safe installation that won't break other plugins
 - 📂 Access to all UNRAID shares and drives
-- ⬆️⬇️ Upload/download with drag-and-drop
-- 🗜️ Archive creation and extraction
-- 🔄 Real-time service monitoring
-- 🛠️ **Improved Reliability**: Fallback URLs, retry logic, detailed diagnostics
+- 🛡️ **Enhanced Security**: Safe permission handling, no global modifications
+- 🎯 **Tools Menu Access**: Available via Tools → ExplorerX
 
-**Quick Setup:**
-1. Install plugin via URL above
-2. Click "Install FileBrowser Binary" (now with enhanced error handling)
-3. Click "Setup Admin User"
-4. Click "Start Service"
-5. Access at `http://your-server:8080`
+### 🏆 UNRAID API Integration (Bounty Submission)
+**Complete NestJS implementation for UNRAID API bounty**
 
-**Latest Improvements (v2025.10.03.21):**
-- ✅ Network connectivity verification before download
-- ✅ Multiple download sources (GitHub, JSDeliver, Raw GitHub)
-- ✅ Comprehensive error diagnostics and logging
-- ✅ Binary testing before and after installation
-- ✅ Automatic fallback and retry mechanisms
-- ✅ **Fixed FileBrowser version command compatibility**
+- **Location**: [`Bounty_Submission/`](Bounty_Submission/)
+- **Status**: ✅ Ready for UNRAID API Integration
+- **Reference**: [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
+
+**Implementation Highlights:**
+- 🏗️ NestJS module architecture
+- � UNRAID session proxy authentication
+- 🖥️ Vue.js WebGUI following LogViewer pattern
+- 🔄 Real-time WebSocket updates
+- 📊 Service lifecycle management
+- 🛡️ Security and permission inheritance
+
+### 📧 AWS End User Messaging (Multi-Version Suite)
+**Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features**
+
+🚀 **All versions now building successfully with GitHub Actions CI/CD!**
+
+#### Version 3.0 (Enhanced UI Edition) 🎨
+- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
+- **Status**: ✅ Production Ready - Auto-deployed
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
+
+**Enhanced Features:**
+- 🌙 Modern dark mode with automatic theme switching
+- 🎨 Clean, responsive design with Google Fonts
+- 📊 Chart.js analytics and message statistics
+- 🛡️ Enhanced security with CSP and rate limiting
+- 🔄 Auto-updates with configurable intervals
+
+#### Version 3.0 (Enhanced UI Edition) 🎨
+- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
+- **Status**: ✅ Production Ready - Auto-deployed
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
+
+**Enhanced Features:**
+- 🌙 Modern dark mode with automatic theme switching
+- 🎨 Clean, responsive design with Google Fonts
+- 📊 Chart.js analytics and message statistics
+- 🛡️ Enhanced security with CSP and rate limiting
+- 🔄 Auto-updates with configurable intervals
+
+#### MariaDB Enterprise Edition 🏢
+- **Location**: [`Apps/AWS_EUM_MariaDB/`](Apps/AWS_EUM_MariaDB/)
+- **Status**: ✅ Production Ready - Multi-user authentication
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
+
+**Enterprise Features:**
+- 👥 Multi-user authentication with session management
+- 🗄️ MariaDB/MySQL database persistence
+- 🔐 JWT-based authentication system
+- 📈 Advanced analytics and reporting
+- 🛡️ Enterprise-grade security features
+
+## 🛠️ Installation
+
+### ExplorerX Plugin (Recommended)
+1. Go to UNRAID Web UI → Plugins → Install Plugin
+2. Paste: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
+3. Click Install and go to Tools → ExplorerX
+
+### Docker-based Apps (AWS EUM)
+1. Pull the desired image from GHCR or use the provided `template.cfg` in the app folder
+2. Configure environment variables and mount `/app/data` for persistence
+3. Start container and check logs for startup messages
+
+**Example (docker run minimal):**
+```bash
+docker run -d \
+    -e AWS_ACCESS_KEY_ID=AKIA... \
+    -e AWS_SECRET_ACCESS_KEY=... \
+    -e AWS_REGION=eu-west-2 \
+    -p 8080:80 \
+    --name aws-eum \
+    ghcr.io/n85uk/aws-eum:latest
+```
+
+## � Development & Contributing
+
+See `CONTRIBUTING.md` for full contribution guidelines. Quick tips:
+
+- Fork the repo and open small focused PRs
+- Run `npm install` inside `Apps/*` Node projects before development
+- Include tests for non-trivial changes and update `CHANGELOG.md` for releases
+- Follow consistent commit message style (semver-inspired prefixes)
+
+### Code Style & Linters
+- Use recommended linters per project (ESLint/Prettier where applicable)
+
+## 📊 CI/CD Status
+
+- ✅ **GitHub Actions**: All workflows passing
+- 🐳 **Docker Images**: Auto-published to GHCR on releases
+- 🔄 **Multi-platform**: x86_64 and ARM64 support
+- 🏷️ **Version Tags**: Automatic tagging with semantic versions
+
+**Docker Images Available:**
+- `ghcr.io/n85uk/aws-eum:latest` (v2.0)
+- `ghcr.io/n85uk/aws-eum:latest` (v3.0)
+- `ghcr.io/n85uk/aws-eum-mariadb:latest` (Enterprise)
+
+## 🤝 Contributing
+
+We welcome contributions! See `CONTRIBUTING.md` for details.
+
+**Quick Start:**
+- Fork and clone the repository
+- Make changes following our guidelines
+- Submit a pull request
+- Wait for review and merge
+
+## 📄 Documentation
+
+- **Contributing Guide**: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- **Security Policy**: [`SECURITY.md`](SECURITY.md)
+- **Changelog**: [`CHANGELOG.md`](CHANGELOG.md)
+- **Migration Guide**: [`MIGRATION.md`](MIGRATION.md)
+
+## 🔒 Security
+
+- **Vulnerability Reports**: Follow [`SECURITY.md`](SECURITY.md)
+- **Responsible Disclosure**: Email security@git.n85.uk
+- **Security Updates**: Regular dependency updates and patches
+
+## 📞 Support
+
+- **General Questions**: hello@git.n85.uk
+- **Bug Reports**: [GitHub Issues](https://github.com/N85UK/UNRAID_Apps/issues)
+- **Security Issues**: security@git.n85.uk
+
+## 📋 System Requirements
+
+- **Minimum UNRAID**: 7.2.0+
+- **Node.js Apps**: Node.js 18+
+- **ExplorerX Plugin**: PHP 8.x (included in UNRAID)
+- **Typical Resources**: 50-200 MB RAM idle, depends on usage
+
+## 📈 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/N85UK/UnRiaid_Apps)
+![GitHub issues](https://img.shields.io/github/issues/N85UK/UnRiaid_Apps)
+![GitHub license](https://img.shields.io/github/license/N85UK/UnRiaid_Apps)
+
+## 🙏 Acknowledgments
+
+- **UNRAID Team**: For the excellent platform and bounty opportunities
+- **Community**: For testing, feedback, and contributions
+- **FileBrowser Project**: For outstanding file management software
+
+## 📄 License
+
+This repository and included projects are licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
+
+---
+
+**Made with ❤️ for the UNRAID community**
 
 ### 🏆 **UNRAID API Integration** (Bounty Submission)
 **Complete NestJS implementation for UNRAID API bounty**
@@ -52,83 +197,235 @@ A collection of applications and plugins for UNRAID systems, providing enhanced 
 - 📊 Service lifecycle management
 - 🛡️ Security and permission inheritance
 
-### 📧 **AWS End User Messaging**
-**SMS messaging via AWS Pinpoint**
+### 📧 **AWS End User Messaging (Multi-Version Suite)**
+**Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features**
 
-- **Location**: [`AWS_EUM/`](AWS_EUM/)
-- **Status**: ✅ Production Ready
-- **Installation**: `https://github.com/N85UK/UnRiaid_Apps/raw/main/AWS_EUM/template.cfg`
+🚀 **All versions now building successfully with GitHub Actions CI/CD!**
 
-## 📦 **Installation Methods**
+#### **Version 3.0** (Enhanced UI Edition) 🎨
+- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
+- **Status**: ✅ Production Ready - Auto-deployed
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 
-### For File Manager Plugin
+**Enhanced Features:**
+- 🌙 Modern dark mode with automatic theme switching
+- 🎨 Clean, responsive design with Google Fonts
+- 📊 Chart.js analytics and message statistics
+- 🛡️ Enhanced security with CSP and rate limiting
+- 🔄 Auto-updates with configurable intervals
 
-**Option 1: Direct Installation (Recommended)**
+#### **Version 3.0** (Enhanced UI Edition) 🎨
+- **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
+- **Status**: ✅ Production Ready - Auto-deployed
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg`
+- **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
+
+**Enhanced Features:**
+# UNRAID Apps
+
+A curated collection of UNRAID applications and plugins that extend UNRAID's functionality and improve user experience.
+
+Keywords: UNRAID plugin, UNRAID app, file manager, SMS messaging, Docker template, MariaDB, API integration
+
+---
+
+## Quick links
+
+- ExplorerX Plugin (native UNRAID plugin): `ExplorerX_Plugin/`
+- UNRAID API Integration (bounty submission): `Bounty_Submission/`
+- AWS End User Messaging (EUM) suite: `Apps/AWS_EUM`, `Apps/AWS_EUM`, `Apps/AWS_EUM_MariaDB`
+- CONTRIBUTING.md: `./CONTRIBUTING.md`
+- SECURITY.md: `./SECURITY.md`
+- CHANGELOG.md: `./CHANGELOG.md`
+- Issues (all projects): https://github.com/N85UK/UNRAID_Apps/issues
+
+---
+
+## Projects included
+
+### ExplorerX Plugin (native UNRAID plugin)
+
+A lightweight, native UNRAID plugin that provides a safe, responsive file manager interface for browsing shares and performing file operations.
+
+- Location: `ExplorerX_Plugin/`
+- Status: Debug (see `ExplorerX_Plugin/README.md` and release notes)
+- Install (plugin manifest): `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
+- Report issues: https://github.com/N85UK/UNRAID_Apps/issues
+
+Key features
+
+- Native UNRAID integration (Tools → ExplorerX)
+- Responsive UI for desktop and mobile
+- Safe permission handling and no global system changes
+- File operations: view, edit, move, copy, delete, streaming downloads
+
+Notes & known issues
+
+- Debug builds may display diagnostic output instead of the normal browser UI when active. Toggle debug mode off for normal behavior.
+- If you encounter rendering or permission issues, open an issue with console logs and a screenshot.
+
+---
+
+### UNRAID API Integration (Bounty Submission)
+
+NestJS-based implementation intended for integration with the official UNRAID API. This is a developer-focused project and requires UNRAID team coordination to include in the upstream API.
+
+- Location: `Bounty_Submission/`
+- Status: Ready for upstream integration (see `Bounty_Submission/README.md`)
+- UNRAID API reference: https://github.com/unraid/api
+
+What this contains
+
+- NestJS module implementing a file-manager API
+- Vue.js WebGUI sample pages
+- Session proxy approach for UNRAID authentication
+
+High-level integration checklist for UNRAID maintainers
+
+1. Review `Bounty_Submission/api/` modules and confirm route compatibility.
+2. Validate session proxy approach and security model with UNRAID maintainers.
+3. Upstream the module via a PR in the UNRAID API repository and follow the maintainers' guidance.
+
+---
+
+### AWS End User Messaging (EUM) Suite
+
+Professional SMS messaging applications using AWS Pinpoint. Select the edition that fits your needs:
+
+- Stable v2 (simple): `Apps/AWS_EUM/` (file-based storage)
+- Enhanced UI v3: `Apps/AWS_EUM/` (modern UI, charts, dark mode)
+- MariaDB Enterprise: `Apps/AWS_EUM_MariaDB/` (multi-user, database persistence)
+
+General notes
+
+- Docker images are built via GitHub Actions and published to GitHub Container Registry (ghcr.io/n85uk)
+- Templates for Community Applications are provided in each app folder
+- All EUM apps require AWS credentials with Pinpoint SMS permissions
+
+Docker image pull commands
+
+```bash
+docker pull ghcr.io/n85uk/aws-eum:latest
+docker pull ghcr.io/n85uk/aws-eum:latest
+docker pull ghcr.io/n85uk/aws-eum-mariadb:latest
 ```
-1. Go to Plugins → Install Plugin
-2. Enter: https://github.com/N85UK/UnRiaid_Apps/raw/main/File_Manager_Plugin/file-manager.plg
-3. Click Install
-4. Follow 3-step setup process
+
+Environment variables (common)
+
+- AWS_ACCESS_KEY_ID — AWS access key (required)
+- AWS_SECRET_ACCESS_KEY — AWS secret key (required)
+- AWS_REGION — AWS region (default: eu-west-2)
+- DISABLE_CSP — Set to `true` on bridged networks (default: `false`)
+- PORT — Port to run server on (default: `80`)
+
+See each application's `template.cfg` or `.env.example` for full lists and defaults.
+
+Security considerations (MariaDB edition)
+
+- Change default admin passwords after first boot
+- Use strong secrets for `DB_PASSWORD` and JWT keys
+- Restrict database access to trusted hosts/networks and enable TLS for DB connections
+
+---
+
+## Installation
+
+Pick the installation method per project below.
+
+ExplorerX Plugin (recommended)
+
+1. Go to UNRAID Web UI → Plugins → Install Plugin
+2. Paste: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
+3. Click Install and go to Tools → ExplorerX
+
+Docker-based apps (EUM)
+
+1. Pull the desired image from GHCR or use the provided `template.cfg` in the app folder
+2. Configure environment variables and mount `/app/data` for persistence
+3. Start container and check logs for startup messages
+
+Example (docker run minimal):
+```bash
+docker run -d \
+    -e AWS_ACCESS_KEY_ID=AKIA... \
+    -e AWS_SECRET_ACCESS_KEY=... \
+    -e AWS_REGION=eu-west-2 \
+    -p 8080:80 \
+    --name aws-eum \
+    ghcr.io/n85uk/aws-eum:latest
 ```
 
-**Option 2: Community Applications**
-```
-1. Install Community Applications if needed
-2. Search for "File Manager" in Apps tab
-3. Click Install
-```
+---
 
-### For UNRAID API Integration
+## Development & Contributing
 
-The bounty submission requires integration by the UNRAID team:
-```typescript
-// Add to UNRAID API codebase
-import { FileManagerModule } from './modules/filemanager/filemanager.module';
-```
+See `CONTRIBUTING.md` for full contribution guidelines. Quick tips:
 
-## 🛠️ **Development & Architecture**
+- Fork the repo and open small focused PRs
+- Run `npm install` inside `Apps/*` Node projects before development
+- Include tests for non-trivial changes and update `CHANGELOG.md` for releases
+- Follow consistent commit message style (semver-inspired prefixes)
 
-### Repository Structure
-```
-UnRiaid_Apps/
-├── File_Manager_Plugin/        # Ready-to-install UNRAID plugin v2025.10.03.21
-│   ├── file-manager.plg        # Plugin manifest (XML validated)
-│   ├── webgui/                 # PHP-based interface with enhanced error handling
-│   ├── scripts/                # Installation/removal scripts
-│   └── README.md               # Installation guide
-├── Bounty_Submission/          # UNRAID API integration (complete)
-│   ├── api/src/unraid-api/modules/filemanager/  # NestJS module
-│   ├── web/pages/              # Vue.js WebGUI
-│   └── README.md               # Integration guide
-├── AWS_EUM/                    # Docker application
-└── Documentation/              # Updated project documentation
-    ├── README.md               # This file
-    ├── CHANGELOG.md            # Version history
-    ├── CONTRIBUTING.md         # Development guidelines
-    ├── SECURITY.md             # Security policy
-    └── MIGRATION.md            # Migration guides
-```
+Code style & linters
 
-### Key Differences
+- Use recommended linters per project (ESLint/Prettier where applicable)
 
-| Aspect | Plugin Version | API Integration |
-|--------|---------------|-----------------|
-| **Use Case** | Install now on any UNRAID | Future API integration |
-| **Architecture** | Traditional plugin | NestJS module |
-| **Authentication** | FileBrowser built-in | UNRAID API proxy |
-| **Interface** | PHP + iframe | Vue.js component |
-| **Installation** | One-click install | API team integration |
+---
 
-## 📋 **System Requirements**
+## CI / CD
 
-### For Plugin Version
-- **UNRAID**: 6.8.0+ (tested through 7.2+)
-- **Architecture**: x86_64, ARM64, ARMv7
-- **Memory**: 50MB RAM
-- **Storage**: 25MB disk space
-- **Network**: **Internet access required** for initial FileBrowser binary download
-- **Connectivity**: HTTPS access to GitHub (with automatic fallbacks)
+- GitHub Actions for build and publish are defined in `.github/workflows/`.
+- Docker image builds run on push to `main`, `develop` or tags like `v*.*.*`.
+- Tags are used to release versioned Docker images to GHCR.
 
+---
+
+## Support & Documentation
+
+- Central issues tracker: https://github.com/N85UK/UNRAID_Apps/issues
+- Security disclosures: follow `SECURITY.md` and email `security@git.n85.uk`
+- For ExplorerX debug mode, include console logs, a screenshot, and steps to reproduce
+
+Suggested improvements (manual steps)
+
+1. Create a DISCUSSIONS or dedicated Support repository for community help and FAQs
+2. Add issue templates for bug reports, feature requests, and security disclosures
+
+---
+
+## System Requirements
+
+- Minimum UNRAID recommended: 7.2.0 (test on latest stable release)
+- Node.js: 18+ for Node-based apps
+- Typical resource usage: small web apps — 50-200 MB RAM idle; depends on traffic and features
+
+---
+
+## Contributing
+
+- Link to `CONTRIBUTING.md` and follow PR/issue process
+
+---
+
+## License
+
+This repository and included projects are licensed under the MIT License. See `LICENSE` for details.
+
+---
+
+## Manual actions required
+
+The following actions require repository owner or maintainers to perform:
+
+1. Create a GitHub Discussions page (or Support repo) for user-facing support and FAQs
+2. Add issue templates for bugs, feature requests, and security reports
+3. Optionally add a SECURITY contact email in GitHub settings if not already set
+4. Verify Community Applications listing for ExplorerX and update `my-aws-eum.xml` if needed
+
+---
+
+Thank you for using and contributing to the UNRAID Apps collection — maintained with care for the UNRAID community.
 ### For API Integration
 - **UNRAID API**: Development environment
 - **Node.js**: 18+
@@ -137,10 +434,11 @@ UnRiaid_Apps/
 
 ## 🆘 **Support & Documentation**
 
-### Plugin Support
-- **Quick Start**: [File_Manager_Plugin/README.md](File_Manager_Plugin/README.md)
-- **Installation Issues**: [GitHub Issues](https://github.com/N85UK/UnRiaid_Apps/issues)
+### ExplorerX Plugin Support
+- **Quick Start**: [ExplorerX_Plugin/README.md](ExplorerX_Plugin/README.md)
+- **Installation Issues**: [GitHub Issues](https://github.com/N85UK/UNRAID_Apps/issues)
 - **User Guide**: Built into plugin interface
+- **Advanced Features**: Multi-pane navigation and bulk operations guide
 
 ### API Integration Support  
 - **Bounty Spec**: [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
@@ -150,21 +448,30 @@ UnRiaid_Apps/
 ## 🔄 **Version Status**
 
 ### Current Active Projects
-- ✅ **File Manager Plugin v2025.10.03.21**: Production ready with enhanced installation
+- ✅ **ExplorerX Plugin v0.1.1**: Production ready with advanced file management
 - ✅ **Bounty Submission**: Complete, ready for UNRAID API integration
-- ✅ **AWS EUM**: Stable, minimal maintenance
+- ✅ **AWS EUM v2.0**: Stable production version, minimal maintenance
+- ✅ **AWS EUM v3.0**: Enhanced UI with dark mode, charts, and modern design
+- ✅ **AWS EUM MariaDB**: Enterprise edition with multi-user and database integration
+- ✅ **CA Submission Tools**: Community Applications integration
 
-### Discontinued Projects
-- ❌ **Legacy Plugin**: Archived, replaced by v2.0
+### Deployment Status
+- ✅ **Build Status**: All GitHub Actions workflows passing
+- 🚀 **All AWS EUM versions**: Auto-deployed via GitHub Actions
+- 📦 **Docker Images**: Available on GitHub Container Registry  
+- 🔄 **CI/CD**: Automated builds with Alpine Linux optimization
+- 🧹 **Clean Dependencies**: npm install with fresh package-lock.json generation
+- 📊 **Monitoring**: Build status and health checks active
 
 ## 🤝 **Contributing**
 
 We welcome contributions for both projects:
 
-**For Plugin Development:**
+**For ExplorerX Plugin Development:**
 - PHP and JavaScript knowledge
 - UNRAID plugin architecture understanding
-- FileBrowser integration experience
+- Native file management implementation
+- Multi-pane UI development experience
 
 **For API Integration:**
 - TypeScript and NestJS expertise
@@ -191,78 +498,15 @@ MIT License - see individual project folders for specific details.
 
 ## ✨ **Get Started Today**
 
-### Want File Management Now?
-→ Install the **File Manager Plugin**: [Installation Guide](File_Manager_Plugin/README.md)
+### Want Advanced File Management Now?
+→ Install **ExplorerX Plugin**: [Installation Guide](ExplorerX_Plugin/README.md)
 
 ### Building UNRAID API Features?
 → Check the **Bounty Submission**: [Integration Guide](Bounty_Submission/README.md)
 
 **Made with ❤️ for the UNRAID community**
 
-## 📋 Requirements
-
-### For UNRAID API Integration
-- UNRAID API development environment
-- Node.js 18+
-- TypeScript support
-- NestJS framework knowledge
-
-### For Docker Applications
-- **UNRAID Version**: 6.8+
-- **Architecture**: x86_64 (Intel/AMD)
-- **Docker**: Community Applications plugin
-
-## 🛠️ Development
-
-### Repository Structure
-```
-UnRiaid_Apps/
-├── UNRAID_API_Integration/     # NEW: Correct API implementation
-│   ├── api/src/unraid-api/modules/filemanager/  # NestJS module
-│   ├── web/pages/              # Vue.js WebGUI
-│   └── README.md               # Integration guide
-├── Plugins/FileManager/        # ARCHIVED: Legacy plugin
-├── AWS_EUM/                    # Docker application
-├── MIGRATION.md                # Migration guide
-└── README.md                   # This file
-```
-
-### Contributing to API Integration
-
-For the UNRAID API File Manager:
-
-1. **Study the Requirements**: Read [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
-2. **Review Implementation**: Check [`UNRAID_API_Integration/`](UNRAID_API_Integration/)
-3. **Follow Patterns**: Use NestJS + Vue.js approach
-4. **Test Integration**: Ensure proper UNRAID API compatibility
-
-### Development Guidelines
-- Follow UNRAID API patterns and conventions
-- Use TypeScript for type safety
-- Include comprehensive tests
-- Update documentation
-- Ensure security best practices
-
-## 📖 Migration Guide
-
-If you were using the previous plugin version, please read [`MIGRATION.md`](MIGRATION.md) for:
-- Architecture changes explanation
-- Migration steps
-- Configuration differences
-- API endpoint changes
-
-## 🆘 Support
-
-### For UNRAID API Integration
-- **Documentation**: [`UNRAID_API_Integration/README.md`](UNRAID_API_Integration/README.md)
-- **Bounty Reference**: [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
-- **Architecture Questions**: GitHub Issues with "api-integration" label
-
-### For Other Applications
-- **GitHub Issues**: [Create an Issue](https://github.com/N85UK/UnRiaid_Apps/issues)
-- **Documentation**: Check individual application folders
-
-## 📄 License
+##  License
 
 This repository and its applications are licensed under the MIT License unless otherwise specified.
 
@@ -270,27 +514,10 @@ This repository and its applications are licensed under the MIT License unless o
 
 ### 💬 General Questions & Support
 - **Email**: hello@git.n85.uk
-- **GitHub Issues**: [Create an Issue](https://github.com/N85UK/UnRiaid_Apps/issues)
+- **GitHub Issues**: [Create an Issue](https://github.com/N85UK/UNRAID_Apps/issues)
 
 ### 🔒 Security Issues
 - **Email**: security@git.n85.uk
-- **GitHub Security**: [Report a Vulnerability](https://github.com/N85UK/UnRiaid_Apps/security/advisories)
-
----
-
-## ✅ **Ready for UNRAID API Bounty**
-
-The `UNRAID_API_Integration/` implementation provides everything required for the UNRAID API File Manager bounty:
-
-1. ✅ **NestJS Module Integration**
-2. ✅ **FileBrowser Subprocess Management**
-3. ✅ **Proxy Authentication Bridge**
-4. ✅ **Vue.js WebGUI (LogViewer pattern)**
-5. ✅ **HTTP/WebSocket Proxy**
-6. ✅ **Virtual Root Configuration**
-7. ✅ **Service Lifecycle Management**
-8. ✅ **Security & Permission Integration**
-9. ✅ **JSON Configuration**
-10. ✅ **Comprehensive Documentation**
+- **GitHub Security**: [Report a Vulnerability](https://github.com/N85UK/UNRAID_Apps/security/advisories)
 
 **Made with ❤️ for the UNRAID community**

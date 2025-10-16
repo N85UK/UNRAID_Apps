@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AWS EUM X — Settings</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .settings-group {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .settings-group h3 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #e6eef8;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    .setting-item {
+      margin-bottom: 16px;
+    }
+    .setting-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .setting-label span {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .setting-help {
+      font-size: 12px;
+      color: #8b949e;
+      margin-top: 4px;
+    }
+    .doc-link {
+      font-size: 12px;
+      color: #58a6ff;
+      text-decoration: none;
+      border-bottom: 1px dashed #58a6ff;
+    }
+    .doc-link:hover {
+      color: #79c0ff;
+      border-bottom-color: #79c0ff;
+    }
+    .setting-value {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #8b949e;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(56, 139, 253, 0.15);
+      color: #58a6ff;
+    }
+    .badge.required {
+      background: rgba(248, 81, 73, 0.15);
+      color: #f85149;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="/icons/icon.svg" alt="AWS EUM X" width="48" height="48" onerror="this.style.display='none'">
+      <h1>Settings</h1>
+    </div>
+
+    <nav class="nav-bar" style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+      <a href="/dashboard" class="nav-link">Dashboard</a>
+      <a href="/settings" class="nav-link active">Settings</a>
+      <a href="/actions" class="nav-link">Actions</a>
+      <a href="/observability" class="nav-link">Observability</a>
+    </nav>
+
+    <p style="color: #8b949e; font-size: 14px;">
+      Settings are configured via Unraid template or environment variables. Changes require container restart.
+      <a href="/api/config/export" style="color: #58a6ff; margin-left: 8px;">Export Config</a>
+    </p>
+
+    <div class="settings-group">
+      <h3>AWS Credentials <span class="badge required">Required</span></h3>
+      
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>AWS Access Key ID</span>
+          <span class="badge required">Required</span>
+        </div>
+        <div class="setting-value">AKIA**** (redacted)</div>
+        <div class="setting-help">
+          IAM user access key with Pinpoint SMS permissions.
+          <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html" class="doc-link" target="_blank">AWS Docs →</a>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>AWS Secret Access Key</span>
+          <span class="badge required">Required</span>
+        </div>
+        <div class="setting-value">***REDACTED***</div>
+        <div class="setting-help">
+          Secret key for the above Access Key ID. Never shared or logged.
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>AWS Region</span>
+          <span class="badge required">Required</span>
+        </div>
+        <div class="setting-value"><%= config.aws_region || 'us-east-1' %></div>
+        <div class="setting-help">
+          AWS region where your Pinpoint SMS resources are provisioned.
+          <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html" class="doc-link" target="_blank">Available Regions →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3>Rate Limiting & Queue</h3>
+      
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Parts Per Second (MPS)</span>
+          <span class="badge">Default: 1.0</span>
+        </div>
+        <div class="setting-value"><%= config.rate_limit_parts_per_second || '1.0' %></div>
+        <div class="setting-help">
+          Maximum message parts per second to send. AWS MPS limits vary by country and originator type.
+          <a href="https://docs.aws.amazon.com/sms-voice/latest/userguide/sms-limitations-mps.html" class="doc-link" target="_blank">AWS MPS Docs →</a>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Max Queue Size</span>
+          <span class="badge">Default: 200</span>
+        </div>
+        <div class="setting-value"><%= config.max_queue_size || '200' %></div>
+        <div class="setting-help">
+          Maximum number of messages to queue before rejecting new requests (HTTP 429).
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Max Send Retries</span>
+          <span class="badge">Default: 5</span>
+        </div>
+        <div class="setting-value"><%= config.max_retries || '5' %></div>
+        <div class="setting-help">
+          Number of times to retry sending after throttling errors. Uses exponential backoff (max 30s).
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3>Features & Safety</h3>
+      
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Real Sends Enabled</span>
+          <span class="badge" style="background: <%= config.sends_enabled ? 'rgba(46, 160, 67, 0.15)' : 'rgba(248, 81, 73, 0.15)'; %>; color: <%= config.sends_enabled ? '#3fb950' : '#f85149'; %>;">
+            <%= config.sends_enabled ? 'Enabled' : 'Disabled' %>
+          </span>
+        </div>
+        <div class="setting-value"><%= config.sends_enabled ? 'true' : 'false' %></div>
+        <div class="setting-help">
+          When disabled, all sends are simulated (no real SMS sent). Set to 'true' for production use.
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Simulate Sends</span>
+          <span class="badge">Default: true</span>
+        </div>
+        <div class="setting-value"><%= config.simulate_sends || 'true' %></div>
+        <div class="setting-help">
+          When true, sends return simulated MessageId without calling AWS. Useful for testing.
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3>Logging & Observability</h3>
+      
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Log Level</span>
+          <span class="badge">Default: info</span>
+        </div>
+        <div class="setting-value"><%= config.log_level || 'info' %></div>
+        <div class="setting-help">
+          Logging verbosity: error, warn, info, debug, trace. Secrets are always redacted.
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Log Format</span>
+          <span class="badge">Default: json</span>
+        </div>
+        <div class="setting-value"><%= config.log_format || 'json' %></div>
+        <div class="setting-help">
+          'json' for structured logs (recommended for aggregation), 'pretty' for human-readable console output.
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>History Retention</span>
+          <span class="badge">Default: 100</span>
+        </div>
+        <div class="setting-value"><%= config.history_retention || '100' %></div>
+        <div class="setting-help">
+          Number of sent messages to keep in history. Older messages are automatically pruned.
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3>Network & Security</h3>
+      
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Disable CSP</span>
+          <span class="badge">Default: true</span>
+        </div>
+        <div class="setting-value"><%= config.disable_csp || 'true' %></div>
+        <div class="setting-help">
+          Set to 'true' for custom bridge networks (br0.x) that may block external resources. Recommended for most Unraid setups.
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Cache Duration</span>
+          <span class="badge">Default: 300000 ms</span>
+        </div>
+        <div class="setting-value"><%= config.cache_duration || '300000' %> ms</div>
+        <div class="setting-help">
+          How long to cache AWS phone numbers and sender IDs. Default 300000 = 5 minutes. Reduces AWS API calls.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+      <p style="margin: 0; font-size: 13px; color: #8b949e;">
+        💡 <strong>Tip:</strong> To change settings, edit the Unraid template or Docker environment variables, then restart the container.
+        All settings are documented in <a href="https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_X" style="color: #58a6ff;">README.md</a>.
+      </p>
+    </div>
+
+    <div style="margin-top: 24px; font-size: 12px; color: #8b949e;">
+      <p>For security reasons, this page displays current settings in read-only mode. Secrets are automatically redacted.</p>
+    </div>
+  </div>
+</body>
+</html>

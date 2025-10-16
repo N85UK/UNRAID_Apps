@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PinpointSMSMinimalAccess",
+      "Effect": "Allow",
+      "Action": [
+        "sms-voice:SendTextMessage",
+        "sms-voice:DescribePhoneNumbers",
+        "sms-voice:DescribeSenderIds"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": [
+            "us-east-1",
+            "eu-west-2"
+          ]
+        }
+      }
+    }
+  ]
+}

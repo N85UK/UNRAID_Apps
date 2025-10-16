@@ -1,0 +1,148 @@
+name: Update ExplorerX Version Info
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to update to (YYYY.MM.DD.#### format)'
+        required: true
+        type: string
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.release.tag_name, 'explorerx-') || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Extract version from release
+      id: extract_version
+      run: |
+        if [ "${{ github.event_name }}" = "release" ]; then
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION=${VERSION#v}  # Remove v prefix if present
+        else
+          VERSION="${{ github.event.inputs.version }}"
+        fi
+        
+        # Validate version format
+        if [[ ! $VERSION =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]{4}$ ]]; then
+          echo "ERROR: Invalid version format: $VERSION (expected: YYYY.MM.DD.####)"
+          exit 1
+        fi
+        
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
+        
+    - name: Update version.json
+      run: |
+        VERSION="${{ steps.extract_version.outputs.version }}"
+        DATE="${{ steps.extract_version.outputs.date }}"
+        
+        # Get package info if it exists
+        PACKAGE_PATH="ExplorerX_Plugin/packages/explorerx-${VERSION}-x86_64-1.txz"
+        if [ -f "$PACKAGE_PATH" ]; then
+          MD5=$(md5sum "$PACKAGE_PATH" | cut -d' ' -f1)
+        else
+          MD5="UPDATE_MD5_AFTER_PACKAGE_BUILD"
+        fi
+        
+        # Extract changelog from release notes or use default
+        if [ "${{ github.event_name }}" = "release" ]; then
+          CHANGELOG='${{ github.event.release.body }}'
+        else
+          CHANGELOG="Manual version update to $VERSION"
+        fi
+        
+        # Create version.json
+        cat > ExplorerX_Plugin/version.json << EOF
+        {
+          "version": "$VERSION",
+          "date": "$DATE",
+          "download": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/packages/explorerx-$VERSION-x86_64-1.txz",
+          "md5": "$MD5",
+          "changelog": [
+            {
+              "version": "$VERSION",
+              "date": "$DATE",
+              "changes": [
+                "See release notes for full details"
+              ]
+            }
+          ],
+          "minimum_unraid": "7.2.0-rc.1",
+          "plugin_url": "https://github.com/N85UK/UNRAID_Apps/raw/main/ExplorerX_Plugin/explorerx.plg",
+          "support_url": "https://github.com/N85UK/UNRAID_Apps/issues",
+          "author": "N85UK",
+          "description": "Advanced native file manager for UNRAID with multi-pane navigation and bulk operations"
+        }
+        EOF
+        
+    - name: Update plugin manifest if needed
+      run: |
+        VERSION="${{ steps.extract_version.outputs.version }}"
+        
+        # Update version in .plg file
+        sed -i "s/<!ENTITY version   \"[^\"]*\">/<!ENTITY version   \"$VERSION\">/" ExplorerX_Plugin/explorerx.plg
+        
+        # Update plugin page version  
+        sed -i "s/window.pluginVersion = '[^']*'/window.pluginVersion = '$VERSION'/" ExplorerX_Plugin/source/usr/local/emhttp/plugins/explorerx/explorerx.page
+        
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add ExplorerX_Plugin/version.json ExplorerX_Plugin/explorerx.plg ExplorerX_Plugin/source/usr/local/emhttp/plugins/explorerx/explorerx.page
+        git diff --staged --quiet || git commit -m "Auto-update ExplorerX version to ${{ steps.extract_version.outputs.version }}"
+        
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+        
+    - name: Create update notification issue
+      if: github.event_name == 'release'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: 'ExplorerX ${{ steps.extract_version.outputs.version }} Released',
+            body: `🎉 **ExplorerX ${{ steps.extract_version.outputs.version }} has been released!**
+            
+            The version information has been automatically updated and UNRAID users will be notified of the update.
+            
+            **Release Details:**
+            - Version: ${{ steps.extract_version.outputs.version }}
+            - Date: ${{ steps.extract_version.outputs.date }}
+            - Package: Available in packages directory
+            
+            **Auto-Update System:**
+            - ✅ version.json updated
+            - ✅ Plugin manifest updated  
+            - ✅ UNRAID will show update notification
+            
+            Users can update via:
+            1. Plugins tab in UNRAID
+            2. Check for updates
+            3. Update ExplorerX
+            
+            This issue will be automatically closed.`,
+            labels: ['release', 'auto-update']
+          }).then((issue) => {
+            // Auto-close the notification issue
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.data.number,
+              state: 'closed'
+            });
+          });

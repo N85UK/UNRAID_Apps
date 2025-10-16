@@ -1,19 +1,23 @@
 {
-  "name": "aws-eum",
-  "version": "1.0.0",
-  "description": "AWS End User Messaging - SMS sending application",
+  "name": "aws-eum-v3",
+  "version": "3.0.11",
+  "description": "AWS End User Messaging v3 - Simplified SMS interface with AWS Pinpoint",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node test-config.js"
   },
   "dependencies": {
     "@aws-sdk/client-pinpoint-sms-voice-v2": "^3.400.0",
     "express": "^4.18.2",
+    "express-rate-limit": "^6.10.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "ejs": "^3.1.9"
+    "ejs": "^3.1.9",
+    "helmet": "^7.0.0",
+    "rate-limiter-flexible": "^3.0.0"
   },
   "engines": {
     "node": ">=18.0.0"

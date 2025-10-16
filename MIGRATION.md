@@ -1,216 +1,145 @@
-# Migration Guide: Plugin → UNRAID API Integration
+# Migration Guide: Legacy Plugins → ExplorerX Plugin
 
 ## ⚠️ **IMPORTANT CHANGE**
 
-The File Manager implementation has been **completely redesigned** to match the UNRAID API bounty requirements. The previous plugin approach was incorrect.
+The file management solution has been **redesigned and implemented as ExplorerX Plugin** - a native UNRAID plugin with advanced multi-pane navigation and bulk operations.
 
-## What Changed
+## Current Implementation
 
-### ❌ **Old Approach (Plugin)**
+### ✅ **ExplorerX Plugin (Current)**
 ```
-Plugins/FileManager/
-├── file-manager.plg           # Plugin manifest
-├── webgui/FileManager.page    # PHP-based settings page
-├── scripts/install.sh         # Manual installation
-└── file-manager-*.txz         # Plugin archive
-```
-
-### ✅ **New Approach (API Integration)**
-```
-UNRAID_API_Integration/
-├── api/src/unraid-api/modules/filemanager/  # NestJS module
-├── web/pages/FileManager.vue                # Vue.js component
-└── api/dev/configs/filemanager.json         # JSON configuration
+ExplorerX_Plugin/
+├── explorerx.plg              # Plugin manifest
+├── source/                    # Native plugin implementation
+│   └── usr/local/emhttp/plugins/explorerx/
+│       ├── explorerx.page     # Main webGUI page
+│       ├── include/           # PHP backend logic
+│       ├── js/                # JavaScript frontend
+│       ├── styles/            # CSS styles
+│       └── scripts/           # Utility scripts
+└── packages/                  # Built plugin packages
 ```
 
-## Key Differences
+## Key Features
 
-| Aspect | Plugin Version | API Integration |
-|--------|---------------|-----------------|
-| **Architecture** | Standalone UNRAID plugin | NestJS module in UNRAID API |
-| **Authentication** | FileBrowser built-in auth | UNRAID API proxy headers |
-| **UI Framework** | PHP + jQuery | Vue.js + TypeScript |
-| **Service Management** | Manual scripts | NestJS lifecycle |
-| **Configuration** | INI files | JSON configuration |
-| **Installation** | .plg manifest | Module integration |
+| Aspect | ExplorerX Plugin |
+|--------|------------------|
+| **Architecture** | Native UNRAID plugin |
+| **Authentication** | UNRAID session integration |
+| **UI Framework** | Vanilla JavaScript + PHP |
+| **Performance** | No Docker overhead |
+| **Features** | Multi-pane, bulk operations, background tasks |
+| **Security** | Path guards, CSRF protection, operation logging |
+| **Installation** | Single .plg file installation |
 
-## Why the Change?
+## Why ExplorerX?
 
-The [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599) specifically requires:
+ExplorerX was designed specifically for UNRAID users who need:
 
-1. **NestJS Integration**: "Integration of an existing, mature file management service that the Unraid API can host"
-2. **Proxy Authentication**: "Use proxy auth headers (X-Unraid-User, X-Unraid-Roles)"
-3. **WebGUI Pattern**: "Create a WebGUI page for the file browser following the existing log viewer pattern"
-4. **Subprocess Management**: "Start FileBrowser as subprocess with `--noauth` flag"
+1. **Advanced Navigation**: Multi-pane interface for power users
+2. **Bulk Operations**: Handle multiple files efficiently
+3. **Background Processing**: Large operations don't block the UI
+4. **Native Performance**: No container overhead
+5. **Enhanced Security**: Comprehensive path validation and CSRF protection
+6. **Mobile Support**: Responsive design for all devices
 
-## Migration Steps
+## Installation
 
-### For Plugin Users
+### New Users
 
-If you installed the plugin version:
-
-1. **Remove Plugin**:
-   ```bash
-   # In UNRAID Plugins tab
-   # Click "Remove" next to File Manager plugin
+1. **Install ExplorerX Plugin**:
+   ```
+   Go to Plugins → Install Plugin
+   Enter: https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
+   Click Install
    ```
 
-2. **Wait for API Integration**:
-   - The API integration will be included in future UNRAID API releases
-   - No manual installation required
+2. **Access the Plugin**:
+   - Navigate to Tools → ExplorerX
+   - Start using the multi-pane file manager
 
-### For Developers
+### Configuration
 
-If you were working with the plugin code:
+ExplorerX uses a simple configuration file at `/boot/config/plugins/explorerx/settings.cfg`:
 
-1. **Study New Architecture**:
-   ```bash
-   cd UNRAID_API_Integration/
-   # Review the NestJS module structure
-   ```
-
-2. **Understand Proxy Pattern**:
-   - Review `filemanager.service.ts` for subprocess management
-   - Study `cookie-auth.guard.ts` for authentication bridging
-   - Examine `api-proxy.middleware.ts` for request proxying
-
-3. **Follow Vue.js Pattern**:
-   - Compare `FileManager.vue` with existing UNRAID API pages
-   - Note the iframe integration approach
-   - Understand the authentication context passing
-
-## Configuration Migration
-
-### Old Plugin Config (`settings.ini`)
 ```ini
-[filemanager]
-enabled=yes
-port=8080
-log_level=info
+# ExplorerX Configuration
+ROOT_PATH=/mnt
+ENABLE_ZIP=true
+ENABLE_CHECKSUMS=true
+ENABLE_PREVIEWS=true
+ENABLE_BULK_OPS=true
+MAX_CONCURRENT_TASKS=3
+TASK_TIMEOUT=3600
+DEFAULT_VIEW=list
+SHOW_HIDDEN_FILES=false
+DUAL_PANE_DEFAULT=false
+LOG_LEVEL=info
+LOG_RETENTION_DAYS=7
 ```
 
-### New API Config (`filemanager.json`)
-```json
-{
-  "service": "filebrowser",
-  "enabled": true,
-  "port": 8080,
-  "auth": {
-    "method": "proxy",
-    "header": "X-Unraid-User"
-  },
-  "roots": [
-    {
-      "name": "User Shares",
-      "path": "/mnt/user",
-      "writable": true
-    }
-  ]
-}
+## API and Endpoints
+
+ExplorerX provides a JSON API for file operations:
+
+```
+GET  /plugins/explorerx/include/api.php?action=list&path=/mnt/user
+POST /plugins/explorerx/include/api.php (with action parameter)
 ```
 
-## API Changes
+All operations require CSRF tokens and proper session authentication.
 
-### Old Plugin Endpoints
-```
-# Plugin had no API - only webGUI
-GET /Settings/FileManager  # Settings page
-```
+## Security Features
 
-### New API Endpoints
-```
-GET /filemanager/status           # Service status
-GET /filemanager/health           # Health check
-GET /filemanager/api/resources    # File operations (proxied)
-WS  /filemanager/ws              # WebSocket updates
-```
+### ✅ **Security Advantages**
 
-## Authentication Changes
+1. **Path Validation**: All paths validated with realpath()
+2. **CSRF Protection**: Token-based protection on all operations
+3. **Session Integration**: Uses UNRAID's built-in authentication
+4. **Operation Logging**: Comprehensive audit trail
+5. **Input Sanitization**: All user inputs validated and sanitized
+6. **Background Security**: Secure handling of queued operations
 
-### Old Plugin Authentication
-- FileBrowser managed its own users
-- Separate login required
-- No integration with UNRAID users
-
-### New API Authentication
-- Uses UNRAID API session cookies
-- No separate login required
-- Inherits UNRAID user permissions
-- Proxy headers bridge authentication
-
-## UI Changes
-
-### Old Plugin UI
-- PHP-based settings page
-- Separate FileBrowser interface
-- Basic iframe embedding
-
-### New API UI
-- Vue.js component in UNRAID API
-- Follows LogViewer pattern
-- Integrated navigation
-- Modern responsive design
-
-## Backwards Compatibility
-
-### ⚠️ **Not Backwards Compatible**
-
-The new implementation is **not compatible** with the plugin version because:
-
-1. **Different Architecture**: NestJS vs Plugin
-2. **Different Authentication**: Proxy vs Built-in
-3. **Different Storage**: API database vs Plugin files
-4. **Different Configuration**: JSON vs INI
-
-### Migration Path
-
-Users will need to:
-1. Remove old plugin
-2. Wait for UNRAID API integration
-3. Reconfigure virtual roots (if customized)
-4. Update any automation scripts
-
-## Benefits of New Approach
-
-### ✅ **Advantages**
-
-1. **Proper Integration**: Follows UNRAID API patterns
-2. **Single Sign-On**: Uses UNRAID authentication
-3. **Better Security**: Inherits UNRAID permissions
-4. **Modern UI**: Vue.js with Tailwind CSS
-5. **Real-time Updates**: WebSocket support
-6. **Maintainable**: TypeScript + NestJS
-7. **Extensible**: Can add new features easily
-8. **Standards Compliant**: Matches bounty requirements
-
-### 📦 **Plugin Version Archived**
-
-The plugin version remains in `Plugins/FileManager/` for reference, but is:
-- ❌ No longer maintained
-- ❌ Not recommended for use
-- ❌ Will not receive updates
-- ❌ Does not meet bounty requirements
-
-## Getting Started with New Version
+## Getting Started
 
 ### For Users
-1. **Wait for Release**: The API integration will be included in UNRAID API
-2. **Access via WebGUI**: Go to Tools → File Manager
-3. **No Setup Required**: Uses your existing UNRAID login
+1. **Install**: Use the plugin URL in UNRAID's plugin installer
+2. **Access**: Go to Tools → ExplorerX
+3. **Explore**: Use dual-pane mode for advanced operations
 
 ### For Developers
-1. **Study Implementation**: Review `UNRAID_API_Integration/`
-2. **Understand Patterns**: Follow NestJS + Vue.js approach
-3. **Contribute**: Help improve the API integration
+1. **Study Implementation**: Review `ExplorerX_Plugin/source/`
+2. **Understand Architecture**: Native PHP + JavaScript approach
+3. **Follow Patterns**: UNRAID plugin best practices
+4. **Contribute**: Help improve the plugin
 
-## Questions?
+## Features Overview
 
-- **Architecture Questions**: Review [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
-- **Implementation Details**: Check `UNRAID_API_Integration/README.md`
-- **Migration Help**: See troubleshooting in main README
+### Core Capabilities
+- Multi-pane file browser
+- Bulk file operations (copy, move, delete)
+- Background task queue
+- Quick file previews
+- ZIP/unzip support
+- Checksum generation
+- Keyboard shortcuts
+- Responsive mobile interface
+
+### Advanced Features
+- CSRF-protected operations
+- Path traversal prevention
+- Real-time progress monitoring
+- Configurable root paths
+- Operation audit logging
+
+## Support
+
+- **Documentation**: [ExplorerX_Plugin/README.md](ExplorerX_Plugin/README.md)
+- **Issues**: [GitHub Issues](https://github.com/N85UK/UNRAID_Apps/issues)
+- **Community**: UNRAID community forums
 
 ---
 
 ## Summary
 
-The File Manager has been **completely redesigned** to properly integrate with the UNRAID API as required by the bounty. This is a **breaking change** but provides a much better foundation for the future.
+ExplorerX Plugin provides a modern, secure, and feature-rich file management solution specifically designed for UNRAID. It offers advanced capabilities while maintaining native performance and security.

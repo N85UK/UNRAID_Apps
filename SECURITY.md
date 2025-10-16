@@ -5,8 +5,8 @@
 We actively support the following versions with security updates:
 
 | Component | Version | Supported |
-|-----------|---------|-----------|
-| File Manager Plugin | 2025.10.03 | ✅ |
+|-----------|---------|----------|
+| ExplorerX Plugin | 0.1.1 | ✅ |
 | AWS EUM | Current | ✅ |
 
 ## Security Standards
@@ -23,12 +23,16 @@ We take the security of UnRaid Apps seriously. Our security practices include:
 
 ### Security Features
 
-#### File Manager Plugin
-- **Authentication**: Integration with UNRAID user authentication
-- **Authorization**: Role-based file access permissions
-- **Input Validation**: Sanitization of file paths and user inputs
-- **Secure File Operations**: Prevention of directory traversal attacks
-- **Session Management**: Secure session handling and timeout
+#### ExplorerX Plugin
+- **Authentication**: Integration with UNRAID user authentication and session management
+- **Authorization**: Role-based file access permissions with path validation
+- **Input Validation**: Comprehensive sanitization of file paths and all user inputs
+- **Secure File Operations**: Prevention of directory traversal attacks with realpath validation
+- **Session Management**: Secure session handling with automatic timeout
+- **CSRF Protection**: Token-based protection on all file operations
+- **Path Guards**: Operations restricted to /mnt by default with configurable boundaries
+- **Operation Logging**: Comprehensive audit trail of all file operations
+- **Background Security**: Secure handling of background task queue operations
 
 #### AWS EUM
 - **IAM Integration**: Proper AWS Identity and Access Management
@@ -100,11 +104,14 @@ We use the following severity levels:
 - **Monitor Logs**: Review system and plugin logs regularly
 - **Backup Configuration**: Maintain secure backups of configurations
 
-### File Manager Plugin Security
+### ExplorerX Plugin Security
 - **User Permissions**: Configure appropriate file access permissions
 - **Network Access**: Limit network access to trusted users
 - **File Validation**: Be cautious when uploading/downloading files
 - **Session Security**: Log out when finished, especially on shared systems
+- **Path Configuration**: Review and configure root path restrictions
+- **Background Tasks**: Monitor background operations for unexpected activity
+- **Bulk Operations**: Verify bulk operations before execution
 
 ### AWS EUM Security
 - **IAM Policies**: Use least privilege principle for AWS permissions

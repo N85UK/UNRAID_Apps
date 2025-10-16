@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<Container>
+  <Name>AWS_2WAY_SMS</Name>
+  <Repository>ghcr.io/n85uk/aws-2way-sms:latest</Repository>
+  <Registry>https://ghcr.io/n85uk/aws-2way-sms</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
+  <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_2WAY</Project>
+  <Overview>
+AWS Two-Way SMS Messaging v1.0.0
+
+Real-time two-way SMS conversations using AWS Pinpoint SMS Voice V2 API.
+
+Features:
+• Send and receive SMS messages with real-time WebSocket updates
+• SQLite database for persistent message storage
+• Conversation threading - organized messages by contact
+• Keyword-based auto-replies for automated responses
+• Statistics dashboard - track messages, conversations, unread counts
+• Dark and Light mode UI with theme toggle
+• Browser notifications for incoming messages
+• Secure with Helmet.js, rate limiting, and CSP policies
+
+Two-Way Messaging Setup:
+• Requires AWS Pinpoint SMS Voice V2 with two-way messaging enabled
+• Phone numbers must be configured for two-way SMS in AWS Console
+• SNS Topic required for incoming message webhooks
+• Webhook endpoint must be publicly accessible for AWS SNS
+
+
+Usage:
+• Access web UI on port 80 (designed for dedicated IP on br0 network)
+• Configure AWS credentials with Pinpoint SMS permissions
+• Set up SNS Topic subscription to your webhook endpoint
+• For custom networks (br0.x): Set DISABLE_CSP=true (enabled by default)
+• Database stored in mounted volume for persistence
+
+Database:
+• SQLite database file: /app/data/messages.db
+• Automatic schema initialization on first run
+• Conversation threads and message history preserved
+• Auto-reply keywords and responses configurable
+
+WebSocket Support:
+• Real-time message updates without page refresh
+• Instant notifications for incoming SMS
+• Connection status indicator in UI
+• Automatic reconnection handling
+  </Overview>
+  <Category>Network:Messaging;Tools:</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_2WAY/images/aws-2way-icon.png</Icon>
+  <ExtraParams>--restart unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
+  <Description>AWS Two-Way SMS v1.0.3 - Fixed volume permissions, runs on port 80 with WebSocket support and auto-replies.</Description>
+
+  <!-- Paths -->
+  <Config Name="AppData" Target="/app/data" Default="/mnt/user/appdata/aws-2way-sms" Mode="rw" Description="SQLite database and persistent storage (stores messages.db in /app/data)" Type="Path" Display="always" Required="true" Mask="false"/>
+
+  <!-- Ports -->
+  <Config Name="Web UI Port" Target="80" Default="80" Mode="tcp" Description="Host port for web UI and WebSocket connections" Type="Port" Display="always" Required="true" Mask="false"/>
+
+  <!-- Environment variables -->
+  <Config Name="TZ" Target="TZ" Default="Europe/London" Mode="" Description="Container timezone for logs and message timestamps" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="AWS_ACCESS_KEY_ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="AWS IAM Access Key ID with Pinpoint SMS permissions" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS_SECRET_ACCESS_KEY" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="AWS IAM Secret Access Key" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS_REGION" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region where Pinpoint is configured (e.g., eu-west-2, us-east-1)" Type="Variable" Display="always" Required="true" Mask="false"/>
+
+  <!-- Application configuration -->
+  <Config Name="PORT" Target="PORT" Default="80" Mode="" Description="Internal application port (should match exposed port)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="NODE_ENV" Target="NODE_ENV" Default="production" Mode="" Description="Node.js environment (production or development)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="true" Mode="" Description="Disable Content Security Policy for UNRAID compatibility (recommended: true)" Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- Watchtower auto-update labels -->
+  <Config Name="com.centurylinklabs.watchtower.enable" Target="com.centurylinklabs.watchtower.enable" Default="true" Mode="" Description="Enable Watchtower auto-updates for this container" Type="Label" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="com.centurylinklabs.watchtower.monitor-only" Target="com.centurylinklabs.watchtower.monitor-only" Default="false" Mode="" Description="Monitor only (don't auto-update)" Type="Label" Display="advanced" Required="false" Mask="false"/>
+</Container>

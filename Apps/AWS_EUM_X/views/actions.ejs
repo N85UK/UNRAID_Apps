@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AWS EUM X — Actions</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .action-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .action-card h3 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #e6eef8;
+      margin-bottom: 8px;
+    }
+    .action-card p {
+      color: #8b949e;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button.primary {
+      background: #238636;
+      border-color: rgba(35, 134, 54, 0.4);
+    }
+    button.primary:hover {
+      background: #2ea043;
+    }
+    button.danger {
+      background: #da3633;
+      border-color: rgba(218, 54, 51, 0.4);
+    }
+    button.danger:hover {
+      background: #f85149;
+    }
+    #result-box {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #8b949e;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+    #result-box.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="/icons/icon.svg" alt="AWS EUM X" width="48" height="48" onerror="this.style.display='none'">
+      <h1>Actions</h1>
+    </div>
+
+    <nav class="nav-bar" style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+      <a href="/dashboard" class="nav-link">Dashboard</a>
+      <a href="/settings" class="nav-link">Settings</a>
+      <a href="/actions" class="nav-link active">Actions</a>
+      <a href="/observability" class="nav-link">Observability</a>
+    </nav>
+
+    <!-- Test Message -->
+    <div class="action-card" id="test-message">
+      <h3>📤 Send Test Message (DryRun)</h3>
+      <p>Send a test message using AWS DryRun mode. No actual SMS sent, no charges incurred.</p>
+      
+      <form id="test-form">
+        <label for="test-dest">Destination Phone Number (E.164)</label>
+        <input id="test-dest" name="test-dest" placeholder="+1234567890" required />
+
+        <label for="test-body">Message Body</label>
+        <textarea id="test-body" name="test-body" rows="3" required>This is a test message from AWS EUM X (DryRun mode - not actually sent).</textarea>
+
+        <div class="action-buttons" style="margin-top: 12px;">
+          <button type="submit" class="primary">Send DryRun Test</button>
+          <button type="button" onclick="document.getElementById('test-form').reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Refresh Originators -->
+    <div class="action-card">
+      <h3>🔄 Refresh Phone Numbers & Sender IDs</h3>
+      <p>Fetch latest phone numbers and sender IDs from your AWS account. Cache will be updated.</p>
+      <div class="action-buttons">
+        <button onclick="refreshOriginators()" class="primary">Refresh Now</button>
+      </div>
+    </div>
+
+    <!-- View Queue Status -->
+    <div class="action-card">
+      <h3>📬 View Queue Status</h3>
+      <p>Check current message queue depth, token availability, and throughput capacity.</p>
+      <div class="action-buttons">
+        <button onclick="viewQueue()">View Queue</button>
+      </div>
+    </div>
+
+    <!-- View Last Sends -->
+    <div class="action-card">
+      <h3>📊 View Last Sends</h3>
+      <p>Display the last 50 send attempts (success, failed, simulated) with timestamps.</p>
+      <div class="action-buttons">
+        <button onclick="viewLastSends()">View History</button>
+      </div>
+    </div>
+
+    <!-- Export Config -->
+    <div class="action-card">
+      <h3>📦 Export Configuration</h3>
+      <p>Download current configuration as JSON. Secrets are automatically excluded for safety.</p>
+      <div class="action-buttons">
+        <button onclick="window.location.href='/api/config/export'">Export Config</button>
+      </div>
+    </div>
+
+    <!-- Generate Support Bundle -->
+    <div class="action-card">
+      <h3>🛟 Generate Support Bundle</h3>
+      <p>Create a diagnostic bundle with logs, config, and system info. All secrets are automatically redacted.</p>
+      <div class="action-buttons">
+        <button onclick="generateSupportBundle()">Generate Bundle</button>
+      </div>
+      <p style="font-size: 12px; color: #8b949e; margin-top: 8px;">
+        Run: <code>docker exec aws-eum-x npm run support-bundle</code> then check <code>/app/data/support-bundles/</code>
+      </p>
+    </div>
+
+    <!-- Clear Queue (destructive) -->
+    <div class="action-card">
+      <h3>⚠️ Clear Message Queue</h3>
+      <p>Remove all pending messages from the queue. This action cannot be undone.</p>
+      <div class="action-buttons">
+        <button onclick="clearQueue()" class="danger">Clear Queue</button>
+      </div>
+    </div>
+
+    <!-- Result Box -->
+    <div id="result-box"></div>
+
+    <div style="margin-top: 24px; font-size: 12px; color: #8b949e;">
+      <p>💡 <strong>Tip:</strong> Use DryRun to test configuration without incurring SMS charges. All tests are logged for troubleshooting.</p>
+    </div>
+  </div>
+
+  <script>
+    // Test Message Form
+    document.getElementById('test-form').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const dest = document.getElementById('test-dest').value.trim();
+      const body = document.getElementById('test-body').value.trim();
+      
+      showResult('Sending DryRun test...');
+
+      try {
+        const res = await fetch('/api/test/dry-run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ DestinationPhoneNumber: dest, MessageBody: body })
+        });
+        const json = await res.json();
+        
+        if (res.ok) {
+          showResult(`✅ DryRun Success!\n\n${JSON.stringify(json, null, 2)}`);
+        } else {
+          showResult(`❌ DryRun Failed\n\n${json.error || 'Unknown error'}\n\nCheck that:\n• Phone number is in E.164 format (+country code)\n• AWS credentials are valid\n• IAM user has sms-voice:SendTextMessage permission`);
+        }
+      } catch (err) {
+        showResult(`❌ Error: ${err.message}`);
+      }
+    });
+
+    async function refreshOriginators() {
+      showResult('Refreshing phone numbers and sender IDs...');
+      try {
+        const res = await fetch('/api/refresh-originators', { method: 'POST' });
+        const json = await res.json();
+        showResult(`✅ Refresh Complete!\n\nFound ${json.count || 0} phone numbers/sender IDs.\n\n${JSON.stringify(json.originators || {}, null, 2)}`);
+      } catch (err) {
+        showResult(`❌ Error: ${err.message}`);
+      }
+    }
+
+    async function viewQueue() {
+      showResult('Fetching queue status...');
+      try {
+        const res = await fetch('/api/queue/status');
+        const json = await res.json();
+        showResult(`📬 Queue Status\n\nDepth: ${json.queueDepth} messages\nTokens: ${(json.tokens || 0).toFixed(2)} / ${json.capacity}\nCapacity: ${json.capacity} parts/second\n\n${json.queueDepth > 0 ? 'Messages are queued and will be sent when tokens are available.' : 'Queue is empty - ready to send immediately.'}`);
+      } catch (err) {
+        showResult(`❌ Error: ${err.message}`);
+      }
+    }
+
+    async function viewLastSends() {
+      showResult('Fetching last sends...');
+      try {
+        const res = await fetch('/api/last-sends');
+        const json = await res.json();
+        const history = json.history || [];
+        
+        if (history.length === 0) {
+          showResult('📊 No sends recorded yet.\n\nSend a test message to populate history.');
+        } else {
+          let output = `📊 Last ${history.length} Sends\n\n`;
+          history.slice(0, 10).forEach((send, idx) => {
+            const time = new Date(send.at).toLocaleString();
+            const status = send.status === 'sent' ? '✅ Sent' : send.status === 'failed' ? '❌ Failed' : '🔄 Simulated';
+            output += `${idx + 1}. ${status} - ${time}\n`;
+            if (send.result && send.result.MessageId) output += `   MessageId: ${send.result.MessageId}\n`;
+            if (send.error) output += `   Error: ${send.error}\n`;
+          });
+          showResult(output);
+        }
+      } catch (err) {
+        showResult(`❌ Error: ${err.message}`);
+      }
+    }
+
+    async function generateSupportBundle() {
+      showResult('To generate a support bundle, run this command in your terminal:\n\ndocker exec aws-eum-x npm run support-bundle\n\nThe bundle will be saved to: /app/data/support-bundles/aws-eum-x-support-[date].txt\n\nAll secrets are automatically redacted for security.');
+    }
+
+    async function clearQueue() {
+      if (!confirm('Are you sure you want to clear the message queue? This will remove all pending messages and cannot be undone.')) {
+        return;
+      }
+      showResult('Queue clearing not yet implemented (planned for v1.1).\n\nTo clear the queue manually, restart the container.');
+    }
+
+    function showResult(text) {
+      const box = document.getElementById('result-box');
+      box.textContent = text;
+      box.classList.add('show');
+      box.scrollTop = 0;
+    }
+  </script>
+</body>
+</html>
