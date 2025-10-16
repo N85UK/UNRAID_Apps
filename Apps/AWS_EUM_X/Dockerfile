@@ -32,8 +32,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN groupadd -r appuser -g 1000 && \
-    useradd -r -g appuser -u 1000 -m -s /bin/bash appuser
+RUN groupadd -r -g 1001 appuser && \
+    useradd -r -g appuser -u 1001 -m -s /bin/bash appuser
 
 # Set working directory
 WORKDIR /app
