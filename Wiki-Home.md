@@ -5,6 +5,7 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 ## 🚀 Featured Applications
 
 ### AWS End User Messaging X (EUM X) v1.0.0
+
 **Production Release** - Modernized AWS Pinpoint SMS Solution
 
 - ✨ **Modern Architecture**: Secure, production-ready Node.js 20 application
@@ -15,6 +16,7 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 - 🌐 **Modern UI**: Clean interface with dashboard, settings, and observability pages
 
 **Key Improvements over AWS_EUM v3:**
+
 - IAM role auto-detection (no hardcoded credentials)
 - Rate limiting with token bucket algorithm
 - Phone number validation (E.164)
@@ -24,6 +26,7 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 [View Documentation](Apps/AWS_EUM_X/README.md) | [Installation Guide](Wiki-AWS-EUM-Installation.md)
 
 ### AWS End User Messaging (EUM) v3.0.1
+
 **Legacy Version** - Maintained for Compatibility
 
 - ✨ **Modern Interface**: Dark/light mode toggle with Chart.js analytics
@@ -35,15 +38,19 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 **Migration Note**: Users are encouraged to migrate to AWS_EUM_X for improved security and features.
 
 ### ExplorerX Plugin v0.1.1
+
 Advanced file manager plugin for UNRAID with enhanced navigation and operations.
 
 ### File Explorer Plugin
+
 Simple, lightweight file browsing solution for UNRAID systems.
 
 ### CA Submission Tools
+
 Utilities for Community Applications submission and testing.
 
 ## 📊 Repository Stats
+
 - **Active Apps**: 5+ applications
 - **Total Downloads**: 1000+ installations
 - **Latest Update**: AWS EUM X v1.0.0 - October 2025
