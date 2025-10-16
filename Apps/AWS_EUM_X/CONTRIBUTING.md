@@ -23,6 +23,7 @@ Be respectful, inclusive, and professional. We're all here to build something us
 Before creating a bug report, please check existing issues to avoid duplicates.
 
 **Good bug reports include:**
+
 - Clear, descriptive title
 - Steps to reproduce
 - Expected vs actual behavior
@@ -32,6 +33,7 @@ Before creating a bug report, please check existing issues to avoid duplicates.
 ### Suggesting Enhancements
 
 Enhancement suggestions are welcome! Please:
+
 - Use a clear, descriptive title
 - Explain the use case and benefit
 - Provide examples if possible
@@ -40,6 +42,7 @@ Enhancement suggestions are welcome! Please:
 ### Code Contributions
 
 We welcome pull requests for:
+
 - Bug fixes
 - New features (please discuss in an issue first)
 - Documentation improvements
@@ -58,29 +61,33 @@ We welcome pull requests for:
 ### Local Development
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/N85UK/UNRAID_Apps.git
    cd UNRAID_Apps/Apps/AWS_EUM_X
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your AWS credentials
    ```
 
 4. **Run in development mode**
+
    ```bash
    npm run dev
    ```
 
 5. **Access the application**
-   - Open http://localhost:3000
+   - Open <http://localhost:3000>
 
 ### Using DevContainer (Recommended)
 
@@ -117,6 +124,7 @@ docker logs -f aws-eum-x-dev
 We use **ESLint** with Prettier for code formatting.
 
 **Key Rules:**
+
 - Semicolons required
 - Single quotes for strings
 - 2-space indentation
@@ -125,6 +133,7 @@ We use **ESLint** with Prettier for code formatting.
 - Prefer `const` over `let`, avoid `var`
 
 **Run linter:**
+
 ```bash
 npm run lint
 npm run lint:fix  # Auto-fix issues
@@ -162,6 +171,7 @@ src/
 - Keep comments up-to-date with code changes
 
 Example:
+
 ```javascript
 /**
  * Send an SMS message via AWS Pinpoint with rate limiting
@@ -196,6 +206,7 @@ npm run test:watch
 ### Writing Tests
 
 **Structure:**
+
 ```javascript
 const { describe, it, expect } = require('@jest/globals');
 const { validate } = require('../src/lib/validation');
@@ -227,12 +238,14 @@ describe('validation', () => {
 ```
 
 **Coverage Requirements:**
+
 - Minimum 80% coverage for new code
 - Critical paths must have 100% coverage (auth, sending, validation)
 
 ### Integration Tests
 
 Place integration tests in `tests/integration/`:
+
 ```javascript
 // tests/integration/health.test.js
 const request = require('supertest');
@@ -274,6 +287,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -284,6 +298,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Build process, dependencies, etc.
 
 **Examples:**
+
 ```
 feat(sms): add MMS support with media upload
 
@@ -391,7 +406,7 @@ AWS_EUM_X/
 
 - **Questions**: [GitHub Discussions](https://github.com/N85UK/UNRAID_Apps/discussions)
 - **Bugs**: [GitHub Issues](https://github.com/N85UK/UNRAID_Apps/issues)
-- **Security**: Email hello@git.n85.uk
+- **Security**: Email <hello@git.n85.uk>
 
 ## License
 

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
+
 - MMS support with media upload
 - Message templates
 - Bulk CSV import
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-10-16
 
 ### Added
+
 - **First-run wizard** with 5-step guided setup
 - **Real-time dashboard** with AWS connectivity status, message stats, and quota usage
 - **SMS sending** with E.164 phone number validation
@@ -44,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Example IAM policies** with least privilege
 
 ### Security
+
 - Container runs as non-root user (`appuser`, UID 1000)
 - AWS credentials never logged or exposed in UI
 - Phone numbers redacted in logs (last 4 digits shown)
@@ -53,12 +56,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Input validation on all user inputs
 
 ### Performance
+
 - Token bucket rate limiter prevents AWS throttling
 - Automatic retry with exponential backoff for transient errors
 - Message queue for high-throughput scenarios
 - Configurable rate limits (default: 5 msg/sec)
 
 ### Operations
+
 - Automatic directory creation for config and data
 - Health check script for Docker `HEALTHCHECK`
 - Support bundle generation (logs, config, system info)
@@ -68,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-10-01 (Internal Beta)
 
 ### Added
+
 - Basic SMS sending functionality
 - Simple web UI
 - Docker containerization

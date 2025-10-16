@@ -18,12 +18,12 @@ We take security seriously. If you discover a security vulnerability in AWS EUM 
 Instead, please report via one of these methods:
 
 1. **GitHub Security Advisories** (Preferred)
-   - Go to https://github.com/N85UK/UNRAID_Apps/security/advisories
+   - Go to <https://github.com/N85UK/UNRAID_Apps/security/advisories>
    - Click "Report a vulnerability"
    - Fill out the form with details
 
 2. **Email**
-   - Send to: hello@git.n85.uk
+   - Send to: <hello@git.n85.uk>
    - Subject: "[SECURITY] AWS EUM X Vulnerability"
    - Include detailed description, steps to reproduce, and potential impact
 
@@ -174,9 +174,9 @@ We currently do not offer a bug bounty program. However, we greatly appreciate r
 
 ## Contact
 
-- **Security Issues**: hello@git.n85.uk
-- **General Issues**: https://github.com/N85UK/UNRAID_Apps/issues
-- **Discussions**: https://github.com/N85UK/UNRAID_Apps/discussions
+- **Security Issues**: <hello@git.n85.uk>
+- **General Issues**: <https://github.com/N85UK/UNRAID_Apps/issues>
+- **Discussions**: <https://github.com/N85UK/UNRAID_Apps/discussions>
 
 ---
 

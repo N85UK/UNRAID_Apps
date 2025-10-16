@@ -12,6 +12,7 @@
 This audit examines the existing AWS_EUM application against AWS End User Messaging best practices, security standards, and user experience patterns from comparable applications. AWS_EUM provides basic SMS sending functionality using AWS Pinpoint SMS/Voice v2 API but lacks several critical features for production use, security hardening, and operational observability.
 
 **Key Findings:**
+
 - 🔴 **6 Critical** security and operational issues
 - 🟡 **12 High** priority improvements
 - 🟢 **8 Medium** enhancements
@@ -36,26 +37,29 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
 ### Critical Issues (🔴)
 
 #### 1. **Secrets Exposed in Logs and UI**
+
 - **Severity:** 🔴 Critical
 - **Current State:** AWS credentials are logged at startup (`console.log` statements), and message history stores complete phone numbers without redaction.
 - **Risk:** Credentials visible in Docker logs, phone numbers stored as PII.
 - **AWS Reference:** [AWS Security Best Practices](https://docs.aws.amazon.com/sms-voice/latest/userguide/security-best-practices.html)
-- **Recommendation:** 
+- **Recommendation:**
   - Implement secret redaction in all log statements
   - Mask phone numbers in UI (show last 4 digits only)
   - Use structured logging with redact filters
   - Never log `AWS_SECRET_ACCESS_KEY`
 
 #### 2. **Missing Healthcheck**
+
 - **Severity:** 🔴 Critical
 - **Current State:** Dockerfile has no `HEALTHCHECK` directive. Unraid cannot determine container health.
 - **Impact:** Failed containers appear as "running", causing silent failures.
-- **Recommendation:** 
+- **Recommendation:**
   - Add `/health` endpoint that validates AWS connectivity
   - Implement Dockerfile `HEALTHCHECK` with 30s interval
   - Include dependency readiness checks (AWS API reachability)
 
 #### 3. **Running as Root User**
+
 - **Severity:** 🔴 Critical  
 - **Current State:** Container runs as `root` user (default in Node image).
 - **Risk:** Container escape vulnerabilities, privilege escalation.
@@ -66,6 +70,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Set proper file permissions on `/app/data`
 
 #### 4. **No Rate Limiting or Backoff**
+
 - **Severity:** 🔴 Critical
 - **Current State:** Application sends SMS requests immediately without rate limiting.
 - **Risk:** AWS API throttling, quota exhaustion, unexpected costs.
@@ -78,6 +83,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Surface quota usage in dashboard
 
 #### 5. **Missing Input Validation**
+
 - **Severity:** 🔴 Critical
 - **Current State:** Phone number validation is client-side only. No server-side validation of message content or originator.
 - **Risk:** Injection attacks, malformed API requests, AWS API errors.
@@ -88,6 +94,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Input length limits enforced
 
 #### 6. **No CSRF Protection**
+
 - **Severity:** 🔴 Critical
 - **Current State:** No CSRF tokens on form submissions.
 - **Risk:** Cross-site request forgery attacks.
@@ -99,6 +106,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
 ### High Priority Issues (🟡)
 
 #### 7. **No IAM Role Support**
+
 - **Severity:** 🟡 High
 - **Current State:** Only supports static AWS Access Keys.
 - **AWS Best Practice:** Use IAM roles with temporary credentials or instance profiles.
@@ -109,6 +117,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Default to role-based auth over static keys
 
 #### 8. **Missing Configuration Sets and Event Destinations**
+
 - **Severity:** 🟡 High
 - **Current State:** No event logging for delivery receipts, bounces, or failures.
 - **AWS Feature:** Configuration sets enable event streaming to CloudWatch, Kinesis, SNS.
@@ -119,6 +128,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Display event data in observability dashboard
 
 #### 9. **No Phone Pool Support**
+
 - **Severity:** 🟡 High
 - **Current State:** Manual ARN entry for originators. No phone pool management.
 - **AWS Feature:** Phone pools provide failover and load balancing.
@@ -129,6 +139,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Display pool health and utilization
 
 #### 10. **Missing MMS Support**
+
 - **Severity:** 🟡 High
 - **Current State:** Only supports SMS text. AWS End User Messaging supports MMS.
 - **AWS Reference:** [Sending MMS](https://docs.aws.amazon.com/sms-voice/latest/userguide/send-mms.html)
@@ -138,6 +149,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Validate media types (image/png, image/jpeg, etc.)
 
 #### 11. **No Opt-Out Management**
+
 - **Severity:** 🟡 High
 - **Current State:** No integration with AWS opt-out lists.
 - **AWS Requirement:** Carriers enforce opt-out compliance.
@@ -148,6 +160,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Provide opt-out keyword management UI
 
 #### 12. **No Message Templates**
+
 - **Severity:** 🟡 High
 - **Current State:** Manual message composition only.
 - **Use Case:** OTP, appointment reminders, delivery notifications.
@@ -157,6 +170,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Regulatory template support (10DLC, A2P)
 
 #### 13. **Insufficient Error Handling**
+
 - **Severity:** 🟡 High
 - **Current State:** Generic error messages. No retry logic.
 - **AWS Errors:** `ThrottlingException`, `ValidationException`, `ResourceNotFoundException`
@@ -166,6 +180,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Error categorization (retriable vs fatal)
 
 #### 14. **No First-Run Experience**
+
 - **Severity:** 🟡 High
 - **Current State:** Users land on send form. No setup guidance.
 - **UX Impact:** High abandonment for new users.
@@ -175,6 +190,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Pre-flight checks before saving config
 
 #### 15. **Limited Observability**
+
 - **Severity:** 🟡 High
 - **Current State:** Basic message history. No metrics, alerts, or logs dashboard.
 - **Operations Need:** Troubleshooting, capacity planning, compliance.
@@ -184,6 +200,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Real-time log viewer with filtering
 
 #### 16. **No Backup or Export**
+
 - **Severity:** 🟡 High
 - **Current State:** History stored in JSON file. No export or backup feature.
 - **Risk:** Data loss on container recreation.
@@ -193,6 +210,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Automated backup option to S3
 
 #### 17. **Unclear Unraid Template**
+
 - **Severity:** 🟡 High
 - **Current State:** `template.cfg` format non-standard. Not XML.
 - **Unraid Standard:** Community Apps use XML templates.
@@ -202,6 +220,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Group settings logically with help text
 
 #### 18. **No Upgrade Path**
+
 - **Severity:** 🟡 High
 - **Current State:** No version detection or migration logic.
 - **Risk:** Breaking changes during updates.
@@ -213,6 +232,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
 ### Medium Priority Enhancements (🟢)
 
 #### 19. **No Character Encoding Handling**
+
 - **Severity:** 🟢 Medium
 - **Current State:** Assumes UTF-8. No GSM-7 vs UCS-2 cost calculation.
 - **Impact:** Unexpected message segmentation and costs.
@@ -223,6 +243,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Estimate cost before sending
 
 #### 20. **No Timezone Support**
+
 - **Severity:** 🟢 Medium
 - **Current State:** Timestamps use server timezone.
 - **Recommendation:**
@@ -230,6 +251,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Display times in user's locale
 
 #### 21. **No Dark Mode**
+
 - **Severity:** 🟢 Medium
 - **Current State:** Light theme only.
 - **Recommendation:**
@@ -237,18 +259,21 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Dark mode toggle
 
 #### 22. **No Keyboard Shortcuts**
+
 - **Severity:** 🟢 Medium
 - **Recommendation:**
   - Ctrl+Enter to send
   - Ctrl+K for quick actions
 
 #### 23. **No Bulk Import**
+
 - **Severity:** 🟢 Medium
 - **Recommendation:**
   - CSV import for multiple recipients
   - Batch send with progress tracking
 
 #### 24. **Limited Documentation**
+
 - **Severity:** 🟢 Medium
 - **Current State:** README covers basics. No troubleshooting guide.
 - **Recommendation:**
@@ -257,6 +282,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - CONTRIBUTING.md for development setup
 
 #### 25. **No CI/CD Pipeline**
+
 - **Severity:** 🟢 Medium
 - **Recommendation:**
   - GitHub Actions for build and test
@@ -264,6 +290,7 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
   - Multi-arch image builds (amd64, arm64)
 
 #### 26. **No Devcontainer**
+
 - **Severity:** 🟢 Medium
 - **Recommendation:**
   - VS Code devcontainer for consistent dev environment
@@ -315,15 +342,19 @@ This audit examines the existing AWS_EUM application against AWS End User Messag
 ## Comparison Patterns from Other Apps
 
 ### Research Methodology
+
 Surveyed 8 well-maintained applications:
+
 - **Unraid Community Apps:** Plex, Nextcloud, Home Assistant, Nginx Proxy Manager, Pi-hole
 - **Open Source Utilities:** Portainer, Uptime Kuma, Traefik
 
 ### Pattern 1: First-Run Wizard 🌟
+
 **Example:** Nextcloud, Home Assistant  
 **Pattern:** Multi-step setup with progress indicator and validation at each step.
 
 **Key Elements:**
+
 - Step 1: Welcome & prerequisites check
 - Step 2: Credentials with "Test Connection" button
 - Step 3: Basic configuration with sensible defaults
@@ -331,12 +362,14 @@ Surveyed 8 well-maintained applications:
 - Step 5: Summary & launch
 
 **Why it improves AWS_EUM_X:**
+
 - Reduces setup abandonment from 40% to <10%
 - Validates configuration before save
 - Educational (explains AWS concepts inline)
 - Builds user confidence
 
 **Implementation for AWS_EUM_X:**
+
 1. Welcome (explain AWS End User Messaging)
 2. AWS Credentials (test connection to AWS)
 3. Region & Resources (auto-discover pools, sender IDs)
@@ -346,21 +379,25 @@ Surveyed 8 well-maintained applications:
 ---
 
 ### Pattern 2: Health Dashboard with Status Tiles 📊
+
 **Example:** Uptime Kuma, Home Assistant  
 **Pattern:** Visual dashboard with color-coded status tiles.
 
 **Key Elements:**
+
 - Green/Yellow/Red status indicators
 - Key metrics in large, readable fonts
 - Refresh button and auto-refresh toggle
 - Quick actions in each tile
 
 **Why it improves AWS_EUM_X:**
+
 - Immediate visibility into system health
 - Reduces support burden (users self-diagnose)
 - Actionable insights at a glance
 
 **Implementation for AWS_EUM_X:**
+
 ```
 ┌─────────────────┬─────────────────┬─────────────────┐
 │ AWS Connectivity│ Messages Today  │ Quota Usage     │
@@ -372,20 +409,24 @@ Surveyed 8 well-maintained applications:
 ---
 
 ### Pattern 3: Copyable Configuration Examples 📋
+
 **Example:** Nginx Proxy Manager, Traefik  
 **Pattern:** Click-to-copy buttons for complex config snippets.
 
 **Key Elements:**
+
 - Syntax-highlighted code blocks
 - One-click copy button
 - Placeholder substitution (auto-fill user values)
 
 **Why it improves AWS_EUM_X:**
+
 - Reduces IAM policy configuration errors
 - Speeds up AWS resource setup
 - Lowers barrier for non-expert users
 
 **Implementation for AWS_EUM_X:**
+
 ```json
 {
   "Version": "2012-10-17",
@@ -396,25 +437,30 @@ Surveyed 8 well-maintained applications:
   }]
 }
 ```
+
 With "Copy IAM Policy" button that substitutes account ID.
 
 ---
 
 ### Pattern 4: Test Before Save 🧪
+
 **Example:** Plex (test Plex account), Pi-hole (test upstream DNS)  
 **Pattern:** Validate configuration with real API call before committing.
 
 **Key Elements:**
+
 - "Test Configuration" button
 - Real-time feedback (success/error)
 - Detailed error messages with resolution steps
 
 **Why it improves AWS_EUM_X:**
+
 - Prevents saving invalid credentials
 - Immediate feedback loop
 - Reduces frustration
 
 **Implementation for AWS_EUM_X:**
+
 - Test AWS credentials → Call `GetAccountAttributes`
 - Test phone pool → Send to SMS simulator
 - Test webhook → Verify signature
@@ -422,6 +468,7 @@ With "Copy IAM Policy" button that substitutes account ID.
 ---
 
 ### Pattern 5: Inline Validation with Clear Errors ✅
+
 **Example:** Home Assistant, Nextcloud  
 **Pattern:** Field-level validation with specific error messages.
 
@@ -429,11 +476,13 @@ With "Copy IAM Policy" button that substitutes account ID.
 **Good:** "Phone number must be in E.164 format (e.g., +447700900000)"
 
 **Why it improves AWS_EUM_X:**
+
 - Users fix errors immediately
 - Reduces form submission errors by 60%
 - Educational (teaches correct format)
 
 **Implementation for AWS_EUM_X:**
+
 - Phone number: Validate E.164 with regex
 - Message: Warn if exceeds 160 chars (SMS segment)
 - Originator ARN: Validate ARN format
@@ -441,20 +490,24 @@ With "Copy IAM Policy" button that substitutes account ID.
 ---
 
 ### Pattern 6: Export Support Bundle 📦
+
 **Example:** Unraid Diagnostics, Portainer  
 **Pattern:** One-click export of logs, config, and diagnostic info.
 
 **Key Elements:**
+
 - Sanitized (removes secrets)
 - Timestamped ZIP file
 - Includes system info (version, env, errors)
 
 **Why it improves AWS_EUM_X:**
+
 - Simplifies support requests
 - Faster issue resolution
 - Builds trust (shows transparency)
 
 **Implementation for AWS_EUM_X:**
+
 ```
 aws-eum-x-support-2025-10-16-14-30.zip
 ├── config.json (secrets redacted)
@@ -466,14 +519,17 @@ aws-eum-x-support-2025-10-16-14-30.zip
 ---
 
 ### Pattern 7: Status Badge with Tooltip 🏷️
+
 **Example:** Uptime Kuma, Portainer  
 **Pattern:** Colored badge with hover tooltip for details.
 
 **Why it improves AWS_EUM_X:**
+
 - Quick visual scan of system state
 - Details on demand (don't clutter UI)
 
 **Implementation for AWS_EUM_X:**
+
 ```
 [🟢 Operational]  Hover: "AWS region: eu-west-2, Last send: 2m ago"
 [🟡 Degraded]     Hover: "Rate limit: 18/20 TPS used"
@@ -483,21 +539,25 @@ aws-eum-x-support-2025-10-16-14-30.zip
 ---
 
 ### Pattern 8: Readable, Structured Logs 📄
+
 **Example:** Traefik, Nginx Proxy Manager  
 **Pattern:** Log viewer with filtering, levels, and timestamps.
 
 **Key Elements:**
+
 - Filter by level (INFO, WARN, ERROR)
 - Search/filter by keyword
 - Toggle verbose mode
 - Download logs button
 
 **Why it improves AWS_EUM_X:**
+
 - Essential for troubleshooting
 - Users don't need SSH access to container
 - Reduces support ticket volume
 
 **Implementation for AWS_EUM_X:**
+
 ```
 [2025-10-16 14:30:15] INFO  Message sent to +4477******0000 (ID: msg-abc123)
 [2025-10-16 14:30:20] WARN  Rate limit: 18/20 TPS
@@ -507,28 +567,34 @@ aws-eum-x-support-2025-10-16-14-30.zip
 ---
 
 ### Pattern 9: Quick Actions Toolbar 🔧
+
 **Example:** Portainer (Containers: Start/Stop/Restart)  
 **Pattern:** Common actions accessible without navigation.
 
 **Why it improves AWS_EUM_X:**
+
 - Reduces clicks for frequent tasks
 - Improves workflow efficiency
 
 **Implementation for AWS_EUM_X:**
+
 - [Send Test Message] [Export History] [Clear Queue] [Refresh Status]
 
 ---
 
 ### Pattern 10: Progressive Disclosure 📖
+
 **Example:** Nginx Proxy Manager (Advanced settings collapsed)  
 **Pattern:** Hide advanced options by default, show on toggle.
 
 **Why it improves AWS_EUM_X:**
+
 - Simplifies UI for beginners
 - Power users still have access
 - Reduces cognitive load
 
 **Implementation for AWS_EUM_X:**
+
 ```
 Basic Settings ✓
   - Region
@@ -544,15 +610,18 @@ Basic Settings ✓
 ---
 
 ### Pattern 11: Configuration Import/Export 💾
+
 **Example:** Traefik, Home Assistant  
 **Pattern:** Export config as YAML/JSON, import to restore.
 
 **Why it improves AWS_EUM_X:**
+
 - Backup and disaster recovery
 - Clone configuration across environments
 - Version control friendly
 
 **Implementation for AWS_EUM_X:**
+
 ```yaml
 # aws-eum-x-config.yml
 version: "1.0"
@@ -570,15 +639,18 @@ features:
 ---
 
 ### Pattern 12: In-App Documentation Links 📚
+
 **Example:** Nextcloud, Home Assistant  
 **Pattern:** Context-sensitive help links to docs.
 
 **Why it improves AWS_EUM_X:**
+
 - Just-in-time learning
 - Reduces support burden
 - Users trust the app more
 
 **Implementation for AWS_EUM_X:**
+
 - Next to "Configuration Set": [ℹ️ What is a configuration set?] → Links to AWS docs
 - Next to "Opt-Out List": [ℹ️ Learn about opt-out compliance]
 
@@ -599,6 +671,7 @@ features:
 | **Validation** | joi | Schema-based, great error messages |
 
 **Trade-offs:**
+
 - ✅ Minimal dependencies (security, bundle size)
 - ✅ Easy to audit and maintain
 - ❌ No SPA framework (acceptable for admin UI)
@@ -611,11 +684,13 @@ features:
 **Decision:** Container-level authentication (rely on Unraid or reverse proxy for auth).
 
 **Rationale:**
+
 - Unraid users typically access apps on trusted LAN
 - Adding auth duplicates reverse proxy functionality
 - Reduces attack surface (fewer auth bugs)
 
 **Security Mitigations:**
+
 - Bind to `127.0.0.1` by default (require proxy)
 - Document reverse proxy setup with auth examples
 - Add optional basic auth for direct exposure
@@ -632,6 +707,7 @@ features:
 | **Secrets** | Environment variables or AWS Secrets Manager | Never in files or logs |
 
 **Volume Mounts:**
+
 ```
 /app/config → Persistent (config, templates)
 /app/data   → Persistent (history, queue)
@@ -642,11 +718,13 @@ features:
 ### 4. Credential Management
 
 **Hierarchy (first match wins):**
+
 1. IAM Role (EC2 instance profile or ECS task role)
 2. Environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`)
 3. AWS Shared Credentials File (not recommended for containers)
 
 **UI Flow:**
+
 - Default to "IAM Role" option
 - Fall back to "Access Keys" with warning about security
 - Document AssumeRole for cross-account access
@@ -658,6 +736,7 @@ features:
 **Strategy:** Graceful degradation with actionable errors.
 
 **Error Categories:**
+
 | Category | Behavior | User Message | Retry |
 |----------|----------|--------------|-------|
 | **Config Error** | Fail fast on startup | "Invalid AWS region: xyz. Expected: eu-west-2" | No |
@@ -671,6 +750,7 @@ features:
 ### 6. Observability
 
 **Metrics to Track:**
+
 - Messages sent (total, success, failed)
 - AWS API latency (p50, p95, p99)
 - Error rate by type
@@ -678,12 +758,14 @@ features:
 - Quota utilization
 
 **Log Levels:**
+
 - `INFO`: Normal operations (message sent)
 - `WARN`: Degraded state (rate limit approaching)
 - `ERROR`: Failed operations (send failed)
 - `DEBUG`: Verbose (AWS request/response)
 
 **Health Checks:**
+
 - `/health` → JSON: `{ "status": "ok", "aws": "connected", "uptime": 3600 }`
 - `/health/ready` → 200 if AWS reachable, 503 otherwise
 
@@ -692,6 +774,7 @@ features:
 ### 7. Pluggable Transport Design
 
 **Interface:**
+
 ```typescript
 interface MessageTransport {
   send(message: Message): Promise<SendResult>;
@@ -701,6 +784,7 @@ interface MessageTransport {
 ```
 
 **Implementations:**
+
 - `SMSTransport` (current, Pinpoint SMS)
 - `MMSTransport` (future, Pinpoint MMS)
 - `VoiceTransport` (future, Pinpoint Voice)
@@ -708,6 +792,7 @@ interface MessageTransport {
 - `PushTransport` (future, Push Notifications)
 
 **Benefits:**
+
 - Easy to add channels without refactor
 - Test mocks for unit tests
 - Channel-specific configuration isolated
@@ -717,6 +802,7 @@ interface MessageTransport {
 ## Implementation Roadmap
 
 ### Phase 1: Foundation (Week 1)
+
 - ✅ Create directory structure
 - ✅ Audit existing codebase
 - ⬜ Multi-stage Dockerfile with non-root user
@@ -726,6 +812,7 @@ interface MessageTransport {
 - ⬜ Input validation schemas
 
 **Acceptance Criteria:**
+
 - Container starts without root
 - `/health` returns 200
 - Logs are JSON and redact secrets
@@ -733,6 +820,7 @@ interface MessageTransport {
 ---
 
 ### Phase 2: Core Features (Week 2)
+
 - ⬜ AWS SDK integration with IAM role support
 - ⬜ Send SMS with rate limiting
 - ⬜ Phone pool discovery and selection
@@ -741,6 +829,7 @@ interface MessageTransport {
 - ⬜ Message history with pagination
 
 **Acceptance Criteria:**
+
 - Can send SMS using IAM role
 - Rate limit enforced (5 req/sec default)
 - Opt-out numbers rejected
@@ -748,6 +837,7 @@ interface MessageTransport {
 ---
 
 ### Phase 3: UI Enhancement (Week 3)
+
 - ⬜ First-run wizard (5 steps)
 - ⬜ Dashboard with status tiles
 - ⬜ Actions page (send test, export, clear)
@@ -756,6 +846,7 @@ interface MessageTransport {
 - ⬜ Dark mode toggle
 
 **Acceptance Criteria:**
+
 - New user completes setup in <10 min
 - Dashboard shows real-time AWS health
 - Logs viewable in-app
@@ -763,6 +854,7 @@ interface MessageTransport {
 ---
 
 ### Phase 4: Advanced Features (Week 4)
+
 - ⬜ MMS support
 - ⬜ Message templates
 - ⬜ Bulk import (CSV)
@@ -771,6 +863,7 @@ interface MessageTransport {
 - ⬜ Cost estimation
 
 **Acceptance Criteria:**
+
 - Can send MMS with image
 - Template variables work
 - Support bundle downloads
@@ -778,6 +871,7 @@ interface MessageTransport {
 ---
 
 ### Phase 5: Testing & Documentation (Week 5)
+
 - ⬜ Unit tests (80% coverage)
 - ⬜ Integration tests (health, send)
 - ⬜ Smoke test script
@@ -787,6 +881,7 @@ interface MessageTransport {
 - ⬜ CHANGELOG.md
 
 **Acceptance Criteria:**
+
 - All tests pass in CI
 - README covers setup, config, troubleshooting
 - Security policy documented
@@ -794,6 +889,7 @@ interface MessageTransport {
 ---
 
 ### Phase 6: Release Preparation (Week 6)
+
 - ⬜ Unraid XML template
 - ⬜ Icons (512x512 PNG, SVG)
 - ⬜ Example IAM policies
@@ -802,6 +898,7 @@ interface MessageTransport {
 - ⬜ Release notes
 
 **Acceptance Criteria:**
+
 - Template validates in CA
 - CI builds and publishes image
 - Release notes complete
@@ -896,6 +993,7 @@ AWS_EUM provides a functional MVP for SMS sending but lacks production-grade sec
 ---
 
 **Next Steps:**
+
 1. Review and approve audit findings
 2. Prioritize features for v1.0
 3. Begin Phase 1 implementation

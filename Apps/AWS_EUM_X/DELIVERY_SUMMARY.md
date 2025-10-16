@@ -9,6 +9,7 @@
 ## 📦 Deliverables Completed
 
 ### 1. Comprehensive Audit ✅
+
 **Location:** `Apps/AWS_EUM_X/AUDIT.md`
 
 - **26 detailed findings** categorized by severity (6 Critical, 12 High, 8 Medium)
@@ -19,6 +20,7 @@
 - **Future enhancements backlog** with effort estimates
 
 **Key Findings:**
+
 - Critical security issues (root user, secret exposure, missing CSRF, no healthcheck)
 - Missing AWS features (phone pools, configuration sets, opt-out lists, IAM roles)
 - UX gaps (no first-run wizard, limited error handling, no observability)
@@ -28,6 +30,7 @@
 ### 2. Production-Ready Application ✅
 
 #### Backend Architecture
+
 **Location:** `Apps/AWS_EUM_X/src/`
 
 | Component | File | Features |
@@ -42,6 +45,7 @@
 | **Healthcheck** | `healthcheck.js` | Docker HEALTHCHECK script, readiness probe |
 
 **Key Features:**
+
 - ✅ Non-root container (UID 1000)
 - ✅ Secret redaction in all logs and UI
 - ✅ CSRF protection on all POST requests
@@ -57,9 +61,11 @@
 ---
 
 ### 3. Container Image ✅
+
 **Location:** `Apps/AWS_EUM_X/Dockerfile`
 
 **Specifications:**
+
 - **Base:** Node.js 20 LTS (Bookworm Slim)
 - **Architecture:** Multi-stage build for minimal image size
 - **User:** Non-root (`appuser`, UID 1000)
@@ -68,6 +74,7 @@
 - **Signal Handling:** dumb-init for proper SIGTERM/SIGINT handling
 
 **Security Features:**
+
 - No root privileges
 - Minimal attack surface (slim base image)
 - Health check prevents silent failures
@@ -76,9 +83,11 @@
 ---
 
 ### 4. Unraid Template ✅
+
 **Location:** `Apps/AWS_EUM_X/my-aws-eum-x.xml`
 
 **Sections:**
+
 - **Overview:** Clear description with feature list
 - **Required Settings:** AWS region, auth method
 - **Authentication:** IAM role vs access keys configuration
@@ -88,6 +97,7 @@
 - **Metadata:** Version history, branch tags, support links
 
 **Community Apps Ready:**
+
 - Proper XML format (Unraid compatible)
 - Environment variable documentation
 - Security warnings for sensitive fields
@@ -107,6 +117,7 @@
 | **CONTRIBUTING.md** | Root | ✅ Complete | ~400 lines |
 
 #### README.md Highlights
+
 - What is AWS EUM X and who it's for
 - Architecture diagram with data flow
 - Installation (3 methods: CA, Docker, Compose)
@@ -118,6 +129,7 @@
 - Roadmap (v1.1, v1.2, v2.0)
 
 #### AUDIT.md Highlights
+
 - Executive summary with severity breakdown
 - 26 detailed findings with AWS doc links
 - AWS API cross-reference table (14 missing features)
@@ -127,6 +139,7 @@
 - Future enhancements backlog
 
 #### SECURITY.md Highlights
+
 - Responsible disclosure policy
 - Response timeline commitments
 - Security best practices for users and developers
@@ -134,6 +147,7 @@
 - GDPR and compliance notes
 
 #### CONTRIBUTING.md Highlights
+
 - Development setup (local, Docker, devcontainer)
 - Coding standards (ESLint, Prettier)
 - Testing guidelines (80% coverage requirement)
@@ -143,15 +157,18 @@
 ---
 
 ### 6. CI/CD Pipeline ✅
-**Location:** `Apps/AWS_EUM_X/.github/workflows/build.yml`
+
+**Location:** `.github/workflows/aws-eum-x-build.yml` (repository root)
 
 **Stages:**
+
 1. **Lint and Test:** ESLint, Jest with coverage reporting
 2. **Build and Push:** Multi-arch builds (amd64, arm64) to GHCR
 3. **Security Scan:** Trivy vulnerability scanning
 4. **Smoke Test:** Health check validation
 
 **Features:**
+
 - Automated builds on push to `main` and `dev`
 - Semantic versioning from Git tags
 - Multi-architecture support (Intel and ARM)
@@ -171,6 +188,7 @@
 | `package.json` | Dependencies and scripts |
 
 **npm Scripts:**
+
 - `npm start` - Production mode
 - `npm run dev` - Development with nodemon
 - `npm test` - Run tests with coverage
@@ -180,14 +198,17 @@
 ---
 
 ### 8. IAM Policies ✅
+
 **Location:** `Apps/AWS_EUM_X/iam-policy-minimal.json`
 
 **Minimal Policy (Recommended):**
+
 - `sms-voice:SendTextMessage` (send SMS/MMS)
 - `sms-voice:Describe*` (read-only access for UI features)
 - Region-scoped for enhanced security
 
 **Not Included:**
+
 - No write permissions (create pools, register numbers, etc.)
 - No delete permissions
 - No billing access
@@ -229,11 +250,13 @@
 ### For Users
 
 1. **Backup existing data:**
+
    ```bash
    docker cp aws-eum:/app/data/history.json ./history-backup.json
    ```
 
 2. **Stop old container:**
+
    ```bash
    docker stop aws-eum
    docker rm aws-eum
@@ -345,28 +368,32 @@
 ## 💡 Recommendations
 
 ### High Priority
+
 1. Implement view templates (required for UI functionality)
 2. Add CSS and JavaScript (required for UX)
 3. Create unit tests (required for CI)
 4. Design and export icons (required for CA submission)
 
 ### Medium Priority
-5. Add example screenshots to README
-6. Create video walkthrough (first-run wizard)
-7. Write migration guide from AWS_EUM
-8. Add Prometheus metrics endpoint
+
+1. Add example screenshots to README
+2. Create video walkthrough (first-run wizard)
+3. Write migration guide from AWS_EUM
+4. Add Prometheus metrics endpoint
 
 ### Low Priority (Future)
-9. Implement MMS support
-10. Add message templates
-11. Build two-way SMS functionality
-12. Create WhatsApp integration (AWS Social Messaging)
+
+1. Implement MMS support
+2. Add message templates
+3. Build two-way SMS functionality
+4. Create WhatsApp integration (AWS Social Messaging)
 
 ---
 
 ## 🎉 Summary
 
 AWS_EUM_X is a **production-ready foundation** with:
+
 - ✅ Secure, well-architected backend
 - ✅ Comprehensive documentation
 - ✅ CI/CD pipeline
@@ -375,12 +402,14 @@ AWS_EUM_X is a **production-ready foundation** with:
 - ⚠️ Views and tests still needed
 
 **Estimated Time to Complete:**
+
 - Views/CSS/JS: 2-3 days
 - Icons: 1 day  
 - Tests: 2-3 days
 - **Total:** 1 week to fully production-ready
 
 **Comparison to Original AWS_EUM:**
+
 - 10x more features
 - 100x better security
 - Infinite times better documentation 😄

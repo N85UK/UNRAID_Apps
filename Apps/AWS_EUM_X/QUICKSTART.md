@@ -30,6 +30,7 @@ Create these EJS files in `views/`:
 - `partials/navigation.ejs` - Navigation menu
 
 **Template Structure Example:**
+
 ```ejs
 <% include('partials/header') %>
 <div class="dashboard">
@@ -43,7 +44,9 @@ Create these EJS files in `views/`:
 ### 2. Frontend Assets (Required)
 
 #### `public/css/style.css`
+
 Modern, responsive design with:
+
 - CSS custom properties for theming
 - Mobile-first responsive layout
 - Status badges (green/yellow/red)
@@ -51,7 +54,9 @@ Modern, responsive design with:
 - Dashboard grid layout
 
 #### `public/js/app.js`
+
 Client-side functionality:
+
 - Form validation
 - AJAX requests for sending
 - Real-time character count
@@ -81,6 +86,7 @@ describe('Phone number validation', () => {
 ### 4. Icons (Required for CA Submission)
 
 Create in `icons/`:
+
 - `aws-eum-x.png` (512x512) - For Community Apps
 - `aws-eum-x.svg` - Scalable version
 - `favicon.ico` - Browser favicon
@@ -88,6 +94,7 @@ Create in `icons/`:
 - `favicon-32x32.png`
 
 **Design Suggestions:**
+
 - AWS orange/blue color scheme
 - SMS/message bubble icon
 - Cloud connectivity element
@@ -127,6 +134,7 @@ docker-compose down
 ## Quick Development Workflow
 
 ### Start Development Server
+
 ```bash
 npm run dev
 # Server starts on http://localhost:3000
@@ -134,6 +142,7 @@ npm run dev
 ```
 
 ### Test AWS Connection
+
 ```bash
 # Set environment variables
 export AWS_REGION=us-east-1
@@ -148,6 +157,7 @@ curl http://localhost:3000/health | jq
 ```
 
 ### Lint and Format
+
 ```bash
 npm run lint          # Check for errors
 npm run lint:fix      # Auto-fix
@@ -248,16 +258,17 @@ docker-compose build         # Rebuild
 
 ## Useful Resources
 
-- **AWS Pinpoint Docs**: https://docs.aws.amazon.com/pinpoint/
-- **Unraid CA Guidelines**: https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/
-- **Express.js Docs**: https://expressjs.com/
-- **EJS Docs**: https://ejs.co/
-- **Pino Logger**: https://getpino.io/
-- **Joi Validation**: https://joi.dev/
+- **AWS Pinpoint Docs**: <https://docs.aws.amazon.com/pinpoint/>
+- **Unraid CA Guidelines**: <https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/>
+- **Express.js Docs**: <https://expressjs.com/>
+- **EJS Docs**: <https://ejs.co/>
+- **Pino Logger**: <https://getpino.io/>
+- **Joi Validation**: <https://joi.dev/>
 
 ## Getting Help
 
 If stuck:
+
 1. Check AUDIT.md for design decisions
 2. Review CONTRIBUTING.md for standards
 3. Look at AWS_EUM original code for reference

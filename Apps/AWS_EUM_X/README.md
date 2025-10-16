@@ -321,16 +321,19 @@ services:
 ### Exporting Data
 
 **Message History CSV:**
+
 1. Go to **Actions** page
 2. Click **Export History**
 3. Save CSV file
 
 **Configuration Backup:**
+
 1. Go to **Settings** page
 2. Click **Export Configuration**
 3. Save JSON file
 
 **Support Bundle:**
+
 1. Go to **Actions** page
 2. Click **Generate Support Bundle**
 3. Save ZIP file (includes logs, config, system info)
@@ -346,6 +349,7 @@ services:
 **Symptoms**: Health check shows red, dashboard displays error
 
 **Solutions**:
+
 - Verify `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are correct
 - Check IAM user has required permissions (see [Security Model](#security-model))
 - Ensure credentials are not expired (if using temporary credentials)
@@ -355,6 +359,7 @@ services:
 **Symptoms**: "Phone number must be in E.164 format" error
 
 **Solutions**:
+
 - Ensure number starts with `+` (e.g., `+1234567890`)
 - Include country code (e.g., `+1` for US, `+44` for UK)
 - Remove spaces, dashes, or parentheses
@@ -364,6 +369,7 @@ services:
 **Symptoms**: Messages stuck in queue
 
 **Solutions**:
+
 - Check **Observability** page for rate limit status
 - Reduce `RATE_LIMIT_TPS` if approaching AWS limits
 - Check AWS quota limits: `aws sms-voice describe-spend-limits`
@@ -374,6 +380,7 @@ services:
 **Symptoms**: Error "Recipient has opted out of receiving messages"
 
 **Solutions**:
+
 - Verify recipient did not text "STOP" to your number
 - Check AWS opt-out list: Console > Pinpoint > Opt-out lists
 - Remove number from opt-out list if legitimately opted back in
@@ -383,6 +390,7 @@ services:
 **Symptoms**: Container restarts repeatedly
 
 **Solutions**:
+
 - Check logs: `docker logs aws-eum-x`
 - Verify volume permissions: `chown -R 1000:1000 /mnt/user/appdata/aws-eum-x`
 - Ensure port 3000 is not in use: `netstat -tuln | grep 3000`
@@ -456,18 +464,21 @@ Send a test message.
 ## Roadmap
 
 ### v1.1 (Q4 2025)
+
 - [ ] MMS support with media upload
 - [ ] Message templates with variable substitution
 - [ ] Bulk import from CSV
 - [ ] Enhanced cost tracking
 
 ### v1.2 (Q1 2026)
+
 - [ ] Two-way SMS (receive and respond)
 - [ ] Voice messaging (text-to-speech)
 - [ ] Prometheus metrics endpoint
 - [ ] Webhook event replay
 
 ### v2.0 (Q2 2026)
+
 - [ ] WhatsApp Business integration (AWS Social Messaging)
 - [ ] Push notifications (AWS Push)
 - [ ] Multi-tenant support
