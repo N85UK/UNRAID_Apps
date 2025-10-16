@@ -1,70 +1,127 @@
 <?xml version="1.0"?>
-<Container templateVersion="1.0">
+<Container version="2">
   <Name>AWS_EUM_X</Name>
-  <Repository>ghcr.io/n85uk/aws-eum-x</Repository>
-  <Registry>ghcr.io</Registry>
-  <ShortDescription>AWS End User Messaging (modernized)</ShortDescription>
-  <Description>Modernized AWS End User Messaging app with first-run wizard, structured logs, and safer defaults. For Unraid Community Applications.</Description>
+  <Repository>ghcr.io/n85uk/aws-eum-x:latest</Repository>
+  <Registry>https://ghcr.io/n85uk/aws-eum-x</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
+  <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_X</Project>
+  <Overview>
+AWS End User Messaging X (EUM X) - v1.0.0
 
-  <Config>
-    <Environment>
-      <Variable>
-        <Name>AWS_ACCESS_KEY_ID</Name>
-        <Label>AWS Access Key ID [AWS Access Key ID]</Label>
-        <Type>password</Type>
-        <Help>Short-lived credentials or IAM user access key. Use IAM role where possible. (Do not paste long-term keys on public systems.)</Help>
-      </Variable>
+Modern, secure, observable SMS messaging interface for AWS Pinpoint SMS and Voice v2.
 
-      <Variable>
-        <Name>AWS_SECRET_ACCESS_KEY</Name>
-        <Label>AWS Secret Access Key [AWS Secret]</Label>
-        <Type>password</Type>
-        <Help>Secret for the AWS Access Key ID. Never store this in logs or screenshots.</Help>
-      </Variable>
+✨ Key Features:
+• First-run wizard for guided setup
+• Automatic AWS phone number and sender ID discovery
+• Structured JSON logging with automatic secret redaction
+• Health and readiness probes for monitoring
+• DryRun support for safe testing without sending messages
+• Message part estimator (GSM-7 and UCS-2 encoding detection)
+• MPS-aware rate limiting with configurable queue
+• SNS webhook signature verification (planned)
+• Export/import configuration (secrets excluded)
+• Production-ready observability
 
-      <Variable>
-        <Name>AWS_REGION</Name>
-        <Label>Region [AWS Region]</Label>
-        <Value>eu-west-2</Value>
-        <Help>Your AWS region (example: eu-west-2). This controls where the Pinpoint resources are queried.</Help>
-      </Variable>
+🔒 Security Highlights:
+• Runs as non-root user (appuser)
+• Secrets never logged in plain text
+• Configurable CSP for custom networks
+• E.164 phone number validation
+• IAM least-privilege policy examples included
 
-      <Variable>
-        <Name>DATA_DIR</Name>
-        <Label>Data directory (container path)</Label>
-        <Value>/app/data</Value>
-        <Help>Container data directory used by the app. Mount a host path into the container (example host: /mnt/user/appdata/aws-eum-x mounted to container: /app/data).</Help>
-      </Variable>
+📊 Observability:
+• /health - Liveness probe with version and uptime
+• /ready - Readiness probe with AWS connectivity check
+• /probe/aws - Dedicated AWS connectivity test
+• Structured logs (JSON) with pino
+• Support bundle export for troubleshooting
 
-      <Variable>
-        <Name>DISABLE_CSP</Name>
-        <Label>Disable CSP (for custom bridge networks)</Label>
-        <Value>true</Value>
-        <Help>Set to true when using custom br0 networks that block external CDNs. Default true for Unraid community templates.</Help>
-      </Variable>
+🚀 Recent Updates:
+• v1.0.0 - Initial release with audit-driven improvements
+• Modular architecture with message queue and backoff
+• Message parts calculation and cost estimation
+• Better error messages and validation
 
-      <Variable>
-        <Name>AUTO_UPDATE_CHECK</Name>
-        <Label>Auto-update check</Label>
-        <Value>true</Value>
-        <Help>If enabled, container will check GitHub releases for updates (no auto-apply unless configured).</Help>
-      </Variable>
+Usage:
+1. Install from Community Apps
+2. Configure AWS credentials (IAM user with Pinpoint permissions)
+3. Complete first-run wizard
+4. Test with DryRun before sending real messages
 
-    </Environment>
-  </Config>
+Volume Setup:
+• Container Path: /app/data (required)
+• Host Path: /mnt/user/appdata/aws-eum-x
+• Stores message history and configuration (secrets excluded)
 
-  <Network>
-    <Port>80</Port>
-  </Network>
+Network Configuration:
+• For custom bridge networks (br0.x): Set DISABLE_CSP=true
+• Default port: 80 (map to any available host port)
+  </Overview>
+  <Category>Network:Management Tools:</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_X/icons/aws-eum-x-512.png</Icon>
+  <ExtraParams>--restart unless-stopped --memory=512m --cpu-shares=1024</ExtraParams>
+  <Description>AWS EUM X v1.0.0 - Modern, secure, observable SMS interface with first-run wizard and structured logging</Description>
 
-  <Volumes>
-    <Volume>
-      <Container>/app/data</Container>
-      <Host>/mnt/user/appdata/aws-eum-x</Host>
-      <Mode>rw</Mode>
-    </Volume>
-  </Volumes>
+  <!-- ==================== REQUIRED CONFIGURATION ==================== -->
+  
+  <!-- Paths -->
+  <Config Name="AppData" Target="/app/data" Default="/mnt/user/appdata/aws-eum-x" Mode="rw" Description="Container data directory - MUST use /app/data for proper permissions. Stores message history and configuration." Type="Path" Display="always" Required="true" Mask="false"/>
 
-  <WebUI>http://[IP]:[PORT:80]</WebUI>
+  <!-- Ports -->
+  <Config Name="Web UI Port" Target="80" Default="8080" Mode="tcp" Description="Host port for web UI (maps to container port 80). Choose any available port on your Unraid server." Type="Port" Display="always" Required="true" Mask="false"/>
 
+  <!-- ==================== AWS CREDENTIALS (Required) ==================== -->
+  
+  <Config Name="AWS Access Key ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="[AWS IAM Access Key] - Required permission: pinpoint-sms-voice-v2:SendTextMessage, DescribePhoneNumbers, DescribeSenderIds. Use short-lived credentials where possible." Type="Variable" Display="always" Required="true" Mask="true"/>
+  
+  <Config Name="AWS Secret Access Key" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="[AWS IAM Secret Key] - Secret key for the above Access Key ID. NEVER share this or include in screenshots. Automatically redacted from logs." Type="Variable" Display="always" Required="true" Mask="true"/>
+  
+  <Config Name="AWS Region" Target="AWS_REGION" Default="us-east-1" Mode="" Description="[AWS Region] - AWS region where your Pinpoint SMS resources are located (e.g., us-east-1, eu-west-2, ap-southeast-1). Must match where your phone numbers/sender IDs are provisioned." Type="Variable" Display="always" Required="true" Mask="false"/>
+
+  <!-- ==================== NETWORK & SECURITY ==================== -->
+  
+  <Config Name="Disable CSP" Target="DISABLE_CSP" Default="true" Mode="" Description="[Content Security Policy] - Set to 'true' for custom bridge networks (br0.x) that may block external resources. Set to 'false' for strict CSP when using standard bridge mode. Recommended: true for most Unraid setups." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  
+  <Config Name="Network Host" Target="NETWORK_HOST" Default="*" Mode="" Description="[CSP Network Allow] - Network origin to allow in CSP when CSP is enabled. Use '*' for permissive or specify your network (e.g., 'http://10.0.2.0/24'). Only relevant if DISABLE_CSP=false." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- ==================== LOGGING & OBSERVABILITY ==================== -->
+  
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="info" Mode="" Description="[Logging Level] - Log verbosity: 'error', 'warn', 'info', 'debug', 'trace'. Use 'info' for normal operation, 'debug' for troubleshooting. Secrets are always redacted." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  
+  <Config Name="Log Format" Target="LOG_FORMAT" Default="json" Mode="" Description="[Log Output Format] - 'json' for structured logs (recommended for log aggregation), 'pretty' for human-readable console output in development." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- ==================== RATE LIMITING & QUEUE ==================== -->
+  
+  <Config Name="Rate Limit (Parts/Second)" Target="RATE_LIMIT_PARTS_PER_SECOND" Default="1.0" Mode="" Description="[AWS MPS Throttling] - Maximum message parts per second to send. AWS MPS limits vary by country and originator type. Default 1.0 is conservative. Increase cautiously based on your AWS limits." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  
+  <Config Name="Max Queue Size" Target="RATE_LIMIT_MAX_QUEUE_SIZE" Default="200" Mode="" Description="[Message Queue Depth] - Maximum number of messages to queue before rejecting new requests (HTTP 429). Prevents memory exhaustion." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  
+  <Config Name="Max Send Retries" Target="MAX_SEND_RETRIES" Default="5" Mode="" Description="[Retry on Throttle] - Number of times to retry sending a message after throttling errors. Uses exponential backoff (max 30s between retries)." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- ==================== MESSAGE CONFIGURATION ==================== -->
+  
+  <Config Name="History Retention" Target="HISTORY_RETENTION" Default="100" Mode="" Description="[Message History Size] - Number of sent messages to keep in history. Older messages are automatically pruned. Stored in /app/data/history.json." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  
+  <Config Name="Cache Duration (ms)" Target="CACHE_DURATION" Default="300000" Mode="" Description="[Originator Cache TTL] - How long to cache AWS phone numbers and sender IDs in milliseconds. Default 300000 = 5 minutes. Reduces AWS API calls." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- ==================== FEATURE FLAGS ==================== -->
+  
+  <Config Name="Enable Real Sends" Target="SENDS_ENABLED" Default="false" Mode="" Description="[Production Send Mode] - Set to 'true' to enable REAL SMS sends. Default 'false' for safety (all sends are simulated). Use DryRun endpoint for testing first." Type="Variable" Display="always" Required="false" Mask="false"/>
+  
+  <Config Name="Simulate Sends" Target="SENDS_SIMULATE" Default="true" Mode="" Description="[Simulation Mode] - When 'true', all sends return simulated MessageId without calling AWS (useful for testing). Override per-request with simulate:true in API payload." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- ==================== OPTIONAL SETTINGS ==================== -->
+  
+  <Config Name="Timezone" Target="TZ" Default="UTC" Mode="" Description="[Container Timezone] - Timezone for logs and timestamps (e.g., America/New_York, Europe/London, UTC). Uses IANA timezone database." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  
+  <Config Name="Node Environment" Target="NODE_ENV" Default="production" Mode="" Description="[Runtime Mode] - 'production' for normal use (JSON logs), 'development' for verbose pretty logs. Affects log formatting and error verbosity." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <!-- ==================== WATCHTOWER AUTO-UPDATE ==================== -->
+  
+  <Config Name="Watchtower Enable" Target="com.centurylinklabs.watchtower.enable" Default="true" Mode="" Description="Enable Watchtower auto-updates for this container (requires Watchtower running)" Type="Label" Display="advanced" Required="false" Mask="false"/>
+  
+  <Config Name="Watchtower Monitor Only" Target="com.centurylinklabs.watchtower.monitor-only" Default="false" Mode="" Description="Monitor for updates but don't auto-apply (notification only)" Type="Label" Display="advanced" Required="false" Mask="false"/>
 </Container>
