@@ -1,0 +1,60 @@
+{
+  "name": "aws-eum-x",
+  "version": "1.0.0",
+  "description": "AWS End User Messaging X - Modern SMS, MMS, and Voice messaging application for Unraid",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "NODE_ENV=development nodemon src/server.js",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write \"src/**/*.js\"",
+    "healthcheck": "node src/healthcheck.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-pinpoint-sms-voice-v2": "^3.679.0",
+    "@aws-sdk/credential-providers": "^3.679.0",
+    "express": "^4.21.1",
+    "body-parser": "^1.20.3",
+    "cookie-session": "^2.1.0",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.2.2",
+    "express-rate-limit": "^7.4.1",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "N85UK <hello@git.n85.uk>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/N85UK/UNRAID_Apps.git",
+    "directory": "Apps/AWS_EUM_X"
+  },
+  "keywords": [
+    "aws",
+    "sms",
+    "mms",
+    "pinpoint",
+    "messaging",
+    "unraid",
+    "docker"
+  ]
+}

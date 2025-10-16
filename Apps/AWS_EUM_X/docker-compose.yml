@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  aws-eum-x:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aws-eum-x
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Required
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      
+      # Authentication (choose one method)
+      - AWS_AUTH_METHOD=${AWS_AUTH_METHOD:-auto}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      
+      # Optional
+      - PORT=3000
+      - HOST=0.0.0.0
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - RATE_LIMIT_TPS=${RATE_LIMIT_TPS:-5}
+      - RATE_LIMIT_BURST=${RATE_LIMIT_BURST:-10}
+      - MAX_HISTORY=${MAX_HISTORY:-1000}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ENABLE_WIZARD=${ENABLE_WIZARD:-true}
+      
+      # AWS Features
+      - SMS_CONFIG_SET_ARN=${SMS_CONFIG_SET_ARN}
+      - OPT_OUT_LIST=${OPT_OUT_LIST}
+      - SMS_MESSAGE_TYPE=${SMS_MESSAGE_TYPE:-TRANSACTIONAL}
+      
+      # Development
+      - NODE_ENV=${NODE_ENV:-production}
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+    networks:
+      - aws-eum-network
+    healthcheck:
+      test: ["CMD", "node", "/app/src/healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  aws-eum-network:
+    driver: bridge

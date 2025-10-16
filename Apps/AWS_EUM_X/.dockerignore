@@ -1,0 +1,49 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+
+# Documentation
+README.md
+CHANGELOG.md
+CONTRIBUTING.md
+SECURITY.md
+LICENSE
+*.md
+
+# Tests
+tests/
+__tests__/
+*.test.js
+*.spec.js
+.nyc_output/
+coverage/
+
+# Development
+.env.example
+.editorconfig
+.prettierrc
+.eslintrc.js
+nodemon.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs (keep production logs out of image)
+logs/
+*.log
+npm-debug.log*
+
+# Application data (should be volumes)
+config/
+data/
+
+# Build artifacts
+dist/
+build/
+node_modules/npm/
