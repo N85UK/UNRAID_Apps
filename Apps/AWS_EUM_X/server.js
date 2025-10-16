@@ -189,6 +189,7 @@ const MAX_SEND_RETRIES = parseInt(process.env.MAX_SEND_RETRIES, 10) || 5;
 function estimateMessageParts(message) {
   if (!message) return 1;
   // crude non-GSM detection: non-ascii characters treated as UCS-2
+  // eslint-disable-next-line no-control-regex
   const nonGsm = /[^\x00-\x7F]/u.test(message);
   if (nonGsm) {
     if (message.length <= 70) return 1;
