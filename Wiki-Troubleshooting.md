@@ -61,12 +61,7 @@ docker restart aws-eum
 **Solutions**:
 
 1. **Check Internet Connectivity**: Ensure UNRAID has internet access
-2. **Verify Plugin URL**: Use exact URL:
-
-   ```
-   https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
-   ```
-
+2. **Verify Plugin URL**: Use the exact URL from the project's plugin manifest file
 3. **Retry Installation**: Wait a few minutes and try again
 4. **Check System Logs**: Review UNRAID system logs for specific errors
 

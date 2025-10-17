@@ -12,6 +12,31 @@ and this project adheres to the new YYYY.MM.DD.#### version format.
 - GitHub Wiki creation and population with comprehensive documentation
 - Complete documentation audit and modernization across all projects
 
+## [2025.01.15] - 2025-01-15
+
+### Repository Cleanup
+
+#### Removed (Projects Discontinued)
+
+- **ExplorerX Plugin** - Native UNRAID file manager plugin
+- **Bounty Submission** - UNRAID API file management integration
+- **File Explorer Plugin** - Alternative file explorer implementation  
+- **ca-submission** - Community Apps submission files
+- All associated workflows, documentation, and references
+
+#### Changed
+
+- Repository now focuses exclusively on maintained projects:
+  - AWS EUM Suite (v3.0, MariaDB, EUM X)
+  - AWS 2-Way SMS
+  - UCG Max Webhook Receiver
+- Simplified workflows and documentation
+- Updated all wiki scripts and automation
+
+**Note:** Historical changelog entries below reference removed projects and are preserved for historical record only.
+
+---
+
 ## [2025.10.12.0001] - 2025-10-12
 
 ### AWS EUM v3.0.9
