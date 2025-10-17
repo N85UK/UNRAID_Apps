@@ -1,6 +1,6 @@
 {
   "name": "aws-eum-x",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AWS End User Messaging X - Modern SMS, MMS, and Voice messaging application for Unraid",
   "main": "src/server.js",
   "scripts": {
