@@ -124,9 +124,22 @@ chmod -R 777 /mnt/user/appdata/aws-eum
 **Browser Console Errors**:
 
 ```
+**Symptoms**: Network errors in browser console
+
+```text
 Refused to load script 'https://cdn.jsdelivr.net/npm/chart.js'
+```
+
+**Comprehensive Solutions**:
+**Root Cause**: Content Security Policy blocks external CDN resources on custom bridge networks
+
+```text
 Refused to load stylesheet 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ```
+
+**Why This Happens**:
+
+- Custom bridge networks (br0.2, br0.100, etc.) have stricter CSP
 
 **Solution 1: Comprehensive CSP Disable (Works on All Networks)**:
 

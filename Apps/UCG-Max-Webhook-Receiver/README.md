@@ -1,11 +1,8 @@
 # UCG Max Webhook Receiver
 
-A production-ready webhook receiver for UCG Max alerts, built with FastAPI, PostgreSQL, and React.
+UCG Max Webhook Receiver is a FastAPI-based webhook endpoint designed for UNRAID servers to receive and process webhooks from UCG Max (Universal Call Generator). It provides secure webhook processing with PostgreSQL storage, authentication, and a web interface for monitoring.
 
-## 📦 Deployment Options
-
-- **Standard Edition**: Separate containers for app, database, and admin tools (recommended for production)
-- **All-in-One Edition**: Single container with embedded PostgreSQL (perfect for Unraid home users) - [See Documentation](INSTALL_ALLINONE.md)
+For detailed setup instructions, see [INSTALL.md](INSTALL.md)
 
 ## Features
 
@@ -21,8 +18,10 @@ A production-ready webhook receiver for UCG Max alerts, built with FastAPI, Post
 
 1. Clone the repository
 2. Configure environment variables (see .env.example)
-3. Run `docker-compose up --build`
-4. Access the UI at http://localhost:8000
+3. Start the services: `docker-compose up -d`
+4. Access the UI at `http://localhost:8000`
+
+## Docker Images
 
 ## Configuration
 

@@ -1,6 +1,6 @@
 # Support & Getting Help
 
-**Contact information and support resources for UNRAID Apps Repository**
+> Contact information and support resources for UNRAID Apps Repository
 
 ## 📞 **Primary Support Channels**
 

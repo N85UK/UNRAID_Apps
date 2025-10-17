@@ -1,8 +1,8 @@
-# Common Issues & Solutions
+# Common Issues & Quick Fixes
 
-**Quick reference for AWS EUM v3.0.1 issues**
+> Fast solutions for the most frequent problems
 
-## 🚨 **Top Issues & Fixes**
+## � **Top 5 Most Common Issues**
 
 ### 1. Charts/Dark Mode Not Working (br0.x Networks)
 
