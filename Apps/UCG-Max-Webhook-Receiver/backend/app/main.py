@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request, HTTPException, Depends
+from typing import Optional
+from fastapi import FastAPI, Request, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -64,16 +65,16 @@ async def receive_alert(request: Request, db: Session = Depends(get_db)):
     return {"status": "accepted", "alert_id": alert.alert_id}
 
 # API routes
-@app.get("/api/alerts", response_model=list[schemas.Alert])
-def get_alerts(
+@app.get("/api/alerts")
+async def get_alerts(
+    severity: Optional[str] = None,
+    alert_type: Optional[str] = None,
+    device: Optional[str] = None,
+    start: Optional[str] = None,
+    end: Optional[str] = None,
+    q: Optional[str] = None,
     page: int = 1,
     page_size: int = 50,
-    severity: str = None,
-    alert_type: str = None,
-    device: str = None,
-    start: str = None,
-    end: str = None,
-    q: str = None,
     db: Session = Depends(get_db)
 ):
     filters = {
@@ -105,13 +106,12 @@ def get_metrics(db: Session = Depends(get_db)):
     return crud.get_metrics(db)
 
 @app.get("/api/alerts/export")
-def export_alerts(
-    format: str = "csv",
-    severity: str = None,
-    alert_type: str = None,
-    device: str = None,
-    start: str = None,
-    end: str = None,
+async def export_alerts(
+    severity: Optional[str] = None,
+    alert_type: Optional[str] = None,
+    device: Optional[str] = None,
+    start: Optional[str] = None,
+    end: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
     from fastapi.responses import StreamingResponse

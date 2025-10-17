@@ -1,6 +1,6 @@
 # UCG Max Webhook Receiver - Installation Guide
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Unraid 6.9+ or Docker-compatible system
 - PostgreSQL database (can be deployed via docker-compose)
@@ -38,7 +38,11 @@
 
 ## 🗄️ Database Setup
 
-### Option 1: Use Docker Compose (Recommended for Testing)
+**Option 1: Using Docker Compose (Testing/Development)**
+
+```yaml
+services:
+  db:
 
 ```bash
 cd /mnt/user/appdata/ucg-max-webhook
@@ -256,12 +260,16 @@ docker logs ucg-max-webhook-receiver
 **Verify:**
 1. Health check passes: `curl http://server:8000/health`
 2. Check firewall rules
-3. Verify HMAC secret matches between UCG Max and container
+3. - Verify HMAC secret matches between UCG Max and server
+
+## Support
+
 4. Check container logs for authentication errors
 
 ### Issue: Database connection failed
 
 **Check:**
+
 1. PostgreSQL container is running
 2. DATABASE_URL is correct
 3. Network connectivity between containers
@@ -269,9 +277,9 @@ docker logs ucg-max-webhook-receiver
 
 ## 🆘 Support
 
-- **GitHub Issues**: https://github.com/N85UK/UNRAID_Apps/issues
-- **Documentation**: https://github.com/N85UK/UNRAID_Apps/wiki
-- **Unraid Forums**: https://forums.unraid.net/
+- **GitHub Issues**: <https://github.com/N85UK/UNRAID_Apps/issues>
+- **Documentation**: <https://github.com/N85UK/UNRAID_Apps/wiki>
+- **Unraid Forums**: <https://forums.unraid.net/>
 
 ## 📄 License
 
