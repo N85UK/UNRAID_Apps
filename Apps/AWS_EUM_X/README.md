@@ -1,6 +1,6 @@
 # AWS End User Messaging X (AWS_EUM_X)
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)
 
@@ -47,7 +47,7 @@ AWS EUM X is a modernized successor to AWS_EUM, providing a clean, secure, and o
 
 ### 🛡️ Security & Compliance
 
-- **Non-Root Container**: Runs as unprivileged user (UID 1000)
+- **Non-Root Container**: Runs as unprivileged user (UID 1001) on port 8080
 - **Secret Redaction**: Logs and UI never expose AWS credentials or full phone numbers
 - **CSRF Protection**: Prevents cross-site request forgery attacks
 - **Input Validation**: Server-side validation of all user inputs
@@ -89,7 +89,7 @@ AWS EUM X is a modernized successor to AWS_EUM, providing a clean, secure, and o
                  │ HTTPS (via Unraid/Reverse Proxy)
                  ▼
 ┌─────────────────────────────────────────────────────────────┐
-│              AWS EUM X Container (Port 3000)                 │
+│              AWS EUM X Container (Port 8080)                 │
 │  ┌────────────────────────────────────────────────────────┐ │
 │  │  Express Server                                         │ │
 │  │  ├─ EJS Views (First-Run Wizard, Dashboard, Settings)  │ │
@@ -101,8 +101,8 @@ AWS EUM X is a modernized successor to AWS_EUM, providing a clean, secure, and o
 │  ┌────────────▼───────────────────────────────────────────┐ │
 │  │  Business Logic Layer                                   │ │
 │  │  ├─ Rate Limiter (Token Bucket)                         │ │
-│  │  ├─ Message Queue (Retry Logic)                         │ │
-│  │  ├─ Message History (JSON Store)                        │ │
+│  │  ├─ Message Queue (File-backed with Worker)              │ │
+│  │  ├─ Persistence Layer (SQLite Database)                 │ │
 │  │  └─ Configuration Manager                               │ │
 │  └────────────┬───────────────────────────────────────────┘ │
 │               │                                              │
@@ -219,7 +219,7 @@ services:
 | Path | Description | Required |
 |------|-------------|----------|
 | `/app/config` | Configuration files, wizard state | ✅ |
-| `/app/data` | Message history, queue state | ✅ |
+| `/app/data` | SQLite database, queue state, logs | ✅ |
 
 ---
 
