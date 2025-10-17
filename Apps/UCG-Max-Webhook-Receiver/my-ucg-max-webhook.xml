@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>UCG-Max-Webhook-Receiver</Name>
+  <Repository>ghcr.io/n85uk/ucg-max-webhook-receiver:latest</Repository>
+  <Registry>https://ghcr.io</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
+  <Project>https://github.com/N85UK/UNRAID_Apps</Project>
+  <Overview>A production-ready webhook receiver for UCG Max alerts. Receives, stores, and displays network monitoring alerts from UCG Max devices with a modern web interface.</Overview>
+  <Category>Tools: Network:Management Status:Stable</Category>
+  <WebUI>http://[IP]:[PORT:8000]</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/UCG-Max-Webhook-Receiver/my-ucg-max-webhook.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/UCG-Max-Webhook-Receiver/icon.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled></DateInstalled>
+  <DonateText>If you find this useful, consider supporting development</DonateText>
+  <DonateLink>https://github.com/sponsors/N85UK</DonateLink>
+  <Requires/>
+  <Config Name="Web UI Port" Target="8000" Default="8000" Mode="tcp" Description="Web interface port" Type="Port" Display="always" Required="true" Mask="false">8000</Config>
+  <Config Name="Database URL" Target="DATABASE_URL" Default="postgresql://ucgmax:changeme@ucgmax-db:5432/ucgmax" Mode="" Description="PostgreSQL connection string" Type="Variable" Display="always" Required="true" Mask="false">postgresql://ucgmax:changeme@ucgmax-db:5432/ucgmax</Config>
+  <Config Name="Secret Key" Target="SECRET_KEY" Default="" Mode="" Description="JWT secret key for authentication (generate a random string)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="HMAC Secret" Target="HMAC_SECRET" Default="" Mode="" Description="Shared secret for webhook HMAC verification" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Bearer Token" Target="BEARER_TOKEN" Default="" Mode="" Description="Alternative Bearer token for webhook authentication" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Admin Username" Target="ADMIN_USER" Default="admin" Mode="" Description="Admin login username" Type="Variable" Display="always" Required="true" Mask="false">admin</Config>
+  <Config Name="Admin Password" Target="ADMIN_PASSWORD" Default="" Mode="" Description="Admin login password (change immediately after first login)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Alert Retention Days" Target="ALERT_RETENTION_DAYS" Default="30" Mode="" Description="Number of days to keep alerts before automatic deletion" Type="Variable" Display="advanced" Required="false" Mask="false">30</Config>
+  <Config Name="Rate Limit Requests" Target="RATE_LIMIT_REQUESTS" Default="100" Mode="" Description="Maximum requests per window" Type="Variable" Display="advanced" Required="false" Mask="false">100</Config>
+  <Config Name="Rate Limit Window" Target="RATE_LIMIT_WINDOW" Default="60" Mode="" Description="Rate limit window in seconds" Type="Variable" Display="advanced" Required="false" Mask="false">60</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="INFO" Mode="" Description="Logging level (DEBUG, INFO, WARNING, ERROR)" Type="Variable" Display="advanced" Required="false" Mask="false">INFO</Config>
+  <Config Name="Application Data" Target="/app/data" Default="/mnt/user/appdata/ucg-max-webhook" Mode="rw" Description="Application data directory" Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/ucg-max-webhook</Config>
+</Container>
