@@ -4,24 +4,27 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 
 ## 🚀 Featured Applications
 
-### AWS End User Messaging X (EUM X) v1.0.0
+### AWS End User Messaging X (EUM X) v0.1.0
 
-**Production Release** - Modernized AWS Pinpoint SMS Solution
+**Public Beta** - Modernized AWS Pinpoint SMS Solution with Advanced Features
 
-- ✨ **Modern Architecture**: Secure, production-ready Node.js 20 application
-- 🔒 **Enhanced Security**: Non-root container, secret redaction, CSRF protection, IAM role support
+- ✨ **Modern Architecture**: Secure, production-ready Node.js 20 application with SQLite persistence
+- 🔒 **Enhanced Security**: Non-root container (port 8080), secret redaction, CSRF protection, IAM role support
 - 📱 **SMS Capabilities**: Send SMS via AWS Pinpoint with phone pool discovery and opt-out checking
-- 📈 **Observability**: Structured logging (Pino), health checks, rate limiting, message history
-- ⚙️ **Easy Setup**: One-click UNRAID installation with first-run wizard
-- 🌐 **Modern UI**: Clean interface with dashboard, settings, and observability pages
+- � **Dashboard UI**: Real-time monitoring with queue status, AWS health probe, and per-origin MPS overrides
+- 🗄️ **Persistent Queue**: File-backed message queue with worker, automatic retry, and SNS webhook support
+- �📈 **Observability**: Structured logging (Pino), health checks, migrations system, comprehensive test coverage
+- ⚙️ **Easy Setup**: One-click UNRAID installation with first-run wizard and dry-run testing
 
 **Key Improvements over AWS_EUM v3:**
 
-- IAM role auto-detection (no hardcoded credentials)
-- Rate limiting with token bucket algorithm
-- Phone number validation (E.164)
-- Message history with CSV export
-- Complete audit and security hardening
+- SQLite database for configuration and message persistence
+- Dashboard with queue monitoring and AWS connectivity status
+- Database migrations for seamless upgrades
+- Per-origin message-per-second (MPS) rate limit overrides
+- Comprehensive test suite (8 test files with Jest)
+- Support bundle with sanitized diagnostics
+- 512px icon generation for Community Apps
 
 [View Documentation](Apps/AWS_EUM_X/README.md) | [Installation Guide](Wiki-AWS-EUM-Installation.md)
 
@@ -53,5 +56,5 @@ Utilities for Community Applications submission and testing.
 
 - **Active Apps**: 5+ applications
 - **Total Downloads**: 1000+ installations
-- **Latest Update**: AWS EUM X v1.0.0 - October 2025
+- **Latest Update**: AWS EUM X v0.1.0 (Beta) - October 2025
 - **Support**: GitHub Issues and Community Forums
