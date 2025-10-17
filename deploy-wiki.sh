@@ -252,7 +252,6 @@ main() {
     echo "🌐 Wiki URL: https://github.com/${REPO_OWNER}/${REPO_NAME}/wiki"
     echo "📝 Pages Created:"
     echo "   - Home (main landing page)"
-    echo "   - ExplorerX Plugin Installation"
     echo "   - AWS EUM Installation (with CSP fixes)"
     echo "   - Version Comparison"
     echo "   - Troubleshooting (comprehensive)"

@@ -57,13 +57,7 @@ docker restart aws-eum
 3. Ensure port 8280 is available
 4. Restart Docker service if needed
 
-### 3. ExplorerX Shows Debug Info
-
-**Problem**: Debug panel instead of file browser
-**Status**: Expected behavior for v2025.10.10.0002
-**Action**: This is intentional while investigating interface issues
-
-### 4. Plugin Not in Tools Menu
+### 3. Plugin Not in Tools Menu
 
 **Problem**: Plugin installs but doesn't appear
 **Quick Fix**:
@@ -118,34 +112,7 @@ chown -R 100:users /mnt/user/appdata/aws-eum
 - Incorrect credentials
 - Database doesn't exist
 - Network connectivity problems
-- Missing privileges
-
-## 📁 **ExplorerX Plugin Issues**
-
-### Current Debug Version Status
-
-**v2025.10.10.0002 Behavior**:
-
-- ✅ **Normal**: Shows debug information instead of file browser
-- ✅ **Expected**: Enhanced logging and error reporting
-- ✅ **Investigating**: Interface rendering problems
-- ❌ **Issue**: If plugin doesn't appear in Tools menu at all
-
-### Installation Problems
-
-**Plugin Download Fails**:
-
-- Check internet connectivity
-- Verify plugin URL is correct
-- Try installation again after waiting
-
-**Plugin Not Visible**:
-
-- Refresh UNRAID webGUI (Ctrl+F5)
-- Check `/usr/local/emhttp/plugins/explorerx` exists
-- Restart web services if needed
-
-## 🔧 **Quick Diagnostic Commands**
+- Missing privileges\n\n## \ud83d\udd27 **Quick Diagnostic Commands**
 
 ### Check Container Status
 

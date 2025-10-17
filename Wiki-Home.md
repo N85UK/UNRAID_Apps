@@ -40,18 +40,6 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 
 **Migration Note**: Users are encouraged to migrate to AWS_EUM_X for improved security and features.
 
-### ExplorerX Plugin v0.1.1
-
-Advanced file manager plugin for UNRAID with enhanced navigation and operations.
-
-### File Explorer Plugin
-
-Simple, lightweight file browsing solution for UNRAID systems.
-
-### CA Submission Tools
-
-Utilities for Community Applications submission and testing.
-
 ## 📊 Repository Stats
 
 - **Active Apps**: 5+ applications

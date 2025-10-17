@@ -104,16 +104,6 @@ We use the following severity levels:
 - **Monitor Logs**: Review system and plugin logs regularly
 - **Backup Configuration**: Maintain secure backups of configurations
 
-### ExplorerX Plugin Security
-
-- **User Permissions**: Configure appropriate file access permissions
-- **Network Access**: Limit network access to trusted users
-- **File Validation**: Be cautious when uploading/downloading files
-- **Session Security**: Log out when finished, especially on shared systems
-- **Path Configuration**: Review and configure root path restrictions
-- **Background Tasks**: Monitor background operations for unexpected activity
-- **Bulk Operations**: Verify bulk operations before execution
-
 ### AWS EUM Security
 
 - **IAM Policies**: Use least privilege principle for AWS permissions
