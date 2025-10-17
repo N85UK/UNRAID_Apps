@@ -1,147 +1,70 @@
 <?xml version="1.0"?>
-<Container version="2">
-  <Name>AWS-EUM-X</Name>
-  <Repository>ghcr.io/n85uk/aws-eum-x:latest</Repository>
-  <Registry>https://ghcr.io/n85uk/aws-eum-x</Registry>
-  <Network>bridge</Network>
-  <Privileged>false</Privileged>
-  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
-  <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_X</Project>
-  <Overview>
-    Modern, secure AWS End User Messaging application for sending SMS, MMS, and Voice messages.&#xD;
-    &#xD;
-    Features:&#xD;
-    - First-run wizard for easy setup&#xD;
-    - Real-time dashboard with AWS health monitoring&#xD;
-    - Rate limiting and queue management&#xD;
-    - Message history with export capability&#xD;
-    - IAM role support for enhanced security&#xD;
-    - Opt-out compliance checking&#xD;
-    - Comprehensive observability and logging&#xD;
-    &#xD;
-    Security: Runs as non-root user, secrets are redacted from logs, CSRF protection enabled.
-  </Overview>
-  <Category>Tools: Status:Stable Network:Cloud</Category>
-  <WebUI>http://[IP]:[PORT:3000]/</WebUI>
-  <TemplateURL>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_X/my-aws-eum-x.xml</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_X/icons/aws-eum-x.png</Icon>
-  <ExtraParams>--health-cmd="node /app/src/healthcheck.js" --health-interval=30s --health-timeout=10s --health-start-period=40s --health-retries=3</ExtraParams>
-  <DateInstalled></DateInstalled>
-  <Description>
-    AWS End User Messaging X (AWS_EUM_X) is a modern, security-hardened application for sending SMS, MMS, and voice messages via AWS End User Messaging (Pinpoint SMS/Voice v2 API).&#xD;
-    &#xD;
-    Perfect for home labs, small businesses, and developers who need reliable messaging with enterprise-grade features.&#xD;
-    &#xD;
-    IMPORTANT: You must have an AWS account with End User Messaging enabled and at least one registered origination identity (phone number, sender ID, or phone pool).&#xD;
-    &#xD;
-    This template does NOT include AWS credentials. You must provide your own credentials via environment variables or IAM roles.
-  </Description>
-  <Networking>
-    <Mode>bridge</Mode>
-    <Publish>
-      <Port>
-        <HostPort>3000</HostPort>
-        <ContainerPort>3000</ContainerPort>
-        <Protocol>tcp</Protocol>
-      </Port>
-    </Publish>
-  </Networking>
-  <Data>
+<Container templateVersion="1.0">
+  <Name>AWS_EUM_X</Name>
+  <Repository>ghcr.io/n85uk/aws-eum-x</Repository>
+  <Registry>ghcr.io</Registry>
+  <ShortDescription>AWS End User Messaging (modernized)</ShortDescription>
+  <Description>Modernized AWS End User Messaging app with first-run wizard, structured logs, and secure defaults. For Unraid Community Applications.</Description>
+
+  <Config>
+    <Environment>
+      <Variable>
+        <Name>AWS_ACCESS_KEY_ID</Name>
+        <Label>AWS Access Key ID [AWS Access Key ID]</Label>
+        <Type>password</Type>
+        <Help>Short-lived credentials or IAM user access key. Use IAM role where possible. (Do not paste long-term keys on public systems.)</Help>
+      </Variable>
+
+      <Variable>
+        <Name>AWS_SECRET_ACCESS_KEY</Name>
+        <Label>AWS Secret Access Key [AWS Secret]</Label>
+        <Type>password</Type>
+        <Help>Secret for the AWS Access Key ID. Never store this in logs or screenshots.</Help>
+      </Variable>
+
+      <Variable>
+        <Name>AWS_REGION</Name>
+        <Label>Region [AWS Region]</Label>
+        <Value>eu-west-2</Value>
+        <Help>Your AWS region (example: eu-west-2). This controls where the Pinpoint resources are queried.</Help>
+      </Variable>
+
+      <Variable>
+        <Name>DATA_DIR</Name>
+        <Label>Data directory (container path)</Label>
+        <Value>/app/data</Value>
+        <Help>Container data directory used by the app. Mount a host path into the container (example host: /mnt/user/appdata/aws-eum-x mounted to container: /app/data).</Help>
+      </Variable>
+
+      <Variable>
+        <Name>DISABLE_CSP</Name>
+        <Label>Disable CSP (only if necessary)</Label>
+        <Value>false</Value>
+        <Help>Set to true to disable the Content Security Policy. Default is false (CSP enabled) for improved security. Only disable if your reverse proxy or network blocks required resources.</Help>
+      </Variable>
+
+      <Variable>
+        <Name>AUTO_UPDATE_CHECK</Name>
+        <Label>Auto-update check</Label>
+        <Value>true</Value>
+        <Help>If enabled, container will check GitHub releases for updates (no auto-apply unless configured).</Help>
+      </Variable>
+
+    </Environment>
+  </Config>
+
+  <Network>
+    <Port>80</Port>
+  </Network>
+
+  <Volumes>
     <Volume>
-      <HostDir>/mnt/user/appdata/aws-eum-x/config</HostDir>
-      <ContainerDir>/app/config</ContainerDir>
+      <Container>/app/data</Container>
+      <Host>/mnt/user/appdata/aws-eum-x</Host>
       <Mode>rw</Mode>
     </Volume>
-    <Volume>
-      <HostDir>/mnt/user/appdata/aws-eum-x/data</HostDir>
-      <ContainerDir>/app/data</ContainerDir>
-      <Mode>rw</Mode>
-    </Volume>
-  </Data>
-  
-  <!-- ====================================================================== -->
-  <!-- REQUIRED SETTINGS -->
-  <!-- ====================================================================== -->
-  
-  <Config Name="Port" Target="3000" Default="3000" Mode="tcp" Description="Web UI port [Container Port]" Type="Port" Display="always" Required="true" Mask="false">3000</Config>
-  
-  <Config Name="AWS Region" Target="AWS_REGION" Default="us-east-1" Mode="" Description="AWS region where your Pinpoint resources are located [AWS Region]. Common: us-east-1, eu-west-2, ap-southeast-1" Type="Variable" Display="always" Required="true" Mask="false">us-east-1</Config>
-  
-  <!-- ====================================================================== -->
-  <!-- AUTHENTICATION METHOD -->
-  <!-- ====================================================================== -->
-  
-  <Config Name="AWS Auth Method" Target="AWS_AUTH_METHOD" Default="auto" Mode="" Description="Credential authentication method [AWS Authentication]. Options: auto (try IAM role first), iam_role (require IAM role), access_keys (use static keys below)" Type="Variable" Display="always" Required="false" Mask="false">auto</Config>
-  
-  <Config Name="AWS Access Key ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="AWS access key ID (required if Auth Method is access_keys) [AWS Credentials]. NEVER share this value. Leave empty if using IAM roles." Type="Variable" Display="always" Required="false" Mask="true"></Config>
-  
-  <Config Name="AWS Secret Access Key" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="AWS secret access key (required if Auth Method is access_keys) [AWS Credentials]. NEVER share this value. Leave empty if using IAM roles." Type="Variable" Display="always" Required="false" Mask="true"></Config>
-  
-  <!-- ====================================================================== -->
-  <!-- OPTIONAL SETTINGS -->
-  <!-- ====================================================================== -->
-  
-  <Config Name="Rate Limit (TPS)" Target="RATE_LIMIT_TPS" Default="5" Mode="" Description="Maximum messages per second [Rate Limiting]. Prevents AWS throttling. Default: 5, Max: 20 (depends on AWS account limits)" Type="Variable" Display="advanced" Required="false" Mask="false">5</Config>
-  
-  <Config Name="Rate Limit Burst" Target="RATE_LIMIT_BURST" Default="10" Mode="" Description="Burst capacity for rate limiter [Rate Limiting]. Allows temporary spikes. Must be >= Rate Limit TPS." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
-  
-  <Config Name="Configuration Set ARN" Target="SMS_CONFIG_SET_ARN" Default="" Mode="" Description="AWS Configuration Set ARN for event tracking [AWS Configuration Set]. Optional. Enables delivery receipts and event logging to CloudWatch/Kinesis." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
-  
-  <Config Name="Opt-Out List Name" Target="OPT_OUT_LIST" Default="" Mode="" Description="AWS Opt-Out List name [AWS Opt-Out List]. Optional. Automatically checks if recipients have opted out before sending." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
-  
-  <!-- ====================================================================== -->
-  <!-- ADVANCED SETTINGS -->
-  <!-- ====================================================================== -->
-  
-  <Config Name="Log Level" Target="LOG_LEVEL" Default="info" Mode="" Description="Logging verbosity [Log Level]. Options: debug, info, warn, error. Use debug for troubleshooting." Type="Variable" Display="advanced" Required="false" Mask="false">info</Config>
-  
-  <Config Name="Max Message History" Target="MAX_HISTORY" Default="1000" Mode="" Description="Maximum number of messages to store in history [Message History]. Older messages are automatically pruned." Type="Variable" Display="advanced" Required="false" Mask="false">1000</Config>
-  
-  <Config Name="Session Secret" Target="SESSION_SECRET" Default="" Mode="" Description="Session encryption secret [Security]. Leave empty to auto-generate. Must be at least 32 characters if provided." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
-  
-  <Config Name="Enable First-Run Wizard" Target="ENABLE_WIZARD" Default="true" Mode="" Description="Show guided setup wizard on first run [User Experience]. Set to false to skip wizard." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
-  
-  <Config Name="Host Bind Address" Target="HOST" Default="0.0.0.0" Mode="" Description="Network interface to bind to [Network]. 0.0.0.0 = all interfaces, 127.0.0.1 = localhost only (requires reverse proxy)" Type="Variable" Display="advanced" Required="false" Mask="false">0.0.0.0</Config>
-  
-  <!-- ====================================================================== -->
-  <!-- VOLUME MAPPINGS -->
-  <!-- ====================================================================== -->
-  
-  <Config Name="Config Directory" Target="/app/config" Default="/mnt/user/appdata/aws-eum-x/config" Mode="rw" Description="Configuration files and wizard state [Persistent Storage]. Do not change unless you know what you're doing." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/aws-eum-x/config</Config>
-  
-  <Config Name="Data Directory" Target="/app/data" Default="/mnt/user/appdata/aws-eum-x/data" Mode="rw" Description="Message history and queue state [Persistent Storage]. Do not change unless you know what you're doing." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/aws-eum-x/data</Config>
-  
-  <!-- ====================================================================== -->
-  <!-- METADATA -->
-  <!-- ====================================================================== -->
-  
-  <Changes>
-    ### Version 1.0.0 (2025-10-16)
-    - Initial release
-    - First-run wizard with 5-step setup
-    - SMS sending with rate limiting
-    - Phone pool and phone number auto-discovery
-    - Configuration set support
-    - Opt-out list checking
-    - Message history with export (CSV)
-    - Real-time dashboard with AWS health monitoring
-    - Structured logging with secret redaction
-    - Non-root container (UID 1000)
-    - CSRF protection
-    - IAM role support (recommended over static keys)
-    - Comprehensive documentation and troubleshooting guide
-    - Health check endpoints for monitoring
-  </Changes>
-  <Branch>
-    <Tag>latest</Tag>
-    <TagDescription>Latest stable release (recommended)</TagDescription>
-  </Branch>
-  <Branch>
-    <Tag>1.0.0</Tag>
-    <TagDescription>Version 1.0.0 (October 2025)</TagDescription>
-  </Branch>
-  <Branch>
-    <Tag>dev</Tag>
-    <TagDescription>Development branch (unstable, for testing only)</TagDescription>
-  </Branch>
+  </Volumes>
+
+  <WebUI>http://[IP]:[PORT:80]</WebUI>
+
 </Container>

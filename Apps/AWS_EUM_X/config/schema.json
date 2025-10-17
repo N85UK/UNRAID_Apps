@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AWS EUM X configuration",
+  "type": "object",
+  "properties": {
+    "AWS_ACCESS_KEY_ID": { "type": "string" },
+    "AWS_SECRET_ACCESS_KEY": { "type": "string" },
+    "AWS_REGION": { "type": "string", "default": "eu-west-2" },
+    "DISABLE_CSP": { "type": "boolean", "default": false }
+  },
+  "required": ["AWS_REGION"]
+}

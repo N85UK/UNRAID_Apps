@@ -22,7 +22,7 @@
         <label for="awsSecretKey">AWS Secret Access Key</label>
         <input id="awsSecretKey" name="awsSecretKey" placeholder="Secret..." type="password" />
 
-  <label for="awsRegion">AWS Region</label>
+        <label for="awsRegion">AWS Region</label>
         <input id="awsRegion" name="awsRegion" placeholder="eu-west-2" />
 
         <div style="margin-top:12px">
@@ -32,26 +32,28 @@
 
       <div id="test-status" role="status" aria-live="polite"></div>
 
-      <p style="margin-top:24px">Tip: Use dry-run to test configuration without sending SMS. See the <a href="/docs/">documentation</a> for IAM policy examples.</p>
-
       <hr />
-      <h2>Send Test Message (Dry-run)</h2>
-      <form id="test-message-form">
-        <label for="testDestination">Destination phone (E.164)</label>
-        <input id="testDestination" name="testDestination" placeholder="+441234567890" />
 
-        <label for="testMessage">Message</label>
-        <textarea id="testMessage" name="testMessage" rows="3" placeholder="Test message...">This is a test message (dry-run)</textarea>
+      <h2>Dry-run test message</h2>
+      <form id="dryrun-form">
+        <label for="destNumber">Destination (E.164)</label>
+        <input id="destNumber" name="destNumber" placeholder="+447700900000" />
+
+        <label for="messageBody">Message</label>
+        <textarea id="messageBody" name="messageBody" rows="4" placeholder="Hello, this is a test."></textarea>
+        <div id="char-info">Characters: <span id="char-count">0</span> • Parts: <span id="part-count">0</span> (<span id="encoding">GSM-7</span>)</div>
 
         <div style="margin-top:12px">
-          <button id="send-test-message" type="submit">Send test (Dry-run)</button>
+          <button type="submit">Run Dry-Run (no SMS will be sent)</button>
         </div>
       </form>
 
-      <div id="test-message-status" role="status" aria-live="polite"></div>
+      <div id="dryrun-status" role="status" aria-live="polite"></div>
+
+  <p style="margin-top:24px">Tip: Use dry-run to test configuration without sending SMS. See the <a href="/docs/">documentation</a> for IAM policy examples. View <a href="/dashboard">dashboard</a> to monitor queue and configure per-origin limits.</p>
 
     </div>
 
     <script src="/js/app.js"></script>
   </body>
-</html>
+  </html>

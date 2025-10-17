@@ -1,0 +1,43 @@
+name: 'AWS_EUM_X CI'
+
+on:
+  push:
+    paths:
+      - 'Apps/AWS_EUM_X/**'
+  pull_request:
+    paths:
+      - 'Apps/AWS_EUM_X/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install build prerequisites (for native modules)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential python3 pkg-config libsqlite3-dev
+      - name: Install dependencies (prefer lockfile; fall back when lock missing dependency)
+        run: |
+          cd Apps/AWS_EUM_X
+          # If package-lock.json already includes better-sqlite3 then use npm ci for reproducible installs.
+          if [ -f package-lock.json ] && grep -q '"better-sqlite3"' package-lock.json; then
+            npm ci
+          else
+            npm install
+          fi
+      - name: Generate icons
+        run: |
+          cd Apps/AWS_EUM_X
+          npm run generate-icons || true
+      - name: Run lint
+        run: npm run lint
+        working-directory: ./Apps/AWS_EUM_X
+      - name: Run tests
+        run: npm test
+        working-directory: ./Apps/AWS_EUM_X
