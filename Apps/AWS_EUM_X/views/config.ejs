@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AWS EUM X — Configuration</title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="/icons/icon.svg" alt="AWS EUM X" width="48" height="48">
+        <h1>AWS EUM X — Configuration</h1>
+      </div>
+
+      <p>
+        Version: <%= version %> — 
+        Logged in as: <strong><%= username || 'User' %></strong> — 
+        <a href="/dashboard">Dashboard</a> | 
+        <a href="/auth/logout">Logout</a>
+      </p>
+
+      <!-- AWS Credentials Section -->
+      <section>
+        <h2>AWS Credentials</h2>
+        
+        <% if (hasSavedCredentials) { %>
+          <div class="alert alert-success">
+            ✓ Credentials configured (Access Key: <%= savedAccessKey %>)
+          </div>
+        <% } %>
+
+        <form id="credentials-form">
+          <label for="awsAccessKey">AWS Access Key ID</label>
+          <input id="awsAccessKey" type="text" value="<%= savedAccessKey %>" placeholder="AKIAIOSFODNN7EXAMPLE" />
+          
+          <label for="awsSecretKey">AWS Secret Access Key</label>
+          <input id="awsSecretKey" type="password" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" />
+          
+          <label for="awsRegion">AWS Region</label>
+          <input id="awsRegion" type="text" value="<%= savedRegion %>" placeholder="eu-west-2" />
+          
+          <div class="checkbox-wrapper">
+            <input id="saveCredentials" type="checkbox" <%= hasSavedCredentials ? 'checked' : '' %> />
+            <label for="saveCredentials">Save credentials to database (encrypted at rest)</label>
+          </div>
+          
+          <button type="submit" class="btn-primary">Test & Save Credentials</button>
+        </form>
+        
+        <div id="credentials-status" role="status" aria-live="polite"></div>
+      </section>
+
+      <!-- Dry-Run Test Section -->
+      <section>
+        <h2>Dry-Run Test (No SMS Sent)</h2>
+        <form id="dryrun-form">
+          <label for="testPhone">Destination Phone (E.164)</label>
+          <input id="testPhone" type="tel" placeholder="+447700900000" />
+          
+          <label for="testMessage">Message</label>
+          <textarea id="testMessage" rows="3" placeholder="Test message"></textarea>
+          
+          <div class="character-count">
+            <span id="test-char-count">0 characters • 0 parts (GSM-7)</span>
+          </div>
+          
+          <button type="submit">Run Dry-Run</button>
+        </form>
+        
+        <div id="dryrun-status" role="status" aria-live="polite"></div>
+      </section>
+
+      <!-- Origination Numbers Section -->
+      <section>
+        <h2>AWS Origination Numbers</h2>
+        <button id="fetch-origins" class="btn-secondary">Fetch from AWS</button>
+        <div id="origins-list">
+          <p class="text-muted">Click "Fetch from AWS" to load your phone numbers</p>
+        </div>
+      </section>
+
+      <!-- 2FA Configuration Section -->
+      <section>
+        <h2>Two-Factor Authentication (TOTP)</h2>
+        
+        <% if (totpEnabled) { %>
+          <div class="alert alert-success">
+            ✓ 2FA is enabled
+          </div>
+          <button id="disable-2fa" class="btn-danger">Disable 2FA</button>
+        <% } else { %>
+          <div class="alert alert-warning">
+            ⚠ 2FA is not enabled. Enable it for better security.
+          </div>
+          <button id="setup-2fa">Setup 2FA</button>
+          
+          <div id="totp-setup" style="display: none;">
+            <p>Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
+            <div id="qr-code"></div>
+            <p>Or manually enter: <code id="totp-secret"></code></p>
+            
+            <label for="verify-code">Verify Code (6 digits)</label>
+            <input id="verify-code" type="text" pattern="[0-9]{6}" maxlength="6" placeholder="000000" />
+            <button id="verify-2fa">Verify & Enable 2FA</button>
+          </div>
+        <% } %>
+        
+        <div id="2fa-status" role="status" aria-live="polite"></div>
+      </section>
+    </div>
+    <script src="/js/config.js"></script>
+  </body>
+</html>

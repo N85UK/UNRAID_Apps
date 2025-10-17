@@ -23,6 +23,15 @@ class Persistence {
     const db = this.db;
     db.pragma('journal_mode = WAL');
     db.prepare(`CREATE TABLE IF NOT EXISTS meta (k TEXT PRIMARY KEY, v TEXT)`).run();
+    
+    // Users table for authentication
+    db.prepare(`CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at INTEGER DEFAULT (cast(strftime('%s','now') as integer) * 1000)
+    )`).run();
+    
     db.prepare(`CREATE TABLE IF NOT EXISTS outbox (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       origin TEXT,
@@ -165,6 +174,48 @@ class Persistence {
   setMpsOverride(origin, mps) { const cfg = this.getConfig(); cfg.mps_overrides = cfg.mps_overrides || {}; cfg.mps_overrides[origin] = mps; this.setConfig(cfg); }
 
   findMessageByBody(substr) { return this.db.prepare('SELECT * FROM messages WHERE body LIKE ? ORDER BY created_at DESC LIMIT 1').get(`%${substr}%`); }
+
+  // User authentication methods
+  createUser(username, passwordHash) {
+    try {
+      const info = this.db.prepare('INSERT INTO users (username, password_hash) VALUES (?, ?)').run(username, passwordHash);
+      return { id: info.lastInsertRowid, username };
+    } catch (err) {
+      if (err.message && err.message.includes('UNIQUE')) {
+        throw new Error('Username already exists');
+      }
+      throw err;
+    }
+  }
+
+  getUser(username) {
+    return this.db.prepare('SELECT id, username, password_hash, created_at FROM users WHERE username = ?').get(username);
+  }
+
+  getUserById(id) {
+    return this.db.prepare('SELECT id, username, password_hash, created_at FROM users WHERE id = ?').get(id);
+  }
+
+  hasAnyUsers() {
+    const row = this.db.prepare('SELECT COUNT(*) as count FROM users').get();
+    return row.count > 0;
+  }
+
+  getSessionSecret() {
+    const row = this.db.prepare('SELECT v FROM config WHERE k = ?').get('session_secret');
+    if (row) {
+      try {
+        return JSON.parse(row.v);
+      } catch (e) {
+        // Fall through to generate new secret
+      }
+    }
+    // Generate and save a new secret
+    const crypto = require('crypto');
+    const secret = crypto.randomBytes(64).toString('hex');
+    this.db.prepare('INSERT OR REPLACE INTO config (k, v) VALUES (?, ?)').run('session_secret', JSON.stringify(secret));
+    return secret;
+  }
 }
 
 module.exports = { Persistence };

@@ -9,6 +9,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
@@ -351,6 +352,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 const { Persistence } = require('./persistence');
 const persistence = new Persistence(DATA_DIR);
 
+// Authentication utilities
+const { hashPassword, verifyPassword, requireAuth, requireAuthAPI, requireSetup, requireNoAuth } = require('./lib/auth');
+
+// Session configuration
+const SQLiteStore = require('connect-sqlite3')(session);
+const sessionSecret = persistence.getSessionSecret();
+const sessionMiddleware = session({
+  store: new SQLiteStore({
+    db: 'sessions.db',
+    dir: DATA_DIR
+  }),
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set true if using HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+});
+
+app.use(sessionMiddleware);
+
 // expose migration runner and persistence for tests and admin
 app.runMigrations = runMigrations;
 app.persistence = persistence;
@@ -369,22 +393,153 @@ app.get('/ready', async (req, res) => {
 
 app.get('/probe/aws', async (req, res) => { const r = await probeAWS(); if (r.ok) return res.json({ ready: true, ...r }); return res.status(503).json({ ready: false, ...r }); });
 
-// First-run UI - Load saved credentials if available
+// ========================================
+// Authentication Routes
+// ========================================
+
+// Root redirect - check if setup required or redirect to dashboard/login
 app.get('/', (req, res) => {
-  const savedCreds = persistence.getCredentials();
-  res.render('first-run', {
+  // Check if any users exist
+  if (!persistence.hasAnyUsers()) {
+    return res.redirect('/auth/setup');
+  }
+  // If authenticated, go to dashboard
+  if (req.session && req.session.userId) {
+    return res.redirect('/dashboard');
+  }
+  // Otherwise, go to login
+  return res.redirect('/auth/login');
+});
+
+// Setup page (first-time only)
+app.get('/auth/setup', (req, res) => {
+  if (persistence.hasAnyUsers()) {
+    return res.redirect('/auth/login');
+  }
+  res.render('setup', { version: APP_VERSION, error: null });
+});
+
+// Process setup
+app.post('/auth/setup', async (req, res) => {
+  if (persistence.hasAnyUsers()) {
+    return res.redirect('/auth/login');
+  }
+  
+  const { username, password, confirmPassword } = req.body || {};
+  
+  if (!username || !password) {
+    return res.render('setup', { version: APP_VERSION, error: 'Username and password are required' });
+  }
+  
+  if (password !== confirmPassword) {
+    return res.render('setup', { version: APP_VERSION, error: 'Passwords do not match' });
+  }
+  
+  if (password.length < 8) {
+    return res.render('setup', { version: APP_VERSION, error: 'Password must be at least 8 characters' });
+  }
+  
+  try {
+    const passwordHash = await hashPassword(password);
+    const user = persistence.createUser(username, passwordHash);
+    
+    // Auto-login after setup
+    req.session.userId = user.id;
+    req.session.username = user.username;
+    
+    logger.info({ username }, 'First user created during setup');
+    return res.redirect('/config');
+  } catch (err) {
+    logger.error({ err: err.message }, 'Failed to create user');
+    return res.render('setup', { version: APP_VERSION, error: 'Failed to create user' });
+  }
+});
+
+// Login page
+app.get('/auth/login', requireNoAuth, (req, res) => {
+  if (!persistence.hasAnyUsers()) {
+    return res.redirect('/auth/setup');
+  }
+  res.render('login', { version: APP_VERSION, error: null, setupRequired: false });
+});
+
+// Process login
+app.post('/auth/login', async (req, res) => {
+  const { username, password } = req.body || {};
+  
+  if (!username || !password) {
+    return res.render('login', { version: APP_VERSION, error: 'Username and password are required', setupRequired: false });
+  }
+  
+  try {
+    const user = persistence.getUser(username);
+    
+    if (!user) {
+      return res.render('login', { version: APP_VERSION, error: 'Invalid username or password', setupRequired: false });
+    }
+    
+    const valid = await verifyPassword(password, user.password_hash);
+    
+    if (!valid) {
+      return res.render('login', { version: APP_VERSION, error: 'Invalid username or password', setupRequired: false });
+    }
+    
+    // Create session
+    req.session.userId = user.id;
+    req.session.username = user.username;
+    
+    logger.info({ username }, 'User logged in');
+    return res.redirect('/dashboard');
+  } catch (err) {
+    logger.error({ err: err.message }, 'Login error');
+    return res.render('login', { version: APP_VERSION, error: 'Login failed', setupRequired: false });
+  }
+});
+
+// Logout
+app.get('/auth/logout', (req, res) => {
+  const username = req.session?.username;
+  req.session.destroy((err) => {
+    if (err) {
+      logger.error({ err: err.message }, 'Failed to destroy session');
+    } else {
+      logger.info({ username }, 'User logged out');
+    }
+    res.redirect('/auth/login');
+  });
+});
+
+// ========================================
+// Protected Application Routes
+// ========================================
+
+// Dashboard UI for monitoring queue, AWS probe, and managing per-origin overrides
+app.get('/dashboard', requireAuth, (req, res) => {
+  res.render('dashboard', { 
     version: APP_VERSION,
+    username: req.session.username 
+  });
+});
+
+// Configuration page
+app.get('/config', requireAuth, (req, res) => {
+  const savedCreds = persistence.getCredentials();
+  res.render('config', {
+    version: APP_VERSION,
+    username: req.session.username,
     savedAccessKey: savedCreds?.accessKeyId || '',
     savedRegion: savedCreds?.region || process.env.AWS_REGION || 'eu-west-2',
     hasSavedCredentials: !!savedCreds
   });
 });
 
-// Dashboard UI for monitoring queue, AWS probe, and managing per-origin overrides
-app.get('/dashboard', (req, res) => res.render('dashboard', { version: APP_VERSION }));
+// Old first-run page - redirect to config
+app.get('/first-run', requireAuth, (req, res) => {
+  res.redirect('/config');
+});
 
 // API: Test AWS credentials and optionally save them
-app.post('/api/test/credentials', async (req, res) => {
+app.post('/api/test/credentials', requireAuthAPI, async (req, res) => {
   const { accessKeyId, secretAccessKey, region, saveCredentials } = req.body || {};
   if (!accessKeyId || !secretAccessKey) return res.status(400).json({ error: 'Missing credentials (accessKeyId, secretAccessKey)' });
   const tmpClient = new PinpointSMSVoiceV2Client({ region: region || process.env.AWS_REGION || 'eu-west-2', credentials: { accessKeyId, secretAccessKey } });
@@ -412,7 +567,7 @@ app.post('/api/test/credentials', async (req, res) => {
 });
 
 // API: Dry-run send (local validation and parts estimation)
-app.post('/api/test/dry-run', async (req, res) => {
+app.post('/api/test/dry-run', requireAuthAPI, async (req, res) => {
   const { DestinationPhoneNumber, MessageBody } = req.body || {};
   if (!DestinationPhoneNumber || !MessageBody) return res.status(400).json({ error: 'Missing DestinationPhoneNumber or MessageBody' });
   const e164 = /^\+[1-9]\d{6,14}$/;
@@ -423,11 +578,11 @@ app.post('/api/test/dry-run', async (req, res) => {
 
 // Centralized estimation endpoint
 
-app.post('/api/estimate', (req, res) => { const { message } = req.body || {}; try { const estimate = estimateMessageParts(message); return res.json({ ok: true, estimate }); } catch (err) { logger.warn({ err: err.message }, 'Estimate failed'); return res.status(400).json({ ok: false, error: 'Estimate failed' }); } });
+app.post('/api/estimate', requireAuthAPI, (req, res) => { const { message } = req.body || {}; try { const estimate = estimateMessageParts(message); return res.json({ ok: true, estimate }); } catch (err) { logger.warn({ err: err.message }, 'Estimate failed'); return res.status(400).json({ ok: false, error: 'Estimate failed' }); } });
 
 // API: Send SMS endpoint with rate limiting and backoff
 // Send endpoint: enqueue for persistence-backed processing
-app.post('/api/send-sms', async (req, res) => {
+app.post('/api/send-sms', requireAuthAPI, async (req, res) => {
   const { phoneNumber, message, originator, dryRun } = req.body || {};
   if (!phoneNumber || !message) return res.status(400).json({ error: 'Missing phoneNumber or message' });
   const e164 = /^\+[1-9]\d{6,14}$/;
@@ -441,18 +596,18 @@ app.post('/api/send-sms', async (req, res) => {
 });
 
 // Queue endpoints
-app.get('/api/queue', (req, res) => {
+app.get('/api/queue', requireAuthAPI, (req, res) => {
   try { const stats = persistence.getQueueStats(); const items = persistence.listQueued(20); return res.json({ ok: true, stats, items }); } catch (e) { return res.status(500).json({ ok: false, error: e.message }); }
 });
 
-app.post('/api/queue/:id/resend', (req, res) => {
+app.post('/api/queue/:id/resend', requireAuthAPI, (req, res) => {
   const id = parseInt(req.params.id, 10);
   const ok = persistence.updateJobStatus(id, { status: 'queued', attempts: 0, nextAttemptAt: Date.now() });
   return res.json({ ok });
 });
 
 // Settings: per-origin MPS override
-app.post('/api/settings/mps', (req, res) => {
+app.post('/api/settings/mps', requireAuthAPI, (req, res) => {
   const { origin, mps } = req.body || {};
   if (!origin || typeof mps !== 'number') return res.status(400).json({ error: 'Missing origin or mps (number)' });
   rateLimiter.setOriginMps(origin, mps);
@@ -461,14 +616,14 @@ app.post('/api/settings/mps', (req, res) => {
 });
 
 // Provide current per-origin MPS overrides
-app.get('/api/settings/mps', (req, res) => {
+app.get('/api/settings/mps', requireAuthAPI, (req, res) => {
   try {
     const cfg = persistence.getConfig() || {};
     return res.json({ ok: true, mps_overrides: cfg.mps_overrides || {} });
   } catch (err) { return res.status(500).json({ ok: false, error: err.message }); }
 });
 
-app.delete('/api/settings/mps/:origin', (req, res) => {
+app.delete('/api/settings/mps/:origin', requireAuthAPI, (req, res) => {
   try {
     const origin = req.params.origin;
     const cfg = persistence.getConfig() || {};
@@ -483,7 +638,7 @@ app.delete('/api/settings/mps/:origin', (req, res) => {
 });
 
 // Config export/import (simple JSON store in data dir)
-app.get('/api/config/export', (req, res) => {
+app.get('/api/config/export', requireAuthAPI, (req, res) => {
   try {
     const parsed = persistence.getConfig() || {};
     ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN', 'aws_access_key_id', 'aws_secret_access_key', 'aws_session_token'].forEach(k => delete parsed[k]);
@@ -492,7 +647,7 @@ app.get('/api/config/export', (req, res) => {
   } catch (err) { logger.warn({ err: err.message }, 'Failed to read or parse configuration for export'); return res.status(500).json({ error: 'Failed to export configuration' }); }
 });
 
-app.post('/api/config/import', (req, res) => {
+app.post('/api/config/import', requireAuthAPI, (req, res) => {
   try {
     const incoming = req.body || {};
     const sanitized = { ...incoming };

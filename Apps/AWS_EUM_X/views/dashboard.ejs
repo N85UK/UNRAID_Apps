@@ -13,7 +13,12 @@
         <h1>AWS EUM X — Dashboard</h1>
       </div>
 
-      <p>Version: <%= version %> — <a href="/">First-run</a></p>
+      <p>
+        Version: <%= version %> — 
+        Logged in as: <strong><%= username || 'User' %></strong> — 
+        <a href="/config">Config</a> | 
+        <a href="/auth/logout">Logout</a>
+      </p>
 
       <section id="send">
         <h2>Send SMS Message</h2>
