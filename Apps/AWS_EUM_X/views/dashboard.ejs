@@ -20,55 +20,87 @@
         <a href="/auth/logout">Logout</a>
       </p>
 
-      <section id="send">
-        <h2>Send SMS Message</h2>
+      <section id="send" class="card">
+        <h2>📤 Send SMS Message</h2>
         <form id="send-form">
-          <label for="send-phone">Phone Number (E.164 format)</label>
-          <input id="send-phone" type="tel" placeholder="+447700900000" required />
-          
-          <label for="send-origin">Origination Number (optional)</label>
-          <input id="send-origin" type="tel" placeholder="+1234567890 or leave empty" />
-          
-          <label for="send-message">Message</label>
-          <textarea id="send-message" rows="4" placeholder="Your SMS message..." required></textarea>
-          
-          <div class="character-count">
-            <span id="char-count">0 characters • 0 parts (GSM-7)</span>
+          <div class="form-group">
+            <label for="send-phone">📞 Destination Phone Number</label>
+            <input id="send-phone" type="tel" placeholder="+447700900000" required />
+            <small class="text-muted">Enter phone number in E.164 format (e.g., +447700900000)</small>
           </div>
           
-          <button type="submit" class="btn-primary">Send SMS</button>
+          <div class="form-group">
+            <label for="send-origin">🎯 Phone Number / Originator</label>
+            <select id="send-origin">
+              <option value="">Loading originators...</option>
+            </select>
+            <small class="text-muted">Select origination number or sender ID for this message</small>
+          </div>
+          
+          <div class="form-group">
+            <label for="send-message">💬 Message</label>
+            <textarea id="send-message" rows="4" placeholder="Your SMS message..." required></textarea>
+            <div class="character-count">
+              <span id="char-count">0 characters • 0 parts (GSM-7)</span>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn-primary">✉️ Send SMS</button>
         </form>
         <div id="send-status" role="status" aria-live="polite"></div>
       </section>
 
-      <section id="health">
-        <h2>System</h2>
-        <div id="tiles" class="tiles">
-          <div class="tile"><strong>Ready</strong><div id="ready-status">Loading…</div></div>
-          <div class="tile"><strong>AWS</strong><div id="aws-probe">Loading…</div></div>
-          <div class="tile"><strong>Queue depth</strong><div id="queue-depth">Loading…</div></div>
+      <section id="health" class="card">
+        <h2>📊 System Status</h2>
+        <div class="status-grid">
+          <div class="status-card">
+            <div class="status-icon">✅</div>
+            <div class="status-label">System Ready</div>
+            <div class="status-value" id="ready-status">Loading…</div>
+          </div>
+          <div class="status-card">
+            <div class="status-icon">☁️</div>
+            <div class="status-label">AWS Connection</div>
+            <div class="status-value" id="aws-probe">Loading…</div>
+          </div>
+          <div class="status-card">
+            <div class="status-icon">📮</div>
+            <div class="status-label">Queue Depth</div>
+            <div class="status-value" id="queue-depth">Loading…</div>
+          </div>
         </div>
       </section>
 
-      <section id="mps">
-        <h2>Per-origin MPS overrides</h2>
-        <div id="mps-list">Loading…</div>
-        <form id="mps-form">
-          <label>Origin</label>
-          <input id="mps-origin" placeholder="e.g. +1234567890 or default" />
-          <label>MPS</label>
-          <input id="mps-value" type="number" step="0.1" value="1.0" />
-          <button type="submit">Save override</button>
+      <section id="mps" class="card">
+        <h2>⚡ Per-Origin MPS Overrides</h2>
+        <div id="mps-list" class="mps-list">Loading…</div>
+        <form id="mps-form" class="mps-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Origin</label>
+              <input id="mps-origin" placeholder="e.g. +1234567890 or default" />
+            </div>
+            <div class="form-group">
+              <label>MPS</label>
+              <input id="mps-value" type="number" step="0.1" value="1.0" />
+            </div>
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <button type="submit">Save Override</button>
+            </div>
+          </div>
         </form>
         <div id="mps-status" role="status" aria-live="polite"></div>
       </section>
 
-      <section id="queue">
-        <h2>Queued messages</h2>
-        <table id="queue-table">
-          <thead><tr><th>ID</th><th>Origin</th><th>Phone</th><th>Attempts</th><th>Next Attempt</th><th>Created</th><th>Action</th></tr></thead>
-          <tbody></tbody>
-        </table>
+      <section id="queue" class="card">
+        <h2>📬 Queued Messages</h2>
+        <div class="table-container">
+          <table id="queue-table">
+            <thead><tr><th>ID</th><th>Origin</th><th>Phone</th><th>Attempts</th><th>Next Attempt</th><th>Created</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </section>
     </div>
     <script src="/js/dashboard.js"></script>

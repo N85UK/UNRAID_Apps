@@ -16,6 +16,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendMessage = document.getElementById('send-message');
   const sendStatus = document.getElementById('send-status');
   const charCount = document.getElementById('char-count');
+  
+  // Load origination numbers into dropdown
+  async function loadOriginators() {
+    try {
+      const res = await fetch('/api/origination-numbers');
+      const json = await res.json();
+      
+      if (res.ok && json.numbers && json.numbers.length > 0) {
+        sendOrigin.innerHTML = '<option value="">-- Auto-select --</option>' +
+          json.numbers.map(n => {
+            const label = `${n.phoneNumber} (${n.type} - ${n.country})`;
+            return `<option value="${n.phoneNumber}">${label}</option>`;
+          }).join('');
+      } else {
+        sendOrigin.innerHTML = '<option value="">-- No originators found --</option>';
+      }
+    } catch (e) {
+      sendOrigin.innerHTML = '<option value="">-- Error loading originators --</option>';
+    }
+  }
 
   function fmtTs(ms) { try { return new Date(ms).toLocaleString(); } catch (e) { return String(ms); } }
 
@@ -139,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // initial load and polling
+  loadOriginators();
   refreshQueue();
   refreshProbeAndMps();
   setInterval(refreshQueue, 5000);

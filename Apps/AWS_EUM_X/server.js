@@ -17,7 +17,7 @@ const crypto = require('crypto');
 const helmet = require('helmet');
 const cors = require('cors');
 const pino = require('pino');
-const { PinpointSMSVoiceV2Client, DescribePhoneNumbersCommand, SendTextMessageCommand } = require('@aws-sdk/client-pinpoint-sms-voice-v2');
+const { PinpointSMSVoiceV2Client, DescribePhoneNumbersCommand, DescribeSenderIdsCommand, SendTextMessageCommand } = require('@aws-sdk/client-pinpoint-sms-voice-v2');
 require('dotenv').config();
 
 const APP_VERSION = require('./package.json').version || '0.0.0';
@@ -681,19 +681,57 @@ app.get('/api/origination-numbers', requireAuthAPI, async (req, res) => {
   }
   
   try {
-    const command = new DescribePhoneNumbersCommand({ MaxResults: 100 });
-    const response = await smsClient.send(command);
+    let allOriginators = [];
     
-    const numbers = (response.PhoneNumbers || []).map(phone => ({
-      phoneNumber: phone.PhoneNumber,
-      status: phone.Status,
-      type: phone.NumberType,
-      capabilities: phone.NumberCapabilities || []
-    }));
+    // Fetch Phone Numbers
+    try {
+      const phoneCommand = new DescribePhoneNumbersCommand({ MaxResults: 100 });
+      const phoneResponse = await smsClient.send(phoneCommand);
+      
+      const phoneNumbers = (phoneResponse.PhoneNumbers || []).map(phone => {
+        let country = phone.PhoneNumberCountryCode || 'Unknown';
+        if (!phone.PhoneNumberCountryCode && phone.PhoneNumber) {
+          if (phone.PhoneNumber.startsWith('+44')) country = 'GB';
+          else if (phone.PhoneNumber.startsWith('+1')) country = 'US';
+        }
+        
+        return {
+          phoneNumber: phone.PhoneNumber,
+          status: phone.Status,
+          type: 'PhoneNumber',
+          country: country,
+          capabilities: phone.NumberCapabilities || []
+        };
+      });
+      
+      allOriginators = allOriginators.concat(phoneNumbers);
+      logger.info({ count: phoneNumbers.length }, 'Fetched phone numbers');
+    } catch (phoneErr) {
+      logger.error({ err: phoneErr.message }, 'Failed to fetch phone numbers');
+    }
     
-    logger.info({ count: numbers.length }, 'Fetched AWS origination numbers');
+    // Fetch Sender IDs
+    try {
+      const senderCommand = new DescribeSenderIdsCommand({ MaxResults: 100 });
+      const senderResponse = await smsClient.send(senderCommand);
+      
+      const senderIds = (senderResponse.SenderIds || []).map(sender => ({
+        phoneNumber: sender.SenderId,
+        status: sender.Registered ? 'Active' : 'Pending',
+        type: 'SenderId',
+        country: sender.IsoCountryCode || 'Unknown',
+        capabilities: []
+      }));
+      
+      allOriginators = allOriginators.concat(senderIds);
+      logger.info({ count: senderIds.length }, 'Fetched sender IDs');
+    } catch (senderErr) {
+      logger.warn({ err: senderErr.message }, 'Failed to fetch sender IDs (may not be available in this region)');
+    }
     
-    return res.json({ ok: true, numbers });
+    logger.info({ total: allOriginators.length }, 'Fetched all AWS originators');
+    
+    return res.json({ ok: true, numbers: allOriginators });
   } catch (err) {
     logger.error({ err: err.message }, 'Failed to fetch origination numbers');
     return res.status(500).json({ error: 'Failed to fetch origination numbers: ' + err.message });
