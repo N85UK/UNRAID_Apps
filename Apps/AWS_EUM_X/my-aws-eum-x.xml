@@ -1,70 +1,41 @@
 <?xml version="1.0"?>
-<Container templateVersion="1.0">
-  <Name>AWS_EUM_X</Name>
+<Container version="2">
+  <Name>AWS EUM X</Name>
   <Repository>ghcr.io/n85uk/aws-eum-x</Repository>
-  <Registry>ghcr.io</Registry>
-  <ShortDescription>AWS End User Messaging (modernized)</ShortDescription>
-  <Description>Modernized AWS End User Messaging app with first-run wizard, structured logs, and secure defaults. For Unraid Community Applications.</Description>
-
-  <Config>
-    <Environment>
-      <Variable>
-        <Name>AWS_ACCESS_KEY_ID</Name>
-        <Label>AWS Access Key ID [AWS Access Key ID]</Label>
-        <Type>password</Type>
-        <Help>Short-lived credentials or IAM user access key. Use IAM role where possible. (Do not paste long-term keys on public systems.)</Help>
-      </Variable>
-
-      <Variable>
-        <Name>AWS_SECRET_ACCESS_KEY</Name>
-        <Label>AWS Secret Access Key [AWS Secret]</Label>
-        <Type>password</Type>
-        <Help>Secret for the AWS Access Key ID. Never store this in logs or screenshots.</Help>
-      </Variable>
-
-      <Variable>
-        <Name>AWS_REGION</Name>
-        <Label>Region [AWS Region]</Label>
-        <Value>eu-west-2</Value>
-        <Help>Your AWS region (example: eu-west-2). This controls where the Pinpoint resources are queried.</Help>
-      </Variable>
-
-      <Variable>
-        <Name>DATA_DIR</Name>
-        <Label>Data directory (container path)</Label>
-        <Value>/app/data</Value>
-        <Help>Container data directory used by the app. Mount a host path into the container (example host: /mnt/user/appdata/aws-eum-x mounted to container: /app/data).</Help>
-      </Variable>
-
-      <Variable>
-        <Name>DISABLE_CSP</Name>
-        <Label>Disable CSP (only if necessary)</Label>
-        <Value>false</Value>
-        <Help>Set to true to disable the Content Security Policy. Default is false (CSP enabled) for improved security. Only disable if your reverse proxy or network blocks required resources.</Help>
-      </Variable>
-
-      <Variable>
-        <Name>AUTO_UPDATE_CHECK</Name>
-        <Label>Auto-update check</Label>
-        <Value>true</Value>
-        <Help>If enabled, container will check GitHub releases for updates (no auto-apply unless configured).</Help>
-      </Variable>
-
-    </Environment>
-  </Config>
-
-  <Network>
-    <Port>80</Port>
-  </Network>
-
-  <Volumes>
-    <Volume>
-      <Container>/app/data</Container>
-      <Host>/mnt/user/appdata/aws-eum-x</Host>
-      <Mode>rw</Mode>
-    </Volume>
-  </Volumes>
-
-  <WebUI>http://[IP]:[PORT:80]</WebUI>
-
+  <Registry>https://ghcr.io</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
+  <Project>https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_X</Project>
+  <Overview>AWS End User Messaging X - Modern, secure SMS/MMS messaging application for Unraid using AWS Pinpoint. Features include first-run wizard, structured logging, rate limiting, message history, and comprehensive security controls. Runs as non-root user on port 8080 with SQLite persistence and automatic retry with exponential backoff.</Overview>
+  <Category>Tools: Status:Stable</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_X/my-aws-eum-x.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM_X/icon.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled></DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI Port" Target="8080" Default="8080" Mode="tcp" Description="Web interface port (container uses 8080)" Type="Port" Display="always" Required="true" Mask="false">8080</Config>
+  <Config Name="AWS Access Key ID" Target="AWS_ACCESS_KEY_ID" Default="" Mode="" Description="AWS IAM access key with Pinpoint SMS permissions. Use short-lived credentials or IAM roles where possible." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS Secret Access Key" Target="AWS_SECRET_ACCESS_KEY" Default="" Mode="" Description="AWS secret key for the access key ID. Never expose this in logs or screenshots." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AWS Region" Target="AWS_REGION" Default="eu-west-2" Mode="" Description="AWS region for Pinpoint resources (e.g., us-east-1, eu-west-2, ap-southeast-1)" Type="Variable" Display="always" Required="true" Mask="false">eu-west-2</Config>
+  <Config Name="Data Directory" Target="/app/data" Default="/mnt/user/appdata/aws-eum-x" Mode="rw" Description="Container data directory for SQLite database, message queue, and configuration. Mount to persistent host storage." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/aws-eum-x</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="info" Mode="" Description="Logging verbosity: debug, info, warn, error. Use debug for troubleshooting." Type="Variable" Display="advanced" Required="false" Mask="false">info</Config>
+  <Config Name="Rate Limit (msg/sec)" Target="DEFAULT_MPS" Default="1.0" Mode="" Description="Maximum messages per second. Default 1.0 to stay within AWS limits. Adjust based on your account quota." Type="Variable" Display="advanced" Required="false" Mask="false">1.0</Config>
+  <Config Name="Max Send Retries" Target="SEND_MAX_RETRIES" Default="5" Mode="" Description="Maximum retry attempts for failed messages with exponential backoff." Type="Variable" Display="advanced" Required="false" Mask="false">5</Config>
+  <Config Name="Base Backoff (ms)" Target="SEND_BASE_BACKOFF_MS" Default="500" Mode="" Description="Base delay in milliseconds for exponential backoff on retries." Type="Variable" Display="advanced" Required="false" Mask="false">500</Config>
+  <Config Name="Disable CSP" Target="DISABLE_CSP" Default="false" Mode="" Description="Set to true to disable Content Security Policy. Only disable if reverse proxy blocks required resources. Default: false (CSP enabled)" Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="Auto Update Check" Target="AUTO_UPDATE_CHECK" Default="true" Mode="" Description="Enable automatic checking for new releases on GitHub. Does not auto-apply updates." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Session Secret" Target="SESSION_SECRET" Default="" Mode="" Description="Secret key for session encryption. Auto-generated if not provided. Set manually for multi-instance deployments." Type="Variable" Display="advanced" Required="false" Mask="true"/>
+  <Config Name="Max History" Target="MAX_HISTORY" Default="1000" Mode="" Description="Maximum number of messages to keep in history database." Type="Variable" Display="advanced" Required="false" Mask="false">1000</Config>
+  <Config Name="Enable Wizard" Target="ENABLE_WIZARD" Default="true" Mode="" Description="Show first-run configuration wizard on initial startup." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="SMS Config Set ARN" Target="SMS_CONFIG_SET_ARN" Default="" Mode="" Description="Optional: AWS Configuration Set ARN for event destinations and analytics." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Opt-Out List Name" Target="OPT_OUT_LIST" Default="" Mode="" Description="Optional: AWS Opt-Out List name for compliance checking." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Node Environment" Target="NODE_ENV" Default="production" Mode="" Description="Node.js environment mode. Leave as production for normal operation." Type="Variable" Display="advanced" Required="false" Mask="false">production</Config>
 </Container>
