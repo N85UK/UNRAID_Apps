@@ -5,6 +5,7 @@
 ### 🚀 Deploy New Version to Production
 
 **Option 1: Automated Version Bump (Recommended)**
+
 ```bash
 # Go to: https://github.com/N85UK/UNRAID_Apps/actions
 # Click: "Version Bump and Release"
@@ -14,6 +15,7 @@
 ```
 
 **Option 2: Manual Tag**
+
 ```bash
 git tag v3.0.8
 git push origin v3.0.8
@@ -85,6 +87,7 @@ docker pull ghcr.io/n85uk/aws-eum:3.0.7
 ### 1️⃣ Docker Build (Automatic)
 
 **Triggers:**
+
 - ✅ Push to `main` → builds `:latest`
 - ✅ Push to `develop` → builds `:develop`
 - ✅ Create tag `v3.0.8` → builds `:3.0.8`, `:v3`
@@ -98,6 +101,7 @@ Actions → "Build and Push AWS EUM v3 Docker Image" → Run workflow
 **Use when:** Ready to release new version
 
 **Steps:**
+
 1. Go to Actions tab
 2. Click "Version Bump and Release"
 3. Click "Run workflow"
@@ -108,6 +112,7 @@ Actions → "Build and Push AWS EUM v3 Docker Image" → Run workflow
 5. Click "Run workflow"
 
 **What it does:**
+
 - ✅ Updates package.json, server.js, Dockerfile
 - ✅ Creates changelog entry
 - ✅ Commits changes
@@ -120,6 +125,7 @@ Actions → "Build and Push AWS EUM v3 Docker Image" → Run workflow
 **Runs on:** Every Pull Request
 
 **Checks:**
+
 - ✅ Syntax validation (`node -c server.js`)
 - ✅ Version consistency
 - ✅ Required files exist
@@ -320,7 +326,7 @@ grep version Dockerfile      # version="3.0.7"
 
 - **Documentation:** See `.github-workflows-guide.md` for details
 - **Contributing:** See `CONTRIBUTING.md`
-- **Issues:** https://github.com/N85UK/UNRAID_Apps/issues
+- **Issues:** <https://github.com/N85UK/UNRAID_Apps/issues>
 
 ---
 

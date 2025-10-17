@@ -9,6 +9,7 @@
 This release addresses **two critical runtime JavaScript errors** that were causing the application to malfunction in v3.0.9:
 
 ### 1. **ChartManager Reference Error (CRITICAL)**
+
 - **Issue:** JavaScript attempted to call `ChartManager.updateMessageChart()` even though ChartManager was removed in v3.0.9
 - **Impact:** This caused a runtime error: `Uncategorized ReferenceError: ChartManager is not defined`
 - **Symptoms:** "Network error - please try again" notification appeared when sending messages
@@ -19,6 +20,7 @@ This release addresses **two critical runtime JavaScript errors** that were caus
 - **Result:** Clean JavaScript execution with no undefined references
 
 ### 2. **Message History Display Bug (CRITICAL)**
+
 - **Issue:** Frontend template referenced `msg.destination` but server sends `msg.phoneNumber`
 - **Impact:** Message history showed "undefined" for phone numbers
 - **Symptoms:** Messages were sent successfully but history section didn't display phone numbers
@@ -28,6 +30,7 @@ This release addresses **two critical runtime JavaScript errors** that were caus
 ## 🔍 Root Cause Analysis
 
 When charts were removed in v3.0.9:
+
 - ✅ Chart.js and Moment.js CDN includes were removed from HTML
 - ✅ ChartManager module (115 lines) was deleted from JavaScript
 - ✅ Chart HTML containers were removed from template
@@ -60,6 +63,7 @@ When charts were removed in v3.0.9:
 ### For Docker Users (UNRAID, Portainer, etc.)
 
 1. **Pull the new image:**
+
    ```bash
    docker pull ghcr.io/n85uk/aws-eum:latest
    # OR specific version:
@@ -67,6 +71,7 @@ When charts were removed in v3.0.9:
    ```
 
 2. **Force update your container** in UNRAID Docker UI or recreate with:
+
    ```bash
    docker stop aws-eum
    docker rm aws-eum
@@ -83,14 +88,15 @@ When charts were removed in v3.0.9:
    ```
 
 3. **Test the application:**
-   - Navigate to http://10.0.2.11 (or your configured IP)
+   - Navigate to <http://10.0.2.11> (or your configured IP)
    - Send a test SMS message
    - Verify message appears in history with phone number displayed
    - Check browser console (F12) - should have no JavaScript errors
 
 ## 🔧 What's Fixed
 
-### Before v3.0.10 (Broken):
+### Before v3.0.10 (Broken)
+
 ```
 User sends SMS → Success notification appears → 
 JavaScript error: "ChartManager is not defined" → 
@@ -98,7 +104,8 @@ Network error notification →
 Message sent but history shows "undefined" for phone number
 ```
 
-### After v3.0.10 (Working):
+### After v3.0.10 (Working)
+
 ```
 User sends SMS → Success notification appears → 
 No JavaScript errors → 
@@ -108,7 +115,9 @@ Message appears in history with phone number displayed correctly
 ## 📝 Technical Details
 
 ### ChartManager Method Stubs
+
 The following methods now contain only deprecation comments:
+
 - `RealTimeManager.updateChartsWithRealData(stats)` - No longer performs chart updates
 - `RealTimeManager.updateChartsWithFallbackData()` - No longer performs chart updates
 
@@ -117,6 +126,7 @@ These methods are kept for compatibility with the existing RealTimeManager initi
 ### Message History Data Structure
 
 **Server Response Format:**
+
 ```json
 {
   "success": true,
@@ -135,6 +145,7 @@ These methods are kept for compatibility with the existing RealTimeManager initi
 ```
 
 **Template Variable (Now Fixed):**
+
 ```javascript
 ${msg.phoneNumber}  // ✅ Matches server response
 // Was: ${msg.destination}  // ❌ Undefined - server doesn't send this
@@ -165,10 +176,11 @@ This release fixes critical runtime bugs discovered immediately after v3.0.9 dep
 ## 📞 Support
 
 If you encounter any issues:
+
 1. Check browser console for JavaScript errors
 2. Verify container logs: `docker logs aws-eum`
 3. Ensure environment variables are correctly set
-4. Report issues on GitHub: https://github.com/N85UK/UNRAID_Apps/issues
+4. Report issues on GitHub: <https://github.com/N85UK/UNRAID_Apps/issues>
 
 ---
 

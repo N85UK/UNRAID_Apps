@@ -5,6 +5,7 @@
 The AWS EUM Docker image has been successfully built and published to GitHub Container Registry.
 
 ### 📦 Published Image
+
 - **Registry**: GitHub Container Registry (GHCR)
 - **Image**: `ghcr.io/n85uk/aws-eum:latest`
 - **Status**: ✅ Available and ready for use
@@ -23,12 +24,14 @@ The GitHub Actions workflow automatically handles building and publishing:
 
 **Workflow File**: `.github/workflows/build-and-publish.yml`
 **Build Steps**:
+
 - Node.js 20 setup
 - Dependencies installation (`npm ci`)
 - Docker build with proper naming
 - GHCR authentication and push
 
 **Environment Variables**:
+
 - Repository owner converted to lowercase for Docker compatibility
 - Automatic tagging with `latest`
 
@@ -36,7 +39,7 @@ The GitHub Actions workflow automatically handles building and publishing:
 
 The image is currently private to your GitHub account. To make it publicly accessible:
 
-1. Go to: https://github.com/orgs/N85UK/packages/container/package/aws-eum
+1. Go to: <https://github.com/orgs/N85UK/packages/container/package/aws-eum>
 2. Click **"Package settings"**
 3. Set **"Package visibility"** to **"Public"**
 4. Confirm the change
@@ -66,21 +69,24 @@ docker run -p 80:80 ghcr.io/n85uk/aws-eum:latest
 ### 📊 Build History
 
 View build history and logs at:
-https://github.com/N85UK/UNRAID_Apps/actions
+<https://github.com/N85UK/UNRAID_Apps/actions>
 
 ### 🛠️ Troubleshooting
 
 **Build fails?**
+
 - Check GitHub Actions logs for detailed error messages
 - Verify Node.js and Docker configurations
 - Ensure all dependencies are properly listed in `package.json`
 
 **Image not found?**
+
 - Confirm the image name: `ghcr.io/n85uk/aws-eum:latest`
 - Check package visibility settings
 - Verify GitHub token permissions
 
 **Authentication issues?**
+
 - The workflow uses `GITHUB_TOKEN` automatically
 - No manual authentication setup required
 

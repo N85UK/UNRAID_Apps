@@ -12,6 +12,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 ## 🏢 Enterprise Features
 
 ### Multi-User Authentication
+
 - **JWT Authentication**: Secure token-based authentication with bcrypt password hashing
 - **Role-Based Access Control**: Admin, User, and ReadOnly permission levels
 - **Session Management**: Secure session handling with automatic timeout
@@ -19,6 +20,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 - **Password Security**: Encrypted password storage with bcrypt hashing
 
 ### Advanced Database Integration
+
 - **External Database**: MariaDB/MySQL database support for scalable data storage
 - **Connection Pooling**: Optimized database connections for high performance
 - **Automated Migrations**: Database schema setup and updates during startup
@@ -26,6 +28,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 - **Backup Ready**: Standard database backup and recovery procedures
 
 ### Enterprise Security
+
 - **API Key Management**: Programmatic access with secure API keys
 - **Comprehensive Audit Trails**: Detailed logging of all user actions and message activity
 - **Permission Inheritance**: Fine-grained access control for different user roles
@@ -35,6 +38,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 ## 👥 User Role System
 
 ### Admin Role
+
 - **Full System Access**: Complete control over all features and settings
 - **User Management**: Create, modify, and delete user accounts
 - **Message Access**: View and manage all messages from all users
@@ -43,6 +47,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 - **Configuration Control**: Modify system settings and AWS configuration
 
 ### User Role
+
 - **Send Messages**: Full SMS sending capabilities via AWS Pinpoint
 - **Personal History**: View and manage own message history
 - **Basic Analytics**: Personal usage statistics and cost tracking
@@ -50,6 +55,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 - **Limited Access**: Cannot access other users' data or system settings
 
 ### ReadOnly Role
+
 - **View Messages**: Read-only access to allowed message data
 - **View Analytics**: Access to analytics dashboards without modification rights
 - **No Sending**: Cannot send SMS messages or modify any data
@@ -59,10 +65,12 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 ## 🔧 Environment Variables
 
 ### Required AWS Configuration
+
 - `AWS_ACCESS_KEY_ID` - AWS access key with Pinpoint permissions
 - `AWS_SECRET_ACCESS_KEY` - AWS secret access key
 
 ### Required Database Configuration
+
 - `DB_HOST` - MariaDB/MySQL database host
 - `DB_PORT` (default: 3306) - Database port
 - `DB_NAME` - Database name for the application
@@ -70,6 +78,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 - `DB_PASSWORD` - Database password
 
 ### Optional Configuration
+
 - `AWS_REGION` (default: eu-west-2) - AWS region for Pinpoint service
 - `PORT` (default: 80) - Application port
 - `ORIGINATORS` - Comma-separated list of custom originators (label:arn format)
@@ -81,27 +90,33 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 ## 🐳 Docker Deployment
 
 ### Image
+
 - **Repository**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
 - **Architecture**: x86_64, ARM64
 - **Base**: Alpine Linux for security and minimal footprint
 
 ### Required External Services
+
 - **MariaDB/MySQL**: External database server (not included in container)
 
 ### Volumes
+
 - `/app/data` - Application data and logs (mount to UNRAID appdata)
 - `/app/uploads` - File uploads and attachments
 
 ### Ports
+
 - `80` - Web interface (map to desired host port)
 
 ### Dependencies
+
 - MariaDB 10.5+ or MySQL 8.0+ database server
 - Network access to AWS Pinpoint service
 
 ## 🗄️ Database Schema
 
 ### Advanced 7-Table Structure
+
 - **users**: User accounts with encrypted passwords and role assignments
 - **messages**: SMS message records with sender tracking and delivery status
 - **audit_logs**: Comprehensive audit trail of all user actions
@@ -111,6 +126,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 - **message_analytics**: Advanced analytics data with aggregated statistics
 
 ### Database Features
+
 - **Foreign Key Constraints**: Ensure data integrity across all tables
 - **Indexes**: Optimized for performance on large datasets
 - **Timestamps**: Automatic creation and update tracking
@@ -120,6 +136,7 @@ This template deploys the AWS EUM MariaDB Enterprise edition with advanced multi
 ## 🚀 GitHub Actions Integration
 
 Enterprise CI/CD pipeline:
+
 - **Triggers**: Push to main branch, releases, manual dispatch
 - **Registry**: GitHub Container Registry (ghcr.io)
 - **Multi-platform**: Supports x86_64 and ARM64 architectures
@@ -130,6 +147,7 @@ Enterprise CI/CD pipeline:
 ## 📊 Enterprise Analytics
 
 ### Advanced Reporting
+
 - **User Activity Dashboard**: Track user engagement and message volume
 - **Cost Analytics**: Detailed AWS cost breakdown by user and department
 - **Usage Trends**: Historical analysis with forecasting capabilities
@@ -137,6 +155,7 @@ Enterprise CI/CD pipeline:
 - **Audit Reports**: Compliance-ready audit trails and user activity reports
 
 ### Real-time Monitoring
+
 - **Live Dashboard**: Real-time system status and user activity
 - **WebSocket Updates**: Live updates for administrators
 - **Alert System**: Configurable alerts for system events and thresholds
@@ -145,6 +164,7 @@ Enterprise CI/CD pipeline:
 ## 🔒 Security Features
 
 ### Enterprise-Grade Security
+
 - **Password Policies**: Configurable password complexity requirements
 - **Account Lockout**: Automatic lockout after failed login attempts
 - **Session Security**: Secure session management with timeout controls
@@ -153,6 +173,7 @@ Enterprise CI/CD pipeline:
 - **Compliance Ready**: Meets enterprise security and compliance requirements
 
 ### Audit and Compliance
+
 - **Full Audit Trail**: Complete logging of all user actions and system events
 - **Data Retention**: Configurable data retention policies
 - **Export Capabilities**: Export audit logs and reports for compliance
@@ -161,6 +182,7 @@ Enterprise CI/CD pipeline:
 ## 🎯 Target Organizations
 
 ### Enterprise Use Cases
+
 - **Corporate Teams**: Multi-department SMS management with role-based access
 - **Service Providers**: Customer communication platforms with user management
 - **Compliance Organizations**: Environments requiring detailed audit trails
@@ -168,6 +190,7 @@ Enterprise CI/CD pipeline:
 - **Support Teams**: Customer service teams with message tracking and analytics
 
 ### Scalability
+
 - **Team Size**: Supports 5-500+ users depending on database configuration
 - **Message Volume**: Handles high-volume SMS campaigns with database optimization
 - **Geographic Distribution**: Multi-region support with database replication
@@ -185,12 +208,14 @@ Enterprise CI/CD pipeline:
 ## 🛠️ Setup Requirements
 
 ### Minimum System Requirements
+
 - **Database Server**: MariaDB 10.5+ or MySQL 8.0+ with 2GB+ RAM
 - **Application Server**: 512MB RAM minimum, 1GB+ recommended
 - **Storage**: 10GB+ for database growth and application data
 - **Network**: Reliable connectivity to AWS services and database
 
 ### Recommended Architecture
+
 - **Load Balancer**: For high-availability deployments
 - **Database Clustering**: Master-slave replication for data redundancy
 - **Backup Strategy**: Regular database backups with point-in-time recovery

@@ -9,12 +9,14 @@ AWS End User Messaging v2.0 includes comprehensive auto-update functionality to 
 UNRAID has built-in auto-update functionality that's enabled by default in the template:
 
 **Setup:**
+
 1. Install AWS EUM through Community Applications
 2. The template automatically configures update checking
 3. UNRAID will notify you of available updates
 4. Click "Update" in the Docker tab when prompted
 
 **Configuration:**
+
 - Updates are checked against the GitHub Container Registry
 - Automatic notifications appear in UNRAID's Docker interface
 - You control when updates are applied
@@ -24,12 +26,14 @@ UNRAID has built-in auto-update functionality that's enabled by default in the t
 The app includes built-in update checking with web interface notifications:
 
 **Features:**
+
 - Automatic update checking every 24 hours (configurable)
 - Visual notifications in the web interface when updates are available
 - Manual update checking via API endpoints
 - Version comparison and changelog links
 
 **Configuration Variables:**
+
 ```bash
 AUTO_UPDATE_CHECK=true              # Enable/disable update checking
 UPDATE_CHECK_INTERVAL=24            # Check interval in hours
@@ -37,6 +41,7 @@ AUTO_UPDATE_APPLY=false             # Auto-apply updates (requires Watchtower)
 ```
 
 **API Endpoints:**
+
 - `GET /api/updates/status` - Get current update status
 - `GET /api/updates/check` - Force update check
 - `POST /api/webhook/update` - GitHub webhook for instant notifications
@@ -46,11 +51,13 @@ AUTO_UPDATE_APPLY=false             # Auto-apply updates (requires Watchtower)
 For fully automatic updates, use the included Watchtower configuration:
 
 **Setup:**
+
 1. Use the `docker-compose-watchtower.yml` file
 2. Set `AUTO_UPDATE_APPLY=true` in environment variables
 3. Watchtower will automatically update the container when new versions are available
 
 **Benefits:**
+
 - Fully automatic updates
 - Configurable update intervals
 - Automatic cleanup of old images
@@ -83,6 +90,7 @@ docker run -d \\
 ## 🚀 Update Process
 
 ### Automatic Updates (Watchtower)
+
 1. Watchtower checks for new images every 4 hours
 2. Downloads new image if available
 3. Gracefully stops current container
@@ -90,12 +98,14 @@ docker run -d \\
 5. Removes old image to save space
 
 ### Manual Updates (UNRAID)
+
 1. Application checks GitHub releases API
 2. Displays notification if update available
 3. User clicks "Update" in UNRAID Docker interface
 4. UNRAID handles the update process
 
 ### Manual Updates (Command Line)
+
 ```bash
 # Pull latest image
 docker pull ghcr.io/n85uk/aws-eum:latest
@@ -113,16 +123,19 @@ docker run -d --name aws-eum [your-settings] ghcr.io/n85uk/aws-eum:latest
 ## 🔔 Update Notifications
 
 ### Web Interface
+
 - Toast notifications appear when updates are available
 - Click "View Release" to see changelog
 - Dismissible notifications don't reappear until next update
 
 ### UNRAID Interface
+
 - Docker tab shows "Update Available" badge
 - Notification center includes update alerts
 - Email notifications (if configured in UNRAID)
 
 ### Webhook Integration
+
 Configure GitHub webhooks to get instant update notifications:
 
 1. Go to GitHub repository settings
@@ -134,18 +147,21 @@ Configure GitHub webhooks to get instant update notifications:
 ## 📋 Best Practices
 
 ### For Stable Environments
+
 - Use UNRAID native updates
 - Set `AUTO_UPDATE_CHECK=true`
 - Set `AUTO_UPDATE_APPLY=false`
 - Review updates before applying
 
 ### For Development/Testing
+
 - Use Watchtower auto-updates
 - Set shorter check intervals
 - Enable debug logging
 - Monitor update logs
 
 ### For Critical Production
+
 - Disable auto-apply: `AUTO_UPDATE_APPLY=false`
 - Use longer check intervals: `UPDATE_CHECK_INTERVAL=168` (weekly)
 - Test updates in staging environment first
@@ -154,18 +170,21 @@ Configure GitHub webhooks to get instant update notifications:
 ## 🔧 Troubleshooting
 
 ### Updates Not Detected
+
 1. Check internet connectivity
 2. Verify GitHub API access
 3. Check logs for update check errors
 4. Manually trigger update check via API
 
 ### Auto-Updates Not Working
+
 1. Ensure Watchtower is running
 2. Check container labels are correct
 3. Verify Watchtower has Docker socket access
 4. Check Watchtower logs for errors
 
 ### Update Check Failures
+
 ```bash
 # Check update status
 curl http://localhost:8080/api/updates/status

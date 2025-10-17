@@ -88,6 +88,7 @@ git push origin main develop v3.1.0
 **Trigger:** Push to `main` or `develop`, or create a tag
 
 The GitHub Actions workflow automatically:
+
 1. Extracts version from `package.json`
 2. Builds multi-architecture Docker images (amd64, arm64)
 3. Pushes to GitHub Container Registry
@@ -104,10 +105,12 @@ Go to **Actions** → **Build and Push AWS EUM v3 Docker Image** → **Run workf
 **Manual Workflow:** Go to **Actions** → **Version Bump and Release** → **Run workflow**
 
 Choose:
+
 - **Bump type:** patch, minor, or major
 - **Application:** AWS_EUM
 
 This workflow automatically:
+
 1. Bumps version in `package.json`
 2. Updates `server.js` and `Dockerfile`
 3. Creates a changelog entry
@@ -121,6 +124,7 @@ This workflow automatically:
 **Trigger:** Any PR to `main` or `develop`
 
 Automated checks:
+
 - ✅ Node.js syntax validation
 - ✅ Version consistency check
 - ✅ Required files verification
@@ -139,6 +143,7 @@ We use **Semantic Versioning** (SemVer): `MAJOR.MINOR.PATCH`
 ### Consistency Requirements
 
 Version must be consistent in:
+
 1. `package.json` → `"version": "3.0.7"`
 2. `server.js` → `const APP_VERSION = '3.0.7';`
 3. `Dockerfile` → `version="3.0.7"`
@@ -273,6 +278,7 @@ docker run -p 80:80 \
 ### PR Template
 
 Fill out all sections in the PR template:
+
 - Description of changes
 - Type of change
 - Testing performed

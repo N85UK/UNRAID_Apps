@@ -95,6 +95,7 @@ FILEMANAGER_PORT=8080
 This implementation is **complete and ready** for the UNRAID API File Manager bounty. It follows all specified requirements, uses the correct architecture patterns, and provides a production-ready integration.
 
 For questions or clarification, please reference:
+
 - [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599) - Original bounty specification
 - [GitHub Repository](https://github.com/N85UK/UnRiaid_Apps) - Complete source code
 
@@ -105,24 +106,28 @@ For questions or clarification, please reference:
 ## Key Features
 
 ### Authentication Integration
+
 - **Cookie Bridge**: Validates UNRAID API session cookies
 - **Header Mapping**: Maps UNRAID user/roles to FileBrowser headers
 - **Permission Bridge**: Converts UNRAID permissions to FileBrowser permissions
 - **No Dual Auth**: FileBrowser runs with `--noauth`, all auth through UNRAID API
 
 ### Service Management
+
 - **Lifecycle Integration**: Starts/stops with UNRAID API NestJS application
 - **Binary Management**: Downloads FileBrowser binary during module initialization
 - **Health Monitoring**: Provides health check endpoints
 - **Graceful Shutdown**: Properly terminates FileBrowser on module destroy
 
 ### WebGUI Integration
+
 - **Vue.js Component**: FileManager.vue following LogViewer.vue pattern
 - **iframe Integration**: Secure iframe with authentication context passing
 - **Responsive Design**: Tailwind CSS styling matching UNRAID design
 - **Real-time Updates**: WebSocket proxy for live file system changes
 
 ### Virtual Root Configuration
+
 - **User Shares**: `/mnt/user` (full access)
 - **Cache Drive**: `/mnt/cache` (full access)
 - **Array Disks**: `/mnt/disk*` (pattern matching)
@@ -188,10 +193,12 @@ FILEMANAGER_BINARY_URL=https://github.com/filebrowser/filebrowser/releases/downl
 ## API Endpoints
 
 ### Service Management
+
 - `GET /filemanager/status` - Service status and configuration
 - `GET /filemanager/health` - Health check endpoint
 
 ### File Operations (Proxied to FileBrowser)
+
 - `GET /filemanager/api/resources` - Browse files/folders
 - `POST /filemanager/api/resources` - Create files/folders
 - `PUT /filemanager/api/resources` - Update/move files
@@ -200,21 +207,25 @@ FILEMANAGER_BINARY_URL=https://github.com/filebrowser/filebrowser/releases/downl
 - `GET /filemanager/api/raw` - Download files
 
 ### WebSocket (Real-time Updates)
+
 - `WS /filemanager/ws` - Real-time file system events
 
 ## Security Features
 
 ### Path Validation
+
 - Directory traversal prevention
 - Scope limitation to configured virtual roots
 - Symlink attack protection
 
 ### Permission Integration
+
 - UNRAID user permission inheritance
 - Role-based access control
 - Path-specific permission enforcement
 
 ### Rate Limiting
+
 - API request rate limiting
 - Upload/download throttling
 - Concurrent operation limits
@@ -222,6 +233,7 @@ FILEMANAGER_BINARY_URL=https://github.com/filebrowser/filebrowser/releases/downl
 ## Development
 
 ### Prerequisites
+
 - Node.js 18+
 - UNRAID API development environment
 - FileBrowser binary (auto-downloaded)
@@ -299,6 +311,7 @@ The `filemanager.json` configuration file provides comprehensive control:
 If you previously installed the plugin version:
 
 1. **Remove Old Plugin**:
+
    ```bash
    # Remove plugin files
    rm -rf /usr/local/emhttp/plugins/file-manager
@@ -326,6 +339,7 @@ This project follows the same license as the UNRAID API project.
 ## Support
 
 For issues related to:
+
 - **UNRAID API Integration**: Create issue in UNRAID API repository
 - **FileBrowser Functionality**: Refer to [FileBrowser documentation](https://filebrowser.org)
 - **Implementation Questions**: Reference [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)

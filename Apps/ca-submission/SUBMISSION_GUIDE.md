@@ -4,22 +4,26 @@
 
 This directory contains the complete submission package for the AWS End User Messaging application.
 
-### Files Included:
+### Files Included
+
 - `template.cfg` - UNraid CA template configuration
 - `doc.md` - Application documentation with CA metadata
 
 ## 🚀 Submission Process
 
 ### Method 1: GitHub Issue (Recommended)
-1. Go to: https://github.com/Squidly271/community.applications/issues
+
+1. Go to: <https://github.com/Squidly271/community.applications/issues>
 2. Click **"New Issue"**
 3. Use title: `Add AWS End User Messaging (EUM) Application`
 4. Copy the template below into the issue body
 5. Attach the `template.cfg` and `doc.md` files
 
 ### Method 2: Pull Request (Alternative)
+
 If you have access to submit PRs directly:
-1. Fork https://github.com/Squidly271/community.applications
+
+1. Fork <https://github.com/Squidly271/community.applications>
 2. Add your template files to the appropriate location
 3. Submit a pull request
 
@@ -87,7 +91,8 @@ If you have access to submit PRs directly:
 ## 📞 Support
 
 For questions about this submission:
-- **Repository**: https://github.com/N85UK/UNRAID_Apps
+
+- **Repository**: <https://github.com/N85UK/UNRAID_Apps>
 - **Documentation**: See README files in AWS_EUM directory
 - **Issues**: Create issues in the main repository
 

@@ -5,6 +5,7 @@ This package bundles the AWS SMS App as a Community Applications (CA) template f
 ## ✅ Status: Ready for CA Submission
 
 The Docker image has been built and published to GitHub Container Registry:
+
 - **Image**: `ghcr.io/n85uk/aws-eum:latest`
 - **Build Status**: ✅ Successful
 - **CA Template**: ✅ Configured
@@ -65,9 +66,9 @@ docker run -d \
 
 ## 📖 Resources
 
-- **UNRAID CA Policies**: https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/
-- **Community Applications**: https://docs.unraid.net/unraid-os/using-unraid-to/run-docker-containers/community-applications/
-- **AWS Pinpoint SMS**: https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html
+- **UNRAID CA Policies**: <https://forums.unraid.net/topic/87144-ca-application-policies-privacy-policy/>
+- **Community Applications**: <https://docs.unraid.net/unraid-os/using-unraid-to/run-docker-containers/community-applications/>
+- **AWS Pinpoint SMS**: <https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html>
 
 ## 🆘 Support
 

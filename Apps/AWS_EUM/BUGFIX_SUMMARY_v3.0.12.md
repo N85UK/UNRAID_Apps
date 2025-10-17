@@ -1,6 +1,7 @@
 # AWS EUM v3.0.12 - Complete Bug Fix Summary
 
 ## Release Date
+
 October 11, 2025
 
 ## Critical Bugs Fixed
@@ -8,6 +9,7 @@ October 11, 2025
 ### 1. Form Submission Issues (v3.0.7 → v3.0.12)
 
 **v3.0.7-3.0.9**: Initial fixes
+
 - ✅ Fixed `CURRENT_VERSION` → `APP_VERSION` (7 locations)
 - ✅ Fixed syntax error at line 248
 - ✅ Added views directory configuration
@@ -16,25 +18,30 @@ October 11, 2025
 - ✅ Changed DISABLE_CSP default to `true`
 
 **v3.0.10**: Debug logging added
+
 - ✅ Added enhanced debug logging to track execution
 - ✅ Removed `action` attribute from form
 
 **v3.0.11**: Double submission fix
+
 - ✅ Removed `method="post"` from form to prevent HTML submission
 - ✅ Added `event.stopPropagation()` to prevent event bubbling
 - ✅ Changed default option to `disabled selected`
 - ✅ Added client-side validation for required fields
 
 **v3.0.12**: Originator dropdown fix ⭐ **CRITICAL**
+
 - ✅ Fixed dropdown value from `info.value` → `label`
 - ✅ Server expects originator as KEY (label) not VALUE (ARN)
 - ✅ This was causing "Invalid originator selected" error
 
 ### 2. Package.json Syntax Error (v3.0.9)
+
 - ✅ Removed double comma causing npm install failure
 - ✅ This was breaking Docker builds
 
 ### 3. Workflow Issues (v3.0.9)
+
 - ✅ Removed duplicate workflows
 - ✅ Simplified docker-build-aws-eum.yml
 - ✅ Removed problematic metadata-action tag templates
@@ -53,6 +60,7 @@ October 11, 2025
 ## Current Status
 
 ### ✅ WORKING
+
 - Container starts successfully
 - CSP disabled (no resource blocking)
 - Form submission via JavaScript fetch
@@ -63,12 +71,14 @@ October 11, 2025
 - AWS originator detection (7 found)
 
 ### ⚠️ KNOWN ISSUES
+
 - Permission warning on `/data/update-info.json` (non-critical)
   - Fix: `chown -R 1000:1000 /mnt/user/appdata/aws-eum`
 
 ## Files Modified
 
 ### Critical Files
+
 1. `server.js` - Fixed APP_VERSION, syntax, views config
 2. `views/index-v3.ejs` - Fixed form fields and dropdown
 3. `public/js/app-v3.js` - Fixed charts, added validation and debug logging
@@ -77,6 +87,7 @@ October 11, 2025
 6. `my-aws-eum.xml` - Changed DISABLE_CSP default
 
 ### Workflow Files
+
 1. `.github/workflows/docker-build-aws-eum.yml` - Simplified
 2. Removed: build-and-publish-v3.yml, build-all-versions.yml, test-*.yml
 
@@ -95,9 +106,10 @@ October 11, 2025
 
 ## Deployment Instructions
 
-### For v3.0.12:
+### For v3.0.12
 
 1. **Pull latest image:**
+
    ```bash
    docker pull ghcr.io/n85uk/aws-eum:latest
    ```
@@ -108,12 +120,15 @@ October 11, 2025
    - Start
 
 3. **Verify version:**
+
    ```bash
    docker logs AWS_EUM | grep "v3.0.12"
    ```
+
    Should show: `🚀 AWS EUM v3.0.12 server running on port 80`
 
 4. **Fix data permissions (if needed):**
+
    ```bash
    chown -R 1000:1000 /mnt/user/appdata/aws-eum
    docker restart AWS_EUM
@@ -133,6 +148,7 @@ October 11, 2025
 ## What to Look For in Console
 
 **Successful submission:**
+
 ```
 🚀 AWS EUM v3.0 Enhanced UI loading...
 📝 FormHandler.init() called
@@ -144,6 +160,7 @@ October 11, 2025
 ```
 
 **Errors (if any):**
+
 - "Missing required fields" → Validation working correctly
 - Network error → Check AWS credentials
 - 400 Bad Request → Check console logs for specific error
@@ -151,11 +168,13 @@ October 11, 2025
 ## Next Steps
 
 ### Immediate
+
 - [ ] Test SMS sending with v3.0.12
 - [ ] Verify message appears in history
 - [ ] Check message cost tracking
 
 ### Future Enhancements
+
 - [ ] Apply fixes to AWS_EUM_MariaDB version
 - [ ] Update all documentation
 - [ ] Create automated testing suite
@@ -172,6 +191,7 @@ October 11, 2025
 ## Support
 
 If issues persist:
+
 1. Check container logs: `docker logs AWS_EUM`
 2. Check browser console (F12)
 3. Verify AWS credentials are correct
@@ -181,7 +201,7 @@ If issues persist:
 ## Success Criteria
 
 ✅ Container runs without errors  
-✅ Web UI accessible at http://10.0.2.11  
+✅ Web UI accessible at <http://10.0.2.11>  
 ✅ No console errors  
 ✅ Form submits via POST  
 ✅ Originator dropdown works  

@@ -5,19 +5,25 @@ Welcome to the comprehensive documentation for the UNRAID Apps Repository! This 
 ## 🚀 **Featured Projects**
 
 ### 📁 [ExplorerX Plugin](ExplorerX-Plugin-Installation)
+
 **Native UNRAID file manager with enhanced debugging capabilities**
+
 - 🔧 **Current Status**: Debug v2025.10.10.0002 (investigating interface issues)
 - 📦 **Installation**: One-click plugin installation
 - 🔒 **Safe & Secure**: Zero interference with other plugins
 
 ### 📧 [AWS End User Messaging Suite](AWS-EUM-Installation)
+
 **Complete SMS messaging solutions for every need**
+
 - **v2.0 Stable**: Reliable production SMS messaging
 - **v3.0 Enhanced**: Modern UI with Chart.js and dark mode
 - **MariaDB Enterprise**: Multi-user with role-based access control
 
 ### 🏆 [UNRAID API Integration](UNRAID-API-Integration)
+
 **Complete bounty submission for UNRAID API file management**
+
 - ✅ **Ready for Integration**: NestJS module with Vue.js WebGUI
 - 🔄 **Seamless Authentication**: UNRAID session bridge
 - 📊 **Production Ready**: Complete implementation following API patterns
@@ -25,39 +31,46 @@ Welcome to the comprehensive documentation for the UNRAID Apps Repository! This 
 ## 📚 **Documentation Sections**
 
 ### 🛠️ **Installation Guides**
+
 - **[ExplorerX Plugin Installation](ExplorerX-Plugin-Installation)** - Step-by-step plugin setup
 - **[AWS EUM Suite Installation](AWS-EUM-Installation)** - Docker application deployment
 - **[UNRAID API Integration Guide](UNRAID-API-Integration)** - API module integration
 
 ### 👥 **User Guides**
+
 - **[Version Comparison](Version-Comparison)** - Feature comparison between versions
 - **[Common Issues](Common-Issues)** - Quick solutions for frequent problems
 - **[Troubleshooting](Troubleshooting)** - Comprehensive problem-solving procedures
 
 ### 🔧 **Troubleshooting**
+
 - **[Common Issues](Common-Issues)** - Quick solutions for frequent problems
 - **[Troubleshooting](Troubleshooting)** - Comprehensive problem-solving procedures  
 - **[Support Contacts](Support-Contacts)** - Getting help and reporting issues
 
 **🚨 Most Common Issues:**
+
 - **Permission Denied**: AWS EUM needs `chown -R 100:users /mnt/user/appdata/aws-eum`
 - **Enhanced UI Not Working**: Add multiple CSP environment variables for custom networks
 - **ExplorerX Debug Mode**: v2025.10.10.0002 shows debug info (expected behavior)
 - **Plugin Not Visible**: Refresh browser (Ctrl+F5) or restart nginx
 
 ### 📖 **Reference**
+
 - **[Version Comparison](Version-Comparison)** - Feature comparison between versions
 - **[Support Contacts](Support-Contacts)** - Getting help and reporting issues
 
 ## 🎯 **Quick Start Guide**
 
 ### For New Users
+
 1. **Choose Your Project**: Review the [Version Comparison](Version-Comparison) to select the right tool
 2. **Follow Installation**: Use the appropriate installation guide for your chosen project
 3. **Configure Settings**: Set up environment variables and configuration
 4. **Get Help**: Use [Common Issues](Common-Issues) and [Support Contacts](Support-Contacts) if needed
 
 ### For Developers
+
 1. **Read Contributing Guidelines**: Understand development practices
 2. **Review API Documentation**: Learn integration patterns
 3. **Check Version History**: Stay current with changes
@@ -76,6 +89,7 @@ Welcome to the comprehensive documentation for the UNRAID Apps Repository! This 
 ## 🔄 **Recent Updates**
 
 ### October 2025 - Major Documentation Overhaul
+
 - ✅ **Complete Documentation Audit**: All 40+ .md files reviewed and updated
 - 🔧 **ExplorerX Debug Version**: v2025.10.10.0002 deployed with enhanced logging
 - 📊 **Version Accuracy**: All projects now show correct current versions
@@ -84,6 +98,7 @@ Welcome to the comprehensive documentation for the UNRAID Apps Repository! This 
 - 🔧 **CSP Fix Breakthrough**: Complete solution for custom bridge networks
 
 ### Key Improvements
+
 - **Version Consistency**: YYYY.MM.DD.#### format across all projects
 - **Feature Documentation**: Comprehensive feature comparison tables
 - **Troubleshooting**: Enhanced debug and support information with CSP fixes
@@ -94,11 +109,13 @@ Welcome to the comprehensive documentation for the UNRAID Apps Repository! This 
 ## 🤝 **Community & Support**
 
 ### Getting Help
-- **📧 Email Support**: hello@git.n85.uk
+
+- **📧 Email Support**: <hello@git.n85.uk>
 - **🐛 GitHub Issues**: [Create an Issue](https://github.com/N85UK/UNRAID_Apps/issues)
-- **🔒 Security Reports**: security@git.n85.uk
+- **🔒 Security Reports**: <security@git.n85.uk>
 
 ### Contributing
+
 - **💡 Feature Requests**: Share ideas for new features
 - **🐛 Bug Reports**: Help improve quality with detailed reports
 - **📝 Documentation**: Improve guides and documentation

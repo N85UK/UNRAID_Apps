@@ -11,6 +11,7 @@
 ## 🌟 Enterprise Features
 
 ### 🗄️ **External Database Integration**
+
 - **MariaDB/MySQL Support**: Store all data in external database
 - **Connection Pooling**: High performance with optimized database connections
 - **Automatic Migrations**: Database schema setup and updates
@@ -18,6 +19,7 @@
 - **Backup Compatible**: Standard database backup procedures
 
 ### 👥 **Multi-User Management**
+
 - **Role-Based Access**: Admin, User, and ReadOnly roles
 - **Secure Authentication**: JWT tokens with bcrypt password hashing
 - **Session Management**: Secure session handling with database storage
@@ -25,6 +27,7 @@
 - **Account Management**: User activation/deactivation controls
 
 ### 📊 **Advanced Analytics Dashboard**
+
 - **Historical Data**: Complete message history with trend analysis
 - **Real-time Metrics**: Live statistics and performance monitoring
 - **Success Rate Tracking**: Delivery status and failure analysis
@@ -33,6 +36,7 @@
 - **Custom Date Ranges**: Flexible reporting periods
 
 ### 🔐 **Enterprise Security**
+
 - **JWT Authentication**: Secure token-based authentication
 - **Password Encryption**: bcrypt hashing with salt rounds
 - **Session Security**: Secure session management with database storage
@@ -43,11 +47,13 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - External MariaDB/MySQL database server
 - Valid AWS account with Pinpoint SMS permissions
 - UNRAID server (or Docker environment)
 
 ### 1. Database Setup
+
 ```sql
 -- Create database and user
 CREATE DATABASE aws_eum CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -57,6 +63,7 @@ FLUSH PRIVILEGES;
 ```
 
 ### 2. Container Deployment
+
 ```bash
 docker run -d \
   --name aws-eum-mariadb \
@@ -76,6 +83,7 @@ docker run -d \
 ```
 
 ### 3. Initial Setup
+
 1. Access the web interface: `http://your-server:8080`
 2. Login with admin credentials (change the default password immediately!)
 3. Configure AWS settings if not set via environment variables
@@ -122,18 +130,21 @@ The application automatically creates the following tables:
 ## 🔧 Management Commands
 
 ### Database Migration
+
 ```bash
 # Run inside container
 npm run migrate
 ```
 
 ### Database Seeding
+
 ```bash
 # Create default admin user and sample data
 npm run seed
 ```
 
 ### Development Mode
+
 ```bash
 npm run dev
 ```
@@ -141,6 +152,7 @@ npm run dev
 ## 🔐 User Roles
 
 ### Admin
+
 - Full system access
 - User management
 - Settings configuration
@@ -148,12 +160,14 @@ npm run dev
 - API key management
 
 ### User
+
 - Send SMS messages
 - View own message history
 - Access basic analytics
 - Update own profile
 
 ### ReadOnly
+
 - View shared message history
 - Access analytics dashboard
 - No sending permissions
@@ -161,21 +175,25 @@ npm run dev
 ## 📊 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` - User login
 - `POST /api/auth/logout` - User logout
 - `POST /api/auth/register` - User registration (if enabled)
 
 ### Messages
+
 - `POST /api/sms/send` - Send SMS message
 - `GET /api/sms/history` - Get message history
 - `GET /api/sms/:id` - Get specific message
 
 ### Analytics
+
 - `GET /api/analytics/dashboard` - Dashboard metrics
 - `GET /api/analytics/reports` - Detailed reports
 - `GET /api/analytics/export` - Export data
 
 ### Management
+
 - `GET /api/users` - List users (admin only)
 - `POST /api/users` - Create user (admin only)
 - `PUT /api/users/:id` - Update user (admin only)
@@ -183,11 +201,13 @@ npm run dev
 ## � Monitoring & Logging
 
 ### Health Checks
+
 - Database connectivity monitoring
 - AWS service status checks
 - Application health endpoints
 
 ### Logging
+
 - Structured JSON logging
 - Configurable log levels
 - Request/response logging
@@ -196,18 +216,21 @@ npm run dev
 ## 🎯 Use Cases
 
 ### Small Business
+
 - Team SMS notifications
 - Customer communication
 - Marketing campaigns
 - User accountability
 
 ### Enterprise
+
 - Departmental messaging
 - Automated alerts
 - Integration with existing systems
 - Compliance and audit requirements
 
 ### Development Teams
+
 - Build notifications
 - System alerts
 - Integration testing
@@ -244,23 +267,27 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **AWS End User Messaging MariaDB Edition** - Enterprise messaging built for scale 🏢
 
 ### ✨ **AWS Auto-Discovery**
+
 - **Automatic phone number detection** - Pulls all available phone numbers from your AWS account
 - **Real-time originator refresh** - Click refresh to update available numbers
 - **Smart caching** - Reduces AWS API calls while keeping data fresh
 
 ### 📱 **Enhanced Message Support**
+
 - **Long message support** - Send messages up to 1,600 characters
 - **Automatic SMS segmentation** - Long messages split into multiple SMS segments
 - **Real-time cost estimation** - See how many SMS segments your message will use
 - **Message preview** - See exactly how your long message will be split
 
 ### 🛡️ **Security & Rate Limiting**
+
 - **Rate limiting** - Prevents SMS abuse with configurable limits
 - **Enhanced security** - Helmet.js security headers and CSP
 - **Input validation** - Comprehensive validation for all inputs
 - **Error handling** - Better error messages and recovery
 
 ### 🔧 **UNRAID Integration**
+
 - **Full configuration interface** - Configure everything through UNRAID
 - **Dropdown region selection** - Easy AWS region selection
 - **Secure credential storage** - AWS credentials stored securely
@@ -269,6 +296,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📋 Features
 
 ### Core Functionality
+
 - ✅ **Send SMS messages** via AWS Pinpoint SMS service
 - ✅ **Automatic AWS integration** - Discovers your phone numbers
 - ✅ **Long message support** - Up to 1,600 characters with auto-segmentation
@@ -276,18 +304,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ✅ **Real-time feedback** - Character counts, segment info, cost estimates
 
 ### AWS Integration
+
 - ✅ **Auto-discovery** - Automatically finds your AWS phone numbers
 - ✅ **Multiple originators** - Support for multiple phone numbers/sender IDs
 - ✅ **Region support** - Works with all AWS regions that support Pinpoint SMS
 - ✅ **Manual override** - Option to manually configure originators
 
 ### Security & Reliability
+
 - ✅ **Rate limiting** - Configurable SMS per minute limits
 - ✅ **Input validation** - Comprehensive validation and sanitization
 - ✅ **Error handling** - Graceful error handling and user feedback
 - ✅ **Health monitoring** - Built-in health checks and status endpoints
 
 ### UNRAID Specific
+
 - ✅ **Complete UNRAID template** - Full configuration through Community Applications
 - ✅ **Secure storage** - AWS credentials encrypted and stored securely
 - ✅ **Easy installation** - One-click install through Community Applications
@@ -403,18 +434,21 @@ docker exec aws-eum npm run test
 ### Common Issues
 
 **No phone numbers showing:**
+
 - Check AWS credentials are correct
 - Verify IAM permissions include SMS permissions
 - Ensure correct AWS region
 - Click "Refresh Numbers" to retry
 
 **Messages not sending:**
+
 - Verify destination number format (+country code)
 - Check AWS account has SMS sending enabled
 - Verify rate limits not exceeded
 - Check AWS CloudWatch logs
 
 **Configuration errors:**
+
 - Run `npm run test` to test AWS connectivity
 - Check UNRAID logs for detailed error messages
 - Verify AWS region supports Pinpoint SMS
@@ -422,6 +456,7 @@ docker exec aws-eum npm run test
 ### Debug Mode
 
 Enable debug logging:
+
 ```bash
 # In UNRAID template
 ENABLE_DEBUG=true
@@ -430,6 +465,7 @@ ENABLE_DEBUG=true
 ### Health Monitoring
 
 Check application health:
+
 ```bash
 curl http://[server-ip]:8280/health
 ```
@@ -482,6 +518,7 @@ Your existing message history will be preserved.
 ### New Features Available
 
 After upgrading, you'll have access to:
+
 - Auto-discovery of AWS phone numbers
 - Long message support
 - Enhanced security features

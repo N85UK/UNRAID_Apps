@@ -1,21 +1,25 @@
 # 🔧 AWS_EUM_MariaDB v2.1.2 - Quick Fix Summary
 
 ## Problem You Reported
+>
 > "I have logged in to AWS_EUM_MariaDB and its displaying v2 but without the correct style also doesn't seem to have a log in screen"
 
 ## Issues Identified
 
 ### 1. ❌ CSS Not Loading (CRITICAL)
+
 **Symptom:** Plain HTML, no styling, looked broken  
 **Cause:** Hardcoded IP `http://10.0.2.11` in CSS link  
 **Impact:** Only worked at 10.0.2.11, failed everywhere else
 
 ### 2. ❌ Wrong Version Display
+
 **Symptom:** Showed "v2.0" instead of "v2.1"  
 **Cause:** Outdated title and branding  
 **Impact:** User confusion about version
 
 ### 3. ℹ️ No Login Screen (NOT A BUG)
+
 **Note:** MariaDB edition is single-user like v3  
 **Authentication exists** but not enforced (by design)  
 **Multi-user infrastructure** ready but not activated
@@ -23,33 +27,39 @@
 ## Solutions Implemented ✅
 
 ### 1. Fixed CSS Loading
+
 **Changed:** `http://10.0.2.11/css/style.css` → `/css/style.css`  
 **Result:** Now works on ANY IP address  
 **File:** views/index.ejs line 6
 
 ### 2. Fixed CSP Headers
+
 **Removed:** Hardcoded `http://10.0.2.11` from security headers  
 **Changed to:** `'self'` directive (adapts to any domain)  
 **Files:** server.js lines 77-78, 101
 
 ### 3. Updated Branding
+
 **Title:** "AWS End User Messaging v2.1 - MariaDB Enterprise Edition"  
 **Header:** Highlights database persistence and multi-user  
 **Footer:** Shows MariaDB Enterprise features
 
 ### 4. Version Bump
+
 **From:** v2.1.1 → **To:** v2.1.2  
 **Files:** server.js, package.json, Dockerfile, GitHub Actions
 
 ## What To Do Now
 
 ### Step 1: Wait for Build (~5-10 minutes)
+
 GitHub Actions is building the new v2.1.2 Docker image.  
-Check: https://github.com/N85UK/UNRAID_Apps/actions
+Check: <https://github.com/N85UK/UNRAID_Apps/actions>
 
 ### Step 2: Update Your Container
 
 **Option A: Pull Manually**
+
 ```bash
 docker stop AWS_EUM_MariaDB
 docker pull ghcr.io/n85uk/aws-eum-mariadb:latest
@@ -57,6 +67,7 @@ docker start AWS_EUM_MariaDB
 ```
 
 **Option B: UNRAID GUI**
+
 1. Docker tab → AWS_EUM_MariaDB
 2. Click "Update Container"
 3. Click "Apply"
@@ -79,7 +90,9 @@ Will auto-update within 24 hours
    - Should NOT show: `❌ Failed to load resource`
 
 ### Step 4: Clear Browser Cache
+
 **Important:** Force refresh to load new CSS
+
 - Chrome/Edge: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
 - Firefox: Ctrl+F5
 - Safari: Cmd+Option+R
@@ -87,6 +100,7 @@ Will auto-update within 24 hours
 ## Expected Results
 
 ### Before (v2.1.1) ❌
+
 - Plain white background
 - Default browser fonts
 - No rounded corners
@@ -94,6 +108,7 @@ Will auto-update within 24 hours
 - Looked broken
 
 ### After (v2.1.2) ✅
+
 - Gradient background (blue → grey)
 - Modern card layout
 - Rounded corners with shadows
@@ -103,12 +118,14 @@ Will auto-update within 24 hours
 ## Troubleshooting
 
 ### Still seeing plain HTML?
+
 1. Clear browser cache (force refresh)
 2. Check you pulled v2.1.2: `docker exec AWS_EUM_MariaDB cat /app/package.json | grep version`
 3. Try incognito/private window
 4. Check container logs: `docker logs AWS_EUM_MariaDB | grep CSS`
 
 ### CSS file not loading?
+
 ```bash
 # Test directly
 curl http://[your-ip]:80/css/style.css | head -20
@@ -139,14 +156,17 @@ curl http://[your-ip]:80/css/style.css | head -20
 
 **Answer:** This is **by design**, not a bug.
 
-### MariaDB Edition Design:
+### MariaDB Edition Design
+
 - **Single-user application** (like AWS_EUM_v3)
 - **No login required** for simplicity
 - Authentication infrastructure exists (`lib/auth.js`) but not enforced
 - Designed for **internal UNRAID use** (already behind network firewall)
 
-### If You Need Multi-User:
+### If You Need Multi-User
+
 The infrastructure exists but isn't activated. Would need:
+
 1. Login page (`views/login.ejs`)
 2. Authentication middleware on routes
 3. User management UI
@@ -178,6 +198,7 @@ The infrastructure exists but isn't activated. Would need:
 ## Support
 
 If issues persist after update:
+
 1. Check container version: Should be 2.1.2
 2. Clear browser cache completely
 3. Test in incognito window

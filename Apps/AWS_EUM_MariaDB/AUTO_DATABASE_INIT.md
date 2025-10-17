@@ -12,6 +12,7 @@
 ### Automatic Database Creation
 
 **Before v2.1.3:**
+
 ```sql
 -- You had to manually run:
 CREATE DATABASE aws_eum CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -24,6 +25,7 @@ npm run migrate
 ```
 
 **Now in v2.1.3:**
+
 ```bash
 # Just start the container!
 docker run -e DB_HOST=mariadb \
@@ -39,12 +41,14 @@ docker run -e DB_HOST=mariadb \
 ## ✨ Features
 
 ### 1. **Database Auto-Creation**
+
 - Checks if database exists on startup
 - Creates database automatically if missing
 - Sets proper character set (utf8mb4) and collation
 - No manual SQL commands needed!
 
 ### 2. **Table Auto-Creation**
+
 Creates all 7 required tables automatically:
 
 | Table | Purpose |
@@ -58,6 +62,7 @@ Creates all 7 required tables automatically:
 | `api_keys` | External API integration keys |
 
 ### 3. **Default Settings**
+
 Automatically inserts 10 default settings:
 
 - `app_name`: "AWS End User Messaging"
@@ -72,6 +77,7 @@ Automatically inserts 10 default settings:
 - `enable_registration`: false
 
 ### 4. **Default Admin User**
+
 Creates admin account on first run if no users exist:
 
 - **Username:** `admin` (or `ADMIN_USERNAME` env var)
@@ -82,12 +88,14 @@ Creates admin account on first run if no users exist:
 ⚠️ **IMPORTANT:** Change default password immediately!
 
 ### 5. **Smart Health Checks**
+
 - Verifies database connection on startup
 - Checks if all tables exist
 - Reports missing tables and creates them
 - Provides detailed status information
 
 ### 6. **Enhanced Logging**
+
 Beautiful formatted console output:
 
 ```
@@ -133,6 +141,7 @@ Beautiful formatted console output:
 ## 🎯 Use Cases
 
 ### 1. **Fresh Installation**
+
 Just provide database credentials - everything else is automatic:
 
 ```yaml
@@ -165,12 +174,14 @@ services:
 **That's it!** Start the containers and everything is configured automatically.
 
 ### 2. **UNRAID Deployment**
+
 1. Install MariaDB from Community Applications
 2. Install AWS_EUM_MariaDB from Community Applications
 3. Configure environment variables in template
 4. Start container - database initializes automatically!
 
 ### 3. **Migration from SQLite (v3)**
+
 Moving from AWS_EUM_v3 to MariaDB edition:
 
 1. Deploy MariaDB container
@@ -181,6 +192,7 @@ Moving from AWS_EUM_v3 to MariaDB edition:
 *(Note: Message history from v3 not automatically migrated - manual export/import if needed)*
 
 ### 4. **Development Environment**
+
 ```bash
 # Local development with Docker
 docker run -d --name mariadb \
@@ -252,6 +264,7 @@ MAX_MESSAGE_LENGTH=1600         # Default: 1600 characters
 ### Tables Created Automatically
 
 #### 1. **users**
+
 ```sql
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -268,6 +281,7 @@ CREATE TABLE users (
 ```
 
 #### 2. **messages**
+
 ```sql
 CREATE TABLE messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -285,6 +299,7 @@ CREATE TABLE messages (
 ```
 
 #### 3. **originators**
+
 ```sql
 CREATE TABLE originators (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -305,6 +320,7 @@ CREATE TABLE originators (
 ## 🔐 Security Best Practices
 
 ### 1. **Change Default Password**
+
 ```sql
 -- After first login, change the password:
 UPDATE users SET password_hash = ? WHERE username = 'admin';
@@ -313,6 +329,7 @@ UPDATE users SET password_hash = ? WHERE username = 'admin';
 Or use the UI (when multi-user features are enabled).
 
 ### 2. **Set Custom Admin Credentials**
+
 ```bash
 # In docker-compose.yml or UNRAID template:
 ADMIN_USERNAME=your-admin-username
@@ -320,6 +337,7 @@ ADMIN_PASSWORD=YourSecurePassword123!
 ```
 
 ### 3. **Generate Strong Secrets**
+
 ```bash
 # Generate JWT and Session secrets:
 openssl rand -base64 32  # For JWT_SECRET
@@ -327,6 +345,7 @@ openssl rand -base64 32  # For SESSION_SECRET
 ```
 
 ### 4. **Database User Permissions**
+
 For production, create a dedicated database user:
 
 ```sql
@@ -346,6 +365,7 @@ Then use these credentials in your deployment.
 **Error:** `❌ Database connection failed: ECONNREFUSED`
 
 **Solution:**
+
 1. Check MariaDB/MySQL is running: `docker ps`
 2. Verify DB_HOST is correct (container name or IP)
 3. Check DB_PORT (default: 3306)
@@ -356,6 +376,7 @@ Then use these credentials in your deployment.
 **Error:** `❌ Database connection failed: ER_ACCESS_DENIED_ERROR`
 
 **Solution:**
+
 1. Verify DB_USER and DB_PASSWORD are correct
 2. Check user has access from container hostname
 3. User needs CREATE DATABASE privilege for first-time setup
@@ -365,6 +386,7 @@ Then use these credentials in your deployment.
 **Behavior:** Application detects existing tables and skips creation
 
 **Console:**
+
 ```
 ✅ Database 'aws_eum' already initialized
 📊 Found 7 tables
@@ -377,6 +399,7 @@ This is normal and safe - existing data is preserved.
 **Behavior:** Default admin user creation skipped if users exist
 
 **Console:**
+
 ```
 👤 Found 1 existing user(s)
 ```
@@ -388,6 +411,7 @@ This is normal - application doesn't create duplicate admin users.
 **Error:** Connection timeout during initialization
 
 **Solution:**
+
 1. Increase DB_TIMEOUT: `DB_TIMEOUT=120000` (120 seconds)
 2. Check database server performance
 3. Verify network connectivity is stable
@@ -500,6 +524,7 @@ spec:
 ## 📈 Benefits
 
 ### For Users
+
 - ✅ **Zero Configuration** - Just provide DB credentials
 - ✅ **Instant Setup** - No manual SQL commands
 - ✅ **Clear Feedback** - Know exactly what's happening
@@ -507,6 +532,7 @@ spec:
 - ✅ **Time Savings** - Setup in seconds, not minutes
 
 ### For Administrators
+
 - ✅ **Consistent Setup** - Same process every time
 - ✅ **Easy Deployment** - Works with any orchestration tool
 - ✅ **Automated Testing** - Deploy test environments quickly
@@ -514,6 +540,7 @@ spec:
 - ✅ **No Manual Migrations** - Updates handle schema changes
 
 ### For Developers
+
 - ✅ **Quick Dev Environment** - Spin up instances instantly
 - ✅ **Reproducible Setup** - Same schema every time
 - ✅ **Easy Integration Testing** - Fresh database for each test
@@ -527,15 +554,18 @@ spec:
 ### From Manual Setup (v2.1.0 - v2.1.2)
 
 **Old Process:**
+
 1. Create database manually
 2. Run migration script
 3. Create admin user
 4. Insert settings
 
 **New Process:**
+
 1. Just start the container!
 
 **Existing Installations:**
+
 - Tables already exist → Skipped (data preserved)
 - Users already exist → Skipped
 - Settings already exist → Preserved
@@ -545,10 +575,12 @@ spec:
 ### From v3 (SQLite)
 
 **Differences:**
+
 - v3 uses SQLite (file-based)
 - MariaDB uses external database server
 
 **Migration Steps:**
+
 1. Deploy MariaDB server
 2. Deploy MariaDB edition with DB credentials
 3. Database initializes automatically

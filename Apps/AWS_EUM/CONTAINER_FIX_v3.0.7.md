@@ -1,9 +1,11 @@
 # 🚨 URGENT: Docker Container Fix for v3.0.7
 
 ## Issue
+
 Your Docker container is running an **old image** that has the `CURRENT_VERSION` bug, causing continuous crashes.
 
 ## Status
+
 ✅ **Code is fixed** in repository (all `CURRENT_VERSION` → `APP_VERSION`)  
 ✅ **Git tag v3.0.7 created and pushed**  
 🔄 **GitHub Actions is building new Docker image NOW**
@@ -20,7 +22,7 @@ Your Docker container is running an **old image** that has the `CURRENT_VERSION`
 ## Track Build Progress
 
 Watch the build here:
-https://github.com/N85UK/UNRAID_Apps/actions
+<https://github.com/N85UK/UNRAID_Apps/actions>
 
 Look for: **"Build and Push AWS EUM v3 Docker Image"** workflow
 
@@ -66,6 +68,7 @@ docker logs AWS_EUM | tail -20
 ```
 
 **Should see:**
+
 ```
 🚀 AWS EUM v3.0.7 server running on port 80
 🌐 HTTP Server: http://0.0.0.0:80
@@ -74,6 +77,7 @@ docker logs AWS_EUM | tail -20
 ```
 
 **Should NOT see:**
+
 ```
 ReferenceError: CURRENT_VERSION is not defined
 ```
@@ -92,7 +96,7 @@ ReferenceError: CURRENT_VERSION is not defined
 - **Now:** Build triggered via git tag
 - **~10 mins:** New Docker image available at `ghcr.io/n85uk/aws-eum:latest`
 - **After pull:** Container will start successfully
-- **Result:** Web UI accessible at http://10.0.2.11:80
+- **Result:** Web UI accessible at <http://10.0.2.11:80>
 
 ## If Urgent (Build Locally)
 
@@ -112,11 +116,13 @@ docker build -t aws-eum:3.0.7 .
 ## Need Help?
 
 Check build status:
+
 ```bash
 gh run list --workflow=docker-build-aws-eum.yml --limit 1
 ```
 
 View build logs:
+
 ```bash
 gh run watch
 ```

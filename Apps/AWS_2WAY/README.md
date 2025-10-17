@@ -64,6 +64,7 @@ Open your browser to: `http://localhost:3000`
    - Configure phone numbers: `+447418367358`, `+447418373704`
 
 2. **Create SNS Topic**
+
    ```bash
    aws sns create-topic --name aws-2way-sms-incoming
    ```
@@ -76,6 +77,7 @@ Open your browser to: `http://localhost:3000`
      - SNS Topic ARN: `arn:aws:sns:eu-west-2:YOUR_ACCOUNT:aws-2way-sms-incoming`
 
 4. **Subscribe Webhook to SNS Topic**
+
    ```bash
    aws sns subscribe \
      --topic-arn arn:aws:sns:eu-west-2:YOUR_ACCOUNT:aws-2way-sms-incoming \
@@ -131,6 +133,7 @@ Open your browser to: `http://localhost:3000`
 5. Click **"Add Keyword"**
 
 **Example Keywords:**
+
 - Trigger: `HELP` → Response: `Welcome! Reply with INFO for details or HOURS for opening times.`
 - Trigger: `HOURS` → Response: `We're open Mon-Fri 9AM-5PM, Sat 10AM-2PM.`
 - Trigger: `STOP` → Response: `You've been unsubscribed. Reply START to resume.`
@@ -223,6 +226,7 @@ curl -X POST http://localhost:3000/api/send \
 ## 🗄️ Database Schema
 
 ### Messages Table
+
 ```sql
 CREATE TABLE messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -238,6 +242,7 @@ CREATE TABLE messages (
 ```
 
 ### Conversations Table
+
 ```sql
 CREATE TABLE conversations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -251,6 +256,7 @@ CREATE TABLE conversations (
 ```
 
 ### Keywords Table
+
 ```sql
 CREATE TABLE keywords (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -291,6 +297,7 @@ docker-compose logs -f
 ```
 
 Log output includes:
+
 - ✅ Successful operations
 - 📤 Outbound SMS
 - 📥 Inbound SMS webhooks
@@ -346,11 +353,12 @@ Contributions welcome! Please open issues or submit pull requests.
 ## 📞 Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/n85uk/aws-2way-sms/issues
-- Documentation: https://github.com/n85uk/aws-2way-sms/wiki
+
+- GitHub Issues: <https://github.com/n85uk/aws-2way-sms/issues>
+- Documentation: <https://github.com/n85uk/aws-2way-sms/wiki>
 
 ---
 
 **Version:** 1.0.0  
 **Author:** N85UK <hello@git.n85.uk>  
-**Repository:** https://github.com/n85uk/aws-2way-sms
+**Repository:** <https://github.com/n85uk/aws-2way-sms>

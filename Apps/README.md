@@ -13,6 +13,7 @@ A web-based SMS sending application using AWS Pinpoint SMS services.
 **Category**: Utilities
 
 #### Features
+
 - Web interface for sending SMS messages
 - AWS Pinpoint SMS integration
 - Configurable originators (phone numbers)
@@ -20,11 +21,13 @@ A web-based SMS sending application using AWS Pinpoint SMS services.
 - Secure credential management (no secrets included)
 
 #### Installation
+
 1. **Via UNRAID Community Applications** (recommended):
    - Once approved, search for "AWS End User Messaging" in the Apps tab
    - Configure your AWS credentials in the template
 
 2. **Manual Docker Installation**:
+
    ```bash
    docker run -d \
      --name aws-eum \
@@ -37,6 +40,7 @@ A web-based SMS sending application using AWS Pinpoint SMS services.
    ```
 
 #### Configuration
+
 - `AWS_ACCESS_KEY_ID`: Your AWS access key (required)
 - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key (required)
 - `AWS_REGION`: AWS region (default: eu-west-2)
@@ -45,11 +49,13 @@ A web-based SMS sending application using AWS Pinpoint SMS services.
 ## Development
 
 ### Prerequisites
+
 - Node.js 20+
 - Docker
 - AWS Account with Pinpoint SMS configured
 
 ### Building
+
 ```bash
 cd Apps/AWS_EUM
 npm install
@@ -58,6 +64,7 @@ docker build -t aws-eum .
 ```
 
 ### Publishing
+
 The GitHub Actions workflow automatically builds and publishes the Docker image to GHCR on pushes to main branch.
 
 ## Community Applications Submission
@@ -65,9 +72,11 @@ The GitHub Actions workflow automatically builds and publishes the Docker image 
 This repository contains properly formatted templates for UNRAID Community Applications submission.
 
 ### Submission Status
-- **AWS EUM**: Ready for submission to https://github.com/Squidly271/community.applications
+
+- **AWS EUM**: Ready for submission to <https://github.com/Squidly271/community.applications>
 
 ### Files Included
+
 - `my-aws-*.xml` - UNRAID CA template configuration (XML format)
 - `doc.md` - Application documentation with CA metadata
 - Docker image published to GHCR

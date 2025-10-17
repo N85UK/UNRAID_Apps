@@ -3,6 +3,7 @@
 ## 📦 Current Release: v3.0.1
 
 ### Image Information
+
 - **Registry**: GitHub Container Registry (GHCR)
 - **Image**: `ghcr.io/n85uk/aws-eum:3.0.1`
 - **Latest**: `ghcr.io/n85uk/aws-eum:latest`
@@ -12,6 +13,7 @@
 ### 🔄 Build & Publish Process
 
 **Build the Image:**
+
 ```bash
 # Build with version tags
 docker build -t ghcr.io/n85uk/aws-eum:3.0.1 -t ghcr.io/n85uk/aws-eum:latest .
@@ -21,6 +23,7 @@ docker build -t ghcr.io/n85uk/aws-eum:3.0.1 -t ghcr.io/n85uk/aws-eum:latest .
 ```
 
 **Publish to GHCR:**
+
 ```bash
 # Login to GitHub Container Registry
 echo $GITHUB_TOKEN | docker login ghcr.io -u N85UK --password-stdin
@@ -31,6 +34,7 @@ docker push ghcr.io/n85uk/aws-eum:latest
 ```
 
 ### 🆕 v3.0.1 Key Features
+
 - **CSP Configuration**: Environment variables for Content Security Policy
 - **Network Compatibility**: Fixes for br0.2, br0.100, custom bridge networks
 - **One-line Fix**: `DISABLE_CSP=true` resolves all CSP issues
@@ -41,12 +45,14 @@ docker push ghcr.io/n85uk/aws-eum:latest
 
 **Workflow File**: `.github/workflows/build-and-publish.yml`
 **Build Steps**:
+
 - Node.js 20 setup
 - Dependencies installation (`npm ci`)
 - Docker build with proper naming
 - GHCR authentication and push
 
 **Environment Variables**:
+
 - Repository owner converted to lowercase for Docker compatibility
 - Automatic tagging with `latest`
 
@@ -54,7 +60,7 @@ docker push ghcr.io/n85uk/aws-eum:latest
 
 The image is currently private to your GitHub account. To make it publicly accessible:
 
-1. Go to: https://github.com/orgs/N85UK/packages/container/package/aws-eum
+1. Go to: <https://github.com/orgs/N85UK/packages/container/package/aws-eum>
 2. Click **"Package settings"**
 3. Set **"Package visibility"** to **"Public"**
 4. Confirm the change
@@ -84,21 +90,24 @@ docker run -p 80:80 ghcr.io/n85uk/aws-eum:latest
 ### 📊 Build History
 
 View build history and logs at:
-https://github.com/N85UK/UNRAID_Apps/actions
+<https://github.com/N85UK/UNRAID_Apps/actions>
 
 ### 🛠️ Troubleshooting
 
 **Build fails?**
+
 - Check GitHub Actions logs for detailed error messages
 - Verify Node.js and Docker configurations
 - Ensure all dependencies are properly listed in `package.json`
 
 **Image not found?**
+
 - Confirm the image name: `ghcr.io/n85uk/aws-eum:latest`
 - Check package visibility settings
 - Verify GitHub token permissions
 
 **Authentication issues?**
+
 - The workflow uses `GITHUB_TOKEN` automatically
 - No manual authentication setup required
 

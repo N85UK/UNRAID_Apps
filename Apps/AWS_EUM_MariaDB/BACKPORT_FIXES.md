@@ -5,19 +5,23 @@
 All critical fixes have been backported and tested.
 
 ## Overview
+
 AWS_EUM_MariaDB (v2.1.0) needs the same fixes that were applied to AWS_EUM_v3 (v3.0.12).
 
 ## Critical Bug Found
 
 ### Originator Dropdown Issue ⚠️
+
 **Location:** `Apps/AWS_EUM_MariaDB/views/index.ejs` line 96
 
 **Current (BROKEN):**
+
 ```html
 <option value="<%= originators[label] %>"><%= label %></option>
 ```
 
 **Should be:**
+
 ```html
 <option value="<%= label %>"><%= label %></option>
 ```
@@ -29,17 +33,22 @@ AWS_EUM_MariaDB (v2.1.0) needs the same fixes that were applied to AWS_EUM_v3 (v
 ## Fixes to Backport from v3.0.12
 
 ### 1. ✅ Form Field Names
+
 **Status:** Already correct in MariaDB version
+
 - Uses `name="phoneNumber"` ✅
 - Uses `name="message"` ✅
 - Uses `name="originator"` ✅
 
 ### 2. ✅ Originator Dropdown
+
 **Status:** FIXED in v2.1.1
+
 - Changed from sending `originators[label]` (the ARN value)
 - Now sends `label` (the phone number key)
 
 **Fix Applied:**
+
 ```diff
 - <option value="<%= originators[label] %>"><%= label %></option>
 + <option value="<%= label %>"><%= label %></option>
@@ -48,22 +57,30 @@ AWS_EUM_MariaDB (v2.1.0) needs the same fixes that were applied to AWS_EUM_v3 (v
 **File Modified:** `views/index.ejs` line 95
 
 ### 3. ✅ Form Method
+
 **Status:** Already correct
+
 - Form has no `method` or `action` attributes ✅
 - Relies on JavaScript fetch ✅
 
 ### 4. ✅ Chart Issues
+
 **Status:** NOT APPLICABLE
+
 - MariaDB version does not use Chart.js
 - No chart configuration needed
 
 ### 5. ✅ Version Variable
+
 **Status:** Already correct
+
 - Uses `CURRENT_VERSION` not `APP_VERSION` ✅
 - No undefined variable issues ✅
 
 ### 6. ? CSP Configuration
+
 **Status:** NEEDS VERIFICATION
+
 - Check if DISABLE_CSP defaults to appropriate value
 - Check if CSP causes resource loading issues
 
@@ -98,6 +115,7 @@ Current: v2.1.0
 Next: v2.1.1 (bug fix release)
 
 **Changes for v2.1.1:**
+
 - Fix originator dropdown value selection
 - Update CHANGELOG.md
 - Tag and release
@@ -105,6 +123,7 @@ Next: v2.1.1 (bug fix release)
 ## Dockerfile Check
 
 MariaDB version uses different base image - verify:
+
 - [ ] Check if multi-stage build needed
 - [ ] Verify node version compatibility
 - [ ] Check if database initialization works
@@ -113,6 +132,7 @@ MariaDB version uses different base image - verify:
 ## Database Schema
 
 Verify that message history table schema is compatible with:
+
 - [ ] Originator as label (string)
 - [ ] Phone number format
 - [ ] Message body (TEXT type)
@@ -121,6 +141,7 @@ Verify that message history table schema is compatible with:
 ## Deployment Notes
 
 **IMPORTANT:** AWS_EUM_MariaDB has different architecture:
+
 - Uses MariaDB for message history storage
 - Requires database container or connection
 - May have additional environment variables
@@ -129,6 +150,7 @@ Verify that message history table schema is compatible with:
 ## Action Items
 
 ### Immediate (Before Next Release)
+
 1. ❗ Fix originator dropdown in index.ejs
 2. Test form submission with fixed dropdown
 3. Verify SMS sending works
@@ -136,12 +158,14 @@ Verify that message history table schema is compatible with:
 5. Update CHANGELOG
 
 ### Short Term
+
 1. Check Chart.js configuration (if used)
 2. Verify CSP settings
 3. Add debug logging like v3.0.12
 4. Test on UNRAID
 
 ### Long Term
+
 1. Consider merging v3 enhancements
 2. Add automated testing
 3. Sync documentation with v3
@@ -160,11 +184,13 @@ Verify that message history table schema is compatible with:
 ## Recommendation
 
 **Priority Order:**
+
 1. 🔴 **HIGH:** Fix originator dropdown (blocks SMS sending)
 2. 🟡 **MEDIUM:** Verify chart configuration
 3. 🟢 **LOW:** Sync documentation
 
 **Timeline:**
+
 - Fix dropdown: **Immediate** (< 1 hour)
 - Test & verify: **Same day**
 - Release v2.1.1: **Within 24 hours**

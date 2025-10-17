@@ -9,6 +9,7 @@ This error typically indicates an issue with your AWS credentials configuration.
 ### 1. Verify Your AWS Credentials
 
 **Check your UNRAID Docker container environment variables:**
+
 - `AWS_ACCESS_KEY_ID` - Should be 20 characters, starting with "AKIA"
 - `AWS_SECRET_ACCESS_KEY` - Should be 40 characters
 - `AWS_REGION` - Should match where your phone numbers are registered
@@ -20,36 +21,48 @@ Visit your app at `http://your-unraid-ip:8080/api/aws/test` to test your AWS con
 ### 3. Common Issues & Solutions
 
 #### ❌ **Invalid Access Key ID**
+
 ```
 Error: The security token included in the request is invalid
 ```
+
 **Solution:**
+
 - Double-check your `AWS_ACCESS_KEY_ID` in UNRAID
 - Ensure there are no extra spaces or characters
 - Verify it's exactly 20 characters long
 
 #### ❌ **Invalid Secret Access Key**
+
 ```
 Error: The security token included in the request is invalid
 ```
+
 **Solution:**
+
 - Double-check your `AWS_SECRET_ACCESS_KEY` in UNRAID
 - Ensure there are no extra spaces or characters
 - Verify it's exactly 40 characters long
 
 #### ❌ **Wrong AWS Region**
+
 ```
 Error: No phone numbers found
 ```
+
 **Solution:**
+
 - Check which region your AWS phone numbers are in
 - Update `AWS_REGION` to match (e.g., `us-east-1`, `eu-west-2`)
 
 #### ❌ **Insufficient Permissions**
+
 ```
 Error: User is not authorized to perform pinpoint-sms-voice-v2:DescribePhoneNumbers
 ```
+
 **Solution:**
+
 - Your AWS user needs additional permissions
 - See "Required AWS Permissions" below
 
@@ -78,12 +91,14 @@ Your AWS user/role needs these permissions:
 ## 🛠️ How to Fix AWS Permissions
 
 ### Method 1: AWS Console (Easy)
+
 1. Go to **AWS IAM Console** → **Users**
 2. Click on your user
 3. Click **Add permissions** → **Attach policies directly**
 4. Search for "**PinpointSMSVoiceFullAccess**" and attach it
 
 ### Method 2: Custom Policy (Recommended)
+
 1. Go to **AWS IAM Console** → **Policies**
 2. Click **Create policy**
 3. Use the JSON above
@@ -114,25 +129,31 @@ If you need to create new credentials:
 ## 📱 Verifying Your Setup
 
 ### 1. Check AWS Phone Numbers
+
 In AWS Console:
+
 - Go to **Amazon Pinpoint** → **SMS and voice** → **Phone numbers**
 - Ensure you have at least one phone number in your region
 - Note the region where your numbers are located
 
 ### 2. Test the Connection
+
 ```bash
 # Test your AWS connection
 curl http://your-unraid-ip:8080/api/aws/test
 ```
 
 ### 3. Check Container Logs
+
 In UNRAID:
+
 - **Docker** tab → **AWS_EUM** → **Logs**
 - Look for specific error messages and suggestions
 
 ## 🎯 Success Indicators
 
 When working correctly, you'll see:
+
 ```
 ✅ AWS SMS client initialized successfully  
 📍 Region: eu-west-2
@@ -152,7 +173,8 @@ When working correctly, you'll see:
 ## 📞 Support
 
 If none of these steps work:
-- Open an issue at: https://github.com/N85UK/UNRAID_Apps/issues
+
+- Open an issue at: <https://github.com/N85UK/UNRAID_Apps/issues>
 - Include the output from `/api/aws/test`
 - Include relevant container logs (without revealing credentials)
 

@@ -5,11 +5,13 @@ This guide installs the AWS EUM v3 Unraid Docker template directly into the corr
 ## Steps
 
 1. SSH into your Unraid server:
+
    ```bash
    ssh root@YOUR_UNRAID_IP
    ```
 
 2. Download the XML template (use the RAW GitHub link):
+
    ```bash
    wget -O /boot/config/plugins/dockerMan/templates-user/my-AWS_EUM.xml \
         https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/my-aws-eum.xml
@@ -17,9 +19,11 @@ This guide installs the AWS EUM v3 Unraid Docker template directly into the corr
    ```
 
 3. Refresh Docker templates (if required):
+
    ```bash
    /etc/rc.d/rc.docker restart
    ```
+
    Or simply refresh the Docker page in Unraid GUI.
 
 4. Add the container from the Unraid GUI:
@@ -46,6 +50,7 @@ This guide installs the AWS EUM v3 Unraid Docker template directly into the corr
 ## Direct Download URL
 
 The template can also be downloaded directly:
+
 ```
 https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/my-aws-eum.xml
 ```

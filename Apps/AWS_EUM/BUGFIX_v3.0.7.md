@@ -1,22 +1,27 @@
 # AWS EUM v3.0.7 - Critical Bug Fixes
 
 ## Release Date
+
 October 11, 2024
 
 ## Version
+
 **3.0.7** - Critical bug fix release
 
 ## Critical Issues Fixed
 
 ### 1. **Syntax Error - Corrupted String Literal** (CRITICAL)
+
 **Problem:** Line 248 contained a corrupted string with literal `\n` escape sequences instead of actual newlines, causing the server to crash immediately on startup.
 
 **Original Code:**
+
 ```javascript
 // Initialize AWS client\ninitializeAWSClient();\n\n// Cache for AWS data...
 ```
 
 **Fixed Code:**
+
 ```javascript
 // Initialize AWS client
 initializeAWSClient();
@@ -30,9 +35,11 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 ---
 
 ### 2. **Undefined Variable - CURRENT_VERSION** (CRITICAL)
+
 **Problem:** The code referenced `CURRENT_VERSION` in 7 locations, but this constant was never defined. The correct constant name is `APP_VERSION`.
 
 **Locations Fixed:**
+
 - Line 381: Update version comparison
 - Line 386: Update info object
 - Line 397: Console log output
@@ -43,11 +50,13 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 - Line 1033: Server startup message
 
 **Original Code:**
+
 ```javascript
 console.log(`🚀 AWS EUM v${CURRENT_VERSION} server running on port ${PORT}`);
 ```
 
 **Fixed Code:**
+
 ```javascript
 console.log(`🚀 AWS EUM v${APP_VERSION} server running on port ${PORT}`);
 ```
@@ -57,14 +66,17 @@ console.log(`🚀 AWS EUM v${APP_VERSION} server running on port ${PORT}`);
 ---
 
 ### 3. **Missing Views Directory Configuration**
+
 **Problem:** The EJS view engine was configured but the views directory path was never explicitly set, which could cause issues finding templates.
 
 **Original Code:**
+
 ```javascript
 app.set('view engine', 'ejs');
 ```
 
 **Fixed Code:**
+
 ```javascript
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -126,12 +138,14 @@ Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
 The container should now start properly. If you experienced the 502 Bad Gateway error:
 
 1. **Stop and remove the old container:**
+
    ```bash
    docker stop AWS_EUM
    docker rm AWS_EUM
    ```
 
 2. **Pull the updated image:**
+
    ```bash
    docker pull ghcr.io/n85uk/aws-eum:3.0.7
    ```

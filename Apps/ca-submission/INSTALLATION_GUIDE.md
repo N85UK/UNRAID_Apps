@@ -23,6 +23,7 @@ Your AWS EUM app is ready to install manually! Choose your preferred method belo
    - **Repository:** `ghcr.io/n85uk/aws-eum:latest`
 
 5. **Environment Variables** (Config Section):
+
    ```
    AWS_ACCESS_KEY_ID = your_aws_access_key_here
    AWS_SECRET_ACCESS_KEY = your_aws_secret_key_here
@@ -43,23 +44,27 @@ Your AWS EUM app is ready to install manually! Choose your preferred method belo
 
 1. **SSH into your UNraid server**
 2. **Create directory:**
+
    ```bash
    mkdir -p /mnt/user/appdata/aws-eum
    cd /mnt/user/appdata/aws-eum
    ```
 
 3. **Download docker-compose.yml:**
+
    ```bash
    wget https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/docker-compose.yml
    ```
 
 4. **Edit environment variables:**
+
    ```bash
    nano docker-compose.yml
    # Edit the AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and other variables
    ```
 
 5. **Start the container:**
+
    ```bash
    docker-compose up -d
    ```
@@ -107,6 +112,7 @@ This creates dropdown options in the web interface.
 ## 🌐 Access Your App
 
 After installation, access your AWS EUM app at:
+
 - **URL:** `http://your-unraid-server-ip`
 - **Port:** 80 (or your configured port)
 
@@ -121,16 +127,19 @@ After installation, access your AWS EUM app at:
 ## 📊 Monitoring
 
 ### Check Container Status
+
 ```bash
 docker ps | grep aws-eum
 ```
 
 ### View Logs
+
 ```bash
 docker logs aws-eum
 ```
 
 ### Stop/Restart
+
 ```bash
 docker stop aws-eum
 docker start aws-eum
@@ -141,16 +150,19 @@ docker start aws-eum
 ### Common Issues
 
 **"Invalid AWS credentials"**
+
 - Verify your AWS keys are correct
 - Ensure your AWS account has Pinpoint SMS access
 - Check the region matches your Pinpoint setup
 
 **"Container won't start"**
+
 - Check Docker logs: `docker logs aws-eum`
 - Verify port 80 isn't already in use
 - Ensure volume path exists
 
 **"Cannot send SMS"**
+
 - Verify phone numbers are in international format (+country code)
 - Check AWS Pinpoint origination numbers are verified
 - Ensure sufficient AWS SMS balance
@@ -164,9 +176,9 @@ docker start aws-eum
 
 ## 📞 Support
 
-- **Documentation:** https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM
-- **Issues:** https://github.com/N85UK/UNRAID_Apps/issues
-- **AWS Pinpoint Docs:** https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html
+- **Documentation:** <https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM>
+- **Issues:** <https://github.com/N85UK/UNRAID_Apps/issues>
+- **AWS Pinpoint Docs:** <https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html>
 
 ## 🔄 Upgrading
 

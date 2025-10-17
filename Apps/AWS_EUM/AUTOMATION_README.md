@@ -7,6 +7,7 @@ This repository now has **fully automated Git Flow** with GitHub Actions for AWS
 ## 📋 What's Automated
 
 ### ✅ Continuous Integration & Deployment
+
 - **Automatic builds** on every push to `main` or `develop`
 - **Version tagging** with semantic versioning
 - **Multi-architecture images** (amd64, arm64)
@@ -14,11 +15,13 @@ This repository now has **fully automated Git Flow** with GitHub Actions for AWS
 - **Release management** with one-click version bumps
 
 ### ✅ Docker Registry
+
 - Images published to: `ghcr.io/n85uk/aws-eum`
 - Tags: `latest`, `develop`, version numbers (e.g., `3.0.7`)
 - Automatic cleanup and optimization
 
 ### ✅ Quality Checks
+
 - Syntax validation
 - Version consistency checks
 - Docker build verification
@@ -29,12 +32,14 @@ This repository now has **fully automated Git Flow** with GitHub Actions for AWS
 ### Deploy New Version
 
 **Automated (Recommended):**
+
 1. Go to: [Actions → Version Bump and Release](https://github.com/N85UK/UNRAID_Apps/actions/workflows/version-bump.yml)
 2. Click "Run workflow"
 3. Select bump type: `patch` | `minor` | `major`
 4. Done! ✨
 
 **Manual:**
+
 ```bash
 git tag v3.0.8
 git push origin v3.0.8
@@ -75,16 +80,19 @@ docker pull ghcr.io/n85uk/aws-eum:3.0.7
 ## 🔄 Workflows
 
 ### 1. Docker Build & Push
+
 - **File:** `.github/workflows/docker-build-aws-eum.yml`
 - **Triggers:** Push to `main`/`develop`, tags, PRs
 - **Actions:** Build, test, push to registry
 
 ### 2. Version Bump & Release
+
 - **File:** `.github/workflows/version-bump.yml`
 - **Triggers:** Manual workflow dispatch
 - **Actions:** Update versions, create release, trigger build
 
 ### 3. Pull Request Checks
+
 - **File:** `.github/workflows/pr-check.yml`
 - **Triggers:** PRs to `main`/`develop`
 - **Actions:** Validate code, check versions, test build
@@ -106,6 +114,7 @@ develop (integration)
 ## 🏷️ Version Tags
 
 Following **Semantic Versioning (SemVer)**:
+
 - **MAJOR.MINOR.PATCH** (e.g., 3.0.7)
 - Git tags: `v3.0.7`
 - Docker tags: `3.0.7`, `v3`, `latest`
@@ -113,12 +122,13 @@ Following **Semantic Versioning (SemVer)**:
 ## 🔐 Required Permissions
 
 Repository settings → Actions → General:
+
 - ✅ Read and write permissions
 - ✅ Allow GitHub Actions to create and approve pull requests
 
 ## 📦 Docker Images
 
-All images available at: https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum
+All images available at: <https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws-eum>
 
 | Tag | Description | Auto-updated |
 |-----|-------------|--------------|
@@ -130,17 +140,21 @@ All images available at: https://github.com/N85UK/UNRAID_Apps/pkgs/container/aws
 ## 🎓 Learning Resources
 
 ### New to Git Flow?
+
 Start with: `QUICK_START_GITFLOW.md`
 
 ### Want to Contribute?
+
 Read: `CONTRIBUTING.md`
 
 ### Need Detailed Workflow Info?
+
 See: `.github-workflows-guide.md`
 
 ## 🚨 Emergency Procedures
 
 ### Rollback Release
+
 ```bash
 # Pull previous version
 docker pull ghcr.io/n85uk/aws-eum:3.0.6
@@ -149,6 +163,7 @@ docker pull ghcr.io/n85uk/aws-eum:3.0.6
 ```
 
 ### Revert Commit
+
 ```bash
 git revert HEAD
 git push origin main
@@ -156,6 +171,7 @@ git push origin main
 ```
 
 ### Delete Bad Tag
+
 ```bash
 git tag -d v3.0.7
 git push origin --delete v3.0.7
@@ -174,12 +190,15 @@ git push origin --delete v3.0.7
 ## 🛠️ Maintenance
 
 ### Update Workflows
+
 Edit files in `.github/workflows/`
 
 ### Add New Checks
+
 Update `pr-check.yml`
 
 ### Modify Build Process
+
 Update `docker-build-aws-eum.yml`
 
 ## 📞 Support

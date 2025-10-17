@@ -1,9 +1,11 @@
 # AWS EUM v3.0.9 - UI Simplification & Bug Fixes
 
 ## Release Date
+
 October 12, 2025
 
 ## Version
+
 **3.0.9** - Simplified UI with chart removal and message history fix
 
 ---
@@ -11,9 +13,11 @@ October 12, 2025
 ## 🎯 Major Changes
 
 ### 1. **Removed Charts** ✅
+
 **Reason:** Charts were causing layout issues and adding unnecessary complexity
 
 **Changes Made:**
+
 - Removed Chart.js dependency from HTML
 - Removed Moment.js dependency (was only used for charts)
 - Deleted entire ChartManager module from JavaScript
@@ -21,12 +25,14 @@ October 12, 2025
 - Removed chart canvas elements from template
 
 **Impact:**
+
 - Faster page load (no Chart.js ~200KB download)
 - Simpler, cleaner UI
 - No more chart expansion bugs
 - Reduced memory footprint
 
 **Files Modified:**
+
 - `views/index-v3.ejs` - Removed chart section and script includes
 - `public/js/app-v3.js` - Removed entire ChartManager (115 lines deleted)
 - `public/css/style-v3.css` - Removed chart-specific styles
@@ -34,9 +40,11 @@ October 12, 2025
 ---
 
 ### 2. **Fixed Message History Display** ✅
+
 **Problem:** Message history was showing "No messages sent yet" even after sending messages
 
 **Root Cause:** Template variable mismatch
+
 - Server saved messages with field: `phoneNumber`
 - Template tried to display field: `destination`
 - Result: Template couldn't find the field, rendered nothing
@@ -46,6 +54,7 @@ October 12, 2025
 **Impact:** Message history now displays correctly ✅
 
 **Files Modified:**
+
 - `views/index-v3.ejs` - Changed field reference in history section
 
 ---
@@ -55,6 +64,7 @@ October 12, 2025
 ### Code Changes
 
 1. **views/index-v3.ejs:**
+
    ```diff
    - <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
    - <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
@@ -67,6 +77,7 @@ October 12, 2025
    ```
 
 2. **public/js/app-v3.js:**
+
    ```diff
    - const ChartManager = { init(), initMessageChart(), initSuccessChart(), ... }
    - ChartManager.init();
@@ -74,6 +85,7 @@ October 12, 2025
    ```
 
 3. **public/css/style-v3.css:**
+
    ```diff
    - .charts-container { ... }
    - .chart-card { ... }
@@ -90,12 +102,14 @@ October 12, 2025
 ## ✅ Validation & Testing
 
 ### Syntax Validation
+
 ```bash
 ✅ node -c server.js          # No errors
 ✅ node -c public/js/app-v3.js # No errors
 ```
 
 ### Code Quality Checks
+
 - ✅ No undefined variables
 - ✅ No missing dependencies
 - ✅ All template variables exist in server response
@@ -103,6 +117,7 @@ October 12, 2025
 - ✅ CSS classes referenced in HTML exist in stylesheet
 
 ### Manual Testing Required
+
 Before deployment, test these scenarios:
 
 1. **Page Load:**
@@ -143,11 +158,13 @@ Before deployment, test these scenarios:
 1. **Wait for Docker build to complete** (~5-10 minutes after git push)
 
 2. **Pull new image:**
+
    ```bash
    docker pull ghcr.io/n85uk/aws-eum:latest
    ```
 
 3. **Verify version:**
+
    ```bash
    docker pull ghcr.io/n85uk/aws-eum:latest 2>&1 | grep "3.0.9"
    ```
@@ -159,13 +176,15 @@ Before deployment, test these scenarios:
    - Click "Start"
 
 5. **Verify in logs:**
+
    ```bash
    docker logs AWS_EUM | grep "v3.0.9"
    ```
+
    Should show: `🚀 AWS EUM v3.0.9 server running on port 80`
 
 6. **Test in browser:**
-   - Go to http://10.0.2.11
+   - Go to <http://10.0.2.11>
    - Send test SMS
    - Verify message appears in history below form
    - Check phone number displays correctly
@@ -177,11 +196,14 @@ Before deployment, test these scenarios:
 ### Non-Critical
 
 1. **Permission Warning (Non-blocking):**
+
    ```
    Error saving update info: EACCES: permission denied, open '/data/update-info.json'
    ```
+
    **Impact:** Auto-update check info not persisted between restarts
    **Workaround:** Run on UNRAID host:
+
    ```bash
    chown -R 1000:1000 /mnt/user/appdata/aws-eum
    ```
@@ -190,12 +212,14 @@ Before deployment, test these scenarios:
 
 ## 📊 Performance Improvements
 
-### Before (v3.0.8):
+### Before (v3.0.8)
+
 - Page load: ~1.2 MB (with Chart.js + Moment.js)
 - JavaScript execution: ~150ms
 - Initial render: ~200ms
 
-### After (v3.0.9):
+### After (v3.0.9)
+
 - Page load: ~1.0 MB (removed 200KB)
 - JavaScript execution: ~100ms (-33%)
 - Initial render: ~150ms (-25%)
@@ -209,6 +233,7 @@ Before deployment, test these scenarios:
 No security changes in this release.
 
 All existing security features remain:
+
 - ✅ Helmet.js security headers
 - ✅ CORS protection
 - ✅ Rate limiting
@@ -284,11 +309,13 @@ This release is successful when:
 If issues occur after upgrade:
 
 1. **Check logs:**
+
    ```bash
    docker logs AWS_EUM -f
    ```
 
 2. **Verify version:**
+
    ```bash
    docker logs AWS_EUM | grep "AWS EUM v"
    ```
@@ -299,6 +326,7 @@ If issues occur after upgrade:
    - Check Network tab for failed requests
 
 4. **Rollback if needed:**
+
    ```bash
    docker pull ghcr.io/n85uk/aws-eum:3.0.8
    # Then force update in UNRAID UI

@@ -7,11 +7,13 @@
 ### Originator Dropdown Value Error
 
 **Problem:**
+
 - Users were unable to send SMS messages
 - Form was submitting AWS ARN instead of the phone number label
 - This caused AWS Pinpoint to reject the messages
 
 **Root Cause:**
+
 ```html
 <!-- BEFORE (v2.1.0) - INCORRECT -->
 <option value="<%= originators[label] %>"><%= label %></option>
@@ -23,9 +25,11 @@
 ```
 
 **Files Changed:**
+
 - `views/index.ejs` - Line 95 fixed
 
 **Impact:**
+
 - ✅ SMS sending now works correctly
 - ✅ Form submits phone number label
 - ✅ AWS Pinpoint accepts the originator value
@@ -33,12 +37,14 @@
 ## Validation Performed
 
 ### Code Review
+
 - ✅ Checked all form field names match server endpoints
 - ✅ Verified no Chart.js in MariaDB version (no aspect ratio issues)
 - ✅ Confirmed CSP configuration appropriate
 - ✅ Validated version constants consistent across files
 
 ### Files Validated
+
 | File | Check | Status |
 |------|-------|--------|
 | `views/index.ejs` | Form fields | ✅ Fixed |
@@ -51,11 +57,13 @@
 ## Version History
 
 ### v2.1.1 (Oct 12, 2025)
+
 - **Fixed**: Originator dropdown sending ARN instead of label
 - **Updated**: Documentation and version numbers
 - **Validated**: All files for consistency
 
 ### v2.1.0 (Oct 8, 2025)
+
 - Initial MariaDB Enterprise Edition release
 - ❌ Had originator dropdown bug (same as v3.0.7)
 
@@ -64,11 +72,13 @@
 ### From v2.1.0 to v2.1.1
 
 1. **Pull new image:**
+
    ```bash
    docker pull ghcr.io/n85uk/aws-eum-mariadb:latest
    ```
 
 2. **Stop and remove old container:**
+
    ```bash
    docker stop aws-eum-mariadb
    docker rm aws-eum-mariadb
@@ -123,8 +133,9 @@ Before deploying to production:
 ## Support
 
 For issues or questions:
-- **GitHub Issues**: https://github.com/N85UK/UNRAID_Apps/issues
-- **Documentation**: https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_MariaDB
+
+- **GitHub Issues**: <https://github.com/N85UK/UNRAID_Apps/issues>
+- **Documentation**: <https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM_MariaDB>
 
 ---
 

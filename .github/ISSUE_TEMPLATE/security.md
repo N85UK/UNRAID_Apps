@@ -6,7 +6,8 @@ labels: security
 assignees: ''
 ---
 
-If you've found a security vulnerability, please report it privately via email to security@git.n85.uk and include the following:
+If you've found a security vulnerability, please report it privately via email to <security@git.n85.uk> and include the following:
+
 - Affected component (app/plugin)
 - Steps to reproduce
 - Proof-of-concept or exploit details

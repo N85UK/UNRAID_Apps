@@ -9,6 +9,7 @@
 ## Root Cause
 
 Your container is on **br0.2 network** at **10.0.2.11**, which requires CSP to be disabled, but the template has:
+
 ```
 DISABLE_CSP = false  ❌
 ```
@@ -16,6 +17,7 @@ DISABLE_CSP = false  ❌
 ## Quick Fix (2 Minutes)
 
 ### Step 1: Stop Container
+
 ```bash
 docker stop AWS_EUM
 ```
@@ -30,11 +32,12 @@ docker stop AWS_EUM
 6. Click **Apply**
 
 ### Step 3: Start Container
+
 The container will restart automatically with CSP disabled.
 
 ### Step 4: Verify Fix
 
-1. Open browser: http://10.0.2.11:80
+1. Open browser: <http://10.0.2.11:80>
 2. Press **Ctrl+Shift+R** (hard refresh)
 3. Check console (F12) - **no more CSP errors**
 4. Charts should load
@@ -76,7 +79,8 @@ docker run -d \
 
 ## Expected Results After Fix
 
-### Container Logs Should Show:
+### Container Logs Should Show
+
 ```
 🔒 CSP Configuration:
    - DISABLE_CSP: true          ← Should be TRUE
@@ -88,13 +92,15 @@ docker run -d \
 🚀 AWS EUM v3.0.7 server running on port 80
 ```
 
-### Browser Console Should Show:
+### Browser Console Should Show
+
 - ✅ No CSP errors
 - ✅ Font Awesome loads
 - ✅ Chart.js loads
 - ✅ All resources load from CDN
 
-### Web UI Should Show:
+### Web UI Should Show
+
 - ✅ Charts display properly
 - ✅ Icons display
 - ✅ Dark mode toggle works
@@ -103,6 +109,7 @@ docker run -d \
 ## Why This Happened
 
 The UNRAID template has `DISABLE_CSP` defaulting to `false` because:
+
 - Most users are on default Docker bridge (172.x.x.x)
 - CSP works fine on default bridge
 - **Custom bridges (br0.x) need CSP disabled**
@@ -113,9 +120,11 @@ Update the template default for br0.2 users:
 
 1. Edit `my-aws-eum.xml`
 2. Change line:
+
    ```xml
    <Config Name="DISABLE_CSP" Target="DISABLE_CSP" Default="true" ...
    ```
+
 3. Or just remember to set it to `true` when installing
 
 ## Network Reference

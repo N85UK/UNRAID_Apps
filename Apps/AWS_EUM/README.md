@@ -12,12 +12,14 @@ Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-u
 ## ✨ Enhanced Features in v3.0
 
 ### 🌙 **Advanced Dark Mode**
+
 - Beautiful toggle between light and dark themes
 - Automatic theme persistence across sessions
 - System preference detection and automatic switching
 - Optimized color schemes for readability in both modes
 
 ### 🎨 **Modern Clean Design** (Updated v3.0.9)
+
 - **Simplified UI** - Removed complex charts for faster, cleaner experience
 - **Smooth animations** and micro-interactions
 - **Enhanced typography** with Google Fonts integration
@@ -29,12 +31,14 @@ Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-u
 - **Smart caching** - Reduces AWS API calls while keeping data fresh
 
 ### 📱 **Enhanced Message Support**
+
 - **Long message support** - Send messages up to 1,600 characters
 - **Automatic SMS segmentation** - Long messages split into multiple SMS segments
 - **Real-time cost estimation** - See how many SMS segments your message will use
 - **Message history tracking** - See all sent messages with phone numbers and timestamps (Fixed v3.0.9)
 
 ### 🛡️ **Enhanced Security & Performance**
+
 - **Rate limiting** with `express-rate-limit` and `rate-limiter-flexible`
 - **Helmet.js security** with comprehensive CSP and security headers
 - **Advanced validation** with sanitization for all inputs
@@ -42,6 +46,7 @@ Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-u
 - **Faster page loads** - 200KB smaller footprint without chart libraries (v3.0.9)
 
 ### 🔧 **Improved UNRAID Integration**
+
 - **Streamlined configuration** through UNRAID templates
 - **Better health monitoring** with detailed status reporting
 - **Enhanced logging** with structured output for debugging
@@ -50,6 +55,7 @@ Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-u
 ## 📋 Features
 
 ### Core Functionality
+
 - ✅ **Send SMS messages** via AWS Pinpoint SMS service
 - ✅ **Automatic AWS integration** - Discovers your phone numbers
 - ✅ **Long message support** - Up to 1,600 characters with auto-segmentation
@@ -57,18 +63,21 @@ Enhanced AWS SMS application with modern UI, dark mode, configurable CSP, auto-u
 - ✅ **Real-time feedback** - Character counts, segment info, cost estimates
 
 ### AWS Integration
+
 - ✅ **Auto-discovery** - Automatically finds your AWS phone numbers
 - ✅ **Multiple originators** - Support for multiple phone numbers/sender IDs
 - ✅ **Region support** - Works with all AWS regions that support Pinpoint SMS
 - ✅ **Manual override** - Option to manually configure originators
 
 ### Security & Reliability
+
 - ✅ **Rate limiting** - Configurable SMS per minute limits
 - ✅ **Input validation** - Comprehensive validation and sanitization
 - ✅ **Error handling** - Graceful error handling and user feedback
 - ✅ **Health monitoring** - Built-in health checks and status endpoints
 
 ### UNRAID Specific
+
 - ✅ **Complete UNRAID template** - Full configuration through Community Applications
 - ✅ **Secure storage** - AWS credentials encrypted and stored securely
 - ✅ **Easy installation** - One-click install through Community Applications
@@ -168,6 +177,7 @@ CSP_POLICY={"defaultSrc":["'self'","'unsafe-inline'","'unsafe-eval'","data:","ht
 ```
 
 **Quick Fix for br0.2 Networks:**
+
 1. Add environment variable: `DISABLE_CSP=true`
 2. Restart container
 3. All features (charts, dark mode, icons) will work perfectly
@@ -208,18 +218,21 @@ docker exec aws-eum npm run test
 ### Common Issues
 
 **No phone numbers showing:**
+
 - Check AWS credentials are correct
 - Verify IAM permissions include SMS permissions
 - Ensure correct AWS region
 - Click "Refresh Numbers" to retry
 
 **Messages not sending:**
+
 - Verify destination number format (+country code)
 - Check AWS account has SMS sending enabled
 - Verify rate limits not exceeded
 - Check AWS CloudWatch logs
 
 **Configuration errors:**
+
 - Run `npm run test` to test AWS connectivity
 - Check UNRAID logs for detailed error messages
 - Verify AWS region supports Pinpoint SMS
@@ -227,6 +240,7 @@ docker exec aws-eum npm run test
 ### Debug Mode
 
 Enable debug logging:
+
 ```bash
 # In UNRAID template
 ENABLE_DEBUG=true
@@ -235,6 +249,7 @@ ENABLE_DEBUG=true
 ### Health Monitoring
 
 Check application health:
+
 ```bash
 curl http://[server-ip]:8280/health
 ```
@@ -287,6 +302,7 @@ Your existing message history will be preserved.
 ### New Features Available
 
 After upgrading, you'll have access to:
+
 - Auto-discovery of AWS phone numbers
 - Long message support
 - Enhanced security features

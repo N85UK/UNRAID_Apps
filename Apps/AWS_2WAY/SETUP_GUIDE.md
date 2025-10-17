@@ -68,7 +68,7 @@ Create custom policy:
 1. Navigate to **AWS Console → Pinpoint SMS Voice V2**
 2. Click **"Phone numbers"** → **"Request phone number"**
 
-#### For UK Numbers:
+#### For UK Numbers
 
 - **Country**: United Kingdom
 - **Number type**: Toll-free (or Long code)
@@ -77,14 +77,14 @@ Create custom policy:
 
 Click **"Request phone number"**
 
-#### Configure Two-Way Messaging:
+#### Configure Two-Way Messaging
 
 1. Select your phone number
 2. Click **"Two-way SMS"** tab
 3. Enable two-way messaging: **✅**
 4. SNS Topic: (will create in next step)
 
-### Phone Numbers to Configure:
+### Phone Numbers to Configure
 
 - `+447418367358` - Primary
 - `+447418373704` - Secondary
@@ -100,6 +100,7 @@ aws sns create-topic \
 ```
 
 **Output:**
+
 ```json
 {
   "TopicArn": "arn:aws:sns:eu-west-2:123456789012:aws-2way-sms-incoming"
@@ -172,6 +173,7 @@ docker-compose logs -f
 ```
 
 You should see:
+
 ```
 ╔═══════════════════════════════════════════════╗
 ║   AWS Two-Way SMS v1.0.0                      ║
@@ -220,6 +222,7 @@ docker run -d \
 6. Click **"Send & Start Conversation"**
 
 **Expected:**
+
 - ✅ Message appears in conversation thread
 - 📱 SMS received on your mobile phone
 
@@ -229,6 +232,7 @@ docker run -d \
 2. Check web UI - message should appear in real-time
 
 **Expected:**
+
 - ✅ Message appears instantly (WebSocket)
 - ✅ Conversation updates with new message
 - ✅ Unread count increments
@@ -240,6 +244,7 @@ docker run -d \
 2. Wait 1-2 seconds
 
 **Expected:**
+
 - ✅ Receive automatic reply: `Welcome! Available commands: INFO, HOURS, STOP`
 
 ## 🌐 Production Deployment
@@ -286,6 +291,7 @@ sms.yourdomain.com {
 ```
 
 Caddy automatically handles:
+
 - SSL certificates (Let's Encrypt)
 - WebSocket upgrades
 - HTTP/2
@@ -303,6 +309,7 @@ aws sns subscribe \
 ### Confirm Subscription
 
 1. Check application logs:
+
    ```bash
    docker-compose logs | grep "SubscribeURL"
    ```
@@ -333,6 +340,7 @@ curl http://localhost:3000/health
 ```
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -368,6 +376,7 @@ docker-compose logs | grep "❌"
 ### Issue: SNS Webhook Not Receiving Messages
 
 **Solution:**
+
 1. Check SNS subscription status (must be "Confirmed")
 2. Verify webhook endpoint is publicly accessible
 3. Test with: `curl -X POST https://sms.yourdomain.com/webhook/sms`
@@ -376,6 +385,7 @@ docker-compose logs | grep "❌"
 ### Issue: WebSocket Disconnecting
 
 **Solution:**
+
 1. Increase reverse proxy timeout: `proxy_read_timeout 300s;`
 2. Check browser console for errors
 3. Verify firewall allows WebSocket connections
@@ -383,6 +393,7 @@ docker-compose logs | grep "❌"
 ### Issue: Messages Not Sending
 
 **Solution:**
+
 1. Verify AWS credentials are correct
 2. Check IAM permissions include `sms-voice:SendTextMessage`
 3. Ensure phone numbers are verified in Pinpoint
@@ -390,9 +401,9 @@ docker-compose logs | grep "❌"
 
 ## 📞 Support
 
-- **GitHub Issues**: https://github.com/n85uk/aws-2way-sms/issues
+- **GitHub Issues**: <https://github.com/n85uk/aws-2way-sms/issues>
 - **Documentation**: See README.md
-- **Email**: hello@git.n85.uk
+- **Email**: <hello@git.n85.uk>
 
 ---
 

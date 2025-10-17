@@ -50,6 +50,7 @@ AWS_2WAY/
 ## 🔧 Technical Stack
 
 ### Backend
+
 - **Runtime**: Node.js 20 (Alpine)
 - **Framework**: Express.js
 - **Database**: better-sqlite3 (SQLite)
@@ -58,12 +59,14 @@ AWS_2WAY/
 - **Security**: Helmet.js, rate limiting, CORS
 
 ### Frontend
+
 - **Template Engine**: EJS
 - **Styling**: Custom CSS with CSS variables (dark/light themes)
 - **JavaScript**: Vanilla JS with WebSocket client
 - **Real-Time**: Native WebSocket API
 
 ### Infrastructure
+
 - **Container**: Docker (multi-arch: amd64, arm64)
 - **Orchestration**: Docker Compose
 - **CI/CD**: GitHub Actions
@@ -71,7 +74,7 @@ AWS_2WAY/
 
 ## 📊 Database Schema
 
-### Tables Created:
+### Tables Created
 
 1. **messages** - All SMS messages (inbound/outbound)
    - Indexed by: from_number, to_number, timestamp
@@ -92,6 +95,7 @@ AWS_2WAY/
 ## 🚀 Deployment Options
 
 ### 1. Docker Compose (Recommended)
+
 ```bash
 cd AWS_2WAY
 cp .env.example .env
@@ -100,18 +104,21 @@ docker-compose up -d
 ```
 
 ### 2. Quick Start Script
+
 ```bash
 ./quick-start.sh
 # Interactive setup with validation
 ```
 
 ### 3. UNRAID Template
+
 - Add template repository
 - Search "AWS Two-Way SMS"
 - Fill in AWS credentials
 - Deploy
 
 ### 4. Manual Docker
+
 ```bash
 docker run -d \
   --name aws-2way-sms \
@@ -140,7 +147,8 @@ docker run -d \
 
 ## 🎨 User Interface
 
-### Main Features:
+### Main Features
+
 - **Conversations Sidebar**: List of all message threads with unread badges
 - **Messages Area**: Full conversation view with message bubbles
 - **Message Input**: Send SMS with sender selection
@@ -149,7 +157,8 @@ docker run -d \
 - **Statistics Cards**: Real-time metrics dashboard
 - **Theme Toggle**: Dark/light mode switcher
 
-### UI Components:
+### UI Components
+
 - Responsive grid layout
 - WebSocket connection indicator
 - Real-time message updates
@@ -171,17 +180,20 @@ docker run -d \
 
 ## 📱 AWS Configuration Requirements
 
-### Pinpoint SMS Voice V2:
+### Pinpoint SMS Voice V2
+
 1. Phone numbers: +447418367358, +447418373704
 2. Two-way messaging enabled
 3. SNS topic configured
 
-### SNS Topic:
+### SNS Topic
+
 - Name: `aws-2way-sms-incoming`
 - Subscription: HTTPS webhook to `/webhook/sms`
 - Status: Confirmed
 
-### IAM Permissions:
+### IAM Permissions
+
 ```json
 {
   "Version": "2012-10-17",
@@ -226,10 +238,12 @@ docker run -d \
 **File**: `.github/workflows/docker-build-aws-2way.yml`
 
 **Triggers**:
+
 - Push to `main` branch
 - Changes in `Apps/AWS_2WAY/**`
 
 **Build Process**:
+
 1. Checkout repository
 2. Set up QEMU and Buildx
 3. Login to GitHub Container Registry
@@ -247,7 +261,8 @@ docker run -d \
 
 ## 🎯 Next Steps for Deployment
 
-### Immediate Actions:
+### Immediate Actions
+
 1. ✅ Configure AWS credentials in `.env`
 2. ✅ Run `./quick-start.sh` or `docker-compose up -d`
 3. ✅ Access web UI at `http://localhost:3000`
@@ -257,7 +272,8 @@ docker run -d \
 7. ✅ Test inbound SMS receiving
 8. ✅ Configure keyword auto-replies
 
-### Production Deployment:
+### Production Deployment
+
 1. Set up reverse proxy (Nginx/Caddy)
 2. Configure SSL certificate
 3. Update SNS webhook URL to production domain
@@ -296,10 +312,10 @@ docker run -d \
 
 ## 📞 Support Resources
 
-- **GitHub Repository**: https://github.com/n85uk/aws-2way-sms
-- **Issues**: https://github.com/n85uk/aws-2way-sms/issues
+- **GitHub Repository**: <https://github.com/n85uk/aws-2way-sms>
+- **Issues**: <https://github.com/n85uk/aws-2way-sms/issues>
 - **Documentation**: README.md, SETUP_GUIDE.md
-- **Contact**: hello@git.n85.uk
+- **Contact**: <hello@git.n85.uk>
 
 ---
 
@@ -308,6 +324,7 @@ docker run -d \
 **AWS_2WAY Application**: **100% COMPLETE**
 
 All components implemented:
+
 - ✅ Backend server with Express and WebSocket
 - ✅ SQLite database with full schema
 - ✅ Complete web UI with real-time updates

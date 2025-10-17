@@ -7,6 +7,7 @@ The file management solution has been **redesigned and implemented as ExplorerX 
 ## Current Implementation
 
 ### ✅ **ExplorerX Plugin (Current)**
+
 ```
 ExplorerX_Plugin/
 ├── explorerx.plg              # Plugin manifest
@@ -48,6 +49,7 @@ ExplorerX was designed specifically for UNRAID users who need:
 ### New Users
 
 1. **Install ExplorerX Plugin**:
+
    ```
    Go to Plugins → Install Plugin
    Enter: https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
@@ -103,11 +105,13 @@ All operations require CSRF tokens and proper session authentication.
 ## Getting Started
 
 ### For Users
+
 1. **Install**: Use the plugin URL in UNRAID's plugin installer
 2. **Access**: Go to Tools → ExplorerX
 3. **Explore**: Use dual-pane mode for advanced operations
 
 ### For Developers
+
 1. **Study Implementation**: Review `ExplorerX_Plugin/source/`
 2. **Understand Architecture**: Native PHP + JavaScript approach
 3. **Follow Patterns**: UNRAID plugin best practices
@@ -116,6 +120,7 @@ All operations require CSRF tokens and proper session authentication.
 ## Features Overview
 
 ### Core Capabilities
+
 - Multi-pane file browser
 - Bulk file operations (copy, move, delete)
 - Background task queue
@@ -126,6 +131,7 @@ All operations require CSRF tokens and proper session authentication.
 - Responsive mobile interface
 
 ### Advanced Features
+
 - CSRF-protected operations
 - Path traversal prevention
 - Real-time progress monitoring

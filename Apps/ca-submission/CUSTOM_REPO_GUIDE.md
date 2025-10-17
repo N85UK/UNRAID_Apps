@@ -7,24 +7,30 @@ You can add your GitHub repository as a custom repository in UNraid's Community 
 ## 📋 Steps to Add Custom Repository
 
 ### 1. Open UNraid Web UI
+
 - Go to **Settings** → **Community Applications**
 
 ### 2. Add Custom Repository
+
 - Scroll down to **"Custom Repositories"**
 - Click **"Add Repository"**
 
 ### 3. Enter Repository Details
+
 ```
 Repository URL: https://github.com/N85UK/UnRiaid_Apps
 Repository Branch: main
 ```
+
 - Click **"Save"**
 
 ### 4. Refresh Community Applications
+
 - Go back to the **Community Applications** tab
 - Click the **refresh icon** (circular arrows) at the top
 
 ### 5. Find and Install Your App
+
 - Search for **"AWS EUM"** or **"AWS End User Messaging"**
 - Click **"Install"**
 - Configure the settings (AWS credentials, etc.)
@@ -52,6 +58,7 @@ UnRiaid_Apps/
 ## ✅ Template Configuration
 
 Your `template.cfg` is properly configured with:
+
 - **Repository**: `ghcr.io/n85uk/aws-eum:latest`
 - **Required environment variables**: AWS credentials
 - **Optional variables**: Region, originators
@@ -74,6 +81,7 @@ Your `template.cfg` is properly configured with:
 ## 🔄 Updating Your App
 
 When you make changes:
+
 1. Update your code and push to GitHub
 2. Go to Community Applications → Settings
 3. Click **"Force Update All Repositories"**
