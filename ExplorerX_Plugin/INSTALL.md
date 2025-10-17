@@ -9,11 +9,9 @@
    - Go to `Plugins` → `Install Plugin`
 3. **Install Plugin**
    - Paste this URL:
-
    ```
    https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg
    ```
-
    - Click `Install`
 4. **Access ExplorerX**
    - Navigate to `ExplorerX` tab (standalone tab, not in Tools menu)
@@ -93,13 +91,11 @@ DUAL_PANE_DEFAULT=false
 ### Plugin Not Appearing in Tools Menu
 
 1. **Check installation**:
-
    ```bash
    ls -la /usr/local/emhttp/plugins/explorerx/
    ```
 
 2. **Restart web server**:
-
    ```bash
    nginx -s reload
    ```
@@ -107,14 +103,12 @@ DUAL_PANE_DEFAULT=false
 ### Permission Issues
 
 1. **Fix file permissions**:
-
    ```bash
    chmod -R 755 /usr/local/emhttp/plugins/explorerx
    chown -R root:root /usr/local/emhttp/plugins/explorerx
    ```
 
 2. **Check PHP logs**:
-
    ```bash
    tail -f /var/log/nginx/error.log
    ```
@@ -122,13 +116,11 @@ DUAL_PANE_DEFAULT=false
 ### Background Tasks Stuck
 
 1. **Check task queue**:
-
    ```bash
    cat /boot/config/plugins/explorerx/queue.json
    ```
 
 2. **Clear stuck tasks**:
-
    ```bash
    echo '{"tasks":[],"version":"2025.10.10.0002"}' > /boot/config/plugins/explorerx/queue.json
    ```
