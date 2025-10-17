@@ -36,8 +36,6 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-CMD ["node", "server.js"]
-
 LABEL org.opencontainers.image.title="AWS EUM X" \
       org.opencontainers.image.description="AWS End User Messaging - modern, secure, observable Unraid app" \
       org.opencontainers.image.vendor="N85UK"
