@@ -35,16 +35,8 @@
           <input id="awsAccessKey" type="text" value="<%= savedAccessKeyFull %>" placeholder="AKIAIOSFODNN7EXAMPLE" />
           
           <label for="awsSecretKey">AWS Secret Access Key</label>
-          <div style="position: relative;">
-            <input id="awsSecretKey" type="password" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" style="padding-right: 45px;" />
-            <button type="button" onclick="toggleSecretVisibility()" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 16px;" title="Toggle visibility">👁️</button>
-          </div>
-          <script>
-            function toggleSecretVisibility() {
-              const input = document.getElementById('awsSecretKey');
-              input.type = input.type === 'password' ? 'text' : 'password';
-            }
-          </script>
+          <input id="awsSecretKey" type="password" placeholder="Leave empty to keep existing key" readonly />
+          <small class="text-muted">For security, the secret key is never displayed. Leave empty to keep the existing saved key, or enter a new one to update.</small>
           
           <label for="awsRegion">AWS Region</label>
           <input id="awsRegion" type="text" value="<%= savedRegion %>" placeholder="eu-west-2" />

@@ -7,6 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const awsRegion = document.getElementById('awsRegion');
   const saveCredentials = document.getElementById('saveCredentials');
 
+  // Make secret key editable when focused
+  if (awsSecretKey) {
+    awsSecretKey.addEventListener('focus', () => {
+      awsSecretKey.removeAttribute('readonly');
+      awsSecretKey.placeholder = 'Enter new secret key or leave empty to keep existing';
+    });
+  }
+
   // Dry-run form
   const dryrunForm = document.getElementById('dryrun-form');
   const dryrunStatus = document.getElementById('dryrun-status');

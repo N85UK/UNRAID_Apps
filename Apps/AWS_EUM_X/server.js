@@ -751,7 +751,17 @@ app.get('/api/origination-numbers', requireAuthAPI, async (req, res) => {
 
 // API: Test AWS credentials and optionally save them
 app.post('/api/test/credentials', requireAuthAPI, async (req, res) => {
-  const { accessKeyId, secretAccessKey, region, saveCredentials } = req.body || {};
+  let { accessKeyId, secretAccessKey, region, saveCredentials } = req.body || {};
+  
+  // If secret key is empty, try to use existing saved credentials
+  if (!secretAccessKey) {
+    const savedCreds = persistence.getCredentials();
+    if (savedCreds && savedCreds.secretAccessKey) {
+      secretAccessKey = savedCreds.secretAccessKey;
+      logger.info('Using existing saved secret access key');
+    }
+  }
+  
   if (!accessKeyId || !secretAccessKey) return res.status(400).json({ error: 'Missing credentials (accessKeyId, secretAccessKey)' });
   const tmpClient = new PinpointSMSVoiceV2Client({ region: region || process.env.AWS_REGION || 'eu-west-2', credentials: { accessKeyId, secretAccessKey } });
   try {
