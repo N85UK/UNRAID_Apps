@@ -10,6 +10,7 @@ on:
     branches: [ main ]
     paths:
       - 'Apps/UCG-Max-Webhook-Receiver/**'
+  workflow_dispatch:
 
 jobs:
   build-and-push:
