@@ -5,7 +5,7 @@ const TEST_DATA_DIR = path.join(__dirname, 'tmp-mig');
 process.env.DATA_DIR = TEST_DATA_DIR;
 
 beforeAll(() => { if (!fs.existsSync(TEST_DATA_DIR)) fs.mkdirSync(TEST_DATA_DIR, { recursive: true }); });
-afterAll(() => { try { fs.rmSync(TEST_DATA_DIR, { recursive: true, force: true }); } catch (e) {} });
+afterAll(() => { try { fs.rmSync(TEST_DATA_DIR, { recursive: true, force: true }); } catch (e) { /* ignore cleanup errors */ } });
 
 const app = require('../server');
 

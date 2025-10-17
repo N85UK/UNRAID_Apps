@@ -122,7 +122,7 @@ class Persistence {
     try {
       const stmt = this.db.prepare('INSERT OR IGNORE INTO messages (message_id, from_number, to_number, body, direction, status, timestamp, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
       stmt.run(record.message_id, record.from_number, record.to_number, record.body, record.direction, record.status || 'received', record.timestamp || Date.now(), record.created_at || Date.now());
-    } catch (e) {}
+    } catch (e) { /* ignore duplicate messages */ }
     try {
       const convStmt = this.db.prepare('SELECT * FROM conversations WHERE phone_number = ?');
       const existing = convStmt.get(record.from_number) || convStmt.get(record.to_number);
@@ -131,7 +131,7 @@ class Persistence {
       } else {
         this.db.prepare('UPDATE conversations SET last_message = ?, last_message_time = ?, unread_count = ?, updated_at = ? WHERE phone_number = ?').run(record.body, record.timestamp || Date.now(), (existing.unread_count || 0) + (record.direction === 'inbound' ? 1 : 0), Date.now(), existing.phone_number);
       }
-    } catch (e) {}
+    } catch (e) { /* ignore conversation update errors */ }
   }
 
   getKeywords() { return this.db.prepare('SELECT id, trigger, response, active FROM keywords').all(); }

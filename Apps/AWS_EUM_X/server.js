@@ -84,6 +84,7 @@ async function probeAWS() {
 function estimateMessageParts(message) {
   const msgStr = typeof message === 'string' ? message : '';
   const chars = msgStr.length;
+  // eslint-disable-next-line no-control-regex
   const isUcs2 = /[^\x00-\x7F]/.test(msgStr);
   const encoding = isUcs2 ? 'UCS-2' : 'GSM-7';
   const singleLimit = isUcs2 ? 70 : 160;
@@ -442,7 +443,7 @@ app.delete('/api/settings/mps/:origin', (req, res) => {
       persistence.setConfig(cfg);
     }
     // Clear runtime state in rate limiter
-    try { rateLimiter.clearOrigin(origin); } catch (e) {}
+    try { rateLimiter.clearOrigin(origin); } catch (e) { /* ignore errors */ }
     return res.json({ ok: true });
   } catch (err) { return res.status(500).json({ ok: false, error: err.message }); }
 });
@@ -542,7 +543,8 @@ app.get('/admin/migrations', async (req, res) => {
 });
 
 // Error handler — keep messages generic to avoid leaking sensitive info
-app.use((err, req, res, _next) => { logger.error({ err: err && err.stack ? err.stack : err }, 'Unhandled error'); res.status(500).json({ error: 'Internal server error' }); });
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => { logger.error({ err: err && err.stack ? err.stack : err }, 'Unhandled error'); res.status(500).json({ error: 'Internal server error' }); });
 
 // Export app for tests and programmatic usage
 module.exports = app;
@@ -611,6 +613,7 @@ if (require.main === module) {
     };
 
     try {
+      // eslint-disable-next-line no-unused-vars
       stopWorker = startQueueWorker();
     } catch (e) {
       logger.warn({ err: e.message }, 'Failed to start queue worker');
