@@ -341,6 +341,7 @@ if (!disableCsp) {
 app.use(helmet.frameguard({ action: 'sameorigin' }));
 app.use(cors());
 app.use(bodyParser.json({ limit: '512kb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '512kb' }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use('/css', express.static(path.join(__dirname, 'public', 'css')));
