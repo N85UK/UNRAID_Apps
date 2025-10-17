@@ -6,6 +6,7 @@
 ## Security Alerts Addressed
 
 ### ✅ Fixed - Alert #79 (LOW Severity)
+
 **CVE-2025-57319** - fast-redact prototype pollution vulnerability
 
 - **Package**: `fast-redact` 3.5.0 (transitive dependency via pino)
@@ -15,6 +16,7 @@
 - **Status**: Will be resolved in next Docker build
 
 ### ⚠️ Remaining - Alert #78 (HIGH Severity)
+
 **CVE-2024-21538** - cross-spawn regular expression denial of service
 
 - **Package**: `cross-spawn` 7.0.3 (npm global dependency, NOT in app)
@@ -22,13 +24,16 @@
 - **Location**: `/usr/local/lib/node_modules/npm/node_modules/cross-spawn/package.json`
 - **Impact**: Docker base image issue, not controllable by app package.json
 - **Mitigation**: This is part of npm itself in the Node.js Docker image. Risk is LOW because:
+
   1. Our application doesn't use `cross-spawn` directly
   2. Attacker would need access to the container's shell to exploit
   3. Container runs as non-root user (UID 1001)
   4. Issue will be resolved when Node.js/npm updates their dependencies
+
 - **Recommendation**: Monitor for Node.js 20.x Docker image updates
 
 ### ⚠️ Remaining - Alert #76 (LOW Severity)
+
 **CVE-2025-5889** - brace-expansion inefficient regular expression complexity
 
 - **Package**: `brace-expansion` 2.0.1 (npm global dependency, NOT in app)
@@ -41,6 +46,7 @@
 ## Code Quality Fixes
 
 ### ESLint Warnings Resolved (10 → 0)
+
 All ESLint warnings have been fixed:
 
 1. **server.js:87** - Control character regex (`\x00`) - Added explicit `eslint-disable-next-line` comment
@@ -57,6 +63,7 @@ All ESLint warnings have been fixed:
 ## Dependency Updates
 
 ### Updated Packages
+
 ```json
 {
   "pino": "^8.17.0" → "^10.0.0",
@@ -65,6 +72,7 @@ All ESLint warnings have been fixed:
 ```
 
 ### Breaking Changes
+
 - **pino v10.0.0**: Major version upgrade (8.x → 10.x)
   - API remains compatible for our usage
   - Includes updated `fast-redact` dependency (fixes CVE-2025-57319)
@@ -72,6 +80,8 @@ All ESLint warnings have been fixed:
 - **better-sqlite3 v11.0.0**: Major version upgrade (8.x → 11.x)
   - Required for Node.js 24.x compatibility (development environment)
   - Fully compatible with Node.js 20.x (production Docker environment)
+
+## Next Steps
 
 ## Next Steps
 
@@ -84,20 +94,25 @@ All ESLint warnings have been fixed:
 ## Trivy Scan Notes
 
 **Fixed in Next Scan**:
+
 - Alert #75 (CRITICAL) - CVE-2023-45853 (zlib1g) - Already fixed in previous run
 - Alert #77 (LOW) - CVE-2024-47764 (cookie) - Already fixed in previous run
 - Alert #79 (LOW) - CVE-2025-57319 (fast-redact) - Will be fixed with pino upgrade
 
 **Cannot Fix (OS/npm dependencies)**:
+
 - Alert #78 (HIGH) - CVE-2024-21538 (cross-spawn in npm)
 - Alert #76 (LOW) - CVE-2025-5889 (brace-expansion in npm)
 - Various LOW severity OS package vulnerabilities in Debian base image
 
 ## Risk Assessment
 
+## Risk Assessment
+
 **Current Risk Level**: LOW
 
 **Justification**:
+
 1. All HIGH/CRITICAL vulnerabilities in OS packages have been addressed
 2. Remaining HIGH vulnerability (#78) is in npm tooling, not runtime code
 3. Application runs as non-root user with minimal permissions
