@@ -2,6 +2,11 @@
 
 A production-ready webhook receiver for UCG Max alerts, built with FastAPI, PostgreSQL, and React.
 
+## 📦 Deployment Options
+
+- **Standard Edition**: Separate containers for app, database, and admin tools (recommended for production)
+- **All-in-One Edition**: Single container with embedded PostgreSQL (perfect for Unraid home users) - [See Documentation](INSTALL_ALLINONE.md)
+
 ## Features
 
 - Secure webhook endpoint with HMAC or Bearer token authentication

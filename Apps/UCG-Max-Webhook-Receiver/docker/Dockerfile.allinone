@@ -1,0 +1,74 @@
+FROM python:3.11-slim
+
+# Install PostgreSQL and supervisor for process management
+RUN apt-get update && apt-get install -y \
+    postgresql-15 \
+    postgresql-client-15 \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create application directory
+WORKDIR /app
+
+# Copy application files
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ .
+COPY frontend/dist ./static
+
+# Create PostgreSQL data directory and set permissions
+RUN mkdir -p /var/lib/postgresql/data && \
+    chown -R postgres:postgres /var/lib/postgresql && \
+    mkdir -p /var/run/postgresql && \
+    chown -R postgres:postgres /var/run/postgresql
+
+# Initialize PostgreSQL
+USER postgres
+RUN /usr/lib/postgresql/15/bin/initdb -D /var/lib/postgresql/data
+
+# Configure PostgreSQL
+RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf && \
+    echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+
+USER root
+
+# Create startup script
+COPY docker/start-allinone.sh /start.sh
+RUN chmod +x /start.sh
+
+# Create supervisor configuration
+RUN echo "[supervisord]" > /etc/supervisor/conf.d/supervisord.conf && \
+    echo "nodaemon=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "user=root" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "[program:postgresql]" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "command=/usr/lib/postgresql/15/bin/postgres -D /var/lib/postgresql/data" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "user=postgres" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autostart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autorestart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stdout_logfile=/var/log/postgresql.log" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stderr_logfile=/var/log/postgresql.err" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "[program:uvicorn]" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "command=/start.sh" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "directory=/app" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autostart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "autorestart=true" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stdout_logfile=/var/log/uvicorn.log" >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo "stderr_logfile=/var/log/uvicorn.err" >> /etc/supervisor/conf.d/supervisord.conf
+
+EXPOSE 8000
+
+# Environment defaults
+ENV DATABASE_URL=postgresql://ucgmax:changeme@localhost/ucgmax \
+    SECRET_KEY=change-this-secret-key \
+    HMAC_SECRET=change-this-hmac-secret \
+    ADMIN_USER=admin \
+    ADMIN_PASSWORD=changeme \
+    ALERT_RETENTION_DAYS=30 \
+    RATE_LIMIT_REQUESTS=100 \
+    RATE_LIMIT_WINDOW=60 \
+    LOG_LEVEL=INFO
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
