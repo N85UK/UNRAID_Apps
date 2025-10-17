@@ -42,8 +42,8 @@ jobs:
     - name: Build and push Docker image (standard)
       uses: docker/build-push-action@v5
       with:
-        context: Apps/UCG-Max-Webhook-Receiver
-        file: Apps/UCG-Max-Webhook-Receiver/docker/Dockerfile.backend
+        context: ./Apps/UCG-Max-Webhook-Receiver
+        file: ./Apps/UCG-Max-Webhook-Receiver/docker/Dockerfile.backend
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/ucg-max-webhook-receiver:latest
+        tags: ghcr.io/n85uk/ucg-max-webhook-receiver:latest
         platforms: linux/amd64
