@@ -715,13 +715,24 @@ app.get('/api/origination-numbers', requireAuthAPI, async (req, res) => {
       const senderCommand = new DescribeSenderIdsCommand({ MaxResults: 100 });
       const senderResponse = await smsClient.send(senderCommand);
       
-      const senderIds = (senderResponse.SenderIds || []).map(sender => ({
-        phoneNumber: sender.SenderId,
-        status: sender.Registered ? 'ACTIVE' : 'PENDING',
-        type: 'SenderId',
-        country: sender.IsoCountryCode || 'GB',
-        capabilities: []
-      }));
+      const senderIds = (senderResponse.SenderIds || []).map(sender => {
+        // AWS returns RegistrationStatus which can be: CREATED, PENDING, COMPLETE, etc.
+        // For "Not Required" registration, sender.Registered is true
+        let status = 'ACTIVE';
+        if (sender.RegistrationStatus) {
+          status = sender.RegistrationStatus; // CREATED, PENDING, COMPLETE, REJECTED, etc.
+        } else if (sender.Registered === false) {
+          status = 'PENDING';
+        }
+        
+        return {
+          phoneNumber: sender.SenderId,
+          status: status,
+          type: 'SenderId',
+          country: sender.IsoCountryCode || 'GB',
+          capabilities: []
+        };
+      });
       
       allOriginators = allOriginators.concat(senderIds);
       logger.info({ count: senderIds.length }, 'Fetched sender IDs');
