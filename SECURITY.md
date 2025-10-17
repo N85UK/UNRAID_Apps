@@ -6,8 +6,8 @@ We actively support the following versions with security updates:
 
 | Component | Version | Supported |
 |-----------|---------|----------|
-| ExplorerX Plugin | 0.1.1 | ✅ |
-| AWS EUM | Current | ✅ |
+| AWS EUM MariaDB | 2.1.2 | ✅ |
+| AWS EUM X | 0.1.0 | ✅ |
 
 ## Security Standards
 
@@ -23,18 +23,6 @@ We take the security of UnRaid Apps seriously. Our security practices include:
 - **Data Protection**: Proper handling of sensitive information
 
 ### Security Features
-
-#### ExplorerX Plugin
-
-- **Authentication**: Integration with UNRAID user authentication and session management
-- **Authorization**: Role-based file access permissions with path validation
-- **Input Validation**: Comprehensive sanitization of file paths and all user inputs
-- **Secure File Operations**: Prevention of directory traversal attacks with realpath validation
-- **Session Management**: Secure session handling with automatic timeout
-- **CSRF Protection**: Token-based protection on all file operations
-- **Path Guards**: Operations restricted to /mnt by default with configurable boundaries
-- **Operation Logging**: Comprehensive audit trail of all file operations
-- **Background Security**: Secure handling of background task queue operations
 
 #### AWS EUM
 

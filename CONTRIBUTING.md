@@ -27,8 +27,8 @@ By participating in this project, you agree to abide by our Code of Conduct:
 ### Prerequisites
 
 - Git installed on your development machine
-- PHP 8.x for ExplorerX Plugin development
-- Docker (for AWS EUM development)
+- Node.js 20+ (LTS) for AWS EUM projects
+- Docker for testing containers
 - UNRAID server for testing (recommended)
 
 ### Fork and Clone

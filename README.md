@@ -4,41 +4,6 @@ A curated collection of UNRAID applications and plugins that extend UNRAID's fun
 
 ## 🚀 Available Projects
 
-### 📁 ExplorerX Plugin (Native UNRAID Plugin)
-
-#### Simple, native file manager for UNRAID with clean interface and safe installation
-
-- **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
-- **Status**: 🔧 Debug v2025.10.10.0002 - Investigating interface rendering issues
-- **Installation**: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
-
-**Key Features:**
-
-- 🌐 Simple directory navigation and file listing
-- 📱 Responsive design for mobile and desktop
-- 🔧 **Native Integration**: No Docker required, pure UNRAID plugin
-- 🔒 Safe installation that won't break other plugins
-- 📂 Access to all UNRAID shares and drives
-- 🛡️ **Enhanced Security**: Safe permission handling, no global modifications
-- 🎯 **Tools Menu Access**: Available via Tools → ExplorerX
-
-### 🏆 UNRAID API Integration (Bounty Submission)
-
-#### Complete NestJS implementation for UNRAID API bounty
-
-- **Location**: [`Bounty_Submission/`](Bounty_Submission/)
-- **Status**: ✅ Ready for UNRAID API Integration
-- **Reference**: [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599)
-
-**Implementation Highlights:**
-
-- 🏗️ NestJS module architecture
-- 🔐 UNRAID session proxy authentication
-- 🖥️ Vue.js WebGUI following LogViewer pattern
-- 🔄 Real-time WebSocket updates
-- 📊 Service lifecycle management
-- 🛡️ Security and permission inheritance
-
 ### 📧 AWS End User Messaging (Multi-Version Suite)
 
 #### Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features
@@ -110,12 +75,6 @@ A curated collection of UNRAID applications and plugins that extend UNRAID's fun
 - 🔔 Real-time notifications
 
 ## 🛠️ Installation
-
-### ExplorerX Plugin (Recommended)
-
-1. Go to UNRAID Web UI → Plugins → Install Plugin
-2. Paste: `https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/ExplorerX_Plugin/explorerx.plg`
-3. Click Install and go to Tools → ExplorerX
 
 ### Docker-based Apps (AWS EUM)
 
@@ -196,7 +155,6 @@ We welcome contributions! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details.
 
 - **Minimum UNRAID**: 7.2.0+
 - **Node.js Apps**: Node.js 20+ (LTS)
-- **ExplorerX Plugin**: PHP 8.x (included in UNRAID)
 - **Typical Resources**: 50-200 MB RAM idle, depends on usage
 
 ## 📈 Project Stats
@@ -207,9 +165,8 @@ We welcome contributions! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details.
 
 ## 🙏 Acknowledgments
 
-- **UNRAID Team**: For the excellent platform and bounty opportunities
+- **UNRAID Team**: For the excellent platform
 - **Community**: For testing, feedback, and contributions
-- **FileBrowser Project**: For outstanding file management software
 - **AWS**: For End User Messaging services
 
 ## 📄 License

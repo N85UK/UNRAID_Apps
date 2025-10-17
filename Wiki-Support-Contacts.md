@@ -65,8 +65,6 @@ Please check these resources first:
 
 - **AWS EUM Permission Errors**: Try `chown -R 100:users /mnt/user/appdata/aws-eum`
 - **Enhanced UI Not Loading**: Add `DISABLE_CSP=true` environment variable
-- **ExplorerX Debug Mode**: v2025.10.10.0002 intentionally shows debug info
-- **Plugin Not Visible**: Refresh browser or check Tools menu
 
 ## 📝 **How to Report Issues Effectively**
 
@@ -74,7 +72,7 @@ Please check these resources first:
 
 #### Project Information
 
-- **Project Name**: ExplorerX, AWS EUM v2.0/v3.0/MariaDB, etc.
+- **Project Name**: AWS EUM v2.0/v3.0/MariaDB, UCG Webhook, etc.
 - **Version**: Exact version number
 - **Installation Method**: Plugin URL, Docker template, Community Apps, etc.
 
@@ -155,22 +153,23 @@ systemctl status nginx
 
 **Error Messages**:
 Browser console shows:
-```
-
-Refused to load script '<https://cdn.jsdelivr.net/npm/chart.js>'
-
+```text
+Refused to load script 'https://cdn.jsdelivr.net/npm/chart.js'
 ```
 
 **Configuration**:
+
 - Network Type: Custom br0.2
 - Environment Variables: AWS credentials set, no CSP settings
 - Volume: /mnt/user/appdata/aws-eum mounted to /app/data
 
 **Attempted Solutions**:
+
 - Restarted container
 - Checked AWS credentials (working)
 - Verified volume permissions
-```
+
+```markdown
 
 ## 🚀 **Feature Requests**
 
