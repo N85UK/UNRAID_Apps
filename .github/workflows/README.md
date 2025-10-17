@@ -12,12 +12,6 @@ This directory contains automated workflows for building and publishing applicat
   - Output: `ghcr.io/n85uk/aws-eum:latest` and `ghcr.io/n85uk/aws-eum:X.X.X`
   - Platforms: linux/amd64, linux/arm64
 
-### ExplorerX Plugin
-
-- **`release-explorerx.yml`** - Builds ExplorerX plugin packages
-- **`update-explorerx-version.yml`** - Updates version in plugin files
-- **`test-explorerx.yml`** - Tests ExplorerX builds
-
 ### Other Services
 
 - **`build-and-publish-mariadb.yml`** - Builds MariaDB containers

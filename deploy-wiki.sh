@@ -44,7 +44,6 @@ check_wiki_files() {
     
     local files=(
         "Wiki-Home.md"
-        "Wiki-ExplorerX-Plugin-Installation.md"
         "Wiki-AWS-EUM-Installation.md"
         "Wiki-Version-Comparison.md"
         "Wiki-Troubleshooting.md"
@@ -124,7 +123,6 @@ convert_wiki_content() {
     # Wiki file mappings: source_file -> wiki_page_name
     declare -A wiki_mappings=(
         ["Wiki-Home.md"]="Home.md"
-        ["Wiki-ExplorerX-Plugin-Installation.md"]="ExplorerX-Plugin-Installation.md"
         ["Wiki-AWS-EUM-Installation.md"]="AWS-EUM-Installation.md"
         ["Wiki-Version-Comparison.md"]="Version-Comparison.md"
         ["Wiki-Troubleshooting.md"]="Troubleshooting.md"
@@ -165,14 +163,9 @@ create_additional_pages() {
 
 Complete installation guides for all UNRAID Apps Repository projects.
 
-## 📁 Plugin Installation
-- **[ExplorerX Plugin Installation](ExplorerX-Plugin-Installation)** - Native UNRAID file manager plugin
-
-## 📧 Application Installation  
+##  Application Installation  
 - **[AWS EUM Suite Installation](AWS-EUM-Installation)** - Complete guide for all AWS EUM editions
-
-## 🏆 API Integration
-- **[UNRAID API Integration](UNRAID-API-Integration)** - Bounty submission integration guide
+- **[UCG Webhook Receiver](https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/UCG-Max-Webhook-Receiver)** - UCG Max webhook integration
 
 ## 🔧 Quick Start
 1. **Choose Your Project**: Review [Version Comparison](Version-Comparison) first
@@ -186,55 +179,6 @@ Complete installation guides for all UNRAID Apps Repository projects.
 
 ---
 *Installation guides updated: $(date +'%Y-%m-%d')*
-EOF
-
-    # Create UNRAID API Integration page (link to bounty submission)
-    cat > "UNRAID-API-Integration.md" << EOF
-<!-- Auto-generated UNRAID API Integration page -->
-<!-- Last updated: $(date +'%Y-%m-%d %H:%M:%S UTC') -->
-
-# UNRAID API Integration
-
-Complete implementation for the UNRAID API File Manager bounty.
-
-## 🎯 Bounty Implementation
-
-This repository contains a complete implementation for [UNRAID API Issue #1599](https://github.com/unraid/api/issues/1599) - File Manager integration.
-
-## 📁 Implementation Location
-
-The complete bounty submission is located in:
-- **Directory**: [\`Bounty_Submission/\`](https://github.com/N85UK/UNRAID_Apps/tree/main/Bounty_Submission)
-- **Documentation**: [Complete README](https://github.com/N85UK/UNRAID_Apps/blob/main/Bounty_Submission/README.md)
-
-## ✅ Implementation Status
-
-| Component | Status | Completeness |
-|-----------|--------|--------------|
-| **NestJS Module** | ✅ Complete | 100% |
-| **Vue.js WebGUI** | ✅ Complete | 100% |
-| **Authentication Bridge** | ✅ Complete | 100% |
-| **HTTP/WebSocket Proxy** | ✅ Complete | 100% |
-| **Service Lifecycle** | ✅ Complete | 100% |
-| **Documentation** | ✅ Complete | 100% |
-
-## 🚀 Integration Steps
-
-For UNRAID API team integration:
-
-1. **Review Implementation**: [Bounty Submission README](https://github.com/N85UK/UNRAID_Apps/blob/main/Bounty_Submission/README.md)
-2. **Add Module**: Integrate NestJS FileManager module
-3. **Add Routes**: Configure API routes and WebGUI
-4. **Test Integration**: Verify functionality with UNRAID API
-
-## 📞 Questions?
-
-For integration questions:
-- **GitHub Issues**: [Create Issue](https://github.com/N85UK/UNRAID_Apps/issues)
-- **Email**: hello@git.n85.uk
-
----
-*Ready for UNRAID API integration - Complete bounty implementation*
 EOF
 
     success "Created additional Wiki pages"
