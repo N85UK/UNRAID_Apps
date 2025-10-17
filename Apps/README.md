@@ -100,4 +100,4 @@ For issues with specific applications, please check their respective documentati
 
 ---
 
-**Copyright (c) 2025 N85UK**
+### Copyright (c) 2025 N85UK

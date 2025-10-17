@@ -24,7 +24,7 @@ Your AWS EUM app is ready to install manually! Choose your preferred method belo
 
 5. **Environment Variables** (Config Section):
 
-   ```
+   ```env
    AWS_ACCESS_KEY_ID = your_aws_access_key_here
    AWS_SECRET_ACCESS_KEY = your_aws_secret_key_here
    AWS_REGION = eu-west-2
@@ -103,7 +103,7 @@ docker run -d \
 
 The `ORIGINATORS` variable allows you to pre-configure phone numbers:
 
-```
+```env
 ORIGINATORS=Mobile:+1234567890,Office:+0987654321
 ```
 
@@ -149,19 +149,19 @@ docker start aws-eum
 
 ### Common Issues
 
-**"Invalid AWS credentials"**
+#### "Invalid AWS credentials"
 
 - Verify your AWS keys are correct
 - Ensure your AWS account has Pinpoint SMS access
 - Check the region matches your Pinpoint setup
 
-**"Container won't start"**
+#### "Container won't start"
 
 - Check Docker logs: `docker logs aws-eum`
 - Verify port 80 isn't already in use
 - Ensure volume path exists
 
-**"Cannot send SMS"**
+#### "Cannot send SMS"
 
 - Verify phone numbers are in international format (+country code)
 - Check AWS Pinpoint origination numbers are verified

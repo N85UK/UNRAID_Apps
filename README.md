@@ -6,7 +6,7 @@ A curated collection of UNRAID applications and plugins that extend UNRAID's fun
 
 ### 📁 ExplorerX Plugin (Native UNRAID Plugin)
 
-**Simple, native file manager for UNRAID with clean interface and safe installation**
+#### Simple, native file manager for UNRAID with clean interface and safe installation
 
 - **Location**: [`ExplorerX_Plugin/`](ExplorerX_Plugin/)
 - **Status**: 🔧 Debug v2025.10.10.0002 - Investigating interface rendering issues
@@ -24,7 +24,7 @@ A curated collection of UNRAID applications and plugins that extend UNRAID's fun
 
 ### 🏆 UNRAID API Integration (Bounty Submission)
 
-**Complete NestJS implementation for UNRAID API bounty**
+#### Complete NestJS implementation for UNRAID API bounty
 
 - **Location**: [`Bounty_Submission/`](Bounty_Submission/)
 - **Status**: ✅ Ready for UNRAID API Integration
@@ -41,7 +41,7 @@ A curated collection of UNRAID applications and plugins that extend UNRAID's fun
 
 ### 📧 AWS End User Messaging (Multi-Version Suite)
 
-**Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features**
+#### Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features
 
 🚀 **All versions now building successfully with GitHub Actions CI/CD!**
 
@@ -218,4 +218,4 @@ This repository and included projects are licensed under the MIT License. See [`
 
 ---
 
-**Made with ❤️ for the UNRAID community**
+### Made with ❤️ for the UNRAID community

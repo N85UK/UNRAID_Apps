@@ -1,6 +1,6 @@
 # AWS EUM v3.0.1 Installation Guide
 
-**Quick installation guide for AWS End User Messaging v3.0.1**
+> Quick installation guide for AWS End User Messaging v3.0.1
 
 ## 🚀 **Quick Install (UNRAID)**
 
@@ -74,15 +74,15 @@ docker run -d \\
 ```
 
 ---
+
 **Need help?** See [Troubleshooting Guide](Wiki-Troubleshooting.md) or [Common Issues](Wiki-Common-Issues.md)
 
-# Method 2: Via Community Applications
+## Method 2: Via Community Applications
 
-# Search for \"AWS End User Messaging v2.0\" in Apps tab
+Search for "AWS End User Messaging v2.0" in Apps tab
 
-```
+### Docker Installation via UNRAID Template
 
-#### 2. Docker Installation via UNRAID Template
 1. **Access Docker Tab**
    - Open UNRAID webGUI
    - Navigate to **Docker** tab
@@ -93,14 +93,13 @@ docker run -d \\
    - Choose **\"AWS End User Messaging v2.0\"**
 
 3. **Configure Environment Variables**
-   ```
 
+   ```env
    AWS_ACCESS_KEY_ID=your_aws_access_key
    AWS_SECRET_ACCESS_KEY=your_aws_secret_key
    AWS_REGION=eu-west-2  # Optional, default region
    PORT=80               # Optional, default port
    ORIGINATORS=Label1:arn1,Label2:arn2  # Optional custom originators
-
    ```
 
 4. **Set Paths and Ports**
@@ -111,12 +110,13 @@ docker run -d \\
    - Click **\"Apply\"** to create and start the container
    - Wait for container to start successfully
 
-#### 3. Access Application
-- **URL**: `http://your-unraid-ip:8080`
-- **Interface**: Clean, simple SMS sending interface
-- **Features**: Basic SMS, history, cost estimation
+6. **Access Application**
+   - **URL**: `http://your-unraid-ip:8080`
+   - **Interface**: Clean, simple SMS sending interface
+   - **Features**: Basic SMS, history, cost estimation
 
 ### Docker Compose (Alternative)
+
 ```yaml
 version: '3.8'
 services:
@@ -152,10 +152,12 @@ Modern interface with Chart.js analytics, dark mode, and advanced visual feature
 
 ```bash
 # Method 1: Direct template download
+```bash
 wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/my-aws-eum-v3.xml
 
 # Method 2: Via Community Applications
 # Search for "AWS End User Messaging v3.0 Enhanced" in Apps tab
+```
 ```
 
 #### 2. Docker Installation via UNRAID Template
@@ -164,7 +166,7 @@ wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/my-aws-eum-v3.xm
 2. **Add Container** with template **\"AWS End User Messaging v3.0 Enhanced\"**
 3. **Configure Environment Variables** (same as v2.0 plus):
 
-   ```
+   ```env
    AWS_ACCESS_KEY_ID=your_aws_access_key
    AWS_SECRET_ACCESS_KEY=your_aws_secret_key
    AWS_REGION=eu-west-2
@@ -260,7 +262,7 @@ wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/my-aws-e
 1. **Add Container** with template **\"AWS EUM MariaDB Enterprise\"**
 2. **Configure All Environment Variables**:
 
-   ```
+   ```env
    # AWS Configuration
    AWS_ACCESS_KEY_ID=your_aws_access_key
    AWS_SECRET_ACCESS_KEY=your_aws_secret_key
