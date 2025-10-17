@@ -29,12 +29,6 @@ jobs:
       with:
         node-version: '20'
     
-    - name: Build frontend
-      working-directory: Apps/UCG-Max-Webhook-Receiver/frontend
-      run: |
-        npm install
-        npm run build
-    
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     
@@ -45,44 +39,11 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Extract metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ghcr.io/${{ github.repository_owner }}/ucg-max-webhook-receiver
-        tags: |
-          type=raw,value=latest
-          type=sha,prefix={{branch}}-
-    
     - name: Build and push Docker image (standard)
       uses: docker/build-push-action@v5
       with:
         context: Apps/UCG-Max-Webhook-Receiver
         file: Apps/UCG-Max-Webhook-Receiver/docker/Dockerfile.backend
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ghcr.io/${{ github.repository_owner }}/ucg-max-webhook-receiver:latest
         platforms: linux/amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
-    - name: Extract metadata (all-in-one)
-      id: meta-allinone
-      uses: docker/metadata-action@v5
-      with:
-        images: ghcr.io/${{ github.repository_owner }}/ucg-max-webhook-receiver
-        tags: |
-          type=raw,value=allinone-latest
-          type=sha,prefix=allinone-{{branch}}-
-    
-    - name: Build and push Docker image (all-in-one)
-      uses: docker/build-push-action@v5
-      with:
-        context: Apps/UCG-Max-Webhook-Receiver
-        file: Apps/UCG-Max-Webhook-Receiver/docker/Dockerfile.allinone
-        push: true
-        tags: ${{ steps.meta-allinone.outputs.tags }}
-        labels: ${{ steps.meta-allinone.outputs.labels }}
-        platforms: linux/amd64
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
