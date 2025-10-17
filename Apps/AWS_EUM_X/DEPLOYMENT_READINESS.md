@@ -10,6 +10,7 @@
 ## ✅ Completed Items
 
 ### Source Code
+
 - ✅ **Backend Implementation** - All 8 modules complete (server, 7 libs)
 - ✅ **View Templates** - 6 EJS templates created
 - ✅ **ESLint Configuration** - All code passes linting
@@ -18,6 +19,7 @@
 - ✅ **Security** - Non-root container, secret redaction, CSRF protection
 
 ### Infrastructure
+
 - ✅ **Dockerfile** - Multi-stage build, health check, optimized
 - ✅ **Docker Compose** - Development environment configured
 - ✅ **GitHub Actions** - CI/CD pipeline with lint, build, scan, test
@@ -25,6 +27,7 @@
 - ✅ **Environment Config** - .env.example with all variables
 
 ### Documentation
+
 - ✅ **README.md** - Comprehensive guide (500+ lines)
 - ✅ **AUDIT.md** - Technical audit (26 findings documented)
 - ✅ **SECURITY.md** - Security policy and disclosure process
@@ -35,12 +38,14 @@
 - ✅ **Wiki-Home.md** - Updated with AWS_EUM_X
 
 ### Unraid Integration
+
 - ✅ **Template XML** - my-aws-eum-x.xml with all metadata
 - ✅ **Environment Variables** - All AWS/app settings documented
 - ✅ **Volume Mappings** - Config and data persistence configured
 - ✅ **IAM Policy** - iam-policy-minimal.json provided
 
 ### CI/CD
+
 - ✅ **GitHub Actions** - All workflows passing
 - ✅ **Multi-arch Builds** - amd64 and arm64 support
 - ✅ **Security Scanning** - Trivy configured
@@ -51,16 +56,19 @@
 ## ⚠️ Known Limitations
 
 ### Frontend (Deferred to v1.1)
+
 - ⚠️ **CSS Styling** - Basic styles, needs enhancement
 - ⚠️ **JavaScript** - Minimal client-side code
 - ⚠️ **UX Polish** - Functional but could be improved
 
 ### Testing (Deferred to v1.1)
+
 - ⚠️ **Unit Tests** - Not yet implemented
 - ⚠️ **Integration Tests** - Not yet implemented
 - ⚠️ **E2E Tests** - Not yet implemented
 
 ### Assets (Deferred to v1.1)
+
 - ⚠️ **Icons** - Placeholder icons, need custom design
 - ⚠️ **Screenshots** - Not yet created
 - ⚠️ **Video Walkthrough** - Not yet recorded
@@ -70,6 +78,7 @@
 ## 🚀 Deployment Steps
 
 ### 1. Docker Image Build
+
 ```bash
 cd Apps/AWS_EUM_X
 docker build -t aws-eum-x:1.0.0 .
@@ -78,6 +87,7 @@ docker push ghcr.io/n85uk/aws-eum-x:latest
 ```
 
 ### 2. Unraid Installation
+
 1. Open Community Apps in Unraid
 2. Search for "AWS EUM X"
 3. Click Install
@@ -86,6 +96,7 @@ docker push ghcr.io/n85uk/aws-eum-x:latest
 6. Complete first-run wizard
 
 ### 3. Manual Installation
+
 ```bash
 # Using Docker Compose
 cd Apps/AWS_EUM_X
@@ -109,6 +120,7 @@ docker run -d \
 ## 📊 Quality Metrics
 
 ### Code
+
 - **Source Lines:** 1,880
 - **Documentation Lines:** 2,939
 - **Total Files:** 31
@@ -116,6 +128,7 @@ docker run -d \
 - **ESLint Warnings:** 0
 
 ### Security
+
 - **Vulnerabilities:** 1 low (csurf deprecated, replacement planned for v1.1)
 - **Container User:** Non-root (UID 1000)
 - **Secret Redaction:** ✅ Enabled
@@ -123,6 +136,7 @@ docker run -d \
 - **Input Validation:** ✅ Joi schemas
 
 ### Performance
+
 - **Image Size:** ~150MB
 - **Build Time:** <2 minutes
 - **Startup Time:** <5 seconds
@@ -134,6 +148,7 @@ docker run -d \
 ## 🎯 Post-Deployment Validation
 
 ### Health Check
+
 ```bash
 curl http://localhost:3000/health
 # Expected: {"status":"ok","uptime":123,"timestamp":"..."}
@@ -143,6 +158,7 @@ curl http://localhost:3000/health/ready
 ```
 
 ### Smoke Test
+
 ```bash
 cd Apps/AWS_EUM_X
 npm run smoke
@@ -150,12 +166,14 @@ npm run smoke
 ```
 
 ### Lint Check
+
 ```bash
 npm run lint
 # Expected: No errors
 ```
 
 ### Container Test
+
 ```bash
 docker run --rm aws-eum-x:1.0.0 node src/healthcheck.js &
 sleep 10
@@ -188,18 +206,21 @@ curl http://localhost:3000/health/ready
 ## 🔄 Next Steps (v1.1+)
 
 ### High Priority
+
 1. Publish Docker image to GHCR
 2. Submit to Unraid Community Apps
 3. Create production icons (512x512 PNG + SVG)
 4. Add unit tests (80% coverage target)
 
 ### Medium Priority
+
 5. Enhance CSS styling (modern, responsive)
 6. Add JavaScript interactivity (AJAX forms, real-time updates)
 7. Create documentation screenshots
 8. Record video walkthrough
 
 ### Low Priority
+
 9. Replace deprecated csurf with csrf-csrf
 10. Add Prometheus metrics endpoint
 11. Implement MMS support
@@ -210,7 +231,7 @@ curl http://localhost:3000/health/ready
 
 ## 📞 Support
 
-- **GitHub Issues**: https://github.com/N85UK/UNRAID_Apps/issues
+- **GitHub Issues**: <https://github.com/N85UK/UNRAID_Apps/issues>
 - **Documentation**: Apps/AWS_EUM_X/README.md
 - **Security**: Apps/AWS_EUM_X/SECURITY.md
 - **Contributing**: Apps/AWS_EUM_X/CONTRIBUTING.md

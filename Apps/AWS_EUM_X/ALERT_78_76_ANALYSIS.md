@@ -42,6 +42,7 @@ Alerts #78 (HIGH) and #76 (LOW) are in npm's global dependencies that ship with 
 ### Why This Cannot Be Fixed
 
 1. **Location Analysis**:
+
    ```
    /usr/local/lib/node_modules/npm/node_modules/cross-spawn/
    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -49,6 +50,7 @@ Alerts #78 (HIGH) and #76 (LOW) are in npm's global dependencies that ship with 
    ```
 
 2. **Not in Application Code**:
+
    ```bash
    # Application dependencies:
    /app/node_modules/  ← Controlled by package.json ✅
@@ -74,6 +76,7 @@ Alerts #78 (HIGH) and #76 (LOW) are in npm's global dependencies that ship with 
 **Likelihood**: Extremely Low
 
 **Why**:
+
 - Docker build runs in isolated GitHub Actions environment
 - Build process is deterministic (same inputs = same outputs)
 - Application doesn't use cross-spawn directly
@@ -85,6 +88,7 @@ Alerts #78 (HIGH) and #76 (LOW) are in npm's global dependencies that ship with 
 #### ✅ Already Implemented
 
 1. **Multi-stage Build**: Build dependencies are removed from final image
+
    ```dockerfile
    RUN apk add --no-cache --virtual .build-deps build-base python3 sqlite-dev && \
        npm ci --only=production --no-audit --no-fund && \
@@ -92,6 +96,7 @@ Alerts #78 (HIGH) and #76 (LOW) are in npm's global dependencies that ship with 
    ```
 
 2. **Non-root User**: Container runs as UID 1001 (appuser)
+
    ```dockerfile
    USER appuser  # ← No root access in production
    ```
@@ -103,6 +108,7 @@ Alerts #78 (HIGH) and #76 (LOW) are in npm's global dependencies that ship with 
 - **Action**: Monitor Node.js 20.x Docker image releases
 - **Expected Fix**: When Node.js updates bundled npm to latest version
 - **Check Command**:
+
   ```bash
   docker run --rm node:20-alpine npm --version
   # Current: 10.x.x (includes cross-spawn 7.0.3)
@@ -162,10 +168,12 @@ Alerts #78 (HIGH) and #76 (LOW) are in npm's global dependencies that ship with 
 **Exploitation Difficulty**: Very High
 
 **From CVE Description**:
+
 - "Complexity of an attack is rather high"
 - "Exploitation is known to be difficult"
 
 **To exploit**:
+
 1. Attacker needs to trigger npm during Docker build
 2. Must craft malicious brace expansion pattern
 3. Pattern must be processed during package installation
@@ -189,11 +197,13 @@ Same as Alert #78 - monitor for Node.js Docker image updates.
 ### Risk Calculation
 
 **Alert #78 Risk Score**:
+
 - CVE Severity: HIGH (8.0/10)
 - Exploitability: Very Low (1.0/10)
 - **Actual Risk**: 8.0 × 0.1 = **0.8/10 (LOW)**
 
 **Alert #76 Risk Score**:
+
 - CVE Severity: LOW (3.0/10)
 - Exploitability: Extremely Low (0.5/10)
 - **Actual Risk**: 3.0 × 0.05 = **0.15/10 (VERY LOW)**
@@ -298,11 +308,13 @@ CVE-2025-5889   # brace-expansion ReDoS (Alert #76)
 ```
 
 **Pros**:
+
 - Clean security dashboard
 - Focuses on actionable issues
 - Documented acceptance
 
 **Cons**:
+
 - May miss related issues
 - Requires maintenance
 - Could hide legitimate problems
@@ -316,13 +328,13 @@ CVE-2025-5889   # brace-expansion ReDoS (Alert #76)
 ### Node.js Updates
 
 - **Current Image**: `node:20-alpine` (npm 10.x.x)
-- **Issue Tracker**: https://github.com/nodejs/docker-node/issues
-- **Release Notes**: https://github.com/nodejs/node/releases
+- **Issue Tracker**: <https://github.com/nodejs/docker-node/issues>
+- **Release Notes**: <https://github.com/nodejs/node/releases>
 
 ### npm Updates
 
 - **Current Version**: Check with `docker run --rm node:20-alpine npm --version`
-- **Release Notes**: https://github.com/npm/cli/releases
+- **Release Notes**: <https://github.com/npm/cli/releases>
 - **Changelog**: Look for mentions of "cross-spawn" or "brace-expansion"
 
 ### Expected Timeline

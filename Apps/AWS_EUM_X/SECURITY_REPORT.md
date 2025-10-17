@@ -59,6 +59,7 @@ Two vulnerabilities remain in npm's global dependencies (part of Node.js Docker 
 | **Status** | ⚠️ **CANNOT FIX** - Part of npm in Docker base image |
 
 **Impact Analysis**:
+
 - Not a runtime dependency of the application
 - Only used by npm during `npm install` phase in Docker build
 - Attacker would need access to Docker build environment to exploit
@@ -66,6 +67,7 @@ Two vulnerabilities remain in npm's global dependencies (part of Node.js Docker 
 - **Actual Risk**: Very Low
 
 **Mitigation**:
+
 1. Docker image is multi-stage build - npm is only present during build phase
 2. Final production image does not include build tools
 3. Will be automatically resolved when Node.js 20.x updates their bundled npm
@@ -86,6 +88,7 @@ Two vulnerabilities remain in npm's global dependencies (part of Node.js Docker 
 | **Status** | ⚠️ **CANNOT FIX** - Part of npm in Docker base image |
 
 **Impact Analysis**:
+
 - Not a runtime dependency of the application
 - Only used by npm during package installation
 - CVE notes "complexity of attack is rather high" and "exploitation is known to be difficult"
@@ -127,11 +130,13 @@ All code quality issues have been fixed with explicit comments for intentional p
 }
 ```
 
-**Breaking Changes**: 
+**Breaking Changes**:
+
 - Pino v10.0.0 is a major version upgrade (8.x → 10.x) but API remains compatible
 - better-sqlite3 v8.7.0 is a patch upgrade (8.0.0 → 8.7.0) with ARM64 build fixes
 
 **Verification**:
+
 - ✅ npm audit shows 0 vulnerabilities
 - ✅ All 8 Jest test suites passing (config-import, estimate, migrations, queue, send, settings, smoke, sns)
 - ✅ ESLint passes with 0 warnings
@@ -151,10 +156,12 @@ All code quality issues have been fixed with explicit comments for intentional p
 | Create Release | ✅ PASS | <1s | Release artifacts generated |
 
 **Docker Images Published**:
+
 - `ghcr.io/n85uk/aws-eum-x:latest`
 - `ghcr.io/n85uk/aws-eum-x:main`
 
 **Test Coverage**:
+
 ```
 PASS test/smoke.test.js
 PASS test/config-import.test.js
@@ -198,17 +205,20 @@ PASS test/sns.test.js
 ## Recommendations
 
 ### Immediate Actions ✅
+
 - [x] Deploy to production - all controllable vulnerabilities fixed
 - [x] Monitor security alerts for new CVEs
 - [x] Schedule dependency updates quarterly
 
 ### Future Improvements 📋
+
 - [ ] Consider switching to `node:20-alpine` minimal image (currently using node:20-alpine already ✅)
 - [ ] Implement dependabot auto-updates for patch versions
 - [ ] Add SAST scanning (CodeQL) for additional security analysis
 - [ ] Consider signing Docker images with Cosign
 
 ### Monitoring 🔍
+
 - [ ] Subscribe to Node.js security advisories
 - [ ] Monitor CVE databases for npm updates
 - [ ] Track when Node.js 20.x updates bundled npm version
