@@ -141,8 +141,8 @@ mysql -h host -u user -p database
 ### Check Plugin Installation
 
 ```bash
-ls -la /usr/local/emhttp/plugins/explorerx
-cat /usr/local/emhttp/plugins/explorerx/explorerx.page
+ls -la /usr/local/emhttp/plugins/plugin_name
+cat /usr/local/emhttp/plugins/plugin_name/plugin.page
 ```
 
 ## 🎯 **Quick Resolution Matrix**
