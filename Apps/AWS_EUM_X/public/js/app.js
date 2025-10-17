@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const accessKey = document.getElementById('awsAccessKey').value.trim();
       const secretKey = document.getElementById('awsSecretKey').value.trim();
       const region = document.getElementById('awsRegion').value.trim() || 'eu-west-2';
+      const saveCredsCheckbox = document.getElementById('saveCredentials');
+      const saveCredentials = saveCredsCheckbox ? saveCredsCheckbox.checked : false;
 
       const status = document.getElementById('test-status');
       status.textContent = 'Testing...';
@@ -14,16 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('/api/test/credentials', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accessKeyId: accessKey, secretAccessKey: secretKey, region })
+          body: JSON.stringify({ accessKeyId: accessKey, secretAccessKey: secretKey, region, saveCredentials })
         });
         const json = await res.json();
         if (res.ok) {
-          status.textContent = `OK — ${json.phoneNumbers || 0} phone numbers visible`;
+          const savedMsg = json.saved ? ' (credentials saved)' : '';
+          status.textContent = `✓ OK — ${json.phoneNumbers || 0} phone numbers visible${savedMsg}`;
+          status.style.background = '#d4edda';
+          status.style.color = '#155724';
         } else {
-          status.textContent = `Error: ${json.error || 'unknown'}`;
+          status.textContent = `✗ Error: ${json.error || 'unknown'}`;
+          status.style.background = '#f8d7da';
+          status.style.color = '#721c24';
         }
       } catch (err) {
-        status.textContent = `Error: ${err.message}`;
+        status.textContent = `✗ Error: ${err.message}`;
+        status.style.background = '#f8d7da';
+        status.style.color = '#721c24';
       }
     });
   }

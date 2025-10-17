@@ -142,6 +142,26 @@ class Persistence {
 
   setConfig(changes) { const cur = this.getConfig(); const merged = Object.assign({}, cur, changes); this.db.prepare('INSERT OR REPLACE INTO config (k, v) VALUES (?, ?)').run('config', JSON.stringify(merged)); }
 
+  // Credential storage (encrypted in production, consider using encryption at rest)
+  saveCredentials(accessKeyId, secretAccessKey, region) {
+    const credentials = { accessKeyId, secretAccessKey, region, savedAt: Date.now() };
+    this.db.prepare('INSERT OR REPLACE INTO config (k, v) VALUES (?, ?)').run('aws_credentials', JSON.stringify(credentials));
+  }
+
+  getCredentials() {
+    const row = this.db.prepare('SELECT v FROM config WHERE k = ?').get('aws_credentials');
+    if (!row) return null;
+    try {
+      return JSON.parse(row.v || 'null');
+    } catch (e) {
+      return null;
+    }
+  }
+
+  clearCredentials() {
+    this.db.prepare('DELETE FROM config WHERE k = ?').run('aws_credentials');
+  }
+
   setMpsOverride(origin, mps) { const cfg = this.getConfig(); cfg.mps_overrides = cfg.mps_overrides || {}; cfg.mps_overrides[origin] = mps; this.setConfig(cfg); }
 
   findMessageByBody(substr) { return this.db.prepare('SELECT * FROM messages WHERE body LIKE ? ORDER BY created_at DESC LIMIT 1').get(`%${substr}%`); }

@@ -325,10 +325,16 @@ const disableCsp = String(process.env.DISABLE_CSP || 'false').toLowerCase() === 
 if (!disableCsp) {
   app.use(helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"], scriptSrc: ["'self'"], styleSrc: ["'self'"], imgSrc: ["'self'", 'data:'], connectSrc: ["'self'"], frameAncestors: ["'self'"], objectSrc: ["'none'"]
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", 'data:'],
+      connectSrc: ["'self'"],
+      frameAncestors: ["'self'"],
+      objectSrc: ["'none'"]
     }
   }));
-  logger.info('Content Security Policy enabled');
+  logger.info('Content Security Policy enabled (allows inline scripts/styles for EJS templates)');
 } else { logger.warn('CSP disabled via DISABLE_CSP env var'); }
 
 app.use(helmet.frameguard({ action: 'sameorigin' }));
@@ -363,18 +369,46 @@ app.get('/ready', async (req, res) => {
 
 app.get('/probe/aws', async (req, res) => { const r = await probeAWS(); if (r.ok) return res.json({ ready: true, ...r }); return res.status(503).json({ ready: false, ...r }); });
 
-// First-run UI
-app.get('/', (req, res) => res.render('first-run', { version: APP_VERSION }));
+// First-run UI - Load saved credentials if available
+app.get('/', (req, res) => {
+  const savedCreds = persistence.getCredentials();
+  res.render('first-run', {
+    version: APP_VERSION,
+    savedAccessKey: savedCreds?.accessKeyId || '',
+    savedRegion: savedCreds?.region || process.env.AWS_REGION || 'eu-west-2',
+    hasSavedCredentials: !!savedCreds
+  });
+});
 
 // Dashboard UI for monitoring queue, AWS probe, and managing per-origin overrides
 app.get('/dashboard', (req, res) => res.render('dashboard', { version: APP_VERSION }));
 
-// API: Test AWS credentials
+// API: Test AWS credentials and optionally save them
 app.post('/api/test/credentials', async (req, res) => {
-  const { accessKeyId, secretAccessKey, region } = req.body || {};
+  const { accessKeyId, secretAccessKey, region, saveCredentials } = req.body || {};
   if (!accessKeyId || !secretAccessKey) return res.status(400).json({ error: 'Missing credentials (accessKeyId, secretAccessKey)' });
   const tmpClient = new PinpointSMSVoiceV2Client({ region: region || process.env.AWS_REGION || 'eu-west-2', credentials: { accessKeyId, secretAccessKey } });
-  try { const cmd = new DescribePhoneNumbersCommand({ MaxResults: 1 }); const resp = await tmpClient.send(cmd); return res.json({ ok: true, phoneNumbers: (resp.PhoneNumbers || []).length }); } catch (err) { logger.warn({ reason: err.message }, 'Credential test failed'); return res.status(400).json({ ok: false, error: err.message }); }
+  try {
+    const cmd = new DescribePhoneNumbersCommand({ MaxResults: 1 });
+    const resp = await tmpClient.send(cmd);
+    
+    // Save credentials if requested
+    if (saveCredentials) {
+      persistence.saveCredentials(accessKeyId, secretAccessKey, region || process.env.AWS_REGION || 'eu-west-2');
+      logger.info('AWS credentials saved to database');
+      
+      // Reinitialize the global AWS client with saved credentials
+      process.env.AWS_ACCESS_KEY_ID = accessKeyId;
+      process.env.AWS_SECRET_ACCESS_KEY = secretAccessKey;
+      if (region) process.env.AWS_REGION = region;
+      initializeAWSClient();
+    }
+    
+    return res.json({ ok: true, phoneNumbers: (resp.PhoneNumbers || []).length, saved: !!saveCredentials });
+  } catch (err) {
+    logger.warn({ reason: err.message }, 'Credential test failed');
+    return res.status(400).json({ ok: false, error: err.message });
+  }
 });
 
 // API: Dry-run send (local validation and parts estimation)
@@ -555,6 +589,20 @@ if (require.main === module) {
     try {
       lastMigrationsResult = await runMigrations();
       logger.info({ migrations: lastMigrationsResult }, 'Migrations result');
+      
+      // Load saved credentials if no env vars provided
+      if (!process.env.AWS_ACCESS_KEY_ID && !process.env.AWS_SECRET_ACCESS_KEY) {
+        const savedCreds = persistence.getCredentials();
+        if (savedCreds) {
+          process.env.AWS_ACCESS_KEY_ID = savedCreds.accessKeyId;
+          process.env.AWS_SECRET_ACCESS_KEY = savedCreds.secretAccessKey;
+          if (savedCreds.region) process.env.AWS_REGION = savedCreds.region;
+          initializeAWSClient();
+          logger.info({ region: savedCreds.region }, 'Loaded saved AWS credentials from database');
+        } else {
+          logger.warn('No AWS credentials found in environment or database - first-run configuration required');
+        }
+      }
     } catch (e) {
       logger.error({ err: e.message }, 'Migrations failed at startup');
     }

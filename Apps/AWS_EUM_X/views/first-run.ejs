@@ -15,15 +15,26 @@
 
       <p>Version: <%= version %></p>
 
+      <% if (hasSavedCredentials) { %>
+      <div style="padding: 12px; background: #d1ecf1; border-left: 4px solid #0c5460; color: #0c5460; margin-bottom: 16px; border-radius: 4px;">
+        ✓ Saved credentials loaded. You can test or update them below.
+      </div>
+      <% } %>
+
       <form id="credentials-form">
         <label for="awsAccessKey">AWS Access Key ID</label>
-        <input id="awsAccessKey" name="awsAccessKey" placeholder="AKIA..." />
+        <input id="awsAccessKey" name="awsAccessKey" placeholder="AKIA..." value="<%= savedAccessKey %>" />
 
         <label for="awsSecretKey">AWS Secret Access Key</label>
         <input id="awsSecretKey" name="awsSecretKey" placeholder="Secret..." type="password" />
 
         <label for="awsRegion">AWS Region</label>
-        <input id="awsRegion" name="awsRegion" placeholder="eu-west-2" />
+        <input id="awsRegion" name="awsRegion" placeholder="eu-west-2" value="<%= savedRegion %>" />
+
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="saveCredentials" name="saveCredentials" <%= hasSavedCredentials ? 'checked' : '' %> />
+          <label for="saveCredentials">Save credentials to database (encrypted at rest)</label>
+        </div>
 
         <div style="margin-top:12px">
           <button type="submit">Test credentials (no message sent)</button>
