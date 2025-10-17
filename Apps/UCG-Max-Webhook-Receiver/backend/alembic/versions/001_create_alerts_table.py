@@ -37,8 +37,8 @@ def upgrade():
     op.create_index('idx_alerts_severity', 'alerts', ['severity'], unique=False)
     op.create_index('idx_alerts_type', 'alerts', ['alert_type'], unique=False)
     op.create_index('idx_alerts_device', 'alerts', ['device'], unique=False)
-    op.create_index('idx_alerts_details_gin', 'alerts', ['details'], unique=False, postgresql_using='gin')
-    op.create_index('idx_alerts_raw_payload_gin', 'alerts', ['raw_payload'], unique=False, postgresql_using='gin')
+    op.create_index('idx_alerts_details_gin', 'alerts', ['details'], unique=False, postgresql_using='gin', postgresql_ops={'details': 'jsonb_path_ops'})
+    op.create_index('idx_alerts_raw_payload_gin', 'alerts', ['raw_payload'], unique=False, postgresql_using='gin', postgresql_ops={'raw_payload': 'jsonb_path_ops'})
 
 def downgrade():
     op.drop_index('idx_alerts_raw_payload_gin', table_name='alerts')
