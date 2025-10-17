@@ -717,9 +717,9 @@ app.get('/api/origination-numbers', requireAuthAPI, async (req, res) => {
       
       const senderIds = (senderResponse.SenderIds || []).map(sender => ({
         phoneNumber: sender.SenderId,
-        status: sender.Registered ? 'Active' : 'Pending',
+        status: sender.Registered ? 'ACTIVE' : 'PENDING',
         type: 'SenderId',
-        country: sender.IsoCountryCode || 'Unknown',
+        country: sender.IsoCountryCode || 'GB',
         capabilities: []
       }));
       

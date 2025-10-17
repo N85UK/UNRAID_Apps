@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const message = sendMessage.value.trim();
       
       try {
-        const res = await fetch('/api/send', {
+        const res = await fetch('/api/send-sms', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phoneNumber: phone, originationNumber: origin, message })
