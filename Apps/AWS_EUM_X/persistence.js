@@ -29,6 +29,8 @@ class Persistence {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
+      totp_secret TEXT,
+      totp_enabled INTEGER DEFAULT 0,
       created_at INTEGER DEFAULT (cast(strftime('%s','now') as integer) * 1000)
     )`).run();
     
@@ -189,11 +191,11 @@ class Persistence {
   }
 
   getUser(username) {
-    return this.db.prepare('SELECT id, username, password_hash, created_at FROM users WHERE username = ?').get(username);
+    return this.db.prepare('SELECT id, username, password_hash, totp_secret, totp_enabled, created_at FROM users WHERE username = ?').get(username);
   }
 
   getUserById(id) {
-    return this.db.prepare('SELECT id, username, password_hash, created_at FROM users WHERE id = ?').get(id);
+    return this.db.prepare('SELECT id, username, password_hash, totp_secret, totp_enabled, created_at FROM users WHERE id = ?').get(id);
   }
 
   hasAnyUsers() {
@@ -215,6 +217,29 @@ class Persistence {
     const secret = crypto.randomBytes(64).toString('hex');
     this.db.prepare('INSERT OR REPLACE INTO config (k, v) VALUES (?, ?)').run('session_secret', JSON.stringify(secret));
     return secret;
+  }
+
+  // 2FA methods
+  save2FASecret(userId, secret) {
+    this.db.prepare('UPDATE users SET totp_secret = ? WHERE id = ?').run(secret, userId);
+  }
+
+  enable2FA(userId) {
+    this.db.prepare('UPDATE users SET totp_enabled = 1 WHERE id = ?').run(userId);
+  }
+
+  disable2FA(userId) {
+    this.db.prepare('UPDATE users SET totp_enabled = 0, totp_secret = NULL WHERE id = ?').run(userId);
+  }
+
+  get2FASecret(userId) {
+    const user = this.getUserById(userId);
+    return user?.totp_secret || null;
+  }
+
+  is2FAEnabled(userId) {
+    const user = this.getUserById(userId);
+    return user?.totp_enabled === 1;
   }
 }
 

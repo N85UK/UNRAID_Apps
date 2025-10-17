@@ -1,6 +1,6 @@
 {
   "name": "aws-eum-x",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "AWS EUM X - modern successor to AWS_EUM (Unraid)",
   "main": "server.js",
   "scripts": {
@@ -31,7 +31,9 @@
     "express": "^4.18.2",
     "express-session": "^1.18.0",
     "helmet": "^7.0.0",
-    "pino": "^10.0.0"
+    "pino": "^10.0.0",
+    "qrcode": "^1.5.3",
+    "speakeasy": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^8.41.0",

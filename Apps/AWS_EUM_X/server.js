@@ -354,6 +354,7 @@ const persistence = new Persistence(DATA_DIR);
 
 // Authentication utilities
 const { hashPassword, verifyPassword, requireAuth, requireAuthAPI, requireSetup, requireNoAuth } = require('./lib/auth');
+const { generateSecret, generateQRCode, verifyToken } = require('./lib/totp');
 
 // Session configuration
 const SQLiteStore = require('connect-sqlite3')(session);
@@ -460,28 +461,40 @@ app.get('/auth/login', requireNoAuth, (req, res) => {
   if (!persistence.hasAnyUsers()) {
     return res.redirect('/auth/setup');
   }
-  res.render('login', { version: APP_VERSION, error: null, setupRequired: false });
+  res.render('login', { version: APP_VERSION, error: null });
 });
 
 // Process login
 app.post('/auth/login', async (req, res) => {
-  const { username, password } = req.body || {};
+  const { username, password, totp } = req.body || {};
   
   if (!username || !password) {
-    return res.render('login', { version: APP_VERSION, error: 'Username and password are required', setupRequired: false });
+    return res.render('login', { version: APP_VERSION, error: 'Username and password are required' });
   }
   
   try {
     const user = persistence.getUser(username);
     
     if (!user) {
-      return res.render('login', { version: APP_VERSION, error: 'Invalid username or password', setupRequired: false });
+      return res.render('login', { version: APP_VERSION, error: 'Invalid username or password' });
     }
     
     const valid = await verifyPassword(password, user.password_hash);
     
     if (!valid) {
-      return res.render('login', { version: APP_VERSION, error: 'Invalid username or password', setupRequired: false });
+      return res.render('login', { version: APP_VERSION, error: 'Invalid username or password' });
+    }
+    
+    // Check if 2FA is enabled
+    if (user.totp_enabled && user.totp_secret) {
+      if (!totp) {
+        return res.render('login', { version: APP_VERSION, error: '2FA code required', require2FA: true, username });
+      }
+      
+      const totpValid = verifyToken(user.totp_secret, totp);
+      if (!totpValid) {
+        return res.render('login', { version: APP_VERSION, error: 'Invalid 2FA code', require2FA: true, username });
+      }
     }
     
     // Create session
@@ -492,7 +505,7 @@ app.post('/auth/login', async (req, res) => {
     return res.redirect('/dashboard');
   } catch (err) {
     logger.error({ err: err.message }, 'Login error');
-    return res.render('login', { version: APP_VERSION, error: 'Login failed', setupRequired: false });
+    return res.render('login', { version: APP_VERSION, error: 'Login failed' });
   }
 });
 
@@ -510,6 +523,108 @@ app.get('/auth/logout', (req, res) => {
 });
 
 // ========================================
+// 2FA Management Routes
+// ========================================
+
+// Setup 2FA - Generate QR code
+app.post('/auth/2fa/setup', requireAuthAPI, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const username = req.session.username;
+    
+    // Check if already enabled
+    if (persistence.is2FAEnabled(userId)) {
+      return res.status(400).json({ error: '2FA is already enabled. Disable it first to set up again.' });
+    }
+    
+    // Generate new secret
+    const { secret, otpauthUrl } = generateSecret(username);
+    
+    // Save secret (but don't enable yet)
+    persistence.save2FASecret(userId, secret);
+    
+    // Generate QR code
+    const qrCode = await generateQRCode(otpauthUrl);
+    
+    logger.info({ username }, '2FA setup initiated');
+    
+    return res.json({
+      ok: true,
+      secret: secret,
+      qrCode: qrCode
+    });
+  } catch (err) {
+    logger.error({ err: err.message }, '2FA setup failed');
+    return res.status(500).json({ error: 'Failed to generate 2FA setup' });
+  }
+});
+
+// Verify and enable 2FA
+app.post('/auth/2fa/verify', requireAuthAPI, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const username = req.session.username;
+    const { token } = req.body || {};
+    
+    if (!token) {
+      return res.status(400).json({ error: 'Token is required' });
+    }
+    
+    // Get the secret we generated during setup
+    const secret = persistence.get2FASecret(userId);
+    
+    if (!secret) {
+      return res.status(400).json({ error: 'No 2FA setup found. Please initiate setup first.' });
+    }
+    
+    // Verify the token
+    const valid = verifyToken(secret, token);
+    
+    if (!valid) {
+      return res.status(400).json({ error: 'Invalid token. Please try again.' });
+    }
+    
+    // Enable 2FA
+    persistence.enable2FA(userId);
+    
+    logger.info({ username }, '2FA enabled');
+    
+    return res.json({ ok: true, message: '2FA enabled successfully' });
+  } catch (err) {
+    logger.error({ err: err.message }, '2FA verification failed');
+    return res.status(500).json({ error: 'Failed to verify 2FA token' });
+  }
+});
+
+// Disable 2FA
+app.post('/auth/2fa/disable', requireAuthAPI, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const username = req.session.username;
+    
+    persistence.disable2FA(userId);
+    
+    logger.info({ username }, '2FA disabled');
+    
+    return res.json({ ok: true, message: '2FA disabled successfully' });
+  } catch (err) {
+    logger.error({ err: err.message }, '2FA disable failed');
+    return res.status(500).json({ error: 'Failed to disable 2FA' });
+  }
+});
+
+// Get 2FA status
+app.get('/auth/2fa/status', requireAuthAPI, (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const enabled = persistence.is2FAEnabled(userId);
+    return res.json({ ok: true, enabled });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to get 2FA status' });
+  }
+});
+
+// ========================================
 // Protected Application Routes
 // ========================================
 
@@ -524,18 +639,52 @@ app.get('/dashboard', requireAuth, (req, res) => {
 // Configuration page
 app.get('/config', requireAuth, (req, res) => {
   const savedCreds = persistence.getCredentials();
+  const userId = req.session.userId;
+  const twoFAEnabled = persistence.is2FAEnabled(userId);
+  
   res.render('config', {
     version: APP_VERSION,
     username: req.session.username,
     savedAccessKey: savedCreds?.accessKeyId || '',
     savedRegion: savedCreds?.region || process.env.AWS_REGION || 'eu-west-2',
-    hasSavedCredentials: !!savedCreds
+    hasSavedCredentials: !!savedCreds,
+    twoFAEnabled: twoFAEnabled
   });
 });
 
 // Old first-run page - redirect to config
 app.get('/first-run', requireAuth, (req, res) => {
   res.redirect('/config');
+});
+
+// ========================================
+// API Routes
+// ========================================
+
+// API: Get AWS origination numbers
+app.get('/api/origination-numbers', requireAuthAPI, async (req, res) => {
+  if (!smsClient) {
+    return res.status(503).json({ error: 'AWS client not configured' });
+  }
+  
+  try {
+    const command = new DescribePhoneNumbersCommand({ MaxResults: 100 });
+    const response = await smsClient.send(command);
+    
+    const numbers = (response.PhoneNumbers || []).map(phone => ({
+      phoneNumber: phone.PhoneNumber,
+      status: phone.Status,
+      type: phone.NumberType,
+      capabilities: phone.NumberCapabilities || []
+    }));
+    
+    logger.info({ count: numbers.length }, 'Fetched AWS origination numbers');
+    
+    return res.json({ ok: true, numbers });
+  } catch (err) {
+    logger.error({ err: err.message }, 'Failed to fetch origination numbers');
+    return res.status(500).json({ error: 'Failed to fetch origination numbers: ' + err.message });
+  }
 });
 
 // API: Test AWS credentials and optionally save them
