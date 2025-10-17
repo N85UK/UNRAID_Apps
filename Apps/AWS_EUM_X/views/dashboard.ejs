@@ -15,6 +15,27 @@
 
       <p>Version: <%= version %> — <a href="/">First-run</a></p>
 
+      <section id="send">
+        <h2>Send SMS Message</h2>
+        <form id="send-form">
+          <label for="send-phone">Phone Number (E.164 format)</label>
+          <input id="send-phone" type="tel" placeholder="+447700900000" required />
+          
+          <label for="send-origin">Origination Number (optional)</label>
+          <input id="send-origin" type="tel" placeholder="+1234567890 or leave empty" />
+          
+          <label for="send-message">Message</label>
+          <textarea id="send-message" rows="4" placeholder="Your SMS message..." required></textarea>
+          
+          <div class="character-count">
+            <span id="char-count">0 characters • 0 parts (GSM-7)</span>
+          </div>
+          
+          <button type="submit" class="btn-primary">Send SMS</button>
+        </form>
+        <div id="send-status" role="status" aria-live="polite"></div>
+      </section>
+
       <section id="health">
         <h2>System</h2>
         <div id="tiles" class="tiles">

@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const mpsOrigin = document.getElementById('mps-origin');
   const mpsValue = document.getElementById('mps-value');
   const mpsStatus = document.getElementById('mps-status');
+  
+  // Send message form elements
+  const sendForm = document.getElementById('send-form');
+  const sendPhone = document.getElementById('send-phone');
+  const sendOrigin = document.getElementById('send-origin');
+  const sendMessage = document.getElementById('send-message');
+  const sendStatus = document.getElementById('send-status');
+  const charCount = document.getElementById('char-count');
 
   function fmtTs(ms) { try { return new Date(ms).toLocaleString(); } catch (e) { return String(ms); } }
 
@@ -79,6 +87,56 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) { mpsStatus.textContent = 'Saved'; await refreshProbeAndMps(); } else { mpsStatus.textContent = `Error: ${j.error || 'unknown'}`; }
     } catch (e) { mpsStatus.textContent = `Error: ${e.message}`; }
   });
+
+  // Character counter for send message
+  if (sendMessage && charCount) {
+    sendMessage.addEventListener('input', () => {
+      const text = sendMessage.value;
+      const len = text.length;
+      const parts = Math.max(1, Math.ceil(len / 160));
+      charCount.textContent = `${len} characters • ${parts} part${parts > 1 ? 's' : ''} (GSM-7)`;
+    });
+  }
+
+  // Send message form handler
+  if (sendForm) {
+    sendForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      sendStatus.textContent = 'Sending...';
+      sendStatus.style.backgroundColor = '#e3f2fd';
+      sendStatus.style.color = '#1565c0';
+      
+      const phone = sendPhone.value.trim();
+      const origin = sendOrigin.value.trim() || undefined;
+      const message = sendMessage.value.trim();
+      
+      try {
+        const res = await fetch('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber: phone, originationNumber: origin, message })
+        });
+        const json = await res.json();
+        
+        if (res.ok) {
+          sendStatus.textContent = `✓ Message sent! MessageId: ${json.MessageId || 'N/A'}`;
+          sendStatus.style.backgroundColor = '#d4edda';
+          sendStatus.style.color = '#155724';
+          sendForm.reset();
+          charCount.textContent = '0 characters • 0 parts (GSM-7)';
+          await refreshQueue();
+        } else {
+          sendStatus.textContent = `✗ Error: ${json.error || 'Failed to send message'}`;
+          sendStatus.style.backgroundColor = '#f8d7da';
+          sendStatus.style.color = '#721c24';
+        }
+      } catch (e) {
+        sendStatus.textContent = `✗ Error: ${e.message}`;
+        sendStatus.style.backgroundColor = '#f8d7da';
+        sendStatus.style.color = '#721c24';
+      }
+    });
+  }
 
   // initial load and polling
   refreshQueue();
