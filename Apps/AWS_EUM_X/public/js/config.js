@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (res.ok && json.numbers && json.numbers.length > 0) {
           originsList.innerHTML = '<h3>Available Numbers:</h3><ul>' +
-            json.numbers.map(n => `<li><strong>${n.PhoneNumber}</strong> (${n.Status}) — ${n.PhoneNumberType || 'Unknown'}</li>`).join('') +
+            json.numbers.map(n => `<li><strong>${n.phoneNumber || 'N/A'}</strong> (${n.status || 'Unknown'}) — ${n.type || 'Unknown'}</li>`).join('') +
             '</ul>';
         } else if (res.ok) {
           originsList.innerHTML = '<p class="text-muted">No origination numbers found in AWS Pinpoint</p>';

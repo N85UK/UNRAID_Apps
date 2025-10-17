@@ -643,10 +643,22 @@ app.get('/config', requireAuth, (req, res) => {
   const userId = req.session.userId;
   const twoFAEnabled = persistence.is2FAEnabled(userId);
   
+  // Mask the access key to show only first/last 4 characters
+  let displayAccessKey = '';
+  if (savedCreds?.accessKeyId) {
+    const key = savedCreds.accessKeyId;
+    if (key.length > 8) {
+      displayAccessKey = key.substring(0, 4) + '...' + key.substring(key.length - 4);
+    } else {
+      displayAccessKey = '****';
+    }
+  }
+  
   res.render('config', {
     version: APP_VERSION,
     username: req.session.username,
-    savedAccessKey: savedCreds?.accessKeyId || '',
+    savedAccessKey: displayAccessKey,
+    savedAccessKeyFull: savedCreds?.accessKeyId || '',
     savedRegion: savedCreds?.region || process.env.AWS_REGION || 'eu-west-2',
     hasSavedCredentials: !!savedCreds,
     twoFAEnabled: twoFAEnabled
