@@ -12,11 +12,22 @@ for i in {1..30}; do
     sleep 1
 done
 
+# Get database password from environment or use default
+DB_PASSWORD=${DB_PASSWORD:-changeme}
+
 # Create database and user if they don't exist
 echo "Setting up database..."
-su - postgres -c "psql -c \"CREATE USER ucgmax WITH PASSWORD 'changeme';\" || true"
-su - postgres -c "psql -c \"CREATE DATABASE ucgmax OWNER ucgmax;\" || true"
-su - postgres -c "psql -c \"GRANT ALL PRIVILEGES ON DATABASE ucgmax TO ucgmax;\" || true"
+export PGPASSWORD=postgres
+psql -h localhost -U postgres -tc "SELECT 1 FROM pg_user WHERE usename = 'ucgmax'" | grep -q 1 || \
+    psql -h localhost -U postgres -c "CREATE USER ucgmax WITH PASSWORD '$DB_PASSWORD';"
+
+psql -h localhost -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'ucgmax'" | grep -q 1 || \
+    psql -h localhost -U postgres -c "CREATE DATABASE ucgmax OWNER ucgmax;"
+
+psql -h localhost -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE ucgmax TO ucgmax;"
+
+# Update DATABASE_URL with actual password
+export DATABASE_URL="postgresql://ucgmax:${DB_PASSWORD}@localhost/ucgmax"
 
 # Wait a moment for database to be fully ready
 sleep 2

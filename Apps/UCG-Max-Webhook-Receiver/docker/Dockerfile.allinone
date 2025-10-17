@@ -30,19 +30,43 @@ RUN mkdir -p /var/lib/postgresql/data && \
     mkdir -p /var/run/postgresql && \
     chown -R postgres:postgres /var/run/postgresql
 
-# Initialize PostgreSQL
+# Switch to postgres user to initialize database
 USER postgres
 RUN /usr/lib/postgresql/15/bin/initdb -D /var/lib/postgresql/data
 
-# Configure PostgreSQL
+# Configure PostgreSQL for network access
 RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf && \
-    echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+    echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf && \
+    echo "port=5432" >> /var/lib/postgresql/data/postgresql.conf
 
 USER root
 
-# Create startup script
+# Copy startup script
 COPY docker/start-allinone.sh /start.sh
 RUN chmod +x /start.sh
+
+# Create entrypoint script that handles data directory initialization
+RUN echo '#!/bin/bash' > /entrypoint.sh && \
+    echo 'set -e' >> /entrypoint.sh && \
+    echo '' >> /entrypoint.sh && \
+    echo '# Initialize PostgreSQL data directory if empty' >> /entrypoint.sh && \
+    echo 'if [ ! -s "/var/lib/postgresql/data/PG_VERSION" ]; then' >> /entrypoint.sh && \
+    echo '  echo "Initializing PostgreSQL data directory..."' >> /entrypoint.sh && \
+    echo '  mkdir -p /var/lib/postgresql/data' >> /entrypoint.sh && \
+    echo '  chown -R postgres:postgres /var/lib/postgresql/data' >> /entrypoint.sh && \
+    echo '  chmod 700 /var/lib/postgresql/data' >> /entrypoint.sh && \
+    echo '  su - postgres -c "/usr/lib/postgresql/15/bin/initdb -D /var/lib/postgresql/data"' >> /entrypoint.sh && \
+    echo '  echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf' >> /entrypoint.sh && \
+    echo '  echo "listen_addresses='\'*\''" >> /var/lib/postgresql/data/postgresql.conf' >> /entrypoint.sh && \
+    echo 'fi' >> /entrypoint.sh && \
+    echo '' >> /entrypoint.sh && \
+    echo '# Ensure correct permissions' >> /entrypoint.sh && \
+    echo 'chown -R postgres:postgres /var/lib/postgresql/data' >> /entrypoint.sh && \
+    echo 'chmod 700 /var/lib/postgresql/data' >> /entrypoint.sh && \
+    echo '' >> /entrypoint.sh && \
+    echo '# Start supervisord' >> /entrypoint.sh && \
+    echo 'exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 # Create supervisor configuration
 RUN echo "[supervisord]" > /etc/supervisor/conf.d/supervisord.conf && \
@@ -78,4 +102,4 @@ ENV DATABASE_URL=postgresql://ucgmax:changeme@localhost/ucgmax \
     RATE_LIMIT_WINDOW=60 \
     LOG_LEVEL=INFO
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/entrypoint.sh"]
