@@ -50,7 +50,7 @@ Your AWS EUM app is ready to install manually! Choose your preferred method belo
 
 3. **Download docker-compose.yml:**
    ```bash
-   wget https://raw.githubusercontent.com/N85UK/UnRiaid_Apps/main/AWS_EUM/docker-compose.yml
+   wget https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/AWS_EUM/docker-compose.yml
    ```
 
 4. **Edit environment variables:**
@@ -164,8 +164,8 @@ docker start aws-eum
 
 ## 📞 Support
 
-- **Documentation:** https://github.com/N85UK/UnRiaid_Apps/tree/main/AWS_EUM
-- **Issues:** https://github.com/N85UK/UnRiaid_Apps/issues
+- **Documentation:** https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM
+- **Issues:** https://github.com/N85UK/UNRAID_Apps/issues
 - **AWS Pinpoint Docs:** https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html
 
 ## 🔄 Upgrading

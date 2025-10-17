@@ -66,7 +66,7 @@ docker run -p 80:80 ghcr.io/n85uk/aws-eum:latest
 ### 📊 Build History
 
 View build history and logs at:
-https://github.com/N85UK/UnRiaid_Apps/actions
+https://github.com/N85UK/UNRAID_Apps/actions
 
 ### 🛠️ Troubleshooting
 

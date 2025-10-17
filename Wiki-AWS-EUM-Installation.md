@@ -136,12 +136,13 @@ Modern interface with Chart.js analytics, dark mode, and advanced visual feature
 ### Installation Steps
 
 #### 1. Download Template
+
 ```bash
 # Method 1: Direct template download
-wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/template.cfg
+wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/my-aws-eum-v3.xml
 
 # Method 2: Via Community Applications
-# Search for \"AWS End User Messaging v3.0 Enhanced\" in Apps tab
+# Search for "AWS End User Messaging v3.0 Enhanced" in Apps tab
 ```
 
 #### 2. Docker Installation via UNRAID Template
@@ -224,12 +225,13 @@ FLUSH PRIVILEGES;
 ### Installation Steps
 
 #### 1. Download Template
+
 ```bash
 # Method 1: Direct template download
-wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/template.cfg
+wget https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/my-aws-eum-mariadb.xml
 
 # Method 2: Via Community Applications
-# Search for \"AWS EUM MariaDB Enterprise\" in Apps tab
+# Search for "AWS EUM MariaDB Enterprise" in Apps tab
 ```
 
 #### 2. Docker Installation with Database Configuration

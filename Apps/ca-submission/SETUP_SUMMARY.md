@@ -36,13 +36,13 @@
 1. **SSH into your UNraid server**
 2. **Run the quick installer**:
    ```bash
-   wget https://raw.githubusercontent.com/N85UK/UnRiaid_Apps/main/ca-submission/quick-install.sh
+   wget https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/ca-submission/quick-install.sh
    chmod +x quick-install.sh
    ./quick-install.sh
    ```
 3. **Or use docker-compose**:
    ```bash
-   wget https://raw.githubusercontent.com/N85UK/UnRiaid_Apps/main/ca-submission/docker-compose.yml
+   wget https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/ca-submission/docker-compose.yml
    # Edit AWS credentials in the file
    docker-compose up -d
    ```
@@ -75,8 +75,8 @@ After installation, test by:
 
 ## 📞 Support & Issues
 
-- **GitHub Issues**: https://github.com/N85UK/UnRiaid_Apps/issues
-- **Documentation**: https://github.com/N85UK/UnRiaid_Apps/tree/main/AWS_EUM
+- **GitHub Issues**: https://github.com/N85UK/UNRAID_Apps/issues
+- **Documentation**: https://github.com/N85UK/UNRAID_Apps/tree/main/Apps/AWS_EUM
 - **AWS Pinpoint SMS**: https://docs.aws.amazon.com/pinpoint/latest/userguide/channels-sms.html
 
 ## ✅ Ready to Go!

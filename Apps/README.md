@@ -1,4 +1,4 @@
-# UnRiaid Apps
+# UNRAID Apps
 
 A collection of Docker applications packaged for UNRAID Community Applications (CA).
 
@@ -68,7 +68,7 @@ This repository contains properly formatted templates for UNRAID Community Appli
 - **AWS EUM**: Ready for submission to https://github.com/Squidly271/community.applications
 
 ### Files Included
-- `template.cfg` - UNRAID CA template configuration
+- `my-aws-*.xml` - UNRAID CA template configuration (XML format)
 - `doc.md` - Application documentation with CA metadata
 - Docker image published to GHCR
 - Security compliance (no secrets included)

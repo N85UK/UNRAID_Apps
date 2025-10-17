@@ -87,7 +87,7 @@ If you have access to submit PRs directly:
 ## 📞 Support
 
 For questions about this submission:
-- **Repository**: https://github.com/N85UK/UnRiaid_Apps
+- **Repository**: https://github.com/N85UK/UNRAID_Apps
 - **Documentation**: See README files in AWS_EUM directory
 - **Issues**: Create issues in the main repository
 
