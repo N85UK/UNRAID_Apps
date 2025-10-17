@@ -1,20 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Credentials form
-  const credForm = document.getElementById('credentials-form');
-  const credStatus = document.getElementById('credentials-status');
-  const awsAccessKey = document.getElementById('awsAccessKey');
-  const awsSecretKey = document.getElementById('awsSecretKey');
-  const awsRegion = document.getElementById('awsRegion');
-  const saveCredentials = document.getElementById('saveCredentials');
-
-  // Make secret key editable when focused
-  if (awsSecretKey) {
-    awsSecretKey.addEventListener('focus', () => {
-      awsSecretKey.removeAttribute('readonly');
-      awsSecretKey.placeholder = 'Enter new secret key or leave empty to keep existing';
-    });
-  }
-
   // Dry-run form
   const dryrunForm = document.getElementById('dryrun-form');
   const dryrunStatus = document.getElementById('dryrun-status');
@@ -33,45 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const verify2faBtn = document.getElementById('verify-2fa');
   const verifyCode = document.getElementById('verify-code');
   const twoFaStatus = document.getElementById('2fa-status');
-
-  // Test & save credentials
-  if (credForm) {
-    credForm.addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      credStatus.textContent = 'Testing credentials...';
-      credStatus.style.backgroundColor = '#e3f2fd';
-      credStatus.style.color = '#1565c0';
-
-      try {
-        const res = await fetch('/api/test/credentials', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            accessKeyId: awsAccessKey.value.trim(),
-            secretAccessKey: awsSecretKey.value.trim(),
-            region: awsRegion.value.trim(),
-            saveCredentials: saveCredentials.checked
-          })
-        });
-        const json = await res.json();
-
-        if (res.ok) {
-          credStatus.textContent = `✓ Credentials valid! ${json.phoneNumbers || 0} phone numbers found. ${json.saved ? 'Saved to database.' : ''}`;
-          credStatus.style.backgroundColor = '#d4edda';
-          credStatus.style.color = '#155724';
-          awsSecretKey.value = '';
-        } else {
-          credStatus.textContent = `✗ Error: ${json.error || 'Invalid credentials'}`;
-          credStatus.style.backgroundColor = '#f8d7da';
-          credStatus.style.color = '#721c24';
-        }
-      } catch (e) {
-        credStatus.textContent = `✗ Error: ${e.message}`;
-        credStatus.style.backgroundColor = '#f8d7da';
-        credStatus.style.color = '#721c24';
-      }
-    });
-  }
 
   // Character counter for dry-run
   if (testMessage && testCharCount) {

@@ -20,41 +20,23 @@
         <a href="/auth/logout">Logout</a>
       </p>
 
-      <!-- AWS Credentials Section -->
-      <section>
-        <h2>AWS Credentials</h2>
-        
-        <% if (hasSavedCredentials) { %>
-          <div class="alert alert-success">
-            ✓ Credentials configured (Access Key: <%= savedAccessKey %>)
-          </div>
-        <% } %>
-
-        <form id="credentials-form">
-          <label for="awsAccessKey">AWS Access Key ID</label>
-          <input id="awsAccessKey" type="text" value="<%= savedAccessKeyFull %>" placeholder="AKIAIOSFODNN7EXAMPLE" />
-          
-          <label for="awsSecretKey">AWS Secret Access Key</label>
-          <input id="awsSecretKey" type="password" placeholder="Leave empty to keep existing key" readonly />
-          <small class="text-muted">For security, the secret key is never displayed. Leave empty to keep the existing saved key, or enter a new one to update.</small>
-          
-          <label for="awsRegion">AWS Region</label>
-          <input id="awsRegion" type="text" value="<%= savedRegion %>" placeholder="eu-west-2" />
-          
-          <div class="checkbox-wrapper">
-            <input id="saveCredentials" type="checkbox" <%= hasSavedCredentials ? 'checked' : '' %> />
-            <label for="saveCredentials">Save credentials to database (encrypted at rest)</label>
-          </div>
-          
-          <button type="submit" class="btn-primary">Test & Save Credentials</button>
-        </form>
-        
-        <div id="credentials-status" role="status" aria-live="polite"></div>
+      <!-- AWS Configuration Info -->
+      <section class="card">
+        <h2>☁️ AWS Configuration</h2>
+        <div class="alert alert-success">
+          <strong>✓ Credentials Configured via Environment Variables</strong>
+          <p style="margin-top: 8px; margin-bottom: 0;">AWS credentials are set in your Unraid container configuration.</p>
+          <ul style="margin: 8px 0 0 20px; padding: 0;">
+            <li><strong>Region:</strong> <%= savedRegion || 'Not Set' %></li>
+            <li><strong>Access Key:</strong> <%= savedAccessKey || 'Not Set' %></li>
+          </ul>
+          <small class="text-muted">To update AWS credentials, edit the container settings in Unraid and restart the container.</small>
+        </div>
       </section>
 
       <!-- Dry-Run Test Section -->
-      <section>
-        <h2>Dry-Run Test (No SMS Sent)</h2>
+      <section class="card">
+        <h2>🧪 Dry-Run Test (No SMS Sent)</h2>
         <form id="dryrun-form">
           <label for="testPhone">Destination Phone (E.164)</label>
           <input id="testPhone" type="tel" placeholder="+447700900000" />
@@ -73,8 +55,8 @@
       </section>
 
       <!-- Origination Numbers Section -->
-      <section>
-        <h2>AWS Origination Numbers</h2>
+      <section class="card">
+        <h2>📞 AWS Origination Numbers</h2>
         <button id="fetch-origins" class="btn-secondary">Fetch from AWS</button>
         <div id="origins-list">
           <p class="text-muted">Click "Fetch from AWS" to load your phone numbers</p>
@@ -82,8 +64,8 @@
       </section>
 
       <!-- 2FA Configuration Section -->
-      <section>
-        <h2>Two-Factor Authentication (TOTP)</h2>
+      <section class="card">
+        <h2>🔐 Two-Factor Authentication (TOTP)</h2>
         
         <% if (twoFAEnabled) { %>
           <div class="alert alert-success">
