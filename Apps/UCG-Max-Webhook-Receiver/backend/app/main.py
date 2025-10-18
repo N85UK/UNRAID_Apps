@@ -110,26 +110,6 @@ async def get_alerts(
         logger.error(f"Error fetching alerts: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error fetching alerts: {str(e)}")
 
-@app.get("/api/alerts/{alert_id}", response_model=schemas.Alert)
-def get_alert(alert_id: int, db: Session = Depends(get_db)):
-    alert = crud.get_alert(db, alert_id)
-    if not alert:
-        raise HTTPException(status_code=404, detail="Alert not found")
-    return alert
-
-@app.delete("/api/alerts/{alert_id}")
-def delete_alert(alert_id: int, current_user: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
-    crud.delete_alert(db, alert_id)
-    return {"status": "deleted"}
-
-@app.get("/api/metrics", response_model=schemas.MetricsResponse)
-def get_metrics(db: Session = Depends(get_db)):
-    try:
-        return crud.get_metrics(db)
-    except Exception as e:
-        logger.error(f"Error fetching metrics: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error fetching metrics: {str(e)}")
-
 @app.get("/api/alerts/export")
 async def export_alerts(
     severity: Optional[str] = None,
@@ -174,6 +154,26 @@ async def export_alerts(
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=ucgmax-alerts.csv"}
     )
+
+@app.get("/api/alerts/{alert_id}", response_model=schemas.Alert)
+def get_alert(alert_id: int, db: Session = Depends(get_db)):
+    alert = crud.get_alert(db, alert_id)
+    if not alert:
+        raise HTTPException(status_code=404, detail="Alert not found")
+    return alert
+
+@app.delete("/api/alerts/{alert_id}")
+def delete_alert(alert_id: int, current_user: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    crud.delete_alert(db, alert_id)
+    return {"status": "deleted"}
+
+@app.get("/api/metrics", response_model=schemas.MetricsResponse)
+def get_metrics(db: Session = Depends(get_db)):
+    try:
+        return crud.get_metrics(db)
+    except Exception as e:
+        logger.error(f"Error fetching metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching metrics: {str(e)}")
 
 @app.get("/health")
 def health_check():
