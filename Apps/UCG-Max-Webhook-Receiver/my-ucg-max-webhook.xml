@@ -28,9 +28,9 @@
   <Config Name="Database Name" Target="DB_NAME" Default="ucg_webhook_db" Mode="" Description="Database name" Type="Variable" Display="always" Required="true" Mask="false">ucg_webhook_db</Config>
   <Config Name="Database User" Target="DB_USER" Default="ucg_webhook" Mode="" Description="Database username" Type="Variable" Display="always" Required="true" Mask="false">ucg_webhook</Config>
   <Config Name="Database Password" Target="DB_PASSWORD" Default="" Mode="" Description="Database password" Type="Variable" Display="always" Required="true" Mask="true"></Config>
-  <Config Name="Secret Key" Target="SECRET_KEY" Default="" Mode="" Description="JWT secret key for authentication (generate a random string)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
-  <Config Name="HMAC Secret" Target="HMAC_SECRET" Default="" Mode="" Description="Shared secret for webhook HMAC verification" Type="Variable" Display="always" Required="true" Mask="true"></Config>
-  <Config Name="Bearer Token" Target="BEARER_TOKEN" Default="" Mode="" Description="Alternative Bearer token for webhook authentication" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Secret Key" Target="SECRET_KEY" Default="" Mode="" Description="JWT secret key for authentication (generate with: openssl rand -hex 32)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="HMAC Secret" Target="HMAC_SECRET" Default="" Mode="" Description="Shared secret for webhook HMAC verification (generate with: openssl rand -hex 32)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Bearer Token" Target="BEARER_TOKEN" Default="" Mode="" Description="Alternative Bearer token for webhook authentication (optional, generate with: openssl rand -hex 32)" Type="Variable" Display="always" Required="false" Mask="true"></Config>
   <Config Name="Admin Username" Target="ADMIN_USER" Default="admin" Mode="" Description="Admin login username" Type="Variable" Display="always" Required="true" Mask="false">admin</Config>
   <Config Name="Admin Password" Target="ADMIN_PASSWORD" Default="" Mode="" Description="Admin login password (change immediately after first login)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
   <Config Name="Alert Retention Days" Target="ALERT_RETENTION_DAYS" Default="30" Mode="" Description="Number of days to keep alerts before automatic deletion" Type="Variable" Display="advanced" Required="false" Mask="false">30</Config>
