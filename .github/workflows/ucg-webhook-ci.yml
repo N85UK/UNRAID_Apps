@@ -39,20 +39,11 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Build and push Docker image (standard)
+    - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: ./Apps/UCG-Max-Webhook-Receiver
         file: ./Apps/UCG-Max-Webhook-Receiver/docker/Dockerfile.backend
         push: true
         tags: ghcr.io/n85uk/ucg-max-webhook-receiver:latest
-        platforms: linux/amd64
-    
-    - name: Build and push Docker image (all-in-one)
-      uses: docker/build-push-action@v5
-      with:
-        context: ./Apps/UCG-Max-Webhook-Receiver
-        file: ./Apps/UCG-Max-Webhook-Receiver/docker/Dockerfile.allinone
-        push: true
-        tags: ghcr.io/n85uk/ucg-max-webhook-receiver:allinone-latest
         platforms: linux/amd64

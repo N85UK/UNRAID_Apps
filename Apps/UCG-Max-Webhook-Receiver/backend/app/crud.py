@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_, func, text
+from sqlalchemy import or_, and_, func
 from . import models, schemas
 from datetime import datetime, timedelta
 
@@ -28,13 +28,9 @@ def get_alerts(db: Session, skip: int = 0, limit: int = 100, filters: dict = Non
             query = query.filter(models.Alert.timestamp <= filters['end'])
         if filters.get('q'):
             q = filters['q']
-            query = query.filter(
-                or_(
-                    models.Alert.summary.ilike(f'%{q}%'),
-                    func.cast(models.Alert.details, text('text')).ilike(f'%{q}%'),
-                    func.cast(models.Alert.raw_payload, text('text')).ilike(f'%{q}%')
-                )
-            )
+            # Simple search on summary field only for cross-database compatibility
+            # JSON searching is database-specific and removed for MariaDB/MySQL support
+            query = query.filter(models.Alert.summary.ilike(f'%{q}%'))
     return query.offset(skip).limit(limit).all()
 
 def delete_alert(db: Session, alert_id: int):
