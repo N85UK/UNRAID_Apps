@@ -174,4 +174,10 @@ def login(request: schemas.LoginRequest):
 
 # Serve frontend
 from fastapi.staticfiles import StaticFiles
-app.mount("/", StaticFiles(directory="../frontend/dist", html=True), name="frontend")
+# Try different paths for frontend (all-in-one uses ./static, standard uses ../frontend/dist)
+import os
+frontend_dir = "./static" if os.path.exists("./static") else "../frontend/dist"
+if os.path.exists(frontend_dir):
+    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+else:
+    print(f"Warning: Frontend directory not found at {frontend_dir}")
