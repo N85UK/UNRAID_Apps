@@ -61,6 +61,63 @@ while [ $attempt -lt $max_attempts ]; do
     sleep 2
 done
 
+# Create database if it doesn't exist (for MariaDB/MySQL)
+if [ "$DB_TYPE" = "mariadb" ] || [ "$DB_TYPE" = "mysql" ]; then
+    echo "Checking if database '$DB_NAME' exists..."
+    
+    # Connect to server without specifying database and create if needed
+    DB_EXISTS=$(python3 -c "
+import pymysql
+try:
+    conn = pymysql.connect(
+        host='$DB_HOST',
+        port=$DB_PORT,
+        user='$DB_USER',
+        password='$DB_PASSWORD'
+    )
+    cursor = conn.cursor()
+    cursor.execute('SHOW DATABASES LIKE \"$DB_NAME\"')
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    print('1' if result else '0')
+except Exception as e:
+    print(f'Error: {e}')
+    exit(1)
+" 2>&1)
+    
+    if [ "$DB_EXISTS" = "0" ]; then
+        echo "Database '$DB_NAME' does not exist. Creating..."
+        python3 -c "
+import pymysql
+try:
+    conn = pymysql.connect(
+        host='$DB_HOST',
+        port=$DB_PORT,
+        user='$DB_USER',
+        password='$DB_PASSWORD'
+    )
+    cursor = conn.cursor()
+    cursor.execute('CREATE DATABASE \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
+    cursor.close()
+    conn.close()
+    print('Database created successfully')
+except Exception as e:
+    print(f'Error creating database: {e}')
+    exit(1)
+"
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Failed to create database"
+            exit 1
+        fi
+        echo "Database '$DB_NAME' created successfully!"
+    else
+        echo "Database '$DB_NAME' already exists."
+    fi
+elif [ "$DB_TYPE" = "postgresql" ] || [ "$DB_TYPE" = "postgres" ]; then
+    echo "PostgreSQL database creation should be done manually or via initialization scripts."
+fi
+
 # Run database migrations
 echo "Running database migrations..."
 cd /app
