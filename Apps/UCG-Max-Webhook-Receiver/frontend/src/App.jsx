@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Box, Dialog, DialogTitle, DialogContent, DialogActions, Card, CardContent, Grid } from '@mui/material';
+import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Box, Dialog, DialogTitle, DialogContent, DialogActions, Card, CardContent, Grid, MenuItem } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import axios from 'axios';
 
@@ -51,12 +51,12 @@ function App() {
           <TextField label="Search" fullWidth onChange={(e) => handleFilterChange('q', e.target.value)} />
         </Grid>
         <Grid item xs={12} md={2}>
-          <TextField label="Severity" select fullWidth onChange={(e) => handleFilterChange('severity', e.target.value)}>
-            <option value="">All</option>
-            <option value="info">Info</option>
-            <option value="warning">Warning</option>
-            <option value="major">Major</option>
-            <option value="critical">Critical</option>
+          <TextField label="Severity" select fullWidth onChange={(e) => handleFilterChange('severity', e.target.value)} SelectProps={{ displayEmpty: true }} value={filters.severity || ''}>
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="info">Info</MenuItem>
+            <MenuItem value="warning">Warning</MenuItem>
+            <MenuItem value="major">Major</MenuItem>
+            <MenuItem value="critical">Critical</MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12} md={2}>
