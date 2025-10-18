@@ -25,8 +25,8 @@
   <Config Name="Database Type" Target="DB_TYPE" Default="mariadb" Mode="" Description="Database type: mariadb, mysql, or postgresql" Type="Variable" Display="always" Required="true" Mask="false">mariadb</Config>
   <Config Name="Database Host" Target="DB_HOST" Default="" Mode="" Description="Database server hostname or IP address" Type="Variable" Display="always" Required="true" Mask="false"></Config>
   <Config Name="Database Port" Target="DB_PORT" Default="3306" Mode="" Description="Database server port (3306 for MariaDB/MySQL, 5432 for PostgreSQL)" Type="Variable" Display="always" Required="true" Mask="false">3306</Config>
-  <Config Name="Database Name" Target="DB_NAME" Default="ucgmax" Mode="" Description="Database name" Type="Variable" Display="always" Required="true" Mask="false">ucgmax</Config>
-  <Config Name="Database User" Target="DB_USER" Default="ucgmax" Mode="" Description="Database username" Type="Variable" Display="always" Required="true" Mask="false">ucgmax</Config>
+  <Config Name="Database Name" Target="DB_NAME" Default="ucg_webhook_db" Mode="" Description="Database name" Type="Variable" Display="always" Required="true" Mask="false">ucg_webhook_db</Config>
+  <Config Name="Database User" Target="DB_USER" Default="ucg_webhook" Mode="" Description="Database username" Type="Variable" Display="always" Required="true" Mask="false">ucg_webhook</Config>
   <Config Name="Database Password" Target="DB_PASSWORD" Default="" Mode="" Description="Database password" Type="Variable" Display="always" Required="true" Mask="true"></Config>
   <Config Name="Secret Key" Target="SECRET_KEY" Default="" Mode="" Description="JWT secret key for authentication (generate a random string)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
   <Config Name="HMAC Secret" Target="HMAC_SECRET" Default="" Mode="" Description="Shared secret for webhook HMAC verification" Type="Variable" Display="always" Required="true" Mask="true"></Config>
