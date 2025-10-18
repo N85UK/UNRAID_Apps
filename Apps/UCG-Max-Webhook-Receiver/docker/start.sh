@@ -35,28 +35,30 @@ fi
 
 # Wait for database to be ready
 echo "Waiting for database to be ready..."
-max_attempts=60
+max_attempts=30
 attempt=0
 
 while [ $attempt -lt $max_attempts ]; do
-    if python -c "from sqlalchemy import create_engine; engine = create_engine('$DATABASE_URL'); engine.connect()" 2>/dev/null; then
-        echo "Database is ready!"
+    # Simple TCP connection test - if we can connect, the database is likely ready
+    if timeout 2 bash -c "cat < /dev/null > /dev/tcp/$DB_HOST/$DB_PORT" 2>/dev/null; then
+        echo "Database port is accessible!"
+        # Give it a moment for the database to fully initialize
+        sleep 2
         break
     fi
     
     attempt=$((attempt + 1))
     if [ $attempt -eq $max_attempts ]; then
-        echo "ERROR: Database failed to become ready after $max_attempts seconds"
+        echo "ERROR: Cannot connect to database at $DB_HOST:$DB_PORT after $max_attempts attempts"
         echo "Please check:"
-        echo "  - Database server is running"
-        echo "  - Database credentials are correct"
-        echo "  - Database name exists"
-        echo "  - Network connectivity to database"
+        echo "  - Database server is running at $DB_HOST:$DB_PORT"
+        echo "  - Network connectivity to database server"
+        echo "  - Firewall settings allow connection on port $DB_PORT"
         exit 1
     fi
     
     echo "Waiting for database... ($attempt/$max_attempts)"
-    sleep 1
+    sleep 2
 done
 
 # Run database migrations
