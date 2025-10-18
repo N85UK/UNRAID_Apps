@@ -1,104 +1,120 @@
 # UNRAID Apps Repository
 
-A curated collection of UNRAID applications and plugins that extend UNRAID's functionality and improve user experience.
+A curated collection of production-ready UNRAID applications that extend UNRAID's functionality and improve user experience.
 
-## 🚀 Available Projects
+## 🚀 Available Applications
 
-### 📧 AWS End User Messaging (Multi-Version Suite)
+### 📧 AWS End User Messaging Suite
 
-#### Professional SMS messaging via AWS Pinpoint with modern UI and enterprise features
+Professional SMS messaging applications using AWS Pinpoint with varying feature sets for different use cases.
 
-🚀 **All versions now building successfully with GitHub Actions CI/CD!**
+---
 
-#### Version 3.0 (Enhanced UI Edition) 🎨
+#### 1. AWS EUM v3.0.12 (Enhanced UI Edition) 🎨
 
 - **Location**: [`Apps/AWS_EUM/`](Apps/AWS_EUM/)
-- **Version**: v3.0.9
 - **Status**: ✅ Production Ready - Auto-deployed
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM/my-aws-eum-v3.xml`
+- **Template**: `my-aws-eum-v3.xml`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 
-**Enhanced Features:**
-
-- 🌙 Modern dark mode with automatic theme switching
-- 🎨 Clean, responsive design with Google Fonts
-- 📊 Simplified UI with improved message history (v3.0.9)
+**Features:**
+- 🌙 Modern dark/light mode with responsive design
+- 📊 Simplified message history interface
 - 🛡️ Enhanced security with CSP and rate limiting
 - 🔄 Auto-discovery of AWS phone numbers
-- 📱 Long message support up to 1,600 characters
+- 📱 Long message support (up to 1,600 characters)
 
-#### MariaDB Enterprise Edition 🏢
+---
+
+#### 2. AWS EUM MariaDB v2.1.2 (Enterprise Edition) 🏢
 
 - **Location**: [`Apps/AWS_EUM_MariaDB/`](Apps/AWS_EUM_MariaDB/)
-- **Status**: ✅ Production Ready - Multi-user authentication
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_MariaDB/my-aws-eum-mariadb.xml`
+- **Status**: ✅ Production Ready - Multi-user
+- **Template**: `my-aws-eum-mariadb.xml`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
 
-**Enterprise Features:**
-
-- 👥 Multi-user authentication with session management
+**Features:**
+- 👥 Multi-user authentication with JWT
 - 🗄️ MariaDB/MySQL database persistence
-- 🔐 JWT-based authentication system
+- � Auto database initialization
 - 📈 Advanced analytics and reporting
-- 🛡️ Enterprise-grade security features
+- � Enterprise-grade security
 
-#### AWS EUM X (Next Generation) 🚀
+---
+
+#### 3. AWS EUM X v0.1.4 (Security Hardened) �
 
 - **Location**: [`Apps/AWS_EUM_X/`](Apps/AWS_EUM_X/)
-- **Version**: v0.1.0
-- **Status**: ✅ Production Ready - Security Hardened
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_EUM_X/my-aws-eum-x.xml`
+- **Status**: ✅ Production Ready - 2FA Enabled
+- **Template**: `my-aws-eum-x.xml`
 - **Docker Image**: `ghcr.io/n85uk/aws-eum-x:latest`
 
-**Next-Gen Features:**
+**Features:**
+- � Password authentication with bcrypt hashing
+- 🔑 Optional TOTP two-factor authentication
+- 🎯 First-run setup wizard
+- 📊 Dashboard with queue monitoring
+- 🛡️ Non-root container (port 8080)
+- 📈 SQLite persistence with auto-migrations
 
-- 🔒 **Security First**: Comprehensive security documentation and vulnerability management
-- 🏗️ **Modern Architecture**: Built with latest Node.js 20 LTS and Alpine Linux
-- 🎯 **First-Run Wizard**: 5-step guided setup for new users
-- 📊 **Observability**: Structured logging, health endpoints, and message history
-- ⚡ **Rate Limiting**: Built-in token bucket with configurable limits
-- 🛡️ **Non-Root Container**: Runs as unprivileged user (UID 1001) on port 8080
-- 📈 **SQLite Persistence**: better-sqlite3 for reliable message tracking
+---
 
-### AWS 2-Way SMS 💬
+### 💬 AWS 2-Way SMS v1.0.0
 
 - **Location**: [`Apps/AWS_2WAY/`](Apps/AWS_2WAY/)
 - **Status**: ✅ Production Ready
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/AWS_2WAY/my-aws-2way-sms.xml`
+- **Template**: `my-aws-2way-sms.xml`
 - **Docker Image**: `ghcr.io/n85uk/aws-2way-sms:latest`
 
-**Bi-Directional Messaging:**
-
+**Features:**
 - 📱 Send and receive SMS messages
 - 🔄 Two-way conversation management
-- 📊 Message history and threading
+- 📊 Message threading and history
 - 🔔 Real-time notifications
+- 🌐 SNS webhook integration
 
-### UCG Max Webhook Receiver 🔔
+---
+
+### 🔔 UCG Max Webhook Receiver v1.0.0
 
 - **Location**: [`Apps/UCG-Max-Webhook-Receiver/`](Apps/UCG-Max-Webhook-Receiver/)
-- **Version**: v1.0.0
-- **Status**: ✅ Production Ready
-- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/UCG-Max-Webhook-Receiver/my-ucg-max-webhook.xml`
+- **Status**: ✅ Production Ready - Universal Receiver
+- **Templates**: `my-ucg-max-webhook.xml`, `my-X_Webhook-Receiver.xml`
 - **Docker Image**: `ghcr.io/n85uk/ucg-max-webhook-receiver:latest`
 
-**Webhook Processing:**
+**Features:**
+- 🌐 **Universal**: Accept webhooks from any JSON source
+- 🎨 **Modern UI**: Gradient theme (purple → cyan) with auto-refresh
+- 🔐 **Authentication**: HMAC-SHA256, Bearer token, or JWT
+- 🗄️ **Database**: External MariaDB, MySQL, or PostgreSQL support
+- 📊 **Dashboard**: Alert monitoring with source tracking
+- ⚡ **Rate Limiting**: Configurable throttling (slowapi)
+- 🔍 **Advanced Filtering**: Search by severity, type, device, source
+- 📤 **CSV Export**: Download filtered alerts
+- 🔄 **Auto-Migrations**: Alembic-based schema management
 
-- 🔐 HMAC-SHA256 and Bearer token authentication
-- 🗄️ External database support (MariaDB, MySQL, PostgreSQL)
-- 📊 Web dashboard for alert monitoring and metrics
-- ⚡ Rate limiting with configurable thresholds
-- 🔍 Search and filter alerts by severity, type, device
-- 📤 Export alerts to CSV
-- 🔄 Automatic database migrations
+---
 
 ## 🛠️ Installation
 
-### Docker-based Apps (AWS EUM)
+### Via UNRAID Community Applications (Recommended)
 
-1. Pull the desired image from GHCR or use the provided XML template in the app folder
-2. Configure environment variables and mount `/app/data` for persistence
-3. Start container and check logs for startup messages
+Search for the application name in the Apps tab and install using the template.
+
+### Manual Installation
+
+1. Pull the Docker image from GHCR
+2. Configure environment variables per application README
+3. Mount required volumes (typically `/mnt/user/appdata/<app-name>`)
+4. Start container and verify logs
+
+**Security Note**: Always generate secure random keys. Never use default passwords in production!
+
+```bash
+# Generate secure secrets
+openssl rand -hex 32  # For SECRET_KEY, JWT_SECRET, HMAC_SECRET
+openssl rand -base64 32  # For SESSION_SECRET
+```
 
 **Example (docker run minimal):**
 

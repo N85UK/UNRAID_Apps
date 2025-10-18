@@ -4,31 +4,21 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 
 ## 🚀 Featured Applications
 
-### AWS End User Messaging X (EUM X) v0.1.0
+### AWS End User Messaging X (EUM X) v0.1.4
 
-**Public Beta** - Modernized AWS Pinpoint SMS Solution with Advanced Features
+**Production Ready** - Security-Hardened AWS Pinpoint SMS Solution
 
-- ✨ **Modern Architecture**: Secure, production-ready Node.js 20 application with SQLite persistence
-- 🔒 **Enhanced Security**: Non-root container (port 8080), secret redaction, CSRF protection, IAM role support
-- 📱 **SMS Capabilities**: Send SMS via AWS Pinpoint with phone pool discovery and opt-out checking
-- 📊 **Dashboard UI**: Real-time monitoring with queue status, AWS health probe, and per-origin MPS overrides
-- 🗄️ **Persistent Queue**: File-backed message queue with worker, automatic retry, and SNS webhook support
-- 📈 **Observability**: Structured logging (Pino), health checks, migrations system, comprehensive test coverage
-- ⚙️ **Easy Setup**: One-click UNRAID installation with first-run wizard and dry-run testing
-
-**Key Improvements over AWS_EUM v3:**
-
-- SQLite database for configuration and message persistence
-- Dashboard with queue monitoring and AWS connectivity status
-- Database migrations for seamless upgrades
-- Per-origin message-per-second (MPS) rate limit overrides
-- Comprehensive test suite (8 test files with Jest)
-- Support bundle with sanitized diagnostics
-- 512px icon generation for Community Apps
+- 🔐 **Authentication**: Password-based login with bcrypt hashing, optional TOTP 2FA
+- 🗄️ **SQLite Persistence**: Configuration, credentials, and message history
+- 📱 **SMS Capabilities**: Send SMS via AWS Pinpoint with phone pool discovery
+- 📊 **Dashboard**: Real-time monitoring with queue status and AWS health probe
+- � **Security**: Non-root container (port 8080), session management, secret redaction
+- ⚙️ **Easy Setup**: First-run wizard, dry-run testing, database migrations
+- 📈 **Observability**: Structured logging, health checks, per-origin MPS overrides
 
 [View Documentation](Apps/AWS_EUM_X/README.md) | [Installation Guide](Wiki-AWS-EUM-Installation.md)
 
-### AWS End User Messaging (EUM) v3.0.9
+### AWS End User Messaging (EUM) v3.0.12
 
 **Enhanced UI Edition** - Production Ready
 
@@ -38,35 +28,39 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 - 📈 **Analytics**: Message history and delivery tracking
 - ⚙️ **Easy Setup**: One-click UNRAID installation with CSP configuration
 
-### AWS End User Messaging MariaDB Edition
+### AWS End User Messaging MariaDB Edition v2.1.2
 
-**Enterprise Edition** - Multi-user Authentication
+**Enterprise Edition** - Multi-user Authentication & Database Persistence
 
 - 👥 **Multi-user**: JWT-based authentication with session management
 - 🗄️ **Database**: MariaDB/MySQL persistence for enterprise deployments
 - 📈 **Analytics**: Advanced reporting and tracking
 - 🔐 **Security**: Enterprise-grade security features
+- 🚀 **Auto-Init**: Automatic database and table creation
 
 ### AWS 2-Way SMS v1.0.0
 
 **Bi-Directional Messaging** - Production Ready
 
-- 📱 **Two-Way**: Send and receive SMS messages
+- 📱 **Two-Way**: Send and receive SMS messages via AWS Pinpoint
 - 🔄 **Conversations**: Thread management and history
 - 📊 **Tracking**: Message history and delivery status
 - 🔔 **Notifications**: Real-time message alerts
+- 🌐 **SNS Integration**: Webhook receiver for incoming messages
 
 ### UCG Max Webhook Receiver v1.0.0
 
-**Production Ready** - Webhook Processing & Alert Management
+**Universal Webhook Receiver** - Production Ready with Modern UI
 
-- 🔐 **Authentication**: HMAC-SHA256 and Bearer token support
+- 🌐 **Universal**: Accept webhooks from any source (UCG Max, Uptime Robot, GitHub, Prometheus, etc.)
+- 🎨 **Modern UI**: Gradient theme (purple → cyan) with auto-refresh dashboard
+- 🔐 **Authentication**: HMAC-SHA256, Bearer token, or JWT support
 - 🗄️ **Database**: External MariaDB, MySQL, or PostgreSQL support
-- 📊 **Dashboard**: Web UI for alert monitoring and metrics
-- ⚡ **Rate Limiting**: Configurable request throttling
-- 🔍 **Search**: Filter alerts by severity, type, device, timestamps
-- 📤 **Export**: CSV export functionality
-- 🔄 **Migrations**: Automatic database schema updates
+- 📊 **Dashboard**: Web UI for alert monitoring and metrics with source tracking
+- ⚡ **Rate Limiting**: Configurable request throttling (slowapi)
+- 🔍 **Search**: Filter alerts by severity, type, device, source, timestamps
+- 📤 **Export**: CSV export functionality with gradient-styled buttons
+- 🔄 **Migrations**: Automatic database schema updates (Alembic)
 
 ## 📊 Repository Stats
 
