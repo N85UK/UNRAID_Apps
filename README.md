@@ -74,6 +74,24 @@ A curated collection of UNRAID applications and plugins that extend UNRAID's fun
 - 📊 Message history and threading
 - 🔔 Real-time notifications
 
+### UCG Max Webhook Receiver 🔔
+
+- **Location**: [`Apps/UCG-Max-Webhook-Receiver/`](Apps/UCG-Max-Webhook-Receiver/)
+- **Version**: v1.0.0
+- **Status**: ✅ Production Ready
+- **Installation**: `https://github.com/N85UK/UNRAID_Apps/raw/main/Apps/UCG-Max-Webhook-Receiver/my-ucg-max-webhook.xml`
+- **Docker Image**: `ghcr.io/n85uk/ucg-max-webhook-receiver:latest`
+
+**Webhook Processing:**
+
+- 🔐 HMAC-SHA256 and Bearer token authentication
+- 🗄️ External database support (MariaDB, MySQL, PostgreSQL)
+- 📊 Web dashboard for alert monitoring and metrics
+- ⚡ Rate limiting with configurable thresholds
+- 🔍 Search and filter alerts by severity, type, device
+- 📤 Export alerts to CSV
+- 🔄 Automatic database migrations
+
 ## 🛠️ Installation
 
 ### Docker-based Apps (AWS EUM)
@@ -120,6 +138,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full contribution guidelines. Quick
 - `ghcr.io/n85uk/aws-eum-mariadb:latest` (Enterprise)
 - `ghcr.io/n85uk/aws-eum-x:latest` (v0.1.0)
 - `ghcr.io/n85uk/aws-2way-sms:latest`
+- `ghcr.io/n85uk/ucg-max-webhook-receiver:latest` (v1.0.0)
 
 ## 🤝 Contributing
 

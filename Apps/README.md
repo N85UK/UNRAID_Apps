@@ -4,21 +4,93 @@ A collection of Docker applications packaged for UNRAID Community Applications (
 
 ## Applications
 
-### AWS End User Messaging (EUM)
+### 1. AWS End User Messaging (EUM) v3.0.9
 
 A web-based SMS sending application using AWS Pinpoint SMS services.
 
-**Status**: ✅ Ready for CA submission
+**Status**: ✅ Production Ready
 **Docker Image**: `ghcr.io/n85uk/aws-eum:latest`
 **Category**: Utilities
+**Template**: `my-aws-eum-v3.xml`
 
 #### Features
 
-- Web interface for sending SMS messages
+- Modern dark/light mode UI
 - AWS Pinpoint SMS integration
-- Configurable originators (phone numbers)
+- Auto-discovery of phone numbers
 - Message history tracking
-- Secure credential management (no secrets included)
+- Long message support (up to 1,600 characters)
+
+### 2. AWS End User Messaging MariaDB Edition
+
+Enterprise SMS application with multi-user authentication and database persistence.
+
+**Status**: ✅ Production Ready
+**Docker Image**: `ghcr.io/n85uk/aws-eum-mariadb:latest`
+**Category**: Utilities
+**Template**: `my-aws-eum-mariadb.xml`
+
+#### Features
+
+- Multi-user authentication with JWT
+- MariaDB/MySQL database persistence
+- Advanced analytics and reporting
+- Session management
+- Enterprise-grade security
+
+### 3. AWS End User Messaging X (EUM X) v0.1.0
+
+Next-generation AWS Pinpoint SMS solution with enhanced security and features.
+
+**Status**: ✅ Production Ready - Security Hardened
+**Docker Image**: `ghcr.io/n85uk/aws-eum-x:latest`
+**Category**: Utilities
+**Template**: `my-aws-eum-x.xml`
+
+#### Features
+
+- SQLite persistence for configuration and messages
+- First-run wizard for easy setup
+- Dashboard with queue monitoring
+- Non-root container (port 8080)
+- Comprehensive security documentation
+- Rate limiting with token bucket
+- Database migrations system
+
+### 4. AWS 2-Way SMS v1.0.0
+
+Bi-directional SMS messaging application for send and receive capabilities.
+
+**Status**: ✅ Production Ready
+**Docker Image**: `ghcr.io/n85uk/aws-2way-sms:latest`
+**Category**: Utilities
+**Template**: `my-aws-2way-sms.xml`
+
+#### Features
+
+- Send and receive SMS messages
+- Two-way conversation management
+- Message threading and history
+- Real-time notifications
+
+### 5. UCG Max Webhook Receiver v1.0.0
+
+Webhook receiver and alert management system for UCG Max network monitoring.
+
+**Status**: ✅ Production Ready
+**Docker Image**: `ghcr.io/n85uk/ucg-max-webhook-receiver:latest`
+**Category**: Network:Management
+**Template**: `my-ucg-max-webhook.xml`
+
+#### Features
+
+- HMAC-SHA256 and Bearer token authentication
+- External database support (MariaDB/MySQL/PostgreSQL)
+- Web dashboard for alert monitoring
+- Search and filter by severity, type, device
+- Rate limiting with configurable thresholds
+- CSV export functionality
+- Automatic database migrations
 
 #### Installation
 
