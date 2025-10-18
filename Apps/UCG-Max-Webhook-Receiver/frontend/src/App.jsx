@@ -88,6 +88,7 @@ function App() {
           <TableHead>
             <TableRow>
               <TableCell>Time</TableCell>
+              <TableCell>Source</TableCell>
               <TableCell>Severity</TableCell>
               <TableCell>Device</TableCell>
               <TableCell>Type</TableCell>
@@ -98,6 +99,7 @@ function App() {
             {alerts.map((alert) => (
               <TableRow key={alert.id} hover onClick={() => setSelectedAlert(alert)}>
                 <TableCell>{new Date(alert.timestamp).toLocaleString()}</TableCell>
+                <TableCell><Chip label={alert.webhook_source || 'unknown'} size="small" variant="outlined" /></TableCell>
                 <TableCell><Chip label={alert.severity} color={severityColor(alert.severity)} /></TableCell>
                 <TableCell>{alert.device}</TableCell>
                 <TableCell>{alert.alert_type}</TableCell>

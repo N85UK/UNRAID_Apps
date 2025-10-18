@@ -66,8 +66,9 @@ async def receive_alert(request: Request, db: Session = Depends(get_db)):
     try:
         data = await request.json()
         alert_data = schemas.AlertCreate(**data)
+        alert_data.webhook_source = "ucgmax"
     except Exception as e:
-        raise HTTPException(status_code=400, detail="Invalid JSON or missing fields")
+        raise HTTPException(status_code=400, detail=f"Invalid JSON or missing fields: {str(e)}")
 
     # Check idempotency
     idempotency_key = headers.get('idempotency-key')
@@ -78,8 +79,76 @@ async def receive_alert(request: Request, db: Session = Depends(get_db)):
 
     alert_data.idempotency_key = idempotency_key
     alert = crud.create_alert(db, alert_data)
-    logger.info(f"Alert received: {alert.alert_id}")
-    return {"status": "accepted", "alert_id": alert.alert_id}
+    logger.info(f"Alert received from UCG Max: {alert.alert_id}")
+    return {"status": "accepted", "alert_id": alert.alert_id or str(alert.id)}
+
+@app.post("/webhook", response_model=schemas.WebhookResponse)
+@limiter.limit(f"{settings.rate_limit_requests} per {settings.rate_limit_window} second")
+async def receive_generic_webhook(request: Request, webhook_source: str = "generic", db: Session = Depends(get_db)):
+    """
+    Generic webhook endpoint that accepts any JSON payload.
+    
+    Query Parameters:
+    - webhook_source: Identifier for the webhook source (default: "generic")
+    
+    Authentication: Supports HMAC-SHA256, Bearer token, or JWT
+    
+    Example:
+    POST /webhook?webhook_source=myapp
+    Authorization: Bearer your-token
+    Content-Type: application/json
+    
+    {
+        "any": "json",
+        "structure": "works",
+        "nested": {"data": "accepted"}
+    }
+    """
+    body = await request.body()
+    headers = dict(request.headers)
+    
+    # Optional authentication - only enforce if credentials are configured
+    if settings.bearer_token or settings.hmac_secret:
+        if not auth.verify_hmac_or_bearer(body, headers):
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+    try:
+        data = await request.json()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid JSON: {str(e)}")
+
+    # Extract common fields with fallbacks
+    from datetime import datetime, timezone
+    import hashlib
+    import json
+    
+    # Generate alert_id from hash of content if not provided
+    alert_id = data.get('id') or data.get('alert_id') or data.get('event_id') or hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()[:32]
+    
+    # Map common field names to our structure
+    alert_data = schemas.AlertCreate(
+        alert_id=str(alert_id),
+        webhook_source=webhook_source,
+        source=data.get('source') or data.get('origin') or data.get('application') or webhook_source,
+        device=data.get('device') or data.get('host') or data.get('hostname') or data.get('node'),
+        severity=data.get('severity') or data.get('level') or data.get('priority') or "info",
+        alert_type=data.get('type') or data.get('alert_type') or data.get('event_type') or data.get('category') or "notification",
+        timestamp=datetime.fromisoformat(data['timestamp']) if 'timestamp' in data else datetime.now(timezone.utc),
+        summary=data.get('message') or data.get('summary') or data.get('title') or data.get('description') or f"Webhook from {webhook_source}",
+        details=data.get('details') or {},
+        raw_payload=data,
+        idempotency_key=headers.get('idempotency-key') or data.get('idempotency_key')
+    )
+
+    # Check idempotency
+    if alert_data.idempotency_key:
+        existing = db.query(models.Alert).filter(models.Alert.idempotency_key == alert_data.idempotency_key).first()
+        if existing:
+            raise HTTPException(status_code=409, detail="Duplicate alert")
+
+    alert = crud.create_alert(db, alert_data)
+    logger.info(f"Generic webhook received from {webhook_source}: {alert.alert_id}")
+    return {"status": "accepted", "alert_id": alert.alert_id or str(alert.id)}
 
 # API routes
 @app.get("/api/alerts")
