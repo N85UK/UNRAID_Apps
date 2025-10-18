@@ -75,10 +75,10 @@ Professional SMS messaging applications using AWS Pinpoint with varying feature 
 
 ---
 
-### 🔔 UCG Max Webhook Receiver v1.0.0
+### 🔔 X_Webhook-Receiver v1.0.0
 
 - **Location**: [`Apps/UCG-Max-Webhook-Receiver/`](Apps/UCG-Max-Webhook-Receiver/)
-- **Status**: ✅ Production Ready - Universal Receiver
+- **Status**: ✅ Production Ready - Universal Webhook Receiver
 - **Templates**: `my-ucg-max-webhook.xml`, `my-X_Webhook-Receiver.xml`
 - **Docker Image**: `ghcr.io/n85uk/ucg-max-webhook-receiver:latest`
 

@@ -48,7 +48,7 @@ Welcome to the N85UK UNRAID Apps repository! This collection provides high-quali
 - 🔔 **Notifications**: Real-time message alerts
 - 🌐 **SNS Integration**: Webhook receiver for incoming messages
 
-### UCG Max Webhook Receiver v1.0.0
+### X_Webhook-Receiver v1.0.0
 
 **Universal Webhook Receiver** - Production Ready with Modern UI
 

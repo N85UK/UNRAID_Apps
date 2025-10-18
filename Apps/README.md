@@ -84,7 +84,7 @@ Bi-directional SMS messaging application for send and receive capabilities.
 
 ---
 
-### 5. UCG Max Webhook Receiver v1.0.0
+### 5. X_Webhook-Receiver v1.0.0
 
 Universal webhook receiver and alert management system with modern gradient UI.
 

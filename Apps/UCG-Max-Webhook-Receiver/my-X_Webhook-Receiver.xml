@@ -9,7 +9,7 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/N85UK/UNRAID_Apps/issues</Support>
   <Project>https://github.com/N85UK/UNRAID_Apps</Project>
-  <Overview>A production-ready universal webhook receiver. Receives, stores, and displays alerts from UCG Max and other webhook sources with a modern gradient UI. Supports external MariaDB/MySQL or PostgreSQL databases. Features generic webhook endpoint accepting any JSON payload with intelligent field mapping.</Overview>
+  <Overview>X_Webhook-Receiver v1.0.0 - Universal webhook receiver and alert management system. Receives, stores, and displays alerts from any webhook source (UCG Max, Uptime Robot, GitHub, Prometheus, etc.) with a modern gradient UI. Supports external MariaDB/MySQL or PostgreSQL databases. Features intelligent field mapping for any JSON payload.</Overview>
   <Category>Tools: Network:Management Status:Stable</Category>
   <WebUI>http://[IP]:[PORT:8000]</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/N85UK/UNRAID_Apps/main/Apps/UCG-Max-Webhook-Receiver/my-X_Webhook-Receiver.xml</TemplateURL>
