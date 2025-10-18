@@ -1,7 +1,8 @@
 from typing import Optional
 from fastapi import FastAPI, Request, HTTPException, Depends, status
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -18,9 +19,20 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="UCG Max Webhook Receiver", version="1.0.0")
 
+# Custom rate limit exception handler
+def rate_limit_handler(request: Request, exc: Exception) -> JSONResponse:
+    if hasattr(exc, 'detail'):
+        message = f"Rate limit exceeded: {exc.detail}"
+    else:
+        message = "Rate limit exceeded"
+    return JSONResponse(
+        status_code=429,
+        content={"error": message}
+    )
+
 limiter = Limiter(key_func=get_remote_address, default_limits=[f"{settings.rate_limit_requests}/{settings.rate_limit_window}s"])
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
 app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(

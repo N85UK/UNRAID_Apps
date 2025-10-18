@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_, func, String, cast
+from sqlalchemy import or_, and_, func, text
 from . import models, schemas
 from datetime import datetime, timedelta
 
@@ -31,8 +31,8 @@ def get_alerts(db: Session, skip: int = 0, limit: int = 100, filters: dict = Non
             query = query.filter(
                 or_(
                     models.Alert.summary.ilike(f'%{q}%'),
-                    cast(models.Alert.details, String).ilike(f'%{q}%'),
-                    cast(models.Alert.raw_payload, String).ilike(f'%{q}%')
+                    func.cast(models.Alert.details, text('text')).ilike(f'%{q}%'),
+                    func.cast(models.Alert.raw_payload, text('text')).ilike(f'%{q}%')
                 )
             )
     return query.offset(skip).limit(limit).all()
