@@ -19,20 +19,25 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="UCG Max Webhook Receiver", version="1.0.0")
 
-# Custom rate limit exception handler
+# Custom rate limit exception handler that handles both RateLimitExceeded and ValueError
 def rate_limit_handler(request: Request, exc: Exception) -> JSONResponse:
     if hasattr(exc, 'detail'):
         message = f"Rate limit exceeded: {exc.detail}"
     else:
-        message = "Rate limit exceeded"
+        message = f"Rate limit exceeded: {str(exc)}"
     return JSONResponse(
         status_code=429,
         content={"error": message}
     )
 
-limiter = Limiter(key_func=get_remote_address, default_limits=[f"{settings.rate_limit_requests}/{settings.rate_limit_window}s"])
+# Initialize limiter with a valid rate limit string
+limiter = Limiter(
+    key_func=get_remote_address, 
+    default_limits=[f"{settings.rate_limit_requests}/{settings.rate_limit_window}second"]
+)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
+app.add_exception_handler(ValueError, rate_limit_handler)  # Handle ValueError from rate limiting
 app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(
@@ -51,7 +56,7 @@ def get_db():
         db.close()
 
 @app.post("/webhook/ucgmax", response_model=schemas.WebhookResponse)
-@limiter.limit(f"{settings.rate_limit_requests} per {settings.rate_limit_window} seconds")
+@limiter.limit(f"{settings.rate_limit_requests} per {settings.rate_limit_window} second")
 async def receive_alert(request: Request, db: Session = Depends(get_db)):
     body = await request.body()
     headers = dict(request.headers)
