@@ -10,8 +10,8 @@ class AlertBase(BaseModel):
     alert_type: str
     timestamp: datetime
     summary: str
-    details: Dict[str, Any]
-    raw_payload: Dict[str, Any]
+    details: Optional[Dict[str, Any]] = None
+    raw_payload: Optional[Dict[str, Any]] = None
     idempotency_key: Optional[str] = None
 
 class AlertCreate(AlertBase):

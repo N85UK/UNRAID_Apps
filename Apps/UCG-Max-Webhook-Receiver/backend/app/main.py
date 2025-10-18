@@ -89,17 +89,21 @@ async def get_alerts(
     page_size: int = 50,
     db: Session = Depends(get_db)
 ):
-    filters = {
-        'severity': severity,
-        'alert_type': alert_type,
-        'device': device,
-        'start': start,
-        'end': end,
-        'q': q
-    }
-    skip = (page - 1) * page_size
-    alerts = crud.get_alerts(db, skip=skip, limit=page_size, filters=filters)
-    return alerts
+    try:
+        filters = {
+            'severity': severity,
+            'alert_type': alert_type,
+            'device': device,
+            'start': start,
+            'end': end,
+            'q': q
+        }
+        skip = (page - 1) * page_size
+        alerts = crud.get_alerts(db, skip=skip, limit=page_size, filters=filters)
+        return alerts
+    except Exception as e:
+        logger.error(f"Error fetching alerts: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching alerts: {str(e)}")
 
 @app.get("/api/alerts/{alert_id}", response_model=schemas.Alert)
 def get_alert(alert_id: int, db: Session = Depends(get_db)):
@@ -115,7 +119,11 @@ def delete_alert(alert_id: int, current_user: str = Depends(auth.get_current_use
 
 @app.get("/api/metrics", response_model=schemas.MetricsResponse)
 def get_metrics(db: Session = Depends(get_db)):
-    return crud.get_metrics(db)
+    try:
+        return crud.get_metrics(db)
+    except Exception as e:
+        logger.error(f"Error fetching metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching metrics: {str(e)}")
 
 @app.get("/api/alerts/export")
 async def export_alerts(
